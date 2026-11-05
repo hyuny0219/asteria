@@ -1,0 +1,250 @@
+[
+ {
+  "name": "petHatch 390x844",
+  "pass": true,
+  "info": {
+   "over": false,
+   "broken": []
+  }
+ },
+ {
+  "name": "pets 390x844",
+  "pass": true,
+  "info": {
+   "over": false,
+   "broken": []
+  }
+ },
+ {
+  "name": "pets hatched & active 390x844",
+  "pass": true,
+  "info": {
+   "owned": 5,
+   "active": "P02",
+   "eggs": 0
+  }
+ },
+ {
+  "name": "codex 390x844",
+  "pass": true,
+  "info": {
+   "over": false,
+   "broken": []
+  }
+ },
+ {
+  "name": "codexItems 390x844",
+  "pass": true,
+  "info": {
+   "over": false,
+   "broken": []
+  }
+ },
+ {
+  "name": "achievements 390x844",
+  "pass": true,
+  "info": {
+   "over": false,
+   "broken": []
+  }
+ },
+ {
+  "name": "titles 390x844",
+  "pass": true,
+  "info": {
+   "over": false,
+   "broken": []
+  }
+ },
+ {
+  "name": "title equipped & shown 390x844",
+  "pass": true,
+  "info": {
+   "equipped": "t_pioneer",
+   "status": "QA2204 「초원의 개척자」"
+  }
+ },
+ {
+  "name": "pass 390x844",
+  "pass": true,
+  "info": {
+   "over": false,
+   "broken": []
+  }
+ },
+ {
+  "name": "pass level 1 claimed once 390x844",
+  "pass": true,
+  "info": {
+   "gem0": 860,
+   "gem1": 910
+  }
+ },
+ {
+  "name": "craft 390x844",
+  "pass": true,
+  "info": {
+   "over": false,
+   "broken": []
+  }
+ },
+ {
+  "name": "craftResult 390x844",
+  "pass": true,
+  "info": {
+   "over": false,
+   "broken": []
+  }
+ },
+ {
+  "name": "mythic crafted 390x844",
+  "pass": true,
+  "info": {}
+ },
+ {
+  "name": "pet attacks in battle 390x844",
+  "pass": true,
+  "info": {
+   "hits": 2
+  }
+ },
+ {
+  "name": "menu_v6 390x844",
+  "pass": true,
+  "info": {
+   "over": false,
+   "broken": []
+  }
+ },
+ {
+  "name": "no page errors 390x844",
+  "pass": true,
+  "info": {
+   "errs": []
+  }
+ },
+ {
+  "name": "petHatch 360x700",
+  "pass": true,
+  "info": {
+   "over": false,
+   "broken": []
+  }
+ },
+ {
+  "name": "pets 360x700",
+  "pass": true,
+  "info": {
+   "over": false,
+   "broken": []
+  }
+ },
+ {
+  "name": "pets hatched & active 360x700",
+  "pass": true,
+  "info": {
+   "owned": 5,
+   "active": "P04",
+   "eggs": 0
+  }
+ },
+ {
+  "name": "codex 360x700",
+  "pass": true,
+  "info": {
+   "over": false,
+   "broken": []
+  }
+ },
+ {
+  "name": "codexItems 360x700",
+  "pass": true,
+  "info": {
+   "over": false,
+   "broken": []
+  }
+ },
+ {
+  "name": "achievements 360x700",
+  "pass": true,
+  "info": {
+   "over": false,
+   "broken": []
+  }
+ },
+ {
+  "name": "titles 360x700",
+  "pass": true,
+  "info": {
+   "over": false,
+   "broken": []
+  }
+ },
+ {
+  "name": "title equipped & shown 360x700",
+  "pass": true,
+  "info": {
+   "equipped": "t_pioneer",
+   "status": "QA6153 「초원의 개척자」"
+  }
+ },
+ {
+  "name": "pass 360x700",
+  "pass": true,
+  "info": {
+   "over": false,
+   "broken": []
+  }
+ },
+ {
+  "name": "pass level 1 claimed once 360x700",
+  "pass": true,
+  "info": {
+   "gem0": 860,
+   "gem1": 910
+  }
+ },
+ {
+  "name": "craft 360x700",
+  "pass": true,
+  "info": {
+   "over": false,
+   "broken": []
+  }
+ },
+ {
+  "name": "craftResult 360x700",
+  "pass": true,
+  "info": {
+   "over": false,
+   "broken": []
+  }
+ },
+ {
+  "name": "mythic crafted 360x700",
+  "pass": true,
+  "info": {}
+ },
+ {
+  "name": "pet attacks in battle 360x700",
+  "pass": true,
+  "info": {
+   "hits": 2
+  }
+ },
+ {
+  "name": "menu_v6 360x700",
+  "pass": true,
+  "info": {
+   "over": false,
+   "broken": []
+  }
+ },
+ {
+  "name": "no page errors 360x700",
+  "pass": true,
+  "info": {
+   "errs": []
+  }
+ }
+]

@@ -3,6 +3,7 @@
 // save leaves the live state untouched (see game.js `transact`).
 import { BALANCE } from '../data/balance.js';
 import { playerStats } from './stats.js';
+import { trackItem } from './meta.js';
 import { dismantleValue, enhanceChance, enhanceCost, mainScore, rarityOrder } from './items.js';
 import { CLASSES, STAT_KEYS, equipSlotFor } from '../data/content.js';
 import { killRewards } from './combat.js';
@@ -79,6 +80,7 @@ export function addItems(state, items) {
   const stored = [], overflowed = [], converted = [], autoDismantled = [];
   const autoMax = AUTO_DISMANTLE_MAX[state.settings.autoDismantle || 'off'] ?? -1;
   for (const it of items) {
+    if (state.codex) trackItem(state, it);      // 장비 도감: counts even if auto-dismantled
     if (autoMax >= 0 && rarityOrder(it.rarity) <= autoMax && it.source !== 'gacha') {
       // auto-dismantle (setting): new drops only; never locked/equipped (they are new)
       const ore = dismantleValue(it);

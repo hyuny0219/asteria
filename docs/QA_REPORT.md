@@ -115,3 +115,20 @@
 | 균열 입장 → 층 클리어 → 축복 선택 → 마치기 → 보상 | PASS | `rift_*.png`, `riftBless_*.png`, `riftResult_*.png` |
 | 단위 테스트 / 브라우저 / 로그인 / v5 | 72/72 · 123/123 화면(35종), 13/13 흐름 · 10/10 · 14/14 | `npm test`, `tools/browser_qa.cjs`, `tools/qa_login.cjs`, `tools/qa_v5.cjs` |
 | 실기기 | 미검증 | — |
+
+## v5 2부 (도감·업적·칭호·시즌 패스·동료·신화 제작) 검수
+| 항목 | 결과 | 근거 |
+|---|---|---|
+| 도감 단계 10/100/1000·보스 1/10/50, 장비 도감 중복 없음, 보너스 작음 | PASS | tests/meta.test.mjs |
+| 업적 32개 판정·1회 수령·칭호 획득·장착 | PASS | tests/meta.test.mjs |
+| 시즌 패스 XP·레벨·1회 수령·처치 XP 일일 상한·28일 시즌 초기화·30레벨 칭호 | PASS | tests/meta.test.mjs |
+| 동료 부화(6종 균등)·중복→조각→별·먹이→레벨·오라·전투 주기 공격 | PASS | tests/meta.test.mjs |
+| 신화 제작 잠금·정확한 비용·저장 실패 시 소모 없음 | PASS | tests/meta.test.mjs (Game + MemorySaver) |
+| 스키마 4 → 5 이전(장비 도감·보스 도감 채움) | PASS | tests/meta.test.mjs |
+| 부화 8회 → 동행, 업적 모두 받기, 칭호 장착 후 상단 표시, 패스 1레벨 수령, 신화 제작, 전투 중 동료 타격 | PASS | tools/qa_v6.cjs (32/32), `pets_*`, `petHatch_*`, `titles_*`, `pass_*`, `craft*_*`, `battle_pet_*` |
+| 단위 테스트 / 브라우저 / 로그인 / v5 / v6 | 79/79 · 141/141 화면(41종), 13/13 흐름 · 10/10 · 14/14 · 32/32 | `npm test`, `tools/browser_qa.cjs`, `tools/qa_login.cjs`, `tools/qa_v5.cjs`, `tools/qa_v6.cjs` |
+| 실기기 | 미검증 | — |
+
+화면을 보고 고친 것:
+- 동료가 영웅 왼쪽 위 화면 끝에 잘려 보였습니다. 영웅 앞 땅 위로 옮겼습니다(나는 동료는 위에 뜹니다).
+- 신화 제작의 부위 칩 7개가 가로 스크롤에 숨어 반지가 안 보였습니다. 칩을 줄바꿈하게 바꿨습니다.

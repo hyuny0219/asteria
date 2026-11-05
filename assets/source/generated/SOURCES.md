@@ -28,3 +28,5 @@ Originals kept unmodified; runtime crops are made by tools/extract_v4.py.
 | tier23_<cls>_gpt_alpha.png | Higgsfield 배경 제거 매트 (b084cf9e / af031ddd / a89e5356) | — |
 
 클래스 그림의 현재 출처는 `assets/source/handoff_v4/` (선배가 준 GPT 인계 v4). 위의 mage/archer/rogue_board, poses/, tier23_<cls>.png 는 이전 생성본으로 원본만 보관합니다.
+| pets_6.png | 동료 3×2: 별여우, 불씨 새끼용, 서리 올빼미 / 숲정령 사슴, 그림자 고양이, 빛의 정령 | 1c8fe6cb |
+| icons_v5.png | 4×4: 특성, 환생, 균열 포털, 균열 축복 / 몬스터 도감, 장비 도감, 업적 트로피, 칭호 / 시즌 패스, 신화 제작 모루, 동료 알, 동료 먹이 / 균열 저주, 균열 유물, 환생 정수, 왕관 메달 | 9213ea6e |

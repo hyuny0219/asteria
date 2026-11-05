@@ -241,6 +241,7 @@ export class Battle {
     this.tickDots();
     this.regen();
     this.heroAct();
+    this.petAct();
     this.enemiesAct();
     this.cleanupDying();
   }
@@ -280,6 +281,20 @@ export class Battle {
       }
       e.dots = e.dots.filter((d) => d.until > this.t);
     }
+  }
+
+  // 동료: a small fixed hit on the front enemy every few seconds (no gauge, no crit)
+  petAct() {
+    const pet = this.heroCfg.pet;
+    if (!pet || this.hero.dead) return;
+    if (this.petNextAt === undefined) this.petNextAt = this.t + pet.everyMs;
+    if (this.t < this.petNextAt) return;
+    const e = this.front();
+    if (!e || e.state === 'approach' || e.state === 'dying') return;
+    this.petNextAt = this.t + pet.everyMs;
+    const dmg = damageFormula(this.heroAtk(), pet.coef, e.defense, e.level, false, this.rng());
+    this.events.push({ type: 'petAttack', pet: pet.id, target: e.uid, x: e.x, t: this.t });
+    this.dealDamage(e, dmg, { crit: false, action: 'pet', skill: pet.id, ranged: true });
   }
 
   regen() {

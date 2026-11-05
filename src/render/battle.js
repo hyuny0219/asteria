@@ -8,7 +8,7 @@
 // images animated by transforms (squash, lean, lunge, flash, fade). These are not
 // frame-by-frame animations; see KNOWN_ISSUES.md.
 import { HERO_X } from '../core/combat.js';
-import { bgMeta, enemyMeta, heroFrames, loadImage, outlined, ready, scaledImage, spriteMeta } from './assets.js';
+import { bgMeta, enemyMeta, heroFrames, loadImage, outlined, petMeta, ready, scaledImage, spriteMeta } from './assets.js';
 import { fmt } from '../core/util.js';
 
 const LOGICAL_W = 390;
@@ -57,9 +57,10 @@ export class BattleRenderer {
       const show = s.damageNumbers === 'all' || (s.damageNumbers === 'crit' && ev.crit) || (s.damageNumbers === 'crit' && ev.by === 'enemy');
       const x = ev.by === 'hero' ? (ev.x ?? 220) : HERO_X;
       if (show) this.pushNumber({ x, y: ev.by === 'hero' ? 0.42 : 0.38, text: fmt(ev.dmg), crit: ev.crit, enemy: ev.by === 'enemy', heavy: ev.heavy, guarded: ev.guarded, born: now });
-      if (ev.by === 'hero' && ev.ranged && ev.action !== 'dot') this.pushFx({ kind: 'shot', x, born: now, dur: 180, crit: ev.crit });
+      if (ev.by === 'hero' && ev.action === 'pet') { this.pushFx({ kind: 'petshot', x, born: now, dur: 260 }); this.petHitAt = now; }
+      else if (ev.by === 'hero' && ev.ranged && ev.action !== 'dot') this.pushFx({ kind: 'shot', x, born: now, dur: 180, crit: ev.crit });
       // ranged basic attacks hit with the streak only (no sword arc on the target)
-      if (ev.by === 'hero' && ev.action !== 'dot' && !(ev.ranged && ev.action === 'attack')) this.pushFx({ kind: ev.action === 'ult' ? 'star' : ev.action === 'skill' ? 'arc2' : ev.action === 'counter' ? 'rose' : 'arc', x, born: now, dur: ev.action === 'ult' ? 520 : 200 });
+      if (ev.by === 'hero' && ev.action !== 'dot' && ev.action !== 'pet' && !(ev.ranged && ev.action === 'attack')) this.pushFx({ kind: ev.action === 'ult' ? 'star' : ev.action === 'skill' ? 'arc2' : ev.action === 'counter' ? 'rose' : 'arc', x, born: now, dur: ev.action === 'ult' ? 520 : 200 });
       if (ev.by === 'enemy' && ev.heavy) this.kick(3, 100);
     } else if (ev.type === 'miss') {
       this.pushNumber({ x: HERO_X, y: 0.38, text: '회피', miss: true, born: now });
@@ -110,6 +111,7 @@ export class BattleRenderer {
     for (const e of sorted) this.drawEnemy(e, battle, lerp(e.px, e.x) * sx, gy, s);
 
     this.drawHero(battle, HERO_X * sx, gy, branch, s, victory);
+    this.drawPet(battle, HERO_X * sx, gy, s, now);
 
     // fx & numbers
     this.drawFx(now, gy, sx, s);
@@ -159,6 +161,30 @@ export class BattleRenderer {
   spriteDims(m, extraScale = 1) {
     const f = this.fit * 0.5 * extraScale * this.figScale;   // runtime art is stored at 2x
     return { w: m.size[0] * f, h: m.size[1] * f, px: m.pivot[0] * f, py: m.pivot[1] * f, f };
+  }
+
+  // 동료: stands (or hovers) just ahead of the hero, bobbing; a small lunge on attack
+  drawPet(battle, hx, gy, s, now) {
+    const pet = battle.heroCfg && battle.heroCfg.pet;
+    this.petPos = null;
+    if (!pet) return;
+    const m = petMeta(pet.id);
+    if (!m) return;
+    const img = ready(m.file);
+    if (!img) { loadImage(m.file).catch(() => {}); return; }
+    const ctx = this.ctx;
+    const d = this.spriteDims(m);
+    const motion = !s.reduceMotion;
+    const bob = motion ? Math.sin(now / 420) * 3 : 0;
+    const lunge = motion && this.petHitAt && now - this.petHitAt < 220 ? 8 * Math.sin(((now - this.petHitAt) / 220) * Math.PI) : 0;
+    const x = hx + 62 * this.fit * this.figScale + lunge;
+    const y = gy - (m.flying ? 70 : 2) * this.fit * this.figScale + (m.flying ? bob : bob * 0.3);
+    const sc = scaledImage(img, d.w * this.dpr, d.h * this.dpr, m.file);
+    ctx.save();
+    ctx.globalAlpha = battle.hero.dead ? 0.5 : 1;
+    ctx.drawImage(sc, x - d.px, y - d.py, d.w, d.h);
+    ctx.restore();
+    this.petPos = { x: x + d.w * 0.25, y: y - d.h * 0.5 };
   }
 
   drawHero(battle, x, gy, branch, s, victory) {
@@ -342,6 +368,16 @@ export class BattleRenderer {
         ctx.globalAlpha = 1;
         ctx.strokeStyle = f.crit ? '#EDBD68' : '#C9D8FF'; ctx.lineWidth = f.crit ? 3 : 2;
         ctx.beginPath(); ctx.moveTo(Math.max(hx, head - 46), y); ctx.lineTo(head, y); ctx.stroke();
+      } else if (f.kind === 'petshot') {
+        // companion: a small glowing mote from the pet to the target
+        const pp = this.petPos || { x: (HERO_X - 30) * sx, y: gy - 90 * this.fit * this.figScale };
+        const q = Math.min(1, p * 1.4);
+        const mx = pp.x + (x - pp.x) * q, my = pp.y + (gy - 50 * this.fit * this.figScale - pp.y) * q;
+        ctx.globalAlpha = 1 - p * 0.5;
+        ctx.fillStyle = '#FFE6A8';
+        ctx.beginPath(); ctx.arc(mx, my, 4, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = 'rgba(255,230,168,0.6)'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(mx - (x - pp.x) * 0.08, my - (gy - pp.y) * 0.04); ctx.lineTo(mx, my); ctx.stroke();
       } else if (f.kind === 'charge') {
         ctx.strokeStyle = '#B79AF2'; ctx.lineWidth = 2;
         ctx.beginPath(); ctx.arc(x, gy - 70 * this.fit, (50 - 30 * p) * this.fit, 0, Math.PI * 2); ctx.stroke();

@@ -31,7 +31,7 @@
   "info": {
    "choices": [
     "b_regen",
-    "b_cdr",
+    "b_echo",
     "b_def"
    ]
   }
@@ -82,9 +82,9 @@
   "pass": true,
   "info": {
    "choices": [
-    "b_steal",
-    "b_evade",
-    "b_heal"
+    "b_glass",
+    "b_greed",
+    "b_crit"
    ]
   }
  },

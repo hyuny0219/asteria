@@ -117,6 +117,14 @@
   "generated/tier23_rogue_gpt.png": {
    "status": "GENERATED_BOARD",
    "note": "GPT-based tier-2/3: A t2, A t3, B t2, B t3; matte = Higgsfield background removal"
+  },
+  "generated/pets_6.png": {
+   "status": "GENERATED_BOARD",
+   "note": "6 companions, face right"
+  },
+  "generated/icons_v5.png": {
+   "status": "GENERATED_BOARD",
+   "note": "4x4 content emblems (V00–V15)"
   }
  },
  "monsters": {
@@ -11113,6 +11121,278 @@
    ],
    "status": "RUNTIME_ICON",
    "source": "handoff_v4/classes/nox_skills.png"
+  },
+  "V00": {
+   "id": "V00",
+   "name": "talents",
+   "file": "assets/runtime/skill_V00.webp",
+   "sourceRect": [
+    11,
+    22,
+    481,
+    481
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/icons_v5.png"
+  },
+  "V01": {
+   "id": "V01",
+   "name": "rebirth",
+   "file": "assets/runtime/skill_V01.webp",
+   "sourceRect": [
+    527,
+    26,
+    476,
+    476
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/icons_v5.png"
+  },
+  "V02": {
+   "id": "V02",
+   "name": "rift",
+   "file": "assets/runtime/skill_V02.webp",
+   "sourceRect": [
+    1035,
+    15,
+    489,
+    489
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/icons_v5.png"
+  },
+  "V03": {
+   "id": "V03",
+   "name": "blessing",
+   "file": "assets/runtime/skill_V03.webp",
+   "sourceRect": [
+    1541,
+    14,
+    484,
+    484
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/icons_v5.png"
+  },
+  "V04": {
+   "id": "V04",
+   "name": "codexMonster",
+   "file": "assets/runtime/skill_V04.webp",
+   "sourceRect": [
+    30,
+    542,
+    445,
+    445
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/icons_v5.png"
+  },
+  "V05": {
+   "id": "V05",
+   "name": "codexItem",
+   "file": "assets/runtime/skill_V05.webp",
+   "sourceRect": [
+    526,
+    528,
+    472,
+    472
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/icons_v5.png"
+  },
+  "V06": {
+   "id": "V06",
+   "name": "achievement",
+   "file": "assets/runtime/skill_V06.webp",
+   "sourceRect": [
+    1052,
+    535,
+    452,
+    452
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/icons_v5.png"
+  },
+  "V07": {
+   "id": "V07",
+   "name": "title",
+   "file": "assets/runtime/skill_V07.webp",
+   "sourceRect": [
+    1559,
+    526,
+    460,
+    460
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/icons_v5.png"
+  },
+  "V08": {
+   "id": "V08",
+   "name": "pass",
+   "file": "assets/runtime/skill_V08.webp",
+   "sourceRect": [
+    8,
+    1046,
+    489,
+    489
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/icons_v5.png"
+  },
+  "V09": {
+   "id": "V09",
+   "name": "craft",
+   "file": "assets/runtime/skill_V09.webp",
+   "sourceRect": [
+    525,
+    1054,
+    481,
+    481
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/icons_v5.png"
+  },
+  "V10": {
+   "id": "V10",
+   "name": "petEgg",
+   "file": "assets/runtime/skill_V10.webp",
+   "sourceRect": [
+    1038,
+    1029,
+    483,
+    483
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/icons_v5.png"
+  },
+  "V11": {
+   "id": "V11",
+   "name": "petFood",
+   "file": "assets/runtime/skill_V11.webp",
+   "sourceRect": [
+    1568,
+    1052,
+    446,
+    446
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/icons_v5.png"
+  },
+  "V12": {
+   "id": "V12",
+   "name": "curse",
+   "file": "assets/runtime/skill_V12.webp",
+   "sourceRect": [
+    12,
+    1536,
+    479,
+    479
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/icons_v5.png"
+  },
+  "V13": {
+   "id": "V13",
+   "name": "relic",
+   "file": "assets/runtime/skill_V13.webp",
+   "sourceRect": [
+    524,
+    1536,
+    481,
+    481
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/icons_v5.png"
+  },
+  "V14": {
+   "id": "V14",
+   "name": "essence",
+   "file": "assets/runtime/skill_V14.webp",
+   "sourceRect": [
+    1048,
+    1546,
+    458,
+    458
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/icons_v5.png"
+  },
+  "V15": {
+   "id": "V15",
+   "name": "crown",
+   "file": "assets/runtime/skill_V15.webp",
+   "sourceRect": [
+    1559,
+    1546,
+    463,
+    463
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/icons_v5.png"
   }
  },
  "backgrounds": {
@@ -11576,6 +11856,454 @@
     310
    ],
    "status": "RUNTIME_STATIC_SPRITE"
+  }
+ },
+ "pets": {
+  "P01": {
+   "id": "P01",
+   "name": "별여우",
+   "displayBodyPx": 56,
+   "file": "assets/runtime/pet_P01.webp",
+   "sourceRect": [
+    0,
+    0,
+    852,
+    816
+   ],
+   "trimOffset": [
+    15,
+    112
+   ],
+   "size": [
+    166,
+    116
+   ],
+   "scale": 0.2414,
+   "bodyHeightPx": 112.0,
+   "pivot": [
+    97.7,
+    113.7
+   ],
+   "hitbox": [
+    11.9,
+    8.4,
+    142.5,
+    98.6
+   ],
+   "flying": false,
+   "mirrored": false,
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "droppedBleedComponents": [
+    15,
+    3,
+    12,
+    10,
+    4,
+    3,
+    1,
+    4,
+    3,
+    1,
+    1,
+    4,
+    1,
+    1,
+    3,
+    1,
+    2,
+    1,
+    2,
+    2,
+    1
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "generated/pets_6.png"
+  },
+  "P02": {
+   "id": "P02",
+   "name": "불씨 새끼용",
+   "displayBodyPx": 52,
+   "file": "assets/runtime/pet_P02.webp",
+   "sourceRect": [
+    512,
+    0,
+    1022,
+    816
+   ],
+   "trimOffset": [
+    762,
+    135
+   ],
+   "size": [
+    128,
+    108
+   ],
+   "scale": 0.2353,
+   "bodyHeightPx": 104.0,
+   "pivot": [
+    64.2,
+    105.6
+   ],
+   "hitbox": [
+    9.5,
+    7.9,
+    108.9,
+    91.5
+   ],
+   "flying": true,
+   "mirrored": false,
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "droppedBleedComponents": [
+    19,
+    68,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    41,
+    2,
+    18,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "generated/pets_6.png"
+  },
+  "P03": {
+   "id": "P03",
+   "name": "서리 올빼미",
+   "displayBodyPx": 50,
+   "file": "assets/runtime/pet_P03.webp",
+   "sourceRect": [
+    1194,
+    0,
+    854,
+    816
+   ],
+   "trimOffset": [
+    1408,
+    87
+   ],
+   "size": [
+    103,
+    103
+   ],
+   "scale": 0.202,
+   "bodyHeightPx": 100.0,
+   "pivot": [
+    58.1,
+    101.6
+   ],
+   "hitbox": [
+    7.4,
+    7.6,
+    87.5,
+    88.0
+   ],
+   "flying": true,
+   "mirrored": false,
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "droppedBleedComponents": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    3,
+    6,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
+    2,
+    1,
+    1,
+    7,
+    1,
+    2,
+    3,
+    4,
+    1,
+    1,
+    4
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "generated/pets_6.png"
+  },
+  "P04": {
+   "id": "P04",
+   "name": "숲정령 사슴",
+   "displayBodyPx": 60,
+   "file": "assets/runtime/pet_P04.webp",
+   "sourceRect": [
+    0,
+    544,
+    852,
+    816
+   ],
+   "trimOffset": [
+    99,
+    626
+   ],
+   "size": [
+    89,
+    124
+   ],
+   "scale": 0.1887,
+   "bodyHeightPx": 120.0,
+   "pivot": [
+    50.6,
+    121.7
+   ],
+   "hitbox": [
+    6.8,
+    8.9,
+    75.4,
+    105.6
+   ],
+   "flying": false,
+   "mirrored": false,
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "droppedBleedComponents": [
+    3,
+    1,
+    1,
+    2,
+    1,
+    4,
+    1,
+    1,
+    1317,
+    10,
+    1,
+    1,
+    731,
+    3,
+    1,
+    1,
+    2,
+    93,
+    1,
+    4,
+    4,
+    1,
+    1,
+    2,
+    8,
+    2,
+    1,
+    1
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "generated/pets_6.png"
+  },
+  "P05": {
+   "id": "P05",
+   "name": "그림자 고양이",
+   "displayBodyPx": 48,
+   "file": "assets/runtime/pet_P05.webp",
+   "sourceRect": [
+    512,
+    544,
+    1022,
+    816
+   ],
+   "trimOffset": [
+    712,
+    727
+   ],
+   "size": [
+    117,
+    99
+   ],
+   "scale": 0.1905,
+   "bodyHeightPx": 96.0,
+   "pivot": [
+    65.9,
+    97.3
+   ],
+   "hitbox": [
+    8.5,
+    7.1,
+    99.4,
+    84.5
+   ],
+   "flying": false,
+   "mirrored": false,
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "droppedBleedComponents": [
+    1,
+    6,
+    1,
+    14,
+    4,
+    51,
+    1,
+    1,
+    63,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    35,
+    1,
+    28,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    9,
+    1,
+    1,
+    4,
+    1,
+    1,
+    7,
+    1,
+    3,
+    1,
+    1,
+    1,
+    1,
+    24,
+    1,
+    4,
+    1,
+    1,
+    6,
+    1,
+    1,
+    2,
+    1,
+    81,
+    1
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "generated/pets_6.png"
+  },
+  "P06": {
+   "id": "P06",
+   "name": "빛의 정령",
+   "displayBodyPx": 50,
+   "file": "assets/runtime/pet_P06.webp",
+   "sourceRect": [
+    1194,
+    544,
+    854,
+    816
+   ],
+   "trimOffset": [
+    1461,
+    711
+   ],
+   "size": [
+    88,
+    104
+   ],
+   "scale": 0.1855,
+   "bodyHeightPx": 100.0,
+   "pivot": [
+    44.6,
+    101.7
+   ],
+   "hitbox": [
+    6.8,
+    7.7,
+    74.8,
+    88.0
+   ],
+   "flying": true,
+   "mirrored": false,
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "droppedBleedComponents": [
+    4,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    4,
+    1,
+    4,
+    1,
+    1,
+    1,
+    212,
+    22,
+    1,
+    25,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "generated/pets_6.png"
   }
  }
 }

@@ -10,6 +10,7 @@ import * as S from './screens.js';
 import * as V4 from './v4.js';
 import { sfx } from '../platform/audio.js';
 import * as FS from './fullscreen.js';
+import { titleName } from '../core/meta.js';
 import * as V5 from './v5.js';
 
 export const TABS = [
@@ -351,7 +352,8 @@ export class App {
     const E = this.el;
     const p = s.player;
     const region = REGION_BY_ID[s.progression.region];
-    E.name.textContent = s.profile.nickname || '모험가';
+    const ttl = titleName(s);
+    E.name.textContent = (s.profile.nickname || '모험가') + (ttl ? ` 「${ttl}」` : '');
     const faceSrc = classPortrait(p.cls || 'warrior', 'face');
     if (E.face.getAttribute('src') !== faceSrc) E.face.setAttribute('src', faceSrc);
     const kvSrc = classPortrait(p.cls || 'warrior', 'kv');

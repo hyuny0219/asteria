@@ -239,6 +239,7 @@ export function nextGoal(state) {
     const todo = cl.items.find((i) => !i.ok && i.id !== 'level');
     if (todo) return { id: 'promo', text: `${nt}차 승급 준비 · ${todo.label}`, action: todo.go || 'quest', progress: todo.progress };
   }
+  if (state.pets && state.pets.eggs > 0) return { id: 'pet', text: `정령 알 ${state.pets.eggs}개 부화하기`, action: 'pets' };
   if (state.dungeon.tickets > 0 && dungeonOpen(state)) return { id: 'dungeon', text: '별의 채석장에서 강화 광석 얻기', action: 'dungeon' };
   if (state.player.level < CAP) return { id: 'level', text: `레벨 ${state.player.level + 1} 달성`, action: null };
   return { id: 'max', text: '최고 레벨 · 레이드와 시련의 탑 기록 갱신', action: 'dungeon' };

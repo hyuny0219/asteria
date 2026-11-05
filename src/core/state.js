@@ -3,8 +3,9 @@ import { BALANCE } from '../data/balance.js';
 import { CLASS_SKILLS } from '../data/content.js';
 import { kstDayIndex } from './util.js';
 import { refreshLook } from './items.js';
+import { defaultMeta } from './meta.js';
 
-export const SCHEMA_VERSION = 4;
+export const SCHEMA_VERSION = 5;
 
 export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0, cls = 'warrior') {
   return {
@@ -24,6 +25,8 @@ export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0, cls = 'wa
     talents: { presets: [{}, {}], active: 0, autoSwitch: false, auto: false, respecDay: null, respecUsed: 0 },
     rebirth: { count: 0, essence: 0, totalEssence: 0, levels: { atk: 0, hp: 0, gold: 0, exp: 0 }, lastAt: null },
     rift: { day: null, runsToday: 0, best: 0, runs: 0, run: null },
+    // 도감 · 업적 · 칭호 · 시즌 패스 · 동료 (schema 5) — see meta.js
+    ...defaultMeta(),
     profile: { nickname: '' },
     wallet: { gold: 0, ore: 0, token: 0, gem: 0, eqTicket: 0, skTicket: 0, awakenStone: 0, starShard: 0, classTicket: 0 },
     shop: { buys: {} },
@@ -136,6 +139,20 @@ const MIGRATIONS = {
   3: (s) => {
     s.schemaVersion = 4;
     s.player.peakLevel = Math.max(s.player.peakLevel || 1, s.player.level);
+    return s;
+  },
+  // 4 → 5: 도감/업적/칭호/패스/동료. Existing items fill the equipment codex; past boss
+  // clears count once in the boss codex. Achievements are measured from counters, so
+  // they become claimable right away (no retroactive auto-grant).
+  4: (s) => {
+    s.schemaVersion = 5;
+    const m = defaultMeta();
+    for (const k of Object.keys(m)) if (!s[k]) s[k] = m[k];
+    for (const it of [...(s.inventory || []), ...(s.overflow || [])]) {
+      const slot = it.slot === 'ring1' || it.slot === 'ring2' ? 'ring' : it.slot;
+      if (slot && it.rarity) s.codex.items[`${slot}:${it.rarity}`] = true;
+    }
+    for (const b of Object.keys(s.progression.bossCleared || {})) s.codex.kills[b] = Math.max(s.codex.kills[b] || 0, 1);
     return s;
   },
 };

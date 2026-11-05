@@ -408,3 +408,41 @@ input.text { width: 100%; min-height: 36px; background: var(--panel); border: 1p
 .bless.r-common { border-color: var(--r-common); } .bless.r-common .br { color: var(--r-common); }
 .bless.r-rare { border-color: var(--r-rare); } .bless.r-rare .br { color: var(--r-rare); }
 .bless.r-epic { border-color: #B98BFF; } .bless.r-epic .br { color: #B98BFF; }
+/* v5 part 2: codex / pass / pets / craft */
+.tile-em { width: 30px; height: 30px; border-radius: 7px; }
+.cur-ico { width: 20px; height: 20px; border-radius: 4px; vertical-align: middle; }
+.codex-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-top: 8px; }
+.codex-cell { border: 1px solid var(--border); border-radius: 8px; background: var(--panel); padding: 4px; display: flex; flex-direction: column; align-items: center; text-align: center; line-height: 1.25; min-width: 0; }
+.codex-cell .cimg { width: 56px; height: 56px; object-fit: contain; display: block; }
+.codex-cell b { font-size: 13px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.codex-cell .stars { color: var(--gold); font-size: 12px; letter-spacing: 1px; }
+.codex-cell .muted, .codex-cell .cb { font-size: 12px; }
+.codex-cell .cb { color: var(--muted); }
+.codex-cell.unseen .cimg { filter: brightness(0) opacity(.45); }
+.codex-cell.boss { border-color: rgba(216,182,117,.5); }
+.codex-table { margin-top: 8px; }
+.ct-row { display: grid; grid-template-columns: 54px repeat(6, minmax(0, 1fr)); gap: 2px; align-items: center; min-height: 30px; border-bottom: 1px solid var(--border); font-size: 13px; }
+.ct-row.head { font-weight: 800; }
+.ct-cell { text-align: center; color: var(--muted); }
+.ct-cell.got { color: var(--gold); font-weight: 800; }
+.pass-track { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; margin-top: 8px; }
+.pass-cell { position: relative; border: 1px solid var(--border); border-radius: 8px; background: var(--panel); padding: 2px 0 4px; display: flex; flex-direction: column; align-items: center; min-width: 0; cursor: default; color: inherit; }
+.pass-cell .lv { font-size: 12px; color: var(--muted); }
+.pass-cell img { width: 30px; height: 30px; border-radius: 6px; }
+.pass-cell b { font-size: 13px; }
+.pass-cell .tt { position: absolute; top: 1px; right: 2px; font-size: 11px; color: var(--gold); }
+.pass-cell.can { border: 2px solid var(--gold); cursor: pointer; }
+.pass-cell.big { background: #2a2133; }
+.pass-cell.got { opacity: .55; }
+.pass-cell .stamp { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--ok); font-weight: 900; text-shadow: 0 1px 3px #000; }
+.pet-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin: 8px 0; }
+.pet-card { position: relative; border: 1px solid var(--border); border-radius: 8px; background: var(--panel); padding: 4px; display: flex; flex-direction: column; align-items: center; min-width: 0; cursor: pointer; color: inherit; line-height: 1.25; }
+.pet-card img { width: 64px; height: 56px; object-fit: contain; }
+.pet-card b { font-size: 13px; }
+.pet-card .muted { font-size: 12px; }
+.pet-card.pick { border: 2px solid var(--gold); }
+.pet-card.unseen img { filter: brightness(0) opacity(.45); }
+.pet-card .pending-tag { top: 2px; left: 2px; bottom: auto; font-size: 11px; color: var(--gold); }
+.hatch-img { width: 140px; height: 120px; object-fit: contain; display: block; margin: 0 auto 6px; }
+.kv.short b { color: #FFB7C6; }
+.tabs.tabs-wrap { flex-wrap: wrap; overflow-x: visible; row-gap: 6px; }

@@ -1,5 +1,5 @@
 {
- "startedAt": "2026-11-05T11:13:57.451Z",
+ "startedAt": "2026-11-05T11:33:07.489Z",
  "base": "http://127.0.0.1:8140/",
  "viewports": [
   [
@@ -657,6 +657,158 @@
     "tower",
     "rift",
     "raid"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "codex",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "몬스터 도감",
+   "file": "codex_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid",
+    "codex",
+    "codex"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "achievements",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "업적",
+   "file": "achievements_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid",
+    "achievements",
+    "achievements"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "titles",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "칭호",
+   "file": "titles_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid",
+    "achievements",
+    "titles"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "pass",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "무료 시즌 패스",
+   "file": "pass_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid",
+    "pass",
+    "pass"
+   ],
+   "tiny": [
+    "칭호"
+   ],
+   "errors": []
+  },
+  {
+   "id": "pets",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "동료",
+   "file": "pets_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid",
+    "pets",
+    "pets"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "craft",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "신화 제작",
+   "file": "craft_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid",
+    "craft",
+    "craft"
    ],
    "tiny": [],
    "errors": []
@@ -1573,6 +1725,158 @@
    "errors": []
   },
   {
+   "id": "codex",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "몬스터 도감",
+   "file": "codex_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid",
+    "codex",
+    "codex"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "achievements",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "업적",
+   "file": "achievements_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid",
+    "achievements",
+    "achievements"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "titles",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "칭호",
+   "file": "titles_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid",
+    "achievements",
+    "titles"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "pass",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "무료 시즌 패스",
+   "file": "pass_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid",
+    "pass",
+    "pass"
+   ],
+   "tiny": [
+    "칭호"
+   ],
+   "errors": []
+  },
+  {
+   "id": "pets",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "동료",
+   "file": "pets_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid",
+    "pets",
+    "pets"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "craft",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "신화 제작",
+   "file": "craft_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid",
+    "craft",
+    "craft"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
    "id": "classpick",
    "viewport": "360x700",
    "pass": true,
@@ -2477,6 +2781,158 @@
    "errors": []
   },
   {
+   "id": "codex",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "몬스터 도감",
+   "file": "codex_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid",
+    "codex",
+    "codex"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "achievements",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "업적",
+   "file": "achievements_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid",
+    "achievements",
+    "achievements"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "titles",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "칭호",
+   "file": "titles_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid",
+    "achievements",
+    "titles"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "pass",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "무료 시즌 패스",
+   "file": "pass_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid",
+    "pass",
+    "pass"
+   ],
+   "tiny": [
+    "칭호"
+   ],
+   "errors": []
+  },
+  {
+   "id": "pets",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "동료",
+   "file": "pets_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid",
+    "pets",
+    "pets"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "craft",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "신화 제작",
+   "file": "craft_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid",
+    "craft",
+    "craft"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
    "id": "classpick",
    "viewport": "412x915",
    "pass": true,
@@ -2747,8 +3203,8 @@
    "name": "reload keeps the same pending claim",
    "pass": true,
    "detail": {
-    "first": "claim_mw3g8u7n_1uvp5xl",
-    "after": "claim_mw3g8u7n_1uvp5xl"
+    "first": "claim_mw3gxno5_2fve11",
+    "after": "claim_mw3gxno5_2fve11"
    }
   },
   {
@@ -2817,10 +3273,10 @@
    "name": "hidden → visible does not replay ticks",
    "pass": true,
    "detail": {
-    "k0": 2,
+    "k0": 1,
     "k1": {
-     "kills": 2,
-     "acc": 0,
+     "kills": 1,
+     "acc": 16.699999999999932,
      "mode": "FARM"
     }
    }
@@ -2859,11 +3315,11 @@
   }
  ],
  "errors": [],
- "finishedAt": "2026-11-05T11:15:45.949Z",
+ "finishedAt": "2026-11-05T11:35:03.541Z",
  "summary": {
-  "screenChecks": 123,
-  "screenPass": 123,
-  "distinctScreens": 35,
+  "screenChecks": 141,
+  "screenPass": 141,
+  "distinctScreens": 41,
   "ids": [
    "title",
    "main",
@@ -2891,6 +3347,12 @@
    "talents",
    "rebirth",
    "rift",
+   "codex",
+   "achievements",
+   "titles",
+   "pass",
+   "pets",
+   "craft",
    "classpick",
    "statpoints",
    "runes",

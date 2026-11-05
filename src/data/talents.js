@@ -99,4 +99,4 @@ export const TALENT_RULES = Object.freeze({
   presets: 2,
 });
 // Icon placeholders: swap when the talent emblem board arrives (keyed by tree id).
-export const TALENT_ICONS = Object.freeze({ knight: 'S1', berserker: 'S4', wizard: 'K07', warlock: 'K04', ranger: 'K08', hunter: 'K12', assassin: 'K16', trickster: 'K22', common: 'K30' });
+export const TALENT_ICONS = Object.freeze({ knight: 'S1', berserker: 'S4', wizard: 'K07', warlock: 'K04', ranger: 'K08', hunter: 'K12', assassin: 'K16', trickster: 'K22', common: 'V00' });

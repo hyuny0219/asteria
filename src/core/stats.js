@@ -9,6 +9,7 @@ import { BRANCHES, CLASSES, RUNES, SETS, SET_SLOTS } from '../data/content.js';
 import { itemOptions, itemStats } from './items.js';
 import { talentEffects } from './talents.js';
 import { rebirthMultipliers, farmMultipliers as rebirthFarm } from './rebirth.js';
+import { metaBonus } from './meta.js';
 
 const P = BALANCE.player;
 const U = BALANCE.upgrade;
@@ -83,6 +84,8 @@ export function playerStats(state, opts = {}) {
     const st = RUNES[id].stat;
     add({ [st]: v });
   }
+  // 도감 · 칭호 · 동료 오라 (small permanent bonuses)
+  add(metaBonus(state));
   // talents (preset), rift blessings/curse
   const tal = state.talents ? talentEffects(state, opts.preset !== undefined ? opts.preset : state.talents.active) : { pct: {}, caps: {} };
   add(tal.pct);

@@ -224,6 +224,27 @@ async function screensAt(browser, vp) {
   await closeAll(page);
   await page.evaluate(() => { window.__asteria.app.setTab('dungeon'); const r = document.querySelector('[data-screen="rift"]'); if (r) r.scrollIntoView(); });
   await check(page, 'rift', vp, '균열 카드');
+  // v5 part 2: 도감 / 업적·칭호 / 시즌 패스 / 동료 / 신화 제작
+  const v6 = (fn, ...args) => page.evaluate(async ([fn, args]) => { const V = await import('./src/ui/v6.js'); V[fn](window.__asteria.app, ...args); }, [fn, args]);
+  await page.evaluate(async () => { await window.__qaTx((s) => { s.player.level = Math.max(s.player.level, 90); s.codex.kills.M01 = 150; s.codex.kills.B01 = 2; s.pets.eggs = Math.max(s.pets.eggs, 2); s.pets.food = 100; s.progression.counters.bossWins = Math.max(1, s.progression.counters.bossWins || 0); return { ok: true }; }); });
+  await v6('openCodex');
+  await check(page, 'codex', vp, '몬스터 도감');
+  await closeAll(page);
+  await v6('openAchievements');
+  await check(page, 'achievements', vp, '업적');
+  await closeAll(page);
+  await v6('openAchievements', 'title');
+  await check(page, 'titles', vp, '칭호');
+  await closeAll(page);
+  await v6('openPass');
+  await check(page, 'pass', vp, '무료 시즌 패스');
+  await closeAll(page);
+  await v6('openPets');
+  await check(page, 'pets', vp, '동료');
+  await closeAll(page);
+  await v6('openCraft');
+  await check(page, 'craft', vp, '신화 제작');
+  await closeAll(page);
   await v4('openClassPicker');
   await check(page, 'classpick', vp, '클래스 선택 4종');
   await closeAll(page);

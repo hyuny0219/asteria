@@ -13,7 +13,7 @@ import { button, h, img, openModal, toast } from './dom.js';
 import { fail, rewardTiles } from './screens.js';
 
 // placeholder icon ids (swap when the v5 emblem board lands)
-export const V5_ICONS = Object.freeze({ talents: 'K30', rebirth: 'S5', rift: 'K35' });
+export const V5_ICONS = Object.freeze({ talents: 'V00', rebirth: 'V01', rift: 'V02', blessing: 'V03', curse: 'V12', essence: 'V14' });
 const ico = (id) => { try { return img(skillIcon(id), '', 'emblem'); } catch { return null; } };
 const curIcon = (k) => img(itemIcon(CURRENCY_ICONS[k]), '');
 const RNAME = { common: '일반', rare: '희귀', epic: '영웅' };
@@ -173,7 +173,8 @@ function showRiftReward(app, r) {
   if (rw.ore) tiles.push({ icon: itemIcon(CURRENCY_ICONS.ore), value: '+' + rw.ore, label: '강화 광석' });
   if (rw.gold) tiles.push({ icon: itemIcon(CURRENCY_ICONS.gold), value: '+' + fmt(rw.gold), label: '골드' });
   if (rw.books) tiles.push({ icon: itemIcon(CURRENCY_ICONS.skillBook || CURRENCY_ICONS.goldChest), value: '+' + rw.books, label: '스킬북' });
-  if (rw.essence) tiles.push({ icon: skillIcon(V5_ICONS.rebirth), value: '+' + rw.essence, label: '환생 정수' });
+  if (rw.essence) tiles.push({ icon: skillIcon(V5_ICONS.essence), value: '+' + rw.essence, label: '환생 정수' });
+  if (r.petEgg) tiles.push({ icon: skillIcon('V10'), value: '+' + r.petEgg, label: '정령 알' });
   const m = openModal({ id: 'riftResult', title: `균열 ${r.cleared}층 도달`, kind: 'center', body: h('div', { dataset: { screen: 'riftResult' } },
     h('p', null, r.cleared ? `축복 ${r.blessings.length}개와 함께 ${r.cleared}층까지 내려갔어요.` : '첫 층을 넘지 못했어요. 성장하고 다시 도전해요.'),
     tiles.length ? rewardTiles(tiles) : null), actions: [button('확인', { cls: 'btn btn-primary', onClick: () => { m.close(); app.setTab('dungeon'); } })] });
@@ -222,8 +223,8 @@ export function v5Tiles(app) {
   const s = app.state;
   const out = [];
   const open = T.talentsOpen(s);
-  out.push({ id: 'talents', ic: 'star', t: '특성', s: open ? `남은 포인트 ${T.pointsFree(s)}` : '1차 승급 후', dot: open && T.pointsFree(s) > 0 && !s.talents.auto, on: () => openTalents(app) });
-  out.push({ id: 'rebirth', ic: 'growth', t: '환생', s: s.rebirth.count ? `${s.rebirth.count}회 · 정수 ${s.rebirth.essence}` : 'Lv 100부터', dot: RB.canRebirth(s), on: () => openRebirth(app) });
+  out.push({ id: 'talents', ic: 'star', em: V5_ICONS.talents, t: '특성', s: open ? `남은 포인트 ${T.pointsFree(s)}` : '1차 승급 후', dot: open && T.pointsFree(s) > 0 && !s.talents.auto, on: () => openTalents(app) });
+  out.push({ id: 'rebirth', ic: 'growth', em: V5_ICONS.rebirth, t: '환생', s: s.rebirth.count ? `${s.rebirth.count}회 · 정수 ${s.rebirth.essence}` : 'Lv 100부터', dot: RB.canRebirth(s), on: () => openRebirth(app) });
   return out;
 }
 export const riftDot = (s) => RF.riftOpen(s) && (!!(s.rift.run && s.rift.run.choices) || RF.runsLeft(s, Date.now()) > 0);

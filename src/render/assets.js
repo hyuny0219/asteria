@@ -61,6 +61,8 @@ export function classPortrait(cls, kind) {
   if (art && meta.portraits[art[kind]]) return meta.portraits[art[kind]].file;
   return meta.portraits[kind === 'face' ? 'serin_face' : 'serin_key'].file;
 }
+export const petMeta = (id) => (meta.pets ? meta.pets[id] : null) || null;
+export const petImage = (id) => (meta.pets && meta.pets[id] ? meta.pets[id].file : null);
 export function enemyMeta(id) { return meta.monsters[id] || meta.bosses[id] || null; }
 export function bgMeta(id) { return meta.backgrounds[id]; }
 export const itemIcon = (iconId) => meta.items[iconId].file;
@@ -76,7 +78,7 @@ export function promoFrame(branch, tier = 1) { const k = promoKey(branch, tier);
 // Transparent full figure for promotion screens (portraits mirror the hero entries).
 export function promoPortrait(branch, tier = 1) { const k = promoKey(branch, tier); return k && meta.portraits[k] ? meta.portraits[k].file : null; }
 
-export async function preloadFor({ region, boss, branch, cls = 'warrior', tier = 1, bg = null, monsters = MONSTERS, bosses = BOSSES }) {
+export async function preloadFor({ region, boss, branch, cls = 'warrior', tier = 1, bg = null, monsters = MONSTERS, bosses = BOSSES, pet = null }) {
   const art = CLASSES[cls] && CLASSES[cls].art;
   // Serin's 8 poses (also used by the instructor projection) + this class's figure
   const list = Object.entries(meta.hero).filter(([k]) => !k.startsWith('promo_') && !k.startsWith('cls_') && !k.startsWith('pose_')).map(([, f]) => f.file);
@@ -91,6 +93,7 @@ export async function preloadFor({ region, boss, branch, cls = 'warrior', tier =
     list.push(spriteFile(bosses ? bosses[region.boss] : { id: region.boss }));
   }
   if (boss) list.push(spriteFile(bosses ? bosses[boss] : { id: boss }));
+  if (pet && meta.pets && meta.pets[pet]) list.push(meta.pets[pet].file);
   if (bg && meta.backgrounds[bg]) list.push(meta.backgrounds[bg].file);
   await Promise.all(list.filter(Boolean).map(loadImage));
 }

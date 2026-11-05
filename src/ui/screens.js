@@ -5,6 +5,7 @@ import { STAT_KEYS, STAT_NAMES } from '../data/content.js';
 import { BOSSES, BRANCHES, CLASSES, CURRENCY_ICONS, OPTION_NAMES, REGIONS, REGION_BY_ID, SETS, SKILLS, SLOT_NAMES, RARITY, branchesOf, equipSlotFor, waveLevel } from '../data/content.js';
 import * as V4 from './v4.js';
 import * as V5 from './v5.js';
+import * as V6 from './v6.js';
 import { MONSTERS } from '../data/content.js';
 const MONSTERS_NAME = (id) => (MONSTERS[id] ? MONSTERS[id].name : id);
 import { classPortrait, itemIcon, portrait, skillIcon, spriteMeta } from '../render/assets.js';
@@ -57,6 +58,9 @@ export function go(app, action) {
   if (action === 'tower' || action.startsWith('dungeon:')) return app.setTab('dungeon');
   if (action === 'gacha') return V4.openGacha(app);
   if (action === 'missions') return V4.openMissions(app);
+  if (action === 'pets') return V6.openPets(app);
+  if (action === 'pass') return V6.openPass(app);
+  if (action === 'achievements') return V6.openAchievements(app);
   if (action === 'farm') return app.setTab('growth');
   if (action === 'mine') return openWorld(app, 'mine');
   if (action.startsWith('boss:')) return openBoss(app, action.slice(5));
@@ -430,7 +434,7 @@ export function menuTiles(app) {
   const tier = prog.tierOf(s);
   const cl = tier < 3 ? prog.promotionChecklist(s) : null;
   const promoHot = !!cl && (cl.canChoose || cl.canTrial || cl.canPromote);
-  const extra = [...V4.v4Tiles(app), ...V5.v5Tiles(app)];
+  const extra = [...V4.v4Tiles(app), ...V5.v5Tiles(app), ...V6.v6Tiles(app)];
   const att = attendanceStatus(s, Date.now());
   return [
     ...extra,
@@ -452,7 +456,7 @@ export function menuPanel(app) {
   const grid = h('div', { class: 'tiles' });
   for (const t of menuTiles(app)) {
     grid.appendChild(h('button', { type: 'button', class: 'tile' + (t.dot ? ' hot' : ''), dataset: { key: 'tile-' + t.id }, 'aria-label': t.t + (t.dot ? ' (할 일 있음)' : ''), onClick: t.on },
-      icon(t.ic, 24), h('span', { class: 't' }, t.t), h('span', { class: 's' }, t.s), t.dot ? h('span', { class: 'dot', 'aria-hidden': 'true' }) : null));
+      t.em ? img(skillIcon(t.em), '', 'tile-em') : icon(t.ic, 24), h('span', { class: 't' }, t.t), h('span', { class: 's' }, t.s), t.dot ? h('span', { class: 'dot', 'aria-hidden': 'true' }) : null));
   }
   sc.appendChild(grid);
   root.appendChild(sc);
@@ -547,6 +551,7 @@ export function openResult(app, r) {
     if (r.ore) tiles.push({ icon: itemIcon(CURRENCY_ICONS.ore), value: '+' + r.ore, label: '강화 광석' });
     if (r.gem) tiles.push({ icon: itemIcon(CURRENCY_ICONS.gem), value: '+' + r.gem, label: '보석' });
     if (r.starShard) tiles.push({ icon: itemIcon(CURRENCY_ICONS.starShard), value: '+' + r.starShard, label: '별의 파편' });
+    if (r.petEgg) tiles.push({ icon: skillIcon('V10'), value: '+' + r.petEgg, label: '정령 알' });
     tiles.push(...itemRewards(r.items || []));
     if (app.state.settings.sound) sfx('bell');
     const actions = [];

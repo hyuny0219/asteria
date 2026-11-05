@@ -29,6 +29,8 @@ import * as gacha from './gacha.js';
 import * as missions from './missions.js';
 import * as tower from './tower.js';
 import * as raid from './raid.js';
+import * as meta from './meta.js';
+import { PASS } from '../data/meta.js';
 import { deepClone, makeRng, uid } from './util.js';
 
 const TICK = BALANCE.combat.tickMs;
@@ -190,7 +192,7 @@ export class Game {
     const cls = s.player.cls || 'warrior';
     const t = s.talents;
     const preset = opts.session && t && t.autoSwitch ? 1 : (t ? t.active : 0);
-    return { stats: playerStats(s, { preset, rift: opts.rift || null }), skills: s.skills, branch: s.player.branch, cls, tier: prog.tierOf(s), ult: CLASS_SKILLS[cls].ult, range: CLASSES[cls].range, skillLevel: (id) => prog.skillLevel(s, id) };
+    return { stats: playerStats(s, { preset, rift: opts.rift || null }), pet: s.pets ? meta.petPower(s) : null, skills: s.skills, branch: s.player.branch, cls, tier: prog.tierOf(s), ult: CLASS_SKILLS[cls].ult, range: CLASSES[cls].range, skillLevel: (id) => prog.skillLevel(s, id) };
   }
   syncHero() {
     if (this.farm) this.farm.updateStats(this.heroCfg({}));
@@ -267,6 +269,8 @@ export class Game {
       const gp = (1 + (pst.goldPct || 0)) * pst.rebirth.gold;
       r.gold = Math.floor(r.gold * mul.gold * gp); r.exp = Math.floor(r.exp * mul.exp * (1 + (pst.expPct || 0)) * pst.rebirth.exp);
       missions.track(s, 'kills', 1, this.now());
+      meta.trackKill(s, e.id);
+      meta.trackPassKill(s, this.now());
       if (e.fieldBoss) { s.wallet.gem += 20; s.progression.counters.fieldBosses++; r.gem = 20; }
       s.wallet.gold += r.gold;
       const expRes = prog.gainExp(s, r.exp);
@@ -436,6 +440,8 @@ export class Game {
         const res = { ok: true, win, bossId: sess.bossId, timeSec: Math.round(ev.t / 1000), reason: ev.reason };
         if (!win) { s.progression.counters.bossLosses++; return res; }
         s.progression.counters.bossWins++;
+        meta.trackKill(s, sess.bossId);
+        meta.addPassXp(s, PASS.xp.boss, this.now());
         const b = BOSSES[sess.bossId];
         const rw = killRewards(b.level, { boss: true });
         s.wallet.gold += rw.gold;
@@ -456,6 +462,7 @@ export class Game {
           s.wallet.ore += 30 * (order + 1);
           res.ore = 30 * (order + 1);
           s.wallet.gem += 100; res.gem = 100;
+          s.pets.eggs += 1; res.petEgg = 1;
           if (sess.bossId === 'B09') { s.wallet.starShard += 1; res.starShard = 1; }
         } else {
           // repeat: one uncommon set piece guaranteed + the boss table (no mythic outside the raid)
@@ -474,9 +481,16 @@ export class Game {
         return { ...fr, win, kills: ev.kills, timeSec: Math.round(ev.t / 1000), reason: ev.reason };
       });
     } else if (sess.kind === 'tower') {
-      r = await this.transact('towerResult', (s) => ({ ...tower.finishFloor(s, sess.floor, win), win, kills: ev.kills, timeSec: Math.round(ev.t / 1000), reason: ev.reason }));
+      r = await this.transact('towerResult', (s) => { const fr = tower.finishFloor(s, sess.floor, win); if (fr.record) meta.addPassXp(s, PASS.xp.towerRecord, this.now()); return { ...fr, win, kills: ev.kills, timeSec: Math.round(ev.t / 1000), reason: ev.reason }; });
     } else if (sess.kind === 'rift') {
-      r = await this.transact('riftResult', (s) => ({ ...rift.finishFloor(s, sess.id, win, ev.hpPct || 0, this.now(), this.rng, this.bookSkills(s)), kills: ev.kills, timeSec: Math.round(ev.t / 1000), reason: ev.reason }));
+      r = await this.transact('riftResult', (s) => {
+        const fr = rift.finishFloor(s, sess.id, win, ev.hpPct || 0, this.now(), this.rng, this.bookSkills(s));
+        if (fr.ended) {
+          meta.addPassXp(s, PASS.xp.riftFloor * (fr.cleared || 0), this.now());
+          if ((fr.cleared || 0) >= 10) { s.pets.eggs += 1; fr.petEgg = 1; }
+        }
+        return { ...fr, kills: ev.kills, timeSec: Math.round(ev.t / 1000), reason: ev.reason };
+      });
     } else if (sess.kind === 'raid') {
       r = await this.transact('raidResult', (s) => {
         if (!markTx(s, sess.id)) return { ok: false, reason: 'duplicate' };
@@ -595,8 +609,26 @@ export class Game {
   resetStats() { return this.transact('stat', (s) => eco.resetStats(s)); }
   setAutoStats(on) { return this.transact('stat', (s) => eco.setAutoStats(s, on)); }
   setAutoDismantle(v) { return this.transact('setting', (s) => { if (!['off', 'common', 'uncommon', 'rare'].includes(v)) return { ok: false, reason: 'value' }; s.settings.autoDismantle = v; return { ok: true }; }); }
-  claimMission(id) { return this.transact('mission', (s) => missions.claimMission(s, id, this.now())); }
-  claimMissionBonus() { return this.transact('missionBonus', (s) => missions.claimMissionBonus(s, this.now())); }
+  claimMission(id) { return this.transact('mission', (s) => { const r = missions.claimMission(s, id, this.now()); if (r.ok) { meta.addPassXp(s, PASS.xp.mission, this.now()); r.passXp = PASS.xp.mission; } return r; }); }
+  claimMissionBonus() { return this.transact('missionBonus', (s) => { const r = missions.claimMissionBonus(s, this.now()); if (r.ok) { meta.addPassXp(s, PASS.xp.missionBonus, this.now()); r.passXp = PASS.xp.missionBonus; } return r; }); }
+  // ---------- 도감 · 업적 · 칭호 · 시즌 패스 · 동료 · 신화 제작 ----------
+  claimAchievement(id) { return this.transact('achievement', (s) => meta.claimAchievement(s, id)); }
+  claimAllAchievements() { return this.transact('achievement', (s) => meta.claimAllAchievements(s)); }
+  equipTitle(id) { return this.transact('title', (s) => meta.equipTitle(s, id)); }
+  claimPass(level) { return this.transact('pass', (s) => meta.claimPass(s, level, this.now())); }
+  claimAllPass() { return this.transact('pass', (s) => meta.claimAllPass(s, this.now())); }
+  hatchEgg() { return this.transact('pet', (s) => meta.hatchEgg(s, this.rng)); }
+  feedPet(id) { return this.transact('pet', (s) => meta.feedPet(s, id)); }
+  starUpPet(id) { return this.transact('pet', (s) => meta.starUpPet(s, id)); }
+  setActivePet(id) { return this.transact('pet', (s) => meta.setActivePet(s, id)); }
+  craftMythic(slot) {
+    return this.transact('craft', (s) => {
+      const r = meta.craftMythic(s, slot, this.rng);
+      if (!r.ok) return r;
+      const added = eco.addItems(s, [r.item]);
+      return { ...r, overflowed: added.overflowed };
+    });
+  }
   setSkillSlot(idx, skillId) {
     return this.transact('skillSlot', (s) => {
       const max = prog.slotCount(s);
