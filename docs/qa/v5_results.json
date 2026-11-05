@@ -30,9 +30,9 @@
   "pass": true,
   "info": {
    "choices": [
-    "b_atk",
-    "b_hp",
-    "b_regen"
+    "b_berserk",
+    "b_aspd",
+    "b_def"
    ]
   }
  },
@@ -82,9 +82,9 @@
   "pass": true,
   "info": {
    "choices": [
-    "b_def",
-    "b_ult",
-    "b_combo"
+    "b_regen",
+    "b_heal",
+    "b_greed"
    ]
   }
  },

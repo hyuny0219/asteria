@@ -1,0 +1,1299 @@
+{
+  "version": "A01",
+  "canvas": [
+    1536,
+    1024
+  ],
+  "grid": [
+    4,
+    2
+  ],
+  "cell": [
+    384,
+    512
+  ],
+  "frameOrder": [
+    "idle",
+    "step",
+    "windup",
+    "contact",
+    "recovery",
+    "hit",
+    "skill",
+    "victory"
+  ],
+  "assets": [
+    {
+      "id": "knight1",
+      "name": "흑장미 기사",
+      "file": "poses_knight1.png",
+      "frames": [
+        {
+          "name": "idle",
+          "rect": [
+            0,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            108,
+            129,
+            269,
+            396
+          ],
+          "suggestedPivot": [
+            192,
+            396
+          ]
+        },
+        {
+          "name": "step",
+          "rect": [
+            384,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            83,
+            138,
+            255,
+            395
+          ],
+          "suggestedPivot": [
+            192,
+            395
+          ]
+        },
+        {
+          "name": "windup",
+          "rect": [
+            768,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            42,
+            156,
+            250,
+            395
+          ],
+          "suggestedPivot": [
+            192,
+            395
+          ]
+        },
+        {
+          "name": "contact",
+          "rect": [
+            1152,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            40,
+            171,
+            325,
+            394
+          ],
+          "suggestedPivot": [
+            192,
+            394
+          ]
+        },
+        {
+          "name": "recovery",
+          "rect": [
+            0,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            93,
+            135,
+            269,
+            391
+          ],
+          "suggestedPivot": [
+            192,
+            391
+          ]
+        },
+        {
+          "name": "hit",
+          "rect": [
+            384,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            92,
+            151,
+            274,
+            391
+          ],
+          "suggestedPivot": [
+            192,
+            391
+          ]
+        },
+        {
+          "name": "skill",
+          "rect": [
+            768,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            62,
+            140,
+            321,
+            392
+          ],
+          "suggestedPivot": [
+            192,
+            392
+          ]
+        },
+        {
+          "name": "victory",
+          "rect": [
+            1152,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            83,
+            133,
+            269,
+            392
+          ],
+          "suggestedPivot": [
+            192,
+            392
+          ]
+        }
+      ]
+    },
+    {
+      "id": "berserker1",
+      "name": "진홍의 집행자",
+      "file": "poses_berserker1.png",
+      "frames": [
+        {
+          "name": "idle",
+          "rect": [
+            0,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            114,
+            138,
+            267,
+            397
+          ],
+          "suggestedPivot": [
+            192,
+            397
+          ]
+        },
+        {
+          "name": "step",
+          "rect": [
+            384,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            101,
+            141,
+            301,
+            397
+          ],
+          "suggestedPivot": [
+            192,
+            397
+          ]
+        },
+        {
+          "name": "windup",
+          "rect": [
+            768,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            88,
+            124,
+            266,
+            398
+          ],
+          "suggestedPivot": [
+            192,
+            398
+          ]
+        },
+        {
+          "name": "contact",
+          "rect": [
+            1152,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            81,
+            172,
+            299,
+            398
+          ],
+          "suggestedPivot": [
+            192,
+            398
+          ]
+        },
+        {
+          "name": "recovery",
+          "rect": [
+            0,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            95,
+            116,
+            315,
+            374
+          ],
+          "suggestedPivot": [
+            192,
+            374
+          ]
+        },
+        {
+          "name": "hit",
+          "rect": [
+            384,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            102,
+            126,
+            315,
+            374
+          ],
+          "suggestedPivot": [
+            192,
+            374
+          ]
+        },
+        {
+          "name": "skill",
+          "rect": [
+            768,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            88,
+            117,
+            272,
+            375
+          ],
+          "suggestedPivot": [
+            192,
+            375
+          ]
+        },
+        {
+          "name": "victory",
+          "rect": [
+            1152,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            91,
+            115,
+            259,
+            374
+          ],
+          "suggestedPivot": [
+            192,
+            374
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wizard1",
+      "name": "위자드",
+      "file": "poses_wizard1.png",
+      "frames": [
+        {
+          "name": "idle",
+          "rect": [
+            0,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            117,
+            121,
+            268,
+            405
+          ],
+          "suggestedPivot": [
+            192,
+            405
+          ]
+        },
+        {
+          "name": "step",
+          "rect": [
+            384,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            88,
+            120,
+            264,
+            405
+          ],
+          "suggestedPivot": [
+            192,
+            405
+          ]
+        },
+        {
+          "name": "windup",
+          "rect": [
+            768,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            85,
+            120,
+            277,
+            406
+          ],
+          "suggestedPivot": [
+            192,
+            406
+          ]
+        },
+        {
+          "name": "contact",
+          "rect": [
+            1152,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            77,
+            124,
+            310,
+            406
+          ],
+          "suggestedPivot": [
+            192,
+            406
+          ]
+        },
+        {
+          "name": "recovery",
+          "rect": [
+            0,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            100,
+            123,
+            283,
+            395
+          ],
+          "suggestedPivot": [
+            192,
+            395
+          ]
+        },
+        {
+          "name": "hit",
+          "rect": [
+            384,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            100,
+            126,
+            301,
+            396
+          ],
+          "suggestedPivot": [
+            192,
+            396
+          ]
+        },
+        {
+          "name": "skill",
+          "rect": [
+            768,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            77,
+            124,
+            302,
+            394
+          ],
+          "suggestedPivot": [
+            192,
+            394
+          ]
+        },
+        {
+          "name": "victory",
+          "rect": [
+            1152,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            107,
+            122,
+            276,
+            395
+          ],
+          "suggestedPivot": [
+            192,
+            395
+          ]
+        }
+      ]
+    },
+    {
+      "id": "warlock1",
+      "name": "워록",
+      "file": "poses_warlock1.png",
+      "frames": [
+        {
+          "name": "idle",
+          "rect": [
+            0,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            122,
+            128,
+            274,
+            380
+          ],
+          "suggestedPivot": [
+            192,
+            380
+          ]
+        },
+        {
+          "name": "step",
+          "rect": [
+            384,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            107,
+            128,
+            273,
+            379
+          ],
+          "suggestedPivot": [
+            192,
+            379
+          ]
+        },
+        {
+          "name": "windup",
+          "rect": [
+            768,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            92,
+            145,
+            269,
+            379
+          ],
+          "suggestedPivot": [
+            192,
+            379
+          ]
+        },
+        {
+          "name": "contact",
+          "rect": [
+            1152,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            79,
+            147,
+            299,
+            379
+          ],
+          "suggestedPivot": [
+            192,
+            379
+          ]
+        },
+        {
+          "name": "recovery",
+          "rect": [
+            0,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            115,
+            129,
+            282,
+            379
+          ],
+          "suggestedPivot": [
+            192,
+            379
+          ]
+        },
+        {
+          "name": "hit",
+          "rect": [
+            384,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            101,
+            144,
+            280,
+            379
+          ],
+          "suggestedPivot": [
+            192,
+            379
+          ]
+        },
+        {
+          "name": "skill",
+          "rect": [
+            768,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            99,
+            128,
+            288,
+            381
+          ],
+          "suggestedPivot": [
+            192,
+            381
+          ]
+        },
+        {
+          "name": "victory",
+          "rect": [
+            1152,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            91,
+            127,
+            270,
+            381
+          ],
+          "suggestedPivot": [
+            192,
+            381
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ranger1",
+      "name": "레인저",
+      "file": "poses_ranger1.png",
+      "frames": [
+        {
+          "name": "idle",
+          "rect": [
+            0,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            112,
+            136,
+            267,
+            402
+          ],
+          "suggestedPivot": [
+            192,
+            402
+          ]
+        },
+        {
+          "name": "step",
+          "rect": [
+            384,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            92,
+            141,
+            275,
+            401
+          ],
+          "suggestedPivot": [
+            192,
+            401
+          ]
+        },
+        {
+          "name": "windup",
+          "rect": [
+            768,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            84,
+            123,
+            274,
+            401
+          ],
+          "suggestedPivot": [
+            192,
+            401
+          ]
+        },
+        {
+          "name": "contact",
+          "rect": [
+            1152,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            82,
+            117,
+            310,
+            401
+          ],
+          "suggestedPivot": [
+            192,
+            401
+          ]
+        },
+        {
+          "name": "recovery",
+          "rect": [
+            0,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            98,
+            135,
+            280,
+            396
+          ],
+          "suggestedPivot": [
+            192,
+            396
+          ]
+        },
+        {
+          "name": "hit",
+          "rect": [
+            384,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            95,
+            128,
+            302,
+            396
+          ],
+          "suggestedPivot": [
+            192,
+            396
+          ]
+        },
+        {
+          "name": "skill",
+          "rect": [
+            768,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            79,
+            121,
+            276,
+            396
+          ],
+          "suggestedPivot": [
+            192,
+            396
+          ]
+        },
+        {
+          "name": "victory",
+          "rect": [
+            1152,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            94,
+            128,
+            269,
+            396
+          ],
+          "suggestedPivot": [
+            192,
+            396
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hunter1",
+      "name": "헌터",
+      "file": "poses_hunter1.png",
+      "frames": [
+        {
+          "name": "idle",
+          "rect": [
+            0,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            123,
+            117,
+            285,
+            417
+          ],
+          "suggestedPivot": [
+            192,
+            417
+          ]
+        },
+        {
+          "name": "step",
+          "rect": [
+            384,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            93,
+            116,
+            292,
+            417
+          ],
+          "suggestedPivot": [
+            192,
+            417
+          ]
+        },
+        {
+          "name": "windup",
+          "rect": [
+            768,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            74,
+            107,
+            283,
+            417
+          ],
+          "suggestedPivot": [
+            192,
+            417
+          ]
+        },
+        {
+          "name": "contact",
+          "rect": [
+            1152,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            64,
+            107,
+            303,
+            417
+          ],
+          "suggestedPivot": [
+            192,
+            417
+          ]
+        },
+        {
+          "name": "recovery",
+          "rect": [
+            0,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            116,
+            109,
+            304,
+            409
+          ],
+          "suggestedPivot": [
+            192,
+            409
+          ]
+        },
+        {
+          "name": "hit",
+          "rect": [
+            384,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            91,
+            118,
+            293,
+            409
+          ],
+          "suggestedPivot": [
+            192,
+            409
+          ]
+        },
+        {
+          "name": "skill",
+          "rect": [
+            768,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            78,
+            111,
+            302,
+            409
+          ],
+          "suggestedPivot": [
+            192,
+            409
+          ]
+        },
+        {
+          "name": "victory",
+          "rect": [
+            1152,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            86,
+            106,
+            270,
+            409
+          ],
+          "suggestedPivot": [
+            192,
+            409
+          ]
+        }
+      ]
+    },
+    {
+      "id": "assassin1",
+      "name": "어쌔신",
+      "file": "poses_assassin1.png",
+      "frames": [
+        {
+          "name": "idle",
+          "rect": [
+            0,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            118,
+            131,
+            264,
+            407
+          ],
+          "suggestedPivot": [
+            192,
+            407
+          ]
+        },
+        {
+          "name": "step",
+          "rect": [
+            384,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            106,
+            141,
+            273,
+            405
+          ],
+          "suggestedPivot": [
+            192,
+            405
+          ]
+        },
+        {
+          "name": "windup",
+          "rect": [
+            768,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            86,
+            165,
+            280,
+            406
+          ],
+          "suggestedPivot": [
+            192,
+            406
+          ]
+        },
+        {
+          "name": "contact",
+          "rect": [
+            1152,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            74,
+            179,
+            305,
+            406
+          ],
+          "suggestedPivot": [
+            192,
+            406
+          ]
+        },
+        {
+          "name": "recovery",
+          "rect": [
+            0,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            100,
+            158,
+            279,
+            409
+          ],
+          "suggestedPivot": [
+            192,
+            409
+          ]
+        },
+        {
+          "name": "hit",
+          "rect": [
+            384,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            95,
+            167,
+            295,
+            408
+          ],
+          "suggestedPivot": [
+            192,
+            408
+          ]
+        },
+        {
+          "name": "skill",
+          "rect": [
+            768,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            84,
+            144,
+            282,
+            409
+          ],
+          "suggestedPivot": [
+            192,
+            409
+          ]
+        },
+        {
+          "name": "victory",
+          "rect": [
+            1152,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            107,
+            142,
+            254,
+            410
+          ],
+          "suggestedPivot": [
+            192,
+            410
+          ]
+        }
+      ]
+    },
+    {
+      "id": "trickster1",
+      "name": "트릭스터",
+      "file": "poses_trickster1.png",
+      "frames": [
+        {
+          "name": "idle",
+          "rect": [
+            0,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            103,
+            134,
+            253,
+            399
+          ],
+          "suggestedPivot": [
+            192,
+            399
+          ]
+        },
+        {
+          "name": "step",
+          "rect": [
+            384,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            93,
+            137,
+            270,
+            399
+          ],
+          "suggestedPivot": [
+            192,
+            399
+          ]
+        },
+        {
+          "name": "windup",
+          "rect": [
+            768,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            90,
+            141,
+            273,
+            398
+          ],
+          "suggestedPivot": [
+            192,
+            398
+          ]
+        },
+        {
+          "name": "contact",
+          "rect": [
+            1152,
+            0,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            59,
+            169,
+            306,
+            396
+          ],
+          "suggestedPivot": [
+            192,
+            396
+          ]
+        },
+        {
+          "name": "recovery",
+          "rect": [
+            0,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            112,
+            137,
+            302,
+            399
+          ],
+          "suggestedPivot": [
+            192,
+            399
+          ]
+        },
+        {
+          "name": "hit",
+          "rect": [
+            384,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            116,
+            154,
+            300,
+            399
+          ],
+          "suggestedPivot": [
+            192,
+            399
+          ]
+        },
+        {
+          "name": "skill",
+          "rect": [
+            768,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            60,
+            147,
+            289,
+            399
+          ],
+          "suggestedPivot": [
+            192,
+            399
+          ]
+        },
+        {
+          "name": "victory",
+          "rect": [
+            1152,
+            512,
+            384,
+            512
+          ],
+          "visibleBoundsAlphaAbove32": [
+            91,
+            134,
+            246,
+            399
+          ],
+          "suggestedPivot": [
+            192,
+            399
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -222,9 +222,9 @@ export class BattleRenderer {
       }
     } else if (t < h.hitFxUntil) { pose = 'hit'; if (motion) dx = -5; }
     else if (battle.enemies.every((e) => e.state === 'approach') && battle.enemies.length) pose = Math.floor(t / 320) % 2 ? 'step' : 'idle';
-    // Promoted: the branch costume has one authored figure; use it for idle/hit/victory
-    // and keep the base attack poses would change costume mid-swing, so promoted
-    // attacks use the branch figure + lunge only.
+    // Promoted forms with a key-pose sheet (GPT A01, tier 1) use their own 8 poses.
+    // Others have one authored figure per costume: that figure + lunge/trail only
+    // (the base poses would change costume mid-swing).
     let m = frames[pose];
     if (branch && frames.promo) m = frames.promo;
     const hf = this.heroTint ? `hue-rotate(${this.heroTint}deg) saturate(1.1)` : '';
@@ -243,7 +243,7 @@ export class BattleRenderer {
       ctx.rotate(rot);
       ctx.scale(1, breathe);
       ctx.drawImage(sc, -d.px, -d.py, d.w, d.h);
-      if ((branch || frames.static) && ac && motion && this.heroCls !== 'mage' && this.heroCls !== 'archer') {
+      if ((frames.static || (branch && frames.promo)) && ac && motion && this.heroCls !== 'mage' && this.heroCls !== 'archer') {
         // weapon trail for promoted attacks (no authored swing frames yet)
         const rel = t - ac.start, imp = ac.impactAt - ac.start;
         if (rel >= imp && rel < imp + 140) {

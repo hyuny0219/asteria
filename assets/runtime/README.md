@@ -20,3 +20,8 @@ v4 생성 그림: `python3 tools/extract_v4.py`(클래스 3종·1차 갈래·장
 무기: 직업별 무기는 마도서·활·쌍단검(일반 / 고급 / 희귀 이상). 전사는 검 그대로. 이미 가진 장비는 원래 그림 그대로 보입니다.
 
 v5 2부: `pet_P01–P06.webp`(동료 6종, `pets_6.png`)와 `skill_V00–V15.webp`(문장 16개, `icons_v5.png`, 96px)는 `tools/extract_v5.py`로 만듭니다. 메타데이터는 `sprites.json`의 `pets`와 `skills`에 있습니다.
+
+## GPT A01 승급 포즈 (tools/extract_gpt_a01.py)
+`hero_pose_promo_<branch>_<pose>.webp` (sprites.json `hero.pose_promo_<branch>_<pose>`), 1차 승급 외형의 8 키 포즈.
+원본: `assets/source/gpt_a01/poses_<branch>1.png` (1536×1024 RGBA, 4×2, idle·step·windup·contact·recovery·hit·skill·victory → idle·step·anticipation·thrust·recovery·hit·cast·victory).
+시트당 배율 1개, 발 피벗은 골반 열 기준. 위자드는 원본 재업로드 후 같은 스크립트를 다시 실행.

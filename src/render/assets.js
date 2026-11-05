@@ -40,8 +40,21 @@ export function promoKey(branch, tier = 1) {
   }
   return null;
 }
+// Tier-1 promoted forms with a GPT A01 pose sheet (tools/extract_gpt_a01.py) animate
+// with 8 key poses like the base forms. Tiers 2/3 keep their single figure.
+const POSE_NAMES = ['idle', 'step', 'anticipation', 'thrust', 'recovery', 'hit', 'cast', 'victory'];
+export function promoPoses(branch, tier = 1) {
+  if (!branch || !meta || promoKey(branch, tier) !== 'promo_' + branch) return null;
+  const H = meta.hero;
+  if (!H[`pose_promo_${branch}_idle`]) return null;
+  const out = { promo: null };
+  for (const n of POSE_NAMES) out[n] = H[`pose_promo_${branch}_${n}`] || H[`pose_promo_${branch}_idle`];
+  return out;
+}
 export function heroFrames(branch, cls = 'warrior', tier = 1) {
   const H = meta.hero;
+  const pp = promoPoses(branch, tier);
+  if (pp) return pp;
   const art = CLASSES[cls] && CLASSES[cls].art;
   const pk = promoKey(branch, tier);
   if (art && H[art.base]) {
@@ -86,6 +99,8 @@ export async function preloadFor({ region, boss, branch, cls = 'warrior', tier =
   for (const [k, f] of Object.entries(meta.hero)) if (k.startsWith(`pose_${cls}_`)) list.push(f.file);
   const pf = promoFrame(branch, tier);
   if (pf) list.push(pf.file);
+  const pp = promoPoses(branch, tier);
+  if (pp) for (const n of POSE_NAMES) list.push(pp[n].file);
   if (region) {
     const bg = meta.backgrounds[region.bg];
     if (bg) list.push(bg.file);
