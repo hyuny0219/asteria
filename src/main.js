@@ -161,7 +161,7 @@ function recovery(res) {
 async function afterLoad() {
   setProgress(0.7, '지역 그림을 불러오는 중…');
   const s = game.state;
-  await preloadFor({ region: REGION_BY_ID[s.progression.region], boss: null, branch: s.player.branch, cls: s.player.cls });
+  await preloadFor({ region: REGION_BY_ID[s.progression.region], boss: null, branch: s.player.branch, cls: s.player.cls, tier: s.player.tier || 0 });
   setProgress(1, '준비 완료');
   app = new App({ game, saver, lock, root: document.getElementById('app'), saverWarning });
   app.onTakeover = takeover;

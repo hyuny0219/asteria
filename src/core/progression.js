@@ -216,7 +216,7 @@ export const raidOpen = (state) => state.player.level >= BALANCE.raid.unlockLeve
 export function nextGoal(state) {
   const p = state.progression;
   const f = p.firsts;
-  if (!f.firstUpgrade) return { id: 'upgrade', text: '골드로 공격력 강화하기', action: 'growth', reward: null };
+  // gold upgrades are automatic now (autogrow.js), so the first goal is equipment
   if (!f.firstEquip && state.inventory.length) return { id: 'equip', text: '새 장비 장착하기', action: 'equipment' };
   const lock = lockTierAt(state);
   if (lock) {

@@ -80,3 +80,22 @@
 | 던전 3종·시련의 탑·주간 레이드 | PASS | dungeon, tower, towerResult, raidResult |
 | 2·3차 승급 | PASS | promotion(2차), promoPlay, quest(3차 체크리스트) |
 | 새 지역 7곳 그림 | **임시** | 기존 그림 색조 변경(KNOWN_ISSUES) |
+
+## v4 그림 적용 검수
+| 항목 | 결과 | 근거 |
+|---|---|---|
+| 새 몬스터 14종 왼쪽(주인공 방향), 접지·비행 위치 | PASS(정적) | `docs/qa/assets_monsters_v4.png`, 전투 캡처 `art_*_390x844.png` |
+| 새 보스 7종 + 탑 수호자 잘림 없음, 보스 높이 상한 | PASS | `assets_bosses_v4.png`, `art_boss_B04/B06/B09_390x844.png` |
+| 지역 4–10·탑 배경, 바닥선(groundRatio) | PASS | `assets_bgs_v4.png`(노란 선) |
+| 2·3차 승급 외형 16종, 1차와 같은 키·얼굴 | PASS | `assets_tiers_v4.png`, `promotion_390x844.png`(지금 / 다음 외형) |
+| 새 스킬 24·각인 8·탑/레이드 문장 아이콘 | PASS | `assets_skills_v4.png`, `art_skills_mage_390x844.png` |
+| 단위 테스트 / 브라우저 / 로그인 | 56/56 · 114/114 화면, 13/13 흐름 · 10/10 | `npm test`, `tools/browser_qa.cjs`, `tools/qa_login.cjs` |
+
+## v4 3부 (자동 성장·키 포즈) 검수
+| 항목 | 결과 | 근거 |
+|---|---|---|
+| 자동 강화: 다섯 스탯 고르게, 음수 골드 없음, 상한 준수, 예약 골드 유지 | PASS | tests/autogrow.test.mjs |
+| 성장 탭 확인 전용(버튼 없음), 값이 제자리 갱신 | PASS | 브라우저 main_390x844 / main_360x700 |
+| 저장 실패 시 소비 없음 (상점 구매로 교체) | PASS | browser_qa 흐름 |
+| 마법사·궁수·도적 8 키 포즈, 공격 순간 포즈 | PASS(정적 확인) | docs/qa/screens/pose_*_390x844.png |
+| 실기기 | 미검증 | — |

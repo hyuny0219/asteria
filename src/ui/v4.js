@@ -1,8 +1,8 @@
 // v4 screens: class picker, 뽑기(장비·스킬), 일일 미션, 능력치 포인트, 각인, 탑·레이드·던전 카드,
 // 3차 승급. Every grant goes through game.transact; reveals start only after r.ok.
 import { BALANCE } from '../data/balance.js';
-import { BOSSES, BRANCHES, CLASSES, CLASS_IDS, CLASS_SKILLS, CURRENCY_ICONS, RARITY, RUNES, SKILLS, STAT_KEYS, STAT_NAMES, branchesOf } from '../data/content.js';
-import { classPortrait, itemIcon, portrait, skillIcon, spriteMeta } from '../render/assets.js';
+import { BOSSES, BRANCHES, CLASSES, CLASS_IDS, CLASS_SKILLS, CURRENCY_ICONS, EMBLEMS, RARITY, RUNES, SKILLS, STAT_KEYS, STAT_NAMES, branchesOf } from '../data/content.js';
+import { classPortrait, itemIcon, portrait, promoPortrait, skillIcon, spriteMeta } from '../render/assets.js';
 import * as prog from '../core/progression.js';
 import { nextLevelAt, quoteDraw, rateTable, skillRateTable, summonLevel } from '../core/gacha.js';
 import { missionStatus } from '../core/missions.js';
@@ -28,9 +28,10 @@ export function classArt(cls, cssClass = '') {
   return img(c.art ? classPortrait(cls, 'card') : portrait('serin_key'), `${c.hero} (${c.name})`, cssClass);
 }
 // The costume the player wears now: tier-1+ branch figure if it exists, else class art.
-export function currentArt(state, cssClass = '') {
-  const meta = spriteMeta().portraits['promo_' + state.player.branch];
-  if (state.player.branch && meta) return img(meta.file, BRANCHES[state.player.branch].names[0], cssClass);
+export function currentArt(state, cssClass = '', tier = prog.tierOf(state)) {
+  const b = state.player.branch;
+  const file = b && tier >= 1 ? promoPortrait(b, tier) : null;
+  if (file) return img(file, BRANCHES[b].names[Math.min(3, tier) - 1], cssClass);
   return classArt(state.player.cls || 'warrior', cssClass);
 }
 const pendingTag = (cls) => (CLASSES[cls].artPending ? h('span', { class: 'pending-tag' }, '그림 준비 중') : null);
@@ -145,7 +146,7 @@ function showDrawResults(app, isEq, r, after) {
     const top = x === best && order(rar) >= 3;
     let pic, name, sub;
     if (isEq) { pic = img(itemIcon(x.item.look), ''); name = x.item.name; sub = rarityLabel(rar); }
-    else if (x.kind === 'rune') { pic = icon('star', 30); name = `각인 · ${RUNES[x.rune].name}`; sub = x.capped ? '최대 레벨 · 보석 +100' : `Lv ${x.level}${x.dupe ? ' (중복)' : ' NEW'}`; }
+    else if (x.kind === 'rune') { pic = RUNES[x.rune].icon ? img(skillIcon(RUNES[x.rune].icon), '') : icon('star', 30); name = `각인 · ${RUNES[x.rune].name}`; sub = x.capped ? '최대 레벨 · 보석 +100' : `Lv ${x.level}${x.dupe ? ' (중복)' : ' NEW'}`; }
     else { pic = img(skillIcon(SKILLS[x.skill].icon), ''); name = SKILLS[x.skill].name; sub = `스킬북 ×${x.books}`; }
     return h('div', { class: `draw r-${rar}${top ? ' top' : ''}`, style: fast ? null : { animationDelay: `${150 + i * 70}ms` } },
       h('span', { class: `mk r-${rar}` }, RARITY[rar] ? RARITY[rar].mark : ''), pic, h('b', null, name), h('span', { class: 'muted' }, sub), x.pity ? h('span', { class: 'tag' }, '천장') : null);
@@ -208,7 +209,7 @@ export function runesCard(app) {
   const owned = Object.entries(R.owned || {}).filter(([, lv]) => lv > 0);
   const slotEl = (i) => {
     const id = R.equipped[i];
-    return h('div', { class: 'skill-line' }, h('span', { class: 'rune-ic' + (id ? ' on' : '') }, icon('star', 22)),
+    return h('div', { class: 'skill-line' }, h('span', { class: 'rune-ic' + (id ? ' on' : '') }, id && RUNES[id].icon ? img(skillIcon(RUNES[id].icon), '') : icon('star', 22)),
       h('div', null, h('div', { class: 't' }, `각인 ${i + 1} · ${id ? `${RUNES[id].name} Lv ${R.owned[id]}` : '비어 있음'}`), h('div', { class: 'muted' }, id ? runeText(id, R.owned[id]) : '스킬 뽑기의 전설 결과로 얻어요.')),
       id ? button('해제', { cls: 'chip-btn', busy: true, onClick: async () => fail(await app.game.unequipRune(i)) }) : null);
   };
@@ -217,7 +218,7 @@ export function runesCard(app) {
     slotEl(0), slotEl(1),
     owned.length ? h('div', { class: 'rune-list' }, owned.map(([id, lv]) => {
       const at = R.equipped.indexOf(id);
-      return h('div', { class: 'kv' }, h('span', null, `${RUNES[id].name} Lv ${lv}`, h('span', { class: 'muted' }, ` · ${runeText(id, lv)}`)),
+      return h('div', { class: 'kv' }, h('span', { class: 'rune-name' }, RUNES[id].icon ? img(skillIcon(RUNES[id].icon), '', 'rune-mini') : null, `${RUNES[id].name} Lv ${lv}`, h('span', { class: 'muted' }, ` · ${runeText(id, lv)}`)),
         at >= 0 ? h('b', null, `${at + 1}번 장착`) : h('span', { class: 'btn-row', style: { gap: '4px' } },
           button('1번', { cls: 'chip-btn', busy: true, onClick: async () => fail(await app.game.equipRune(id, 0)) }),
           button('2번', { cls: 'chip-btn', busy: true, onClick: async () => fail(await app.game.equipRune(id, 1)) })));
@@ -270,7 +271,7 @@ export function towerCard(app) {
   const rw = floorReward(f);
   const T = BALANCE.tower;
   return h('div', { class: 'card', dataset: { screen: 'tower' } },
-    h('div', { class: 'kv' }, h('b', { style: { color: 'var(--text)' } }, '시련의 탑'), h('b', null, `최고 ${s.tower.best || 0}층`)),
+    h('div', { class: 'kv' }, h('span', { class: 'card-title' }, img(skillIcon(EMBLEMS.tower), '', 'emblem'), h('b', { style: { color: 'var(--text)' } }, '시련의 탑')), h('b', null, `최고 ${s.tower.best || 0}층`)),
     h('div', { class: 'kv' }, `${f}층 · Lv ${floorLevel(f)}`, h('b', null, [`보석 ${rw.gem}`, rw.awakenStone ? `각성석 ${rw.awakenStone}` : null, rw.starShard ? `별의 파편 ${rw.starShard}` : null].filter(Boolean).join(' · '))),
     h('p', { class: 'muted', style: { margin: '2px 0 6px' } }, `입장권 없이 언제든 · ${T.timeSec}초 안에 ${T.killTarget}마리 · 층 보상은 처음 깰 때 한 번. 2차 승급 조건 5층.`),
     button(`${f}층 도전`, { cls: 'btn btn-primary', disabled: app.game.mode !== 'FARM', onClick: () => { const r = app.game.startTower(); if (!r.ok) fail(r); } }));
@@ -282,7 +283,7 @@ export function raidCard(app) {
   const open = prog.raidOpen(s);
   const left = triesLeft(s, Date.now());
   return h('div', { class: 'card' + (open ? '' : ' locked-card'), dataset: { screen: 'raid' } },
-    h('div', { class: 'kv' }, h('b', { style: { color: 'var(--text)' } }, '주간 레이드 · 심연의 문'), h('b', null, open ? `이번 주 ${left}/${R.weeklyTries}회` : '잠김')),
+    h('div', { class: 'kv' }, h('span', { class: 'card-title' }, img(skillIcon(EMBLEMS.raid), '', 'emblem'), h('b', { style: { color: 'var(--text)' } }, '주간 레이드 · 심연의 문')), h('b', null, open ? `이번 주 ${left}/${R.weeklyTries}회` : '잠김')),
     h('div', { class: 'kv' }, '최고 기록', h('b', null, s.raid.best ? `${s.raid.bestGrade} · 피해 ${fmt(s.raid.best)}` : '없음')),
     h('p', { class: 'muted', style: { margin: '2px 0 6px' } }, open ? `${R.timeSec}초 동안 ${BOSSES[R.boss].name}에게 준 피해로 등급(D~S)이 정해져요. S 등급은 전설 장비 확정(신화 0.5%) + 별의 파편. 매주 월요일 00:00(KST) 초기화.`
       : `Lv ${R.unlockLevel} 이상 · ${BOSSES[R.unlockBoss].name} 처치 후 열려요.`),
@@ -326,7 +327,8 @@ export function openPromotionTier(app, tier) {
   const cl = prog.promotionChecklist(s, tier);
   const name = br.names[tier - 1];
   const m = openModal({ id: 'promotion', title: `${tier}차 승급 · ${name}`, body: h('div', { dataset: { screen: 'promotion' } },
-    h('div', { class: 'hero-art' }, h('figure', { class: 'pick' }, currentArt(s), h('figcaption', null, h('b', null, name), h('span', { class: 'muted' }, br.role)))),
+    h('div', { class: 'hero-art' }, h('figure', null, currentArt(s), h('figcaption', null, h('b', null, '지금'), h('span', { class: 'muted' }, prog.tierName(s) || CLASSES[s.player.cls || 'warrior'].name))),
+      h('figure', { class: 'pick' }, currentArt(s, '', tier), h('figcaption', null, h('b', null, name), h('span', { class: 'muted' }, br.role)))),
     h('div', { class: 'card' },
       h('div', { class: 'kv' }, '승급 능력', h('b', null, passiveText(br.tiers[tier - 1]))),
       tier === 2 ? h('div', { class: 'kv' }, '신규 스킬', h('b', null, `${SKILLS[br.skills[1]].name} · 5번 슬롯`)) : null,

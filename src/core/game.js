@@ -21,6 +21,7 @@ import { playerStats } from './stats.js';
 import { markTx, newGame } from './state.js';
 import * as rewards from './rewards.js';
 import * as shop from './shop.js';
+import { autoGrow } from './autogrow.js';
 import * as gacha from './gacha.js';
 import * as missions from './missions.js';
 import * as tower from './tower.js';
@@ -128,6 +129,13 @@ export class Game {
     return r;
   }
 
+  runAutoGrow() {
+    if (!this.state) return null;
+    const r = autoGrow(this.state);
+    if (r.count) { this.syncHero(); this.emit('autoGrow', r); }
+    return r;
+  }
+
   // ---------- daily / return rewards ----------
   claimAttendance() { return this.transact('attendance', (s) => rewards.claimAttendance(s, this.now())); }
   claimReturn() { return this.transact('returnBonus', (s) => rewards.claimReturn(s, this.now())); }
@@ -180,6 +188,12 @@ export class Game {
       }
       this.process(this.active.drainEvents());
       if (this.busy) break;
+    }
+    // automatic growth: spend farming gold on upgrades every 2 s of play
+    this.growAcc = (this.growAcc || 0) + realDtMs;
+    if (this.growAcc >= 2000 && !this.busy && (this.mode === 'FARM' || this.mode === 'DEFEAT')) {
+      this.growAcc = 0;
+      this.runAutoGrow();
     }
     this.realSinceCheckpoint += realDtMs;
     if (this.realSinceCheckpoint >= BALANCE.save.checkpointSec * 1000 && !this.busy) {
@@ -454,6 +468,9 @@ export class Game {
   // Leave a boss fight early (counts as a loss, no penalty).
   forfeit() {
     if (!this.active || this.active === this.farm || this.active.over) return;
+    // a checkpoint save is being written: finish the session right after it, so the
+    // result commit never races it (revision conflict → CONFLICT screen)
+    if (this.busy) { setTimeout(() => this.forfeit(), 30); return; }
     this.active.finish('defeat', 'forfeit');
     this.process(this.active.drainEvents());
   }

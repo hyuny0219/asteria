@@ -1,12 +1,15 @@
 // Screens. Each 22-screen reference id from docs/handoff (screens.json) is noted
 // as `data-screen` on its root so browser QA can open and check every one.
 import { BALANCE } from '../data/balance.js';
+import { STAT_KEYS, STAT_NAMES } from '../data/content.js';
 import { BOSSES, BRANCHES, CLASSES, CURRENCY_ICONS, OPTION_NAMES, REGIONS, REGION_BY_ID, SETS, SKILLS, SLOT_NAMES, RARITY, branchesOf, equipSlotFor, waveLevel } from '../data/content.js';
 import * as V4 from './v4.js';
 import { MONSTERS } from '../data/content.js';
 const MONSTERS_NAME = (id) => (MONSTERS[id] ? MONSTERS[id].name : id);
 import { classPortrait, itemIcon, portrait, skillIcon, spriteMeta } from '../render/assets.js';
-import { dismantleQuote, enhanceQuote, isEquipped, quoteUpgrade, recommend, selectForDismantle, upgradeRoom } from '../core/economy.js';
+import { dismantleQuote, enhanceQuote, isEquipped, quoteUpgrade, recommend, selectForDismantle, upgradeCost, upgradeRoom } from '../core/economy.js';
+import { autoGrowReserve } from '../core/autogrow.js';
+import { killRewards } from '../core/combat.js';
 import { enhanceChance, itemOptions, itemStats, rarityLabel, rarityOrder } from '../core/items.js';
 import * as prog from '../core/progression.js';
 import { stageLevel, stageReward, nextRefillAt } from '../core/dungeon.js';
@@ -60,60 +63,53 @@ export function go(app, action) {
 
 // ======================= S01 growth panel (main) =======================
 export function growthPanel(app) {
-  const s0 = app.state;
+  // Read-only (선배 요청): gold upgrades and stat points grow automatically
+  // (core/autogrow.js); this screen only shows the numbers. Values are patched in
+  // place by _update so the list never flickers or jumps.
   const root = h('div', { class: 'panel', dataset: { screen: 'main' }, style: { height: '100%', margin: 0 } });
-  const mults = [1, 10, 100, 'MAX'].map((m) => h('button', { type: 'button', class: 'mult', 'aria-pressed': String(app.mult === m), onClick: () => { app.mult = m; app.panelDirty = true; app.renderPanel(); } }, m === 'MAX' ? 'MAX' : '×' + m));
-  root.appendChild(h('div', { class: 'panel-head' }, h('h2', null, '성장'), h('span', { class: 'spacer' }), h('div', { class: 'mults', role: 'group', 'aria-label': '강화 배수' }, mults)));
+  const powerEl = h('b', { class: 'power-v' });
+  root.appendChild(h('div', { class: 'panel-head' }, h('h2', null, '능력치'), h('span', { class: 'spacer' }), h('span', { class: 'muted' }, '전투력 '), powerEl));
   const list = h('div', { class: 'panel-scroll' });
   const updaters = [];
-  for (const stat of ['atk', 'hp', 'def', 'crit', 'speed']) {
-    const vals = h('span', { class: 'vals' });
-    const note = h('span', { class: 'note' });
-    const b = button('', { cls: 'btn btn-primary', busy: true, onClick: async () => {
-      const r = fail(await app.game.buyUpgrade(stat, app.mult));
-      if (r.ok && app.state.settings.sound) sfx('metal');
-      update();
-    } });
-    b.dataset.key = 'up-' + stat;
-    // values are patched in place (no rebuild), so a tap is never lost to a re-render
-    const update = () => {
-      if (b.dataset.busy === '1') return;
-      const s = app.state;
-      const st = playerStats(s);
-      const q = quoteUpgrade(s, stat, app.mult);
-      const gain = BALANCE.upgrade.gains[stat];
-      const n = Math.max(1, q.count);
-      const after = stat === 'crit' ? fmtPct(Math.min(BALANCE.combat.critChanceCap, st.rawCrit + gain * n)) : stat === 'speed' ? Math.min(BALANCE.combat.attackSpeedCap, st.aspd + gain * n).toFixed(2) + '/초' : fmtFull((stat === 'atk' ? st.atk : stat === 'hp' ? st.hp : st.def) + gain * n * (stat === 'atk' && s.player.branch === 'berserker' ? 1.12 : 1));
-      let label, nt = '', disabled = false;
-      if (q.capped) { label = '상한 도달'; disabled = true; nt = stat === 'crit' ? '치명타 확률 상한 60%' : '공격 속도 상한 3.0/초'; }
-      else if (q.count === 0) { label = `강화 · ${fmt(q.nextCost)}`; disabled = true; nt = `골드 ${fmtFull(q.shortfall)} 부족`; }
-      else {
-        label = `강화 ×${q.count} · ${fmt(q.total)}`;
-        if (q.partial) nt = `×${app.mult} 중 ${q.count}회 가능 · 총 ${fmtFull(q.total)} 골드`;
-        else if (app.mult !== 1) nt = `총 ${fmtFull(q.total)} 골드`;
-      }
-      const v = `${STAT_INFO[stat].fmt(st)} → ${q.capped ? 'MAX' : after}`;
-      if (vals.textContent !== v) vals.textContent = v;
-      if (note.textContent !== nt) note.textContent = nt;
-      note.hidden = !nt;
-      if (b.textContent !== label) b.textContent = label;
-      b.disabled = disabled;
-      b.setAttribute('aria-label', `${STAT_INFO[stat].name} ${label}${nt ? ' · ' + nt : ''}`);
-    };
-    update();
-    updaters.push(update);
-    list.appendChild(h('div', { class: 'stat-row' }, h('span', { class: 'nm' }, STAT_INFO[stat].name), vals, note, b));
+  const kv = (label, get) => { const v = h('b'); updaters.push(() => { const t = get(); if (v.textContent !== t) v.textContent = t; }); return h('div', { class: 'kv' }, label, v); };
+  const st = () => playerStats(app.state);
+  list.appendChild(h('p', { class: 'muted auto-note' }, '사냥 골드로 자동 강화됩니다. 레벨업 포인트도 클래스 추천대로 자동 분배돼요.'));
+  // current stats
+  list.appendChild(h('div', { class: 'card stat-view' },
+    h('div', { class: 'stat-grid2' },
+      kv('공격력', () => fmtFull(st().atk)), kv('체력', () => fmtFull(st().hp)),
+      kv('방어력', () => fmtFull(st().def)), kv('공격 속도', () => st().aspd.toFixed(2) + '/초'),
+      kv('치명 확률', () => fmtPct(st().crit)), kv('치명 피해', () => fmtPct(st().critMul, 0)),
+      kv('회피', () => fmtPct(st().evade || 0)), kv('쿨타임 감소', () => fmtPct(st().cdr || 0)),
+      kv('궁극기 충전', () => '+' + fmtPct(st().ultCharge || 0, 0)), kv('골드 획득', () => '+' + fmtPct(st().goldPct || 0, 0)))));
+  // auto upgrades
+  const upRows = h('div');
+  const upLevel = (k) => app.state.player.statsUpgrades[k];
+  for (const k of ['atk', 'hp', 'def', 'crit', 'speed']) {
+    upRows.appendChild(kv(STAT_INFO[k].name, () => {
+      const room = upgradeRoom(app.state, k);
+      return `${upLevel(k)}단계 · ${room <= 0 ? '상한' : '다음 ' + fmt(upgradeCost(k, upLevel(k)))}`;
+    }));
   }
-  const power = h('b');
-  const eqb = h('b');
-  const capNote = h('p', { class: 'muted' }, '장비 치명타 중 60% 상한을 넘는 부분은 적용되지 않습니다.');
-  updaters.push(() => { const st = playerStats(app.state); power.textContent = fmt(powerRating(st)); eqb.textContent = `공 ${st.equipBonus.atk} · 체 ${st.equipBonus.hp} · 방 ${st.equipBonus.def}`; capNote.hidden = !st.capped.crit; });
-  updaters[updaters.length - 1]();
-  list.appendChild(h('details', { class: 'card' }, h('summary', { class: 'small' }, '전투력 · 상세 능력치'),
-    h('div', { class: 'kv' }, '전투력(표시용)', power),
-    h('div', { class: 'kv' }, '치명 피해', h('b', null, fmtPct(playerStats(s0).critMul, 0))),
-    h('div', { class: 'kv' }, '장비 보너스', eqb), capNote));
-  list.appendChild(V4.statPointsCard(app));
+  const totalEl = kv('누적 자동 강화', () => { const a = app.state.progression.autoGrow; return a ? `${fmtFull(a.total)}회 · 골드 ${fmt(a.spent)}` : '0회'; });
+  const resEl = kv('남겨두는 골드', () => {
+    const r = autoGrowReserve(app.state);
+    if (!r) return '없음';
+    const t2 = BALANCE.tiers[2];
+    const t2gold = prog.tierOf(app.state) < 2 && app.state.player.level >= t2.level - 5 ? Math.floor(killRewards(t2.level).gold * 20 * t2.goldMinutes) : 0;
+    const why = [t2gold ? '2차 승급' : null, r > t2gold ? '스킬 레벨업' : null].filter(Boolean).join('·');
+    return `${fmt(r)} (${why})`;
+  });
+  list.appendChild(h('div', { class: 'card' }, h('h3', null, '골드 자동 강화'), upRows, totalEl, resEl));
+  // stat points (auto)
+  const main = () => CLASSES[app.state.player.cls || 'warrior'].mainStat;
+  const pts = h('div', { class: 'stat-grid2' }, STAT_KEYS.map((k) => kv(STAT_NAMES[k] + (k === main() ? ' ★' : ''), () => String(app.state.player.stats[k] || 0))));
+  list.appendChild(h('div', { class: 'card', dataset: { screen: 'statpoints' } }, h('h3', null, '능력치 포인트 (자동 분배)'), pts,
+    h('p', { class: 'muted', style: { margin: '4px 0 0' } }, `레벨마다 ${BALANCE.statPoints.perLevel}포인트 · ★ = ${CLASSES[app.state.player.cls || 'warrior'].name} 주 능력치`)));
+  // equipment bonus
+  list.appendChild(h('div', { class: 'card' }, kv('장비 보너스', () => { const e = st().equipBonus; return `공 ${fmt(e.atk)} · 체 ${fmt(e.hp)} · 방 ${fmt(e.def)}`; })));
+  updaters.push(() => { const t = fmt(powerRating(st())); if (powerEl.textContent !== t) powerEl.textContent = t; });
+  updaters.forEach((u) => u());
   root.appendChild(list);
   root._update = () => updaters.forEach((u) => u());
   return root;
@@ -848,6 +844,7 @@ export function openConflict(app) {
 // ======================= help =======================
 function openHelp(app) {
   openModal({ id: 'help', title: '도움말', body: h('div', null,
+    h('h3', null, '자동 성장'), h('p', { class: 'small' }, '사냥으로 번 골드로 공격력·체력·방어력·치명타·공격 속도가 자동으로 강화되고, 레벨업 포인트도 클래스 추천대로 자동 분배됩니다. 2차 승급 골드와 바로 올릴 수 있는 스킬 레벨업 골드는 남겨 둡니다. 성장 탭에서 확인만 하면 돼요.'),
     h('h3', null, '배속 ×2'), h('p', { class: 'small' }, '전경 전투만 2배속이 됩니다. 쿨타임·적 공격·등장도 함께 빨라집니다. 방치 보상은 항상 ×1 기준이며 ×2·버프를 포함하지 않습니다.'),
     h('h3', null, '방치 보상'), h('p', { class: 'small' }, `같은 웨이브에서 10마리씩 3번 연속(최소 60초) 쓰러지지 않고 사냥하면 그 사냥터가 방치 기준이 됩니다. 보상 = 측정 수익률 × 경과 시간(최대 12시간) × 75%. 방식: ${RATE_METHOD}.`),
     h('h3', null, '저장'), h('p', { class: 'small' }, '중요한 소비·보상은 저장이 확정된 뒤에만 반영되고 연출됩니다. 20초마다, 탭을 숨길 때, 주요 보상 직후 자동 저장합니다. 이 브라우저에만 저장되므로 기기 이동은 내보내기 파일로 합니다.'),

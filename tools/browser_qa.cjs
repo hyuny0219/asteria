@@ -24,6 +24,17 @@ async function freshPage(browser, vp, { dpr = 1, ctx = null } = {}) {
     // one guest profile, so the title shows the profile card instead of the nickname form
     if (!localStorage.getItem('asteria-profiles')) localStorage.setItem('asteria-profiles', JSON.stringify({ list: [{ id: 'qa', nickname: 'QA선배', createdAt: Date.now(), lastPlayedAt: Date.now(), level: 1, job: '' }], last: 'qa' }));
   });
+  await context.addInitScript(() => {
+    // QA state edits retry while a routine checkpoint save is in flight ('busy')
+    window.__qaTx = async (fn) => {
+      for (let i = 0; i < 40; i++) {
+        const r = await window.__asteria.game.transact('qa', fn);
+        if (!r || r.ok || r.reason !== 'busy') return r;
+        await new Promise((res) => setTimeout(res, 50));
+      }
+      throw new Error('qa transact stayed busy');
+    };
+  });
   const page = await context.newPage();
   page.qaErrors = [];
   page.on('pageerror', (e) => page.qaErrors.push('pageerror: ' + e.message));
@@ -89,14 +100,14 @@ async function screensAt(browser, vp) {
   await ff(page, 20);
   await check(page, 'main', vp, '실제 전투 20초 후');
   // equipment empty state (19) — reset inventory
-  await page.evaluate(async () => { const g = window.__asteria.game; await g.transact('qa', (s) => { s.inventory = []; for (const k in s.equipped) s.equipped[k] = null; return { ok: true }; }); window.__asteria.app.setTab('equipment'); });
+  await page.evaluate(async () => { const g = window.__asteria.game; await window.__qaTx((s) => { s.inventory = []; for (const k in s.equipped) s.equipped[k] = null; return { ok: true }; }); window.__asteria.app.setTab('equipment'); });
   await check(page, 'empty', vp, '장비 없음');
   // give a set of items, then inventory (2), compare (3), enhance (4), dismantle (16)
   await page.evaluate(async () => {
     const A = window.__asteria; const g = A.game;
     const { makeItem } = await import('./src/core/items.js'); const { makeRng } = await import('./src/core/util.js');
     const rng = makeRng(3);
-    await g.transact('qa', (s) => { for (let i = 0; i < 14; i++) s.inventory.push(makeItem(s, { slot: ['weapon', 'helmet', 'armor', 'accessory'][i % 4], rarity: ['common', 'uncommon', 'rare'][i % 3], level: 5 + i, rng })); s.wallet.ore = 120; s.wallet.gold = 5000; return { ok: true }; });
+    await window.__qaTx((s) => { for (let i = 0; i < 14; i++) s.inventory.push(makeItem(s, { slot: ['weapon', 'helmet', 'armor', 'accessory'][i % 4], rarity: ['common', 'uncommon', 'rare'][i % 3], level: 5 + i, rng })); s.wallet.ore = 120; s.wallet.gold = 5000; return { ok: true }; });
     await g.autoEquip();
     A.app.setTab('equipment');
   });
@@ -117,7 +128,7 @@ async function screensAt(browser, vp) {
   // overflow (15)
   await page.evaluate(async () => {
     const g = window.__asteria.game; const { makeItem } = await import('./src/core/items.js'); const { makeRng } = await import('./src/core/util.js'); const rng = makeRng(5);
-    await g.transact('qa', (s) => { while (s.inventory.length < 200) s.inventory.push(makeItem(s, { slot: 'helmet', rarity: 'common', level: 3, rng })); for (let i = 0; i < 6; i++) s.overflow.push(makeItem(s, { slot: 'weapon', rarity: 'uncommon', level: 9, rng })); return { ok: true }; });
+    await window.__qaTx((s) => { while (s.inventory.length < 200) s.inventory.push(makeItem(s, { slot: 'helmet', rarity: 'common', level: 3, rng })); for (let i = 0; i < 6; i++) s.overflow.push(makeItem(s, { slot: 'weapon', rarity: 'uncommon', level: 9, rng })); return { ok: true }; });
   });
   await modal(page, 'openOverflow');
   await check(page, 'overflow', vp);
@@ -132,11 +143,11 @@ async function screensAt(browser, vp) {
   await modal(page, 'openWorld');
   await check(page, 'world', vp);
   await closeAll(page);
-  await page.evaluate(async () => { const g = window.__asteria.game; await g.transact('qa', (s) => { s.progression.maxWave.meadow = 10; s.progression.wave = 10; return { ok: true }; }); });
+  await page.evaluate(async () => { const g = window.__asteria.game; await window.__qaTx((s) => { s.progression.maxWave.meadow = 10; s.progression.wave = 10; return { ok: true }; }); });
   await modal(page, 'openBoss', 'B01');
   await check(page, 'boss', vp);
   // victory (9): strong hero, fight for real
-  await page.evaluate(async () => { const g = window.__asteria.game; await g.transact('qa', (s) => { s.player.statsUpgrades.atk = 120; s.player.statsUpgrades.hp = 60; return { ok: true }; }); });
+  await page.evaluate(async () => { const g = window.__asteria.game; await window.__qaTx((s) => { s.player.statsUpgrades.atk = 120; s.player.statsUpgrades.hp = 60; return { ok: true }; }); });
   await page.click('.modal-actions .btn-primary');
   await page.waitForTimeout(300);
   await check(page, 'skills', vp, '보스전 진행 중 (탭은 스킬)');
@@ -146,7 +157,7 @@ async function screensAt(browser, vp) {
   await page.click('.modal-actions .btn:last-child');
   await page.waitForTimeout(300);
   // defeat (10): weak hero vs B02 via forfeit
-  await page.evaluate(async () => { const g = window.__asteria.game; await g.transact('qa', (s) => { s.progression.maxWave.desert = 10; return { ok: true }; }); g.startBoss('B02'); });
+  await page.evaluate(async () => { const g = window.__asteria.game; await window.__qaTx((s) => { s.progression.maxWave.desert = 10; return { ok: true }; }); g.startBoss('B02'); });
   await ff(page, 2);
   await page.evaluate(() => window.__asteria.game.forfeit());
   await page.waitForTimeout(400);
@@ -158,7 +169,7 @@ async function screensAt(browser, vp) {
   // offline (11)
   await page.evaluate(async () => {
     const g = window.__asteria.game;
-    await g.transact('qa', (s) => { s.progression.verifiedFarm = { region: 'meadow', wave: 8, level: 8, killsPerSec: 0.35, windowSec: 80, method: 'qa', at: Date.now() }; return { ok: true }; });
+    await window.__qaTx((s) => { s.progression.verifiedFarm = { region: 'meadow', wave: 8, level: 8, killsPerSec: 0.35, windowSec: 80, method: 'qa', at: Date.now() }; return { ok: true }; });
     g.state.offlineSnapshot.lastActiveAt = Date.now() - 13 * 3600 * 1000;
     g.onVisible();
   });
@@ -169,12 +180,12 @@ async function screensAt(browser, vp) {
   // quest (13) / promotion (12) with dev save
   await page.evaluate(async () => {
     const g = window.__asteria.game;
-    await g.transact('qa', (s) => { s.player.level = 30; s.wallet.token = 20; s.progression.bossCleared.B03 = true; s.progression.unlockedRegions = ['meadow', 'desert', 'mine']; s.promotion.trialCleared = false; s.player.pendingExp = 12480; return { ok: true }; });
+    await window.__qaTx((s) => { s.player.level = 30; s.wallet.token = 20; s.progression.bossCleared.B03 = true; s.progression.unlockedRegions = ['meadow', 'desert', 'mine']; s.promotion.trialCleared = false; s.player.pendingExp = 12480; return { ok: true }; });
   });
   await modal(page, 'openQuest');
   await check(page, 'quest', vp);
   await closeAll(page);
-  await page.evaluate(async () => { const g = window.__asteria.game; await g.transact('qa', (s) => { s.promotion.trialCleared = true; s.promotion.trials = { ...(s.promotion.trials || {}), 1: true }; return { ok: true }; }); });
+  await page.evaluate(async () => { const g = window.__asteria.game; await window.__qaTx((s) => { s.promotion.trialCleared = true; s.promotion.trials = { ...(s.promotion.trials || {}), 1: true }; return { ok: true }; }); });
   await modal(page, 'openPromotion');
   await check(page, 'promotion', vp);
   await closeAll(page);
@@ -184,7 +195,7 @@ async function screensAt(browser, vp) {
   await closeAll(page);
   // ---- v4 screens ----
   const v4 = (fn, ...args) => page.evaluate(async ([fn, args]) => { const V = await import('./src/ui/v4.js'); V[fn](window.__asteria.app, ...args); }, [fn, args]);
-  await page.evaluate(async () => { await window.__asteria.game.transact('qa', (s) => { s.wallet.gem = 20000; s.wallet.eqTicket = 2; s.wallet.skTicket = 1; return { ok: true }; }); });
+  await page.evaluate(async () => { await window.__qaTx((s) => { s.wallet.gem = 20000; s.wallet.eqTicket = 2; s.wallet.skTicket = 1; return { ok: true }; }); });
   await v4('openGacha', 'eq');
   await check(page, 'gacha', vp, '장비 뽑기 · 확률 공개 · 천장');
   await page.click('.modal-actions .btn-primary');
@@ -207,12 +218,12 @@ async function screensAt(browser, vp) {
   await closeAll(page);
   await page.evaluate(() => window.__asteria.app.setTab('growth'));
   await check(page, 'statpoints', vp, '능력치 포인트');
-  await page.evaluate(async () => { await window.__asteria.game.transact('qa', (s) => { s.skills.runes.owned = { lifesteal: 2, focus: 1, gale: 1 }; s.skills.runes.equipped = ['lifesteal', null]; return { ok: true }; }); window.__asteria.app.setTab('skills'); });
+  await page.evaluate(async () => { await window.__qaTx((s) => { s.skills.runes.owned = { lifesteal: 2, focus: 1, gale: 1 }; s.skills.runes.equipped = ['lifesteal', null]; return { ok: true }; }); window.__asteria.app.setTab('skills'); });
   await check(page, 'runes', vp, '각인 2칸');
   await page.evaluate(() => window.__asteria.app.setTab('equipment'));
   await check(page, 'inventory', vp, '8부위 · 6등급');
   // tower / raid
-  await page.evaluate(async () => { await window.__asteria.game.transact('qa', (s) => { s.progression.bossCleared.B03 = true; s.player.level = 95; s.progression.bossCleared.B09 = true; return { ok: true }; }); window.__asteria.app.setTab('dungeon'); });
+  await page.evaluate(async () => { await window.__qaTx((s) => { s.progression.bossCleared.B03 = true; s.player.level = 95; s.progression.bossCleared.B09 = true; return { ok: true }; }); window.__asteria.app.setTab('dungeon'); });
   await check(page, 'tower', vp, '시련의 탑 · 레이드 카드');
   await page.evaluate(() => { window.__asteria.game.startTower(); });
   await ff(page, 3);
@@ -229,23 +240,25 @@ async function screensAt(browser, vp) {
   await page.click('.modal-actions .btn-primary');
   await page.waitForTimeout(300);
   // tier 2 / 3 promotion
-  await page.evaluate(async () => { await window.__asteria.game.transact('qa', (s) => { s.player.branch = 'knight'; s.player.tier = 1; s.player.level = 60; s.wallet.awakenStone = 10; s.wallet.gold = 1e9; s.progression.bossCleared.B06 = true; s.tower.best = 5; return { ok: true }; }); });
+  await page.evaluate(async () => { await window.__qaTx((s) => { s.player.branch = 'knight'; s.player.tier = 1; s.player.level = 60; s.wallet.awakenStone = 10; s.wallet.gold = 1e9; s.progression.bossCleared.B06 = true; s.tower.best = 5; return { ok: true }; }); });
   await v4('openPromotionTier', 2);
   await check(page, 'promotion', vp, '2차 승급');
   await page.click('.modal-actions .btn-primary');
   await page.waitForSelector('[data-screen=promoPlay]', { timeout: 5000 }).catch(() => {});
   await check(page, 'promoPlay', vp, '2차 승급 완료');
   await closeAll(page);
-  await page.evaluate(async () => { await window.__asteria.game.transact('qa', (s) => { s.player.level = 90; s.wallet.starShard = 3; s.progression.bossCleared.B09 = true; s.promotion.trials = { ...(s.promotion.trials || {}), 3: true }; return { ok: true }; }); });
+  await page.evaluate(async () => { await window.__qaTx((s) => { s.player.level = 90; s.wallet.starShard = 3; s.progression.bossCleared.B09 = true; s.promotion.trials = { ...(s.promotion.trials || {}), 3: true }; return { ok: true }; }); });
   await modal(page, 'openQuest');
   await check(page, 'quest', vp, '3차 승급 체크리스트');
   await closeAll(page);
-  await page.evaluate(async () => { await window.__asteria.game.transact('qa', (s) => { s.player.tier = 1; s.player.level = 30; s.wallet.gold = 1e6; return { ok: true }; }); });
-  // save error (18): next save fails, try an upgrade
-  await page.evaluate(async () => { await window.__asteria.game.transact('qa', (s) => { s.player.statsUpgrades.atk = 3; s.wallet.gold = 1e6; return { ok: true }; }); window.__asteria.app.setTab('growth'); });
+  await page.evaluate(async () => { await window.__qaTx((s) => { s.player.tier = 1; s.player.level = 30; s.wallet.gold = 1e6; return { ok: true }; }); });
+  // save error (18): next save fails, try a shop purchase (growth is automatic, no buttons)
+  await page.evaluate(async () => { await window.__qaTx((s) => { s.wallet.gold = 1e15; s.shop = { buys: {} }; return { ok: true }; }); window.__asteria.app.setTab('menu'); });
   await page.waitForTimeout(300);
+  await page.click('[data-key="tile-shop"]');
+  await page.waitForSelector('[data-key="shop-ore100"] .btn');
   await page.evaluate(() => { window.__asteria.saver.failNext = 1; });
-  await page.click('[data-key="up-atk"]');
+  await page.click('[data-key="shop-ore100"] .btn');
   await page.waitForTimeout(500);
   await check(page, 'saveerror', vp, '저장 실패 시뮬레이션');
   await closeAll(page);
@@ -268,7 +281,7 @@ async function flows(browser) {
     await boot(page);
     await page.evaluate(async () => {
       const g = window.__asteria.game;
-      await g.transact('qa', (s) => { s.progression.verifiedFarm = { region: 'meadow', wave: 5, level: 5, killsPerSec: 0.4, windowSec: 80, method: 'qa', at: Date.now() }; return { ok: true }; });
+      await window.__qaTx((s) => { s.progression.verifiedFarm = { region: 'meadow', wave: 5, level: 5, killsPerSec: 0.4, windowSec: 80, method: 'qa', at: Date.now() }; return { ok: true }; });
       g.state.offlineSnapshot.lastActiveAt = Date.now() - 2 * 3600 * 1000;
       g.onVisible();
     });
@@ -300,12 +313,16 @@ async function flows(browser) {
   {
     const { context, page } = await freshPage(browser, vp);
     await boot(page);
-    await page.evaluate(async () => { await window.__asteria.game.transact('qa', (s) => { s.wallet.gold = 500; return { ok: true }; }); window.__asteria.saver.failNext = 1; });
-    const g0 = await page.evaluate(() => ({ gold: window.__asteria.game.state.wallet.gold, up: window.__asteria.game.state.player.statsUpgrades.atk }));
-    await page.click('[data-key="up-atk"]');
+    await page.evaluate(async () => { await window.__qaTx((s) => { s.wallet.gold = 1e12; s.shop = { buys: {} }; return { ok: true }; }); window.__asteria.app.setTab('menu'); });
+    await page.waitForTimeout(300);
+    await page.click('[data-key="tile-shop"]');
+    await page.waitForSelector('[data-key="shop-ore100"] .btn');
+    await page.evaluate(() => { window.__asteria.saver.failNext = 1; });
+    const g0 = await page.evaluate(() => ({ ore: window.__asteria.game.state.wallet.ore, buys: JSON.stringify(window.__asteria.game.state.shop.buys) }));
+    await page.click('[data-key="shop-ore100"] .btn');
     await page.waitForTimeout(500);
-    const g1 = await page.evaluate(() => ({ gold: window.__asteria.game.state.wallet.gold, up: window.__asteria.game.state.player.statsUpgrades.atk, modal: !!document.querySelector('[data-screen=saveerror]'), dot: document.querySelector('.save-dot').classList.contains('bad') }));
-    rec('failed save spends nothing', g1.gold >= g0.gold && g1.up === g0.up && g1.modal && g1.dot, { g0, g1 });
+    const g1 = await page.evaluate(() => ({ ore: window.__asteria.game.state.wallet.ore, buys: JSON.stringify(window.__asteria.game.state.shop.buys), modal: !!document.querySelector('[data-screen=saveerror]'), dot: document.querySelector('.save-dot').classList.contains('bad') }));
+    rec('failed save spends nothing', g1.ore === g0.ore && g1.buys === g0.buys && g1.modal && g1.dot, { g0, g1 });
     await page.click('.modal-actions .btn-primary');
     await page.waitForTimeout(500);
     const ok = await page.evaluate(() => window.__asteria.game.saveStatus.ok);
@@ -318,7 +335,7 @@ async function flows(browser) {
     await boot(page);
     await page.evaluate(async () => {
       const g = window.__asteria.game;
-      await g.transact('qa', (s) => { s.progression.verifiedFarm = { region: 'meadow', wave: 5, level: 5, killsPerSec: 0.4, windowSec: 80, method: 'qa', at: Date.now() }; return { ok: true }; });
+      await window.__qaTx((s) => { s.progression.verifiedFarm = { region: 'meadow', wave: 5, level: 5, killsPerSec: 0.4, windowSec: 80, method: 'qa', at: Date.now() }; return { ok: true }; });
       g.state.offlineSnapshot.lastActiveAt = Date.now() - 3600 * 1000;
       g.onVisible();
     });
@@ -347,7 +364,7 @@ async function flows(browser) {
     rec('second tab blocked, takeover stops first tab', waiting === 'conflict' && first === 'CONFLICT' && ['FARM', 'LOAD', 'OFFLINE'].includes(second), { waiting, first, second });
     // the stopped tab must not write
     const rev1 = await p2.evaluate(() => window.__asteria.game.state.revision);
-    await page.evaluate(() => window.__asteria.game.buyUpgrade('atk', 1));
+    await page.evaluate(() => window.__asteria.game.setSetting('shake', false));
     await p2.waitForTimeout(300);
     const r2 = await page.evaluate(() => window.__asteria.game.mode);
     rec('stopped tab cannot commit', r2 === 'CONFLICT', { rev1 });

@@ -1,6 +1,6 @@
 {
- "startedAt": "2026-11-05T03:08:21.328Z",
- "base": "http://127.0.0.1:8140/",
+ "startedAt": "2026-11-05T04:05:53.264Z",
+ "base": "http://127.0.0.1:8141/",
  "viewports": [
   [
    390,
@@ -812,8 +812,8 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "main",
-    "statpoints",
+    "shop",
+    "shop",
     "saveerror",
     "saveerror"
    ],
@@ -1633,8 +1633,8 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "main",
-    "statpoints",
+    "shop",
+    "shop",
     "saveerror",
     "saveerror"
    ],
@@ -2446,8 +2446,8 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "main",
-    "statpoints",
+    "shop",
+    "shop",
     "saveerror",
     "saveerror"
    ],
@@ -2477,8 +2477,8 @@
    "name": "reload keeps the same pending claim",
    "pass": true,
    "detail": {
-    "first": "claim_mw2yw6ch_zlxite",
-    "after": "claim_mw2yw6ch_zlxite"
+    "first": "claim_mw30y6my_q3azwv",
+    "after": "claim_mw30y6my_q3azwv"
    }
   },
   {
@@ -2501,12 +2501,12 @@
    "pass": true,
    "detail": {
     "g0": {
-     "gold": 500,
-     "up": 0
+     "ore": 0,
+     "buys": "{}"
     },
     "g1": {
-     "gold": 500,
-     "up": 0,
+     "ore": 0,
+     "buys": "{}",
      "modal": true,
      "dot": true
     }
@@ -2550,7 +2550,7 @@
     "k0": 1,
     "k1": {
      "kills": 1,
-     "acc": 49.89999999999998,
+     "acc": 16.699999999999932,
      "mode": "FARM"
     }
    }
@@ -2589,7 +2589,7 @@
   }
  ],
  "errors": [],
- "finishedAt": "2026-11-05T03:09:59.048Z",
+ "finishedAt": "2026-11-05T04:07:32.474Z",
  "summary": {
   "screenChecks": 114,
   "screenPass": 114,

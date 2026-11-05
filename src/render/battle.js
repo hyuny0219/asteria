@@ -58,7 +58,8 @@ export class BattleRenderer {
       const x = ev.by === 'hero' ? (ev.x ?? 220) : HERO_X;
       if (show) this.pushNumber({ x, y: ev.by === 'hero' ? 0.42 : 0.38, text: fmt(ev.dmg), crit: ev.crit, enemy: ev.by === 'enemy', heavy: ev.heavy, guarded: ev.guarded, born: now });
       if (ev.by === 'hero' && ev.ranged && ev.action !== 'dot') this.pushFx({ kind: 'shot', x, born: now, dur: 180, crit: ev.crit });
-      if (ev.by === 'hero' && ev.action !== 'dot') this.pushFx({ kind: ev.action === 'ult' ? 'star' : ev.action === 'skill' ? 'arc2' : ev.action === 'counter' ? 'rose' : 'arc', x, born: now, dur: ev.action === 'ult' ? 520 : 200 });
+      // ranged basic attacks hit with the streak only (no sword arc on the target)
+      if (ev.by === 'hero' && ev.action !== 'dot' && !(ev.ranged && ev.action === 'attack')) this.pushFx({ kind: ev.action === 'ult' ? 'star' : ev.action === 'skill' ? 'arc2' : ev.action === 'counter' ? 'rose' : 'arc', x, born: now, dur: ev.action === 'ult' ? 520 : 200 });
       if (ev.by === 'enemy' && ev.heavy) this.kick(3, 100);
     } else if (ev.type === 'miss') {
       this.pushNumber({ x: HERO_X, y: 0.38, text: '회피', miss: true, born: now });
@@ -82,7 +83,8 @@ export class BattleRenderer {
   }
 
   // ---------- frame ----------
-  draw(battle, { alpha = 0, region = null, bgId = null, bgTint = null, branch = null, cls = 'warrior', heroTint = 0, label = null, victory = false }) {
+  draw(battle, { alpha = 0, region = null, bgId = null, bgTint = null, branch = null, cls = 'warrior', tier = 1, heroTint = 0, label = null, victory = false }) {
+    this.heroTier = tier;
     this.heroTint = heroTint;
     this.heroCls = cls;
     const ctx = this.ctx;
@@ -162,7 +164,7 @@ export class BattleRenderer {
   drawHero(battle, x, gy, branch, s, victory) {
     const ctx = this.ctx;
     const h = battle.hero;
-    const frames = heroFrames(branch, this.heroCls || 'warrior');
+    const frames = heroFrames(branch, this.heroCls || 'warrior', this.heroTier || 1);
     const t = battle.t;
     let pose = 'idle', dx = 0, dy = 0, alpha = 1, rot = 0;
     const ac = h.action;

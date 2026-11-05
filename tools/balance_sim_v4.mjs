@@ -74,17 +74,8 @@ async function runOne(seed, cls) {
     if (s.returnBonus.pending) await g.claimReturn();
     for (const x of missionStatus(g.state, clock).list) if (x.done && !x.claimed) await g.claimMission(x.id);
     if (missionStatus(g.state, clock).canBonus) await g.claimMissionBonus();
-    // gold upgrades (value per gold)
-    for (let k = 0; k < 40; k++) {
-      const st = playerStats(g.state);
-      const val = { atk: 2 / st.atk, hp: 20 / st.hp * 0.55, def: 1 / Math.max(1, st.def) * 0.35, crit: 0.002 / Math.max(0.05, st.crit) * 0.8, speed: 0.01 / st.aspd * 0.9 };
-      let best = null, bestScore = 0;
-      for (const stat of Object.keys(val)) { const q = quoteUpgrade(g.state, stat, 1); if (!q.count) continue; const sc = val[stat] / q.total; if (sc > bestScore) { bestScore = sc; best = stat; } }
-      // keep gold for skill levels / promotion (spend at most 70% on upgrades)
-      if (!best) break;
-      const r = await g.buyUpgrade(best, 1);
-      if (!r.ok) break;
-    }
+    // gold upgrades: automatic in the game (autogrow.js, runs every 2 s of farming); run once more here
+    g.runAutoGrow();
     // skill levels
     for (const id of unlockedSkills(g.state)) {
       const c = skillLevelCost(g.state, id);

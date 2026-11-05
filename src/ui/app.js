@@ -12,7 +12,7 @@ import { sfx } from '../platform/audio.js';
 import * as FS from './fullscreen.js';
 
 export const TABS = [
-  { id: 'growth', label: '성장', icon: 'growth' },
+  { id: 'growth', label: '능력치', icon: 'growth' },
   { id: 'equipment', label: '장비', icon: 'equipment' },
   { id: 'skills', label: '스킬', icon: 'skill' },
   { id: 'dungeon', label: '모험', icon: 'dungeon' },
@@ -160,7 +160,7 @@ export class App {
   onMode(mode, prev) {
     if (mode === 'OFFLINE') S.openOffline(this);
     if (mode === 'CONFLICT') S.openConflict(this);
-    if (mode === 'DEFEAT') { this.el.liveText.textContent = '세린이 쓰러졌습니다. 3초 뒤 다시 싸웁니다.'; }
+    if (mode === 'DEFEAT') { this.el.liveText.textContent = `${CLASSES[this.state.player.cls || 'warrior'].hero}이(가) 쓰러졌습니다. 3초 뒤 다시 싸웁니다.`; }
     this.updateHud(true);
     this.renderSession();
   }
@@ -170,7 +170,7 @@ export class App {
       // boss/dungeon/trial always shows the real battle; restore the user's view after
       this.forcedBattleView = true;
       this.applyView();
-      preloadFor({ region: REGION_BY_ID[this.state.progression.region], boss: sess.bossId || null, branch: this.state.player.branch, cls: this.state.player.cls });
+      preloadFor({ region: REGION_BY_ID[this.state.progression.region], boss: sess.bossId || null, branch: this.state.player.branch, cls: this.state.player.cls, tier: prog.tierOf(this.state), bg: sess.kind === 'tower' ? 'tower' : sess.kind === 'raid' ? 'void' : null });
     } else {
       this.forcedBattleView = false;
       this.applyView();
@@ -188,7 +188,7 @@ export class App {
 
   preload() {
     const s = this.state;
-    return preloadFor({ region: REGION_BY_ID[s.progression.region], boss: null, branch: s.player.branch, cls: s.player.cls });
+    return preloadFor({ region: REGION_BY_ID[s.progression.region], boss: null, branch: s.player.branch, cls: s.player.cls, tier: prog.tierOf(s) });
   }
 
   // ---------- fullscreen ----------
@@ -314,7 +314,7 @@ export class App {
     if (view === 'battle') {
       const region = REGION_BY_ID[s.progression.region];
       const sess = g.session;
-      const SB = { quarry: ['mine', null], gold: ['desert', 40], books: ['cathedral', null], tower: ['cathedral', 200], raid: ['mine', 260] };
+      const SB = { quarry: ['mine', null], gold: ['desert', 40], books: ['cathedral', null], tower: ['tower', null], raid: ['void', null] };
       const sk = sess ? (sess.kind === 'dungeon' ? sess.type || 'quarry' : sess.kind) : null;
       const [bg, bgTint] = g.mode === 'PROMOTION_TRIAL' ? ['cathedral', null] : SB[sk] || [region.bg, region.bgTint || null];
       const left = b.timeLeftMs ? b.timeLeftMs() : null;
@@ -324,7 +324,7 @@ export class App {
         : sk === 'raid' ? `레이드 · 누적 피해 ${fmt(b.raidDamage || b.damageDealt || 0)} · ${Math.ceil((left || 0) / 1000)}초`
         : g.mode === 'DEFEAT' ? '쓰러졌습니다 · 3초 뒤 재개 (손실 없음)' : null;
       const cls = CLASSES[s.player.cls || 'warrior'];
-      this.renderer.draw(b, { alpha, region, bgId: bg, bgTint, branch: s.player.branch, cls: s.player.cls || 'warrior', heroTint: cls.tint || 0, label, victory: g.mode === 'RESULT' && g.result && g.result.win });
+      this.renderer.draw(b, { alpha, region, bgId: bg, bgTint, branch: s.player.branch, cls: s.player.cls || 'warrior', tier: prog.tierOf(s), heroTint: cls.tint || 0, label, victory: g.mode === 'RESULT' && g.result && g.result.win });
     }
     // cooldowns
     if (b && this.skillEls) {

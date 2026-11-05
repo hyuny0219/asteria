@@ -16,3 +16,9 @@ Originals kept unmodified; runtime crops are made by tools/extract_v4.py.
 | tier23_archer.png | 스나이퍼, 호크아이, 비스트마스터, 와일드 킹 | 7360d64f |
 | tier23_rogue.png | 나이트블레이드, 섀도우, 팬텀, 페이트위버 | 0071327b |
 | skills_v4.png | 6×6 스킬·각인 아이콘 (행 순서는 프롬프트 참고) | 672d47ae |
+| poses/mage_poses.png | 엘레나 8 키 포즈 4×2 (대기, 걸음, 준비, 공격, 회수, 피격, 시전, 승리) | 9f8972ac |
+| poses/archer_poses.png | 리라 8 키 포즈 (같은 순서) | f7303822 |
+| poses/rogue_poses.png | 녹스 8 키 포즈 (같은 순서) | f4f35a00 |
+| crops/*_base.png | 클래스 보드 왼쪽 기본 외형 단독 크롭 (AutoSprite 시도용, 2회 실패) | — |
+
+`*_alpha.png`: Higgsfield background removal of the same board (matte only; combined with the colour key by the extract scripts).

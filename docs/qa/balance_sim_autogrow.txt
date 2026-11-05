@@ -1,0 +1,53 @@
+warrior#1 done in 16s → L100 T3
+mage#1 done in 16s → L100 T3
+archer#1 done in 17s → L100 T3
+rogue#1 done in 16s → L100 T3
+balance 0.4-v4-experimental · warrior/mage/archer/rogue × 1 seeds · 4×30min/day · max 22 days (days since start)
+milestone    median   p10     p90     reached
+lv10         0.25     0.25    0.25    4/4
+lv20         0.5      0.5     0.5     4/4
+lv30         1        1       1.25    4/4
+tier1        1        1       1.25    4/4
+lv40         1.75     1.75    2.25    4/4
+lv50         3.25     3.25    3.75    4/4
+lv60         5.25     5       6.25    4/4
+tier2        5.25     5       6.25    4/4
+lv70         7.75     7.5     8.5     4/4
+lv80         10.75    10.5    11.27   4/4
+lv90         14.75    14.51   15.5    4/4
+tier3        14.75    14.51   15.5    4/4
+lv100        19.75    19.25   20.02   4/4
+win_B01      0        0       0       4/4
+win_B02      0.01     0.01    0.01    4/4
+win_B03      0.01     0.01    0.02    4/4
+win_B04      0.25     0.25    0.25    4/4
+win_B05      0.5      0.5     0.75    4/4
+win_B06      1        1       1.25    4/4
+win_B07      3        2.5     3.01    4/4
+win_B08      5        3.26    5.25    4/4
+win_B09      6.5      6.26    8       4/4
+TTK Lv0–9: median 2.65s p90 5.20 (n=2543)
+TTK Lv10–19: median 3.30s p90 4.90 (n=2498)
+TTK Lv20–29: median 3.65s p90 6.25 (n=5933)
+TTK Lv30–39: median 3.60s p90 5.25 (n=9403)
+TTK Lv40–49: median 3.15s p90 5.20 (n=16960)
+TTK Lv50–59: median 3.35s p90 5.20 (n=21206)
+TTK Lv60–69: median 2.90s p90 4.40 (n=28049)
+TTK Lv70–79: median 2.65s p90 4.25 (n=39651)
+TTK Lv80–89: median 2.45s p90 3.60 (n=54039)
+TTK Lv90–99: median 2.20s p90 3.20 (n=69606)
+TTK Lv100–109: median 2.10s p90 3.15 (n=9625)
+B01: fights 4, win 100%, win time median 28s
+B02: fights 4, win 100%, win time median 28s
+B03: fights 12, win 33%, win time median 46s
+B04: fights 10, win 40%, win time median 45s
+B05: fights 17, win 24%, win time median 55s
+B06: fights 18, win 22%, win time median 44s
+B07: fights 18, win 22%, win time median 46s
+B08: fights 18, win 22%, win time median 52s
+B09: fights 16, win 25%, win time median 53s
+warrior: final L100/T3/tower70/void · lv100 day 20.02 · raid CCC · deaths 33
+mage: final L100/T3/tower78/void · lv100 day 19.75 · raid SAS · deaths 15
+archer: final L100/T3/tower78/void · lv100 day 19.25 · raid BBA · deaths 79
+rogue: final L100/T3/tower78/void · lv100 day 20.25 · raid BBB · deaths 60
+done

@@ -374,3 +374,14 @@ input.text { width: 100%; min-height: 36px; background: var(--panel); border: 1p
 .shop-item .lim { font-size: 12px; color: var(--gold); }
 .shop-item .btn { width: auto; min-width: 92px; font-size: 13px; padding: 0 10px; }
 .class-card[disabled] { opacity: .5; cursor: default; }
+/* v4 art: rune / emblem icons */
+.rune-ic img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+.rune-mini { width: 22px; height: 22px; border-radius: 50%; vertical-align: -6px; margin-right: 6px; }
+.card-title { display: inline-flex; align-items: center; gap: 6px; }
+.emblem { width: 28px; height: 28px; border-radius: 6px; }
+/* read-only growth view */
+.auto-note { margin: 0 0 6px; font-size: 12px; }
+.stat-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+.stat-grid2 .kv { padding: 2px 0; }
+.panel-head .power-v { color: var(--gold); font-size: 16px; font-variant-numeric: tabular-nums; }
+.card h3 { font-size: 14px; }

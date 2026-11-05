@@ -31,16 +31,29 @@ export function failed(src) { const e = cache.get(src); return !!(e && e.failed)
 
 // Serin (warrior) has 8 key poses. Elena / Lira / Nox have one authored figure per
 // costume (base, tier-1 branch), drawn static with the lunge/trail tweens.
-export function heroFrames(branch, cls = 'warrior') {
+// Costume for a branch at a tier: tier-3 / tier-2 figure when it exists, else tier 1.
+export function promoKey(branch, tier = 1) {
+  if (!branch || !meta) return null;
+  for (let t = Math.min(3, Math.max(1, tier)); t >= 1; t--) {
+    const k = t === 1 ? 'promo_' + branch : `promo_${branch}_t${t}`;
+    if (meta.hero[k]) return k;
+  }
+  return null;
+}
+export function heroFrames(branch, cls = 'warrior', tier = 1) {
   const H = meta.hero;
   const art = CLASSES[cls] && CLASSES[cls].art;
+  const pk = promoKey(branch, tier);
   if (art && H[art.base]) {
     const base = H[art.base];
-    const promo = branch && H['promo_' + branch] ? H['promo_' + branch] : null;
+    const promo = pk ? H[pk] : null;
     const f = promo || base;
+    // base form: 8 key poses when extracted (tools/extract_poses_v4.py), like Serin
+    const P = (k) => H[`pose_${cls}_${k}`];
+    if (!promo && P('idle')) return { idle: P('idle'), step: P('step'), anticipation: P('anticipation'), thrust: P('thrust'), recovery: P('recovery'), hit: P('hit'), cast: P('cast'), victory: P('victory'), promo: null };
     return { idle: f, step: f, anticipation: f, thrust: f, recovery: f, hit: f, cast: f, victory: f, promo, static: true };
   }
-  return { idle: H.idle, step: H.step, anticipation: H.anticipation, thrust: H.thrust, recovery: H.recovery, hit: H.hit, cast: H.cast, victory: H.victory, promo: branch ? H['promo_' + branch] : null };
+  return { idle: H.idle, step: H.step, anticipation: H.anticipation, thrust: H.thrust, recovery: H.recovery, hit: H.hit, cast: H.cast, victory: H.victory, promo: pk ? H[pk] : null };
 }
 // Class portraits: face (192), card (3:4), illustration (2:3). Warrior = Serin's key art.
 export function classPortrait(cls, kind) {
@@ -59,14 +72,17 @@ export function spriteFile(def) {
   const m = def && (meta.monsters[def.sprite] || meta.bosses[def.sprite] || meta.monsters[def.id] || meta.bosses[def.id]);
   return m ? m.file : null;
 }
-export function promoFrame(branch) { return branch && meta.hero['promo_' + branch] ? meta.hero['promo_' + branch] : null; }
+export function promoFrame(branch, tier = 1) { const k = promoKey(branch, tier); return k ? meta.hero[k] : null; }
+// Transparent full figure for promotion screens (portraits mirror the hero entries).
+export function promoPortrait(branch, tier = 1) { const k = promoKey(branch, tier); return k && meta.portraits[k] ? meta.portraits[k].file : null; }
 
-export async function preloadFor({ region, boss, branch, cls = 'warrior', monsters = MONSTERS, bosses = BOSSES }) {
+export async function preloadFor({ region, boss, branch, cls = 'warrior', tier = 1, bg = null, monsters = MONSTERS, bosses = BOSSES }) {
   const art = CLASSES[cls] && CLASSES[cls].art;
   // Serin's 8 poses (also used by the instructor projection) + this class's figure
-  const list = Object.entries(meta.hero).filter(([k]) => !k.startsWith('promo_') && !k.startsWith('cls_')).map(([, f]) => f.file);
+  const list = Object.entries(meta.hero).filter(([k]) => !k.startsWith('promo_') && !k.startsWith('cls_') && !k.startsWith('pose_')).map(([, f]) => f.file);
   if (art && meta.hero[art.base]) list.push(meta.hero[art.base].file);
-  const pf = promoFrame(branch);
+  for (const [k, f] of Object.entries(meta.hero)) if (k.startsWith(`pose_${cls}_`)) list.push(f.file);
+  const pf = promoFrame(branch, tier);
   if (pf) list.push(pf.file);
   if (region) {
     const bg = meta.backgrounds[region.bg];
@@ -75,6 +91,7 @@ export async function preloadFor({ region, boss, branch, cls = 'warrior', monste
     list.push(spriteFile(bosses ? bosses[region.boss] : { id: region.boss }));
   }
   if (boss) list.push(spriteFile(bosses ? bosses[boss] : { id: boss }));
+  if (bg && meta.backgrounds[bg]) list.push(meta.backgrounds[bg].file);
   await Promise.all(list.filter(Boolean).map(loadImage));
 }
 

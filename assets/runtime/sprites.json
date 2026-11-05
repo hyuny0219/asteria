@@ -33,6 +33,54 @@
   "generated/icons_v4.png": {
    "status": "GENERATED_BOARD",
    "note": "Higgsfield gpt_image_2_5, 4x4 icon grid"
+  },
+  "generated/monsters_a.png": {
+   "status": "GENERATED_BOARD",
+   "note": "3x2 monsters, alpha = key ∪ bg-removal matte"
+  },
+  "generated/monsters_b.png": {
+   "status": "GENERATED_BOARD",
+   "note": "4x2 monsters, alpha = key ∪ bg-removal matte"
+  },
+  "generated/bosses_a.png": {
+   "status": "GENERATED_BOARD",
+   "note": "2x2 bosses"
+  },
+  "generated/bosses_b.png": {
+   "status": "GENERATED_BOARD",
+   "note": "2x2 bosses"
+  },
+  "generated/tier23_warrior.png": {
+   "status": "GENERATED_BOARD",
+   "note": "tier-2/3 figures: A t2, A t3, B t2, B t3"
+  },
+  "generated/tier23_mage.png": {
+   "status": "GENERATED_BOARD",
+   "note": "tier-2/3 figures: A t2, A t3, B t2, B t3"
+  },
+  "generated/tier23_archer.png": {
+   "status": "GENERATED_BOARD",
+   "note": "tier-2/3 figures: A t2, A t3, B t2, B t3"
+  },
+  "generated/tier23_rogue.png": {
+   "status": "GENERATED_BOARD",
+   "note": "tier-2/3 figures: A t2, A t3, B t2, B t3"
+  },
+  "generated/skills_v4.png": {
+   "status": "GENERATED_BOARD",
+   "note": "6x6 skill / rune / emblem icons"
+  },
+  "generated/poses/mage_poses.png": {
+   "status": "GENERATED_BOARD",
+   "note": "Higgsfield gpt_image_2_5, 8 key poses 4x2; matte = Higgsfield background removal"
+  },
+  "generated/poses/archer_poses.png": {
+   "status": "GENERATED_BOARD",
+   "note": "Higgsfield gpt_image_2_5, 8 key poses 4x2; matte = Higgsfield background removal"
+  },
+  "generated/poses/rogue_poses.png": {
+   "status": "GENERATED_BOARD",
+   "note": "Higgsfield gpt_image_2_5, 8 key poses 4x2; matte = Higgsfield background removal"
   }
  },
  "monsters": {
@@ -251,6 +299,1444 @@
    "mirrored": false,
    "droppedBleedComponents": [],
    "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "M07": {
+   "id": "M07",
+   "name": "독거미",
+   "displayBodyPx": 62,
+   "file": "assets/runtime/mon_M07.webp",
+   "sourceRect": [
+    0,
+    0,
+    852,
+    816
+   ],
+   "trimOffset": [
+    17,
+    132
+   ],
+   "size": [
+    173,
+    128
+   ],
+   "scale": 0.2583,
+   "bodyHeightPx": 124.0,
+   "pivot": [
+    82.1,
+    125.8
+   ],
+   "hitbox": [
+    11.9,
+    9.2,
+    148.2,
+    109.1
+   ],
+   "flying": false,
+   "mirrored": false,
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "droppedBleedComponents": [
+    1,
+    1,
+    11,
+    1,
+    2,
+    1,
+    1,
+    3,
+    1,
+    1,
+    1,
+    4,
+    1,
+    3,
+    4,
+    3
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "generated"
+  },
+  "M08": {
+   "id": "M08",
+   "name": "트렌트",
+   "displayBodyPx": 112,
+   "file": "assets/runtime/mon_M08.webp",
+   "sourceRect": [
+    512,
+    0,
+    1022,
+    816
+   ],
+   "trimOffset": [
+    707,
+    12
+   ],
+   "size": [
+    230,
+    230
+   ],
+   "scale": 0.3607,
+   "bodyHeightPx": 224.0,
+   "pivot": [
+    165.3,
+    226.9
+   ],
+   "hitbox": [
+    16.0,
+    16.3,
+    197.1,
+    197.1
+   ],
+   "flying": false,
+   "mirrored": false,
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "droppedBleedComponents": [
+    5,
+    1,
+    1,
+    1,
+    8,
+    6,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    171,
+    1,
+    2,
+    1,
+    73,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    6,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    10,
+    1,
+    1,
+    2,
+    2,
+    2,
+    4,
+    1,
+    2,
+    7,
+    2,
+    2,
+    39,
+    1,
+    34,
+    1,
+    2,
+    1,
+    1,
+    4
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "generated"
+  },
+  "M09": {
+   "id": "M09",
+   "name": "설인",
+   "displayBodyPx": 106,
+   "file": "assets/runtime/mon_M09.webp",
+   "sourceRect": [
+    1194,
+    0,
+    854,
+    816
+   ],
+   "trimOffset": [
+    1381,
+    50
+   ],
+   "size": [
+    241,
+    218
+   ],
+   "scale": 0.3706,
+   "bodyHeightPx": 212.0,
+   "pivot": [
+    158.0,
+    214.6
+   ],
+   "hitbox": [
+    17.1,
+    15.3,
+    206.8,
+    186.6
+   ],
+   "flying": false,
+   "mirrored": false,
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "droppedBleedComponents": [
+    1,
+    1,
+    16,
+    1,
+    3,
+    1,
+    1,
+    19,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "generated"
+  },
+  "M10": {
+   "id": "M10",
+   "name": "서리 마녀",
+   "displayBodyPx": 104,
+   "file": "assets/runtime/mon_M10.webp",
+   "sourceRect": [
+    0,
+    544,
+    852,
+    816
+   ],
+   "trimOffset": [
+    27,
+    681
+   ],
+   "size": [
+    193,
+    213
+   ],
+   "scale": 0.3317,
+   "bodyHeightPx": 208.0,
+   "pivot": [
+    108.6,
+    210.7
+   ],
+   "hitbox": [
+    13.6,
+    15.1,
+    165.5,
+    183.0
+   ],
+   "flying": true,
+   "mirrored": false,
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "droppedBleedComponents": [
+    20,
+    16,
+    1,
+    1,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    3,
+    1,
+    3,
+    3,
+    1,
+    1,
+    16,
+    1,
+    1,
+    5,
+    1
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "generated"
+  },
+  "M11": {
+   "id": "M11",
+   "name": "화염 정령",
+   "displayBodyPx": 104,
+   "file": "assets/runtime/mon_M11.webp",
+   "sourceRect": [
+    512,
+    544,
+    1022,
+    816
+   ],
+   "trimOffset": [
+    697,
+    666
+   ],
+   "size": [
+    178,
+    213
+   ],
+   "scale": 0.323,
+   "bodyHeightPx": 208.0,
+   "pivot": [
+    97.2,
+    210.6
+   ],
+   "hitbox": [
+    13.2,
+    15.1,
+    150.9,
+    183.0
+   ],
+   "flying": true,
+   "mirrored": false,
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "droppedBleedComponents": [
+    1,
+    17,
+    1,
+    1,
+    104,
+    11,
+    1,
+    3,
+    1,
+    9,
+    1,
+    6,
+    7,
+    5,
+    1,
+    1,
+    3,
+    1074,
+    52,
+    1072,
+    1,
+    6,
+    4,
+    5,
+    3,
+    1,
+    1,
+    2168,
+    1,
+    233,
+    145,
+    28,
+    2,
+    1
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "generated"
+  },
+  "M12": {
+   "id": "M12",
+   "name": "샐러맨더",
+   "displayBodyPx": 58,
+   "file": "assets/runtime/mon_M12.webp",
+   "sourceRect": [
+    1194,
+    544,
+    854,
+    816
+   ],
+   "trimOffset": [
+    1336,
+    755
+   ],
+   "size": [
+    164,
+    120
+   ],
+   "scale": 0.2334,
+   "bodyHeightPx": 116.0,
+   "pivot": [
+    66.1,
+    118.1
+   ],
+   "hitbox": [
+    11.7,
+    9.1,
+    140.5,
+    102.1
+   ],
+   "flying": false,
+   "mirrored": false,
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "droppedBleedComponents": [
+    90,
+    85,
+    1,
+    15,
+    3,
+    89,
+    4,
+    4,
+    3,
+    191,
+    1,
+    22,
+    14,
+    7,
+    1,
+    1,
+    26,
+    8,
+    10,
+    1,
+    147,
+    6,
+    2,
+    16,
+    2,
+    10,
+    1,
+    2,
+    1,
+    56,
+    5,
+    29,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "generated"
+  },
+  "M13": {
+   "id": "M13",
+   "name": "머맨",
+   "displayBodyPx": 108,
+   "file": "assets/runtime/mon_M13.webp",
+   "sourceRect": [
+    0,
+    0,
+    840,
+    912
+   ],
+   "trimOffset": [
+    40,
+    92
+   ],
+   "size": [
+    215,
+    221
+   ],
+   "scale": 0.3512,
+   "bodyHeightPx": 216.0,
+   "pivot": [
+    186.7,
+    218.5
+   ],
+   "hitbox": [
+    14.7,
+    15.4,
+    184.8,
+    190.1
+   ],
+   "flying": false,
+   "mirrored": false,
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "droppedBleedComponents": [
+    5,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    2,
+    1,
+    3,
+    1,
+    13,
+    1,
+    1,
+    2,
+    1,
+    2,
+    1,
+    2,
+    2,
+    3,
+    1,
+    5,
+    1,
+    3,
+    1,
+    1,
+    1,
+    1,
+    59,
+    1,
+    1,
+    8,
+    1,
+    3,
+    1,
+    1,
+    2,
+    1,
+    3,
+    2,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    2,
+    14,
+    1,
+    4,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    5,
+    1,
+    1,
+    2,
+    1,
+    1
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "generated"
+  },
+  "M14": {
+   "id": "M14",
+   "name": "심해어",
+   "displayBodyPx": 74,
+   "file": "assets/runtime/mon_M14.webp",
+   "sourceRect": [
+    504,
+    0,
+    1008,
+    912
+   ],
+   "trimOffset": [
+    677,
+    115
+   ],
+   "size": [
+    174,
+    152
+   ],
+   "scale": 0.2552,
+   "bodyHeightPx": 148.0,
+   "pivot": [
+    138.9,
+    149.8
+   ],
+   "hitbox": [
+    12.0,
+    10.7,
+    150.2,
+    130.2
+   ],
+   "flying": false,
+   "mirrored": false,
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "droppedBleedComponents": [
+    7,
+    75,
+    32,
+    33,
+    103,
+    7,
+    1,
+    1,
+    1,
+    18,
+    153,
+    2,
+    4,
+    1,
+    156,
+    13,
+    1,
+    3,
+    1,
+    7,
+    1,
+    1,
+    38,
+    1,
+    78,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    3,
+    1,
+    1,
+    1,
+    1,
+    31,
+    4,
+    2,
+    1,
+    2,
+    43,
+    1,
+    2,
+    2,
+    2,
+    2,
+    51,
+    3,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    14,
+    5,
+    1,
+    1,
+    1,
+    2,
+    17,
+    1,
+    2,
+    3,
+    2,
+    1,
+    1,
+    3,
+    1,
+    3,
+    1,
+    9,
+    1,
+    2,
+    1,
+    12,
+    14,
+    1,
+    2,
+    4,
+    137,
+    4,
+    1,
+    1,
+    2,
+    27,
+    1,
+    2,
+    1,
+    23,
+    1,
+    3,
+    2,
+    2,
+    18,
+    1,
+    4,
+    185,
+    2,
+    8,
+    1,
+    1,
+    2,
+    2,
+    2,
+    1,
+    22,
+    2,
+    2,
+    11,
+    110,
+    1,
+    1,
+    4,
+    1,
+    1,
+    2,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    3,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
+    3,
+    1,
+    3,
+    1,
+    1,
+    1,
+    2,
+    5,
+    5,
+    1,
+    1,
+    1,
+    4,
+    1
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "generated"
+  },
+  "M15": {
+   "id": "M15",
+   "name": "스켈레톤 기사",
+   "displayBodyPx": 112,
+   "file": "assets/runtime/mon_M15.webp",
+   "sourceRect": [
+    1176,
+    0,
+    1008,
+    912
+   ],
+   "trimOffset": [
+    1342,
+    100
+   ],
+   "size": [
+    246,
+    229
+   ],
+   "scale": 0.3721,
+   "bodyHeightPx": 224.0,
+   "pivot": [
+    205.2,
+    226.6
+   ],
+   "hitbox": [
+    17.0,
+    16.0,
+    211.5,
+    197.1
+   ],
+   "flying": false,
+   "mirrored": false,
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "droppedBleedComponents": [
+    1,
+    1,
+    1,
+    9,
+    5,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    4,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    24,
+    1,
+    1,
+    1,
+    2,
+    4,
+    1,
+    1,
+    2,
+    1,
+    11,
+    2,
+    1,
+    5,
+    7,
+    1
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "generated"
+  },
+  "M16": {
+   "id": "M16",
+   "name": "망령",
+   "displayBodyPx": 104,
+   "file": "assets/runtime/mon_M16.webp",
+   "sourceRect": [
+    1848,
+    0,
+    840,
+    912
+   ],
+   "trimOffset": [
+    2025,
+    36
+   ],
+   "size": [
+    193,
+    212
+   ],
+   "scale": 0.3045,
+   "bodyHeightPx": 208.0,
+   "pivot": [
+    102.0,
+    209.8
+   ],
+   "hitbox": [
+    13.1,
+    14.3,
+    165.9,
+    183.0
+   ],
+   "flying": true,
+   "mirrored": false,
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "droppedBleedComponents": [
+    1,
+    1,
+    1,
+    29,
+    1,
+    1,
+    3,
+    2,
+    3,
+    1,
+    1,
+    1,
+    1,
+    24,
+    1,
+    2,
+    1,
+    2,
+    1,
+    116,
+    39,
+    1,
+    355,
+    2,
+    1,
+    13,
+    1,
+    7,
+    1,
+    5,
+    1,
+    1,
+    3,
+    5,
+    1,
+    1,
+    1,
+    4,
+    16,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    8,
+    3,
+    2,
+    3,
+    1,
+    1,
+    4,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    2,
+    194,
+    2,
+    1,
+    2,
+    21,
+    30,
+    1,
+    1,
+    1,
+    3,
+    1,
+    1,
+    1,
+    21,
+    2,
+    1,
+    1,
+    18,
+    1,
+    5,
+    6,
+    8,
+    1,
+    5,
+    8,
+    1,
+    1,
+    41,
+    1,
+    62,
+    1,
+    5,
+    1,
+    3,
+    11,
+    1,
+    5,
+    17,
+    2,
+    20,
+    1,
+    1,
+    1,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    4,
+    1,
+    31,
+    1,
+    3,
+    1,
+    1,
+    1,
+    31,
+    1,
+    6,
+    1,
+    6,
+    1,
+    1,
+    1,
+    1,
+    24,
+    1,
+    14,
+    8,
+    1,
+    1,
+    4,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    7,
+    1,
+    1
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "generated"
+  },
+  "M17": {
+   "id": "M17",
+   "name": "그리폰",
+   "displayBodyPx": 96,
+   "file": "assets/runtime/mon_M17.webp",
+   "sourceRect": [
+    0,
+    608,
+    840,
+    912
+   ],
+   "trimOffset": [
+    36,
+    757
+   ],
+   "size": [
+    220,
+    197
+   ],
+   "scale": 0.3024,
+   "bodyHeightPx": 192.0,
+   "pivot": [
+    133.9,
+    194.1
+   ],
+   "hitbox": [
+    15.1,
+    13.6,
+    190.0,
+    169.0
+   ],
+   "flying": false,
+   "mirrored": false,
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "droppedBleedComponents": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    18,
+    1,
+    2,
+    2,
+    6,
+    2,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    17,
+    2
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "generated"
+  },
+  "M18": {
+   "id": "M18",
+   "name": "타락 천사병",
+   "displayBodyPx": 112,
+   "file": "assets/runtime/mon_M18.webp",
+   "sourceRect": [
+    504,
+    608,
+    1008,
+    912
+   ],
+   "trimOffset": [
+    690,
+    755
+   ],
+   "size": [
+    239,
+    229
+   ],
+   "scale": 0.3446,
+   "bodyHeightPx": 224.0,
+   "pivot": [
+    137.1,
+    226.1
+   ],
+   "hitbox": [
+    16.5,
+    15.5,
+    205.9,
+    197.1
+   ],
+   "flying": true,
+   "mirrored": false,
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "droppedBleedComponents": [
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "generated"
+  },
+  "M19": {
+   "id": "M19",
+   "name": "공허의 촉수",
+   "displayBodyPx": 104,
+   "file": "assets/runtime/mon_M19.webp",
+   "sourceRect": [
+    1176,
+    608,
+    1008,
+    912
+   ],
+   "trimOffset": [
+    1418,
+    762
+   ],
+   "size": [
+    170,
+    213
+   ],
+   "scale": 0.3128,
+   "bodyHeightPx": 208.0,
+   "pivot": [
+    85.3,
+    210.2
+   ],
+   "hitbox": [
+    12.1,
+    14.7,
+    145.6,
+    183.0
+   ],
+   "flying": false,
+   "mirrored": false,
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "droppedBleedComponents": [
+    1,
+    1,
+    1,
+    1,
+    4,
+    1,
+    2,
+    1,
+    1,
+    76,
+    4,
+    28,
+    1,
+    1,
+    6,
+    1,
+    1,
+    4,
+    20,
+    2,
+    1,
+    1,
+    2,
+    38,
+    1,
+    15,
+    3,
+    11,
+    2,
+    3,
+    1,
+    1,
+    2,
+    1,
+    8,
+    2,
+    1,
+    11,
+    1,
+    1,
+    6,
+    17,
+    22,
+    1,
+    1,
+    1,
+    1,
+    95,
+    1,
+    1,
+    1,
+    4,
+    1,
+    1,
+    1,
+    10,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "generated"
+  },
+  "M20": {
+   "id": "M20",
+   "name": "그림자 마수",
+   "displayBodyPx": 76,
+   "file": "assets/runtime/mon_M20.webp",
+   "sourceRect": [
+    1848,
+    608,
+    840,
+    912
+   ],
+   "trimOffset": [
+    2036,
+    848
+   ],
+   "size": [
+    167,
+    156
+   ],
+   "scale": 0.2681,
+   "bodyHeightPx": 152.0,
+   "pivot": [
+    58.0,
+    153.6
+   ],
+   "hitbox": [
+    11.7,
+    10.7,
+    143.4,
+    133.8
+   ],
+   "flying": false,
+   "mirrored": false,
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "droppedBleedComponents": [
+    1,
+    9,
+    1,
+    13,
+    1,
+    1,
+    1,
+    1,
+    13,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    5,
+    1,
+    3,
+    1,
+    1,
+    1,
+    6,
+    41,
+    3,
+    1,
+    2,
+    3,
+    2,
+    1,
+    14,
+    2,
+    8,
+    1,
+    1,
+    11,
+    5,
+    1,
+    4,
+    1,
+    59,
+    11,
+    4,
+    3,
+    23,
+    1,
+    1,
+    1,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    11,
+    1,
+    1,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    16,
+    1,
+    1,
+    4,
+    1,
+    1,
+    31,
+    67,
+    1,
+    12,
+    1,
+    3,
+    1,
+    55,
+    2,
+    1,
+    12,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    10,
+    1,
+    1,
+    1,
+    2,
+    14,
+    21,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    2,
+    1,
+    3,
+    1,
+    1,
+    1,
+    1,
+    33,
+    32,
+    1,
+    72,
+    2,
+    1,
+    3,
+    1
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "generated"
   }
  },
  "bosses": {
@@ -389,6 +1875,1184 @@
     5127
    ],
    "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "B04": {
+   "id": "B04",
+   "name": "여왕 거미 아라크네",
+   "displayBodyPx": 150,
+   "file": "assets/runtime/boss_B04.webp",
+   "sourceRect": [
+    0,
+    0,
+    1280,
+    1228
+   ],
+   "trimOffset": [
+    22,
+    54
+   ],
+   "size": [
+    329,
+    305
+   ],
+   "scale": 0.3429,
+   "bodyHeightPx": 300.0,
+   "pivot": [
+    195.9,
+    302.7
+   ],
+   "hitbox": [
+    22.1,
+    20.7,
+    284.2,
+    264.0
+   ],
+   "flying": false,
+   "mirrored": false,
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "droppedBleedComponents": [
+    114,
+    17,
+    7,
+    1,
+    25,
+    1,
+    9,
+    1,
+    1,
+    1,
+    1,
+    3,
+    1,
+    51,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    2,
+    1,
+    1,
+    80,
+    1,
+    1,
+    16,
+    3,
+    71,
+    1,
+    8,
+    9,
+    1,
+    1,
+    43,
+    10,
+    9,
+    21,
+    5,
+    5,
+    2,
+    4,
+    283,
+    4,
+    7,
+    2,
+    13,
+    2,
+    3
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "generated"
+  },
+  "B05": {
+   "id": "B05",
+   "name": "프로스트 웜",
+   "displayBodyPx": 190,
+   "file": "assets/runtime/boss_B05.webp",
+   "sourceRect": [
+    768,
+    0,
+    1280,
+    1228
+   ],
+   "trimOffset": [
+    1156,
+    40
+   ],
+   "size": [
+    333,
+    387
+   ],
+   "scale": 0.4121,
+   "bodyHeightPx": 380.0,
+   "pivot": [
+    181.8,
+    383.3
+   ],
+   "hitbox": [
+    23.3,
+    26.1,
+    287.3,
+    334.4
+   ],
+   "flying": false,
+   "mirrored": false,
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "droppedBleedComponents": [
+    7,
+    5,
+    74,
+    5,
+    5,
+    1,
+    102,
+    83,
+    1,
+    5,
+    1,
+    12,
+    1,
+    157,
+    3,
+    78,
+    1,
+    3,
+    3,
+    1,
+    2,
+    1,
+    1,
+    1,
+    80,
+    9,
+    64,
+    5,
+    4,
+    7,
+    1,
+    2,
+    4,
+    4,
+    1,
+    1,
+    1,
+    281,
+    3,
+    1,
+    3,
+    1,
+    3,
+    3,
+    1,
+    2,
+    3,
+    1,
+    1,
+    2,
+    3,
+    3,
+    1,
+    11,
+    1,
+    4,
+    2,
+    4,
+    1,
+    25,
+    9,
+    1,
+    19,
+    13,
+    5,
+    2,
+    1,
+    3,
+    2,
+    1,
+    9,
+    1,
+    6,
+    1,
+    47,
+    7,
+    1,
+    26,
+    1,
+    1,
+    5,
+    11,
+    1
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "generated"
+  },
+  "B06": {
+   "id": "B06",
+   "name": "이프리트",
+   "displayBodyPx": 190,
+   "file": "assets/runtime/boss_B06.webp",
+   "sourceRect": [
+    0,
+    820,
+    1280,
+    1228
+   ],
+   "trimOffset": [
+    63,
+    940
+   ],
+   "size": [
+    311,
+    387
+   ],
+   "scale": 0.3633,
+   "bodyHeightPx": 380.0,
+   "pivot": [
+    155.2,
+    383.3
+   ],
+   "hitbox": [
+    21.2,
+    26.1,
+    268.2,
+    334.4
+   ],
+   "flying": false,
+   "mirrored": false,
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "droppedBleedComponents": [
+    2,
+    3,
+    7,
+    5,
+    5,
+    51,
+    2,
+    1,
+    1,
+    3,
+    4,
+    9,
+    1,
+    1,
+    2,
+    6,
+    4,
+    16,
+    1,
+    6,
+    5,
+    1,
+    3,
+    1,
+    25,
+    9,
+    1,
+    12,
+    11,
+    11,
+    157,
+    1,
+    11,
+    1,
+    11,
+    51,
+    1,
+    22,
+    15,
+    8,
+    4,
+    13,
+    27,
+    14,
+    5,
+    9,
+    2,
+    5,
+    13,
+    12,
+    6,
+    3,
+    6,
+    33,
+    5,
+    16,
+    3,
+    2,
+    2,
+    1,
+    12,
+    20,
+    1,
+    1,
+    3,
+    4,
+    6,
+    14,
+    4,
+    1,
+    1,
+    3,
+    3,
+    7,
+    1,
+    1,
+    1,
+    23,
+    2,
+    5,
+    3,
+    8,
+    2,
+    1,
+    2,
+    1,
+    37,
+    8,
+    3,
+    4,
+    22,
+    4,
+    3,
+    2,
+    21
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "generated"
+  },
+  "B07": {
+   "id": "B07",
+   "name": "크라켄",
+   "displayBodyPx": 180,
+   "file": "assets/runtime/boss_B07.webp",
+   "sourceRect": [
+    768,
+    820,
+    1280,
+    1228
+   ],
+   "trimOffset": [
+    1003,
+    1056
+   ],
+   "size": [
+    400,
+    366
+   ],
+   "scale": 0.3863,
+   "bodyHeightPx": 360.0,
+   "pivot": [
+    190.6,
+    363.1
+   ],
+   "hitbox": [
+    26.7,
+    24.7,
+    346.4,
+    316.8
+   ],
+   "flying": false,
+   "mirrored": false,
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "droppedBleedComponents": [
+    1,
+    4,
+    1,
+    101,
+    9,
+    1,
+    1,
+    1,
+    3,
+    2,
+    10,
+    2,
+    9,
+    1,
+    1,
+    2,
+    4,
+    5,
+    9,
+    2,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    3,
+    3,
+    4,
+    4,
+    12,
+    7,
+    18,
+    4,
+    7,
+    1,
+    2,
+    6,
+    3,
+    13,
+    3,
+    4,
+    3,
+    4,
+    3,
+    9,
+    1,
+    2,
+    2,
+    1,
+    4,
+    13,
+    1,
+    8,
+    7,
+    41,
+    1,
+    1,
+    1,
+    6,
+    1,
+    1,
+    1,
+    1,
+    1,
+    14,
+    1,
+    5,
+    1,
+    2,
+    1,
+    1,
+    3,
+    2,
+    2,
+    3,
+    2,
+    11,
+    2,
+    1,
+    1,
+    1,
+    8,
+    1,
+    2,
+    6,
+    2,
+    2,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    7,
+    3,
+    3,
+    1,
+    1,
+    1,
+    6,
+    1,
+    5,
+    1,
+    1,
+    5,
+    1,
+    2,
+    7,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    4,
+    1,
+    1,
+    8,
+    1,
+    1,
+    8,
+    2,
+    1,
+    1,
+    4,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    14,
+    24,
+    1,
+    18,
+    1,
+    5,
+    1,
+    9,
+    8,
+    15,
+    14,
+    1,
+    72,
+    2,
+    14,
+    1,
+    1,
+    4,
+    2,
+    5,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    14,
+    1,
+    1,
+    1,
+    1,
+    3,
+    6,
+    56,
+    4,
+    1,
+    1,
+    1,
+    1,
+    6,
+    1,
+    5,
+    2,
+    19,
+    1,
+    1,
+    30,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    10,
+    1,
+    267,
+    1
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "generated"
+  },
+  "B08": {
+   "id": "B08",
+   "name": "데스나이트 군주",
+   "displayBodyPx": 190,
+   "file": "assets/runtime/boss_B08.webp",
+   "sourceRect": [
+    0,
+    0,
+    1280,
+    1228
+   ],
+   "trimOffset": [
+    17,
+    64
+   ],
+   "size": [
+    417,
+    387
+   ],
+   "scale": 0.4455,
+   "bodyHeightPx": 380.0,
+   "pivot": [
+    222.7,
+    383.1
+   ],
+   "hitbox": [
+    28.6,
+    25.9,
+    360.3,
+    334.4
+   ],
+   "flying": false,
+   "mirrored": false,
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "droppedBleedComponents": [
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
+    2,
+    4,
+    2,
+    27,
+    2,
+    1,
+    1,
+    6,
+    2,
+    1,
+    2,
+    5,
+    1,
+    1,
+    26,
+    1,
+    2,
+    4,
+    7,
+    4,
+    1,
+    1,
+    2,
+    3,
+    1,
+    7,
+    1,
+    2,
+    4,
+    1,
+    5,
+    1,
+    29,
+    1,
+    125,
+    1,
+    1,
+    17,
+    6,
+    1,
+    7,
+    1,
+    2,
+    2,
+    1,
+    2,
+    1,
+    1,
+    5,
+    3,
+    11,
+    4,
+    8,
+    4,
+    30,
+    1,
+    47,
+    105,
+    2,
+    1,
+    1,
+    2,
+    6,
+    18,
+    6,
+    99,
+    1,
+    10,
+    4,
+    1,
+    2,
+    4,
+    2,
+    6,
+    5,
+    3,
+    1,
+    1,
+    1,
+    2,
+    1,
+    15,
+    2,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    4,
+    2,
+    3,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    2,
+    5,
+    2,
+    5,
+    2,
+    6,
+    1,
+    2,
+    1,
+    7,
+    8,
+    2,
+    1,
+    4,
+    12,
+    2,
+    1,
+    3,
+    6,
+    1,
+    3,
+    1,
+    1,
+    3,
+    7,
+    14
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "generated"
+  },
+  "B09": {
+   "id": "B09",
+   "name": "타락한 대천사",
+   "displayBodyPx": 190,
+   "file": "assets/runtime/boss_B09.webp",
+   "sourceRect": [
+    768,
+    0,
+    1280,
+    1228
+   ],
+   "trimOffset": [
+    992,
+    41
+   ],
+   "size": [
+    433,
+    388
+   ],
+   "scale": 0.4289,
+   "bodyHeightPx": 380.0,
+   "pivot": [
+    177.2,
+    383.4
+   ],
+   "hitbox": [
+    29.0,
+    26.2,
+    375.5,
+    334.4
+   ],
+   "flying": false,
+   "mirrored": false,
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "droppedBleedComponents": [
+    1,
+    2,
+    1,
+    1,
+    6,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
+    1,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    17,
+    8,
+    16,
+    1,
+    1,
+    1,
+    5,
+    1,
+    2,
+    5,
+    2,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    9,
+    3,
+    1,
+    1,
+    10,
+    2,
+    1,
+    1,
+    2,
+    1,
+    9,
+    1,
+    2,
+    3,
+    6,
+    9,
+    9,
+    1,
+    2,
+    1,
+    1,
+    3,
+    1,
+    5,
+    1,
+    2,
+    1,
+    1,
+    2,
+    6,
+    5,
+    1,
+    6,
+    2,
+    1,
+    3,
+    6,
+    2,
+    2,
+    3,
+    6,
+    4,
+    1,
+    1,
+    1,
+    1,
+    1,
+    4,
+    6,
+    4,
+    2,
+    1,
+    1,
+    1,
+    1,
+    3,
+    6,
+    1,
+    4,
+    4,
+    2,
+    1,
+    1,
+    7,
+    1,
+    1,
+    3,
+    6,
+    14,
+    1,
+    1,
+    3,
+    4,
+    1,
+    6,
+    5,
+    3,
+    3,
+    1
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "generated"
+  },
+  "B10": {
+   "id": "B10",
+   "name": "심연의 군주",
+   "displayBodyPx": 190,
+   "file": "assets/runtime/boss_B10.webp",
+   "sourceRect": [
+    0,
+    820,
+    1280,
+    1228
+   ],
+   "trimOffset": [
+    53,
+    969
+   ],
+   "size": [
+    366,
+    386
+   ],
+   "scale": 0.3811,
+   "bodyHeightPx": 380.0,
+   "pivot": [
+    161.0,
+    383.4
+   ],
+   "hitbox": [
+    25.0,
+    26.2,
+    316.3,
+    334.4
+   ],
+   "flying": false,
+   "mirrored": false,
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "droppedBleedComponents": [
+    75,
+    1,
+    379,
+    48,
+    1,
+    7,
+    120,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    2,
+    5,
+    2,
+    2,
+    30,
+    1,
+    4,
+    2,
+    5,
+    4,
+    123,
+    12,
+    9,
+    6,
+    1,
+    3,
+    1,
+    1,
+    4,
+    2,
+    3,
+    7,
+    2,
+    6,
+    13,
+    3,
+    3,
+    1,
+    2,
+    1,
+    1,
+    4,
+    1,
+    2,
+    5,
+    1,
+    7,
+    1,
+    2,
+    25,
+    15,
+    61,
+    1,
+    4,
+    1,
+    1,
+    4,
+    2,
+    1,
+    1,
+    3,
+    125,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1,
+    12,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
+    4,
+    1,
+    2,
+    21,
+    1,
+    1,
+    1,
+    22,
+    1,
+    5,
+    2,
+    1,
+    1,
+    3,
+    5,
+    7,
+    13,
+    1,
+    12,
+    1,
+    2,
+    2,
+    20,
+    2,
+    29,
+    1,
+    1,
+    1,
+    7,
+    4,
+    1,
+    3,
+    1,
+    1,
+    4,
+    2,
+    7,
+    8,
+    3,
+    12,
+    2,
+    1,
+    11,
+    5,
+    5,
+    1,
+    1,
+    3,
+    1,
+    6,
+    3,
+    2,
+    9
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "generated"
+  },
+  "TOWER": {
+   "id": "TOWER",
+   "name": "탑 수호자",
+   "displayBodyPx": 190,
+   "file": "assets/runtime/boss_tower.webp",
+   "sourceRect": [
+    768,
+    820,
+    1280,
+    1228
+   ],
+   "trimOffset": [
+    1083,
+    970
+   ],
+   "size": [
+    333,
+    386
+   ],
+   "scale": 0.385,
+   "bodyHeightPx": 380.0,
+   "pivot": [
+    176.9,
+    382.7
+   ],
+   "hitbox": [
+    22.6,
+    25.5,
+    286.6,
+    334.4
+   ],
+   "flying": false,
+   "mirrored": false,
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "droppedBleedComponents": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    4,
+    4,
+    1,
+    1
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "generated"
   }
  },
  "hero": {
@@ -1225,6 +3889,2543 @@
     1
    ],
    "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_knight_t2": {
+   "id": "promo_knight_t2",
+   "cls": "warrior",
+   "tier": 2,
+   "file": "assets/runtime/hero_promo_knight_t2.webp",
+   "sourceRect": [
+    0,
+    0,
+    659,
+    1520
+   ],
+   "trimOffset": [
+    13,
+    130
+   ],
+   "size": [
+    153,
+    313
+   ],
+   "scale": 0.2374,
+   "bodyHeightPx": 302.4,
+   "pivot": [
+    61.3,
+    311.2
+   ],
+   "hitbox": [
+    10.7,
+    20.7,
+    132.4,
+    272.0
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    1,
+    1,
+    2,
+    1,
+    6,
+    1,
+    3,
+    2,
+    10
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_knight_t3": {
+   "id": "promo_knight_t3",
+   "cls": "warrior",
+   "tier": 3,
+   "file": "assets/runtime/hero_promo_knight_t3.webp",
+   "sourceRect": [
+    659,
+    0,
+    639,
+    1520
+   ],
+   "trimOffset": [
+    659,
+    47
+   ],
+   "size": [
+    148,
+    321
+   ],
+   "scale": 0.231,
+   "bodyHeightPx": 302.4,
+   "pivot": [
+    66.3,
+    319.5
+   ],
+   "hitbox": [
+    9.7,
+    20.9,
+    128.7,
+    279.5
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    3,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    200,
+    2
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_berserker_t2": {
+   "id": "promo_berserker_t2",
+   "cls": "warrior",
+   "tier": 2,
+   "file": "assets/runtime/hero_promo_berserker_t2.webp",
+   "sourceRect": [
+    1298,
+    0,
+    664,
+    1520
+   ],
+   "trimOffset": [
+    1298,
+    138
+   ],
+   "size": [
+    156,
+    311
+   ],
+   "scale": 0.2344,
+   "bodyHeightPx": 302.4,
+   "pivot": [
+    89.3,
+    309.2
+   ],
+   "hitbox": [
+    9.3,
+    20.5,
+    135.9,
+    270.2
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    3,
+    1,
+    2,
+    1,
+    1,
+    4,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_berserker_t3": {
+   "id": "promo_berserker_t3",
+   "cls": "warrior",
+   "tier": 3,
+   "file": "assets/runtime/hero_promo_berserker_t3.webp",
+   "sourceRect": [
+    1962,
+    0,
+    726,
+    1520
+   ],
+   "trimOffset": [
+    1992,
+    109
+   ],
+   "size": [
+    156,
+    318
+   ],
+   "scale": 0.2337,
+   "bodyHeightPx": 302.4,
+   "pivot": [
+    85.5,
+    315.7
+   ],
+   "hitbox": [
+    10.8,
+    20.7,
+    134.5,
+    276.2
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    2,
+    1,
+    1,
+    1,
+    6,
+    1,
+    2,
+    1,
+    2,
+    1,
+    121,
+    109,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    2,
+    3,
+    3,
+    7,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_wizard_t2": {
+   "id": "promo_wizard_t2",
+   "cls": "mage",
+   "tier": 2,
+   "file": "assets/runtime/hero_promo_wizard_t2.webp",
+   "sourceRect": [
+    0,
+    0,
+    661,
+    1520
+   ],
+   "trimOffset": [
+    21,
+    29
+   ],
+   "size": [
+    143,
+    327
+   ],
+   "scale": 0.2242,
+   "bodyHeightPx": 302.4,
+   "pivot": [
+    73.0,
+    325.5
+   ],
+   "hitbox": [
+    10.0,
+    21.2,
+    123.9,
+    284.9
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    11,
+    1,
+    21,
+    4,
+    1,
+    1,
+    4,
+    2,
+    1,
+    14,
+    1,
+    8,
+    3,
+    8,
+    1,
+    1,
+    7,
+    1,
+    1,
+    4,
+    14,
+    2,
+    4,
+    1,
+    14,
+    2,
+    3,
+    518,
+    47,
+    19,
+    6,
+    10,
+    1,
+    3,
+    6,
+    1,
+    1,
+    24,
+    1,
+    59,
+    3,
+    1,
+    1,
+    1,
+    3,
+    3,
+    1,
+    2,
+    8,
+    1,
+    13,
+    12,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    4,
+    2,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
+    69
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_wizard_t3": {
+   "id": "promo_wizard_t3",
+   "cls": "mage",
+   "tier": 3,
+   "file": "assets/runtime/hero_promo_wizard_t3.webp",
+   "sourceRect": [
+    661,
+    0,
+    631,
+    1520
+   ],
+   "trimOffset": [
+    701,
+    103
+   ],
+   "size": [
+    133,
+    311
+   ],
+   "scale": 0.2257,
+   "bodyHeightPx": 302.4,
+   "pivot": [
+    77.4,
+    309.4
+   ],
+   "hitbox": [
+    9.4,
+    20.5,
+    115.0,
+    270.5
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    1,
+    1,
+    3,
+    4,
+    1,
+    3,
+    9,
+    4,
+    2,
+    1,
+    1,
+    2,
+    1,
+    11,
+    1,
+    1,
+    1,
+    4,
+    1,
+    1,
+    6,
+    1,
+    219,
+    36,
+    3,
+    2,
+    36,
+    12,
+    1,
+    6,
+    1,
+    1,
+    2,
+    2,
+    27,
+    1,
+    1,
+    1,
+    14,
+    4,
+    1,
+    3,
+    1,
+    1,
+    13,
+    4,
+    2,
+    18,
+    12,
+    7,
+    4,
+    1,
+    6,
+    6,
+    15,
+    60,
+    2,
+    4,
+    8,
+    5,
+    81,
+    22,
+    11,
+    3,
+    433,
+    1,
+    52,
+    2,
+    1,
+    2,
+    44,
+    7,
+    21,
+    4,
+    1,
+    1,
+    6,
+    2,
+    11,
+    3,
+    1,
+    1,
+    20,
+    3,
+    7,
+    2,
+    1,
+    1,
+    2,
+    1,
+    3,
+    1,
+    1,
+    9,
+    1,
+    14,
+    2,
+    4,
+    3,
+    40,
+    4,
+    1,
+    1,
+    38,
+    1,
+    2,
+    7,
+    8,
+    1,
+    3,
+    1,
+    2,
+    1,
+    3,
+    2,
+    3,
+    24,
+    1,
+    27,
+    3,
+    4,
+    3,
+    9,
+    3,
+    3,
+    4,
+    21,
+    14,
+    1,
+    5,
+    10,
+    2,
+    1,
+    6,
+    3,
+    1,
+    1,
+    2,
+    1,
+    32,
+    5,
+    3,
+    16,
+    5,
+    6,
+    1,
+    4,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    3,
+    1,
+    3,
+    1,
+    1,
+    3,
+    4,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_warlock_t2": {
+   "id": "promo_warlock_t2",
+   "cls": "mage",
+   "tier": 2,
+   "file": "assets/runtime/hero_promo_warlock_t2.webp",
+   "sourceRect": [
+    1292,
+    0,
+    652,
+    1520
+   ],
+   "trimOffset": [
+    1363,
+    82
+   ],
+   "size": [
+    131,
+    315
+   ],
+   "scale": 0.2257,
+   "bodyHeightPx": 302.4,
+   "pivot": [
+    67.8,
+    313.7
+   ],
+   "hitbox": [
+    9.7,
+    20.5,
+    112.6,
+    274.5
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    39,
+    13,
+    3,
+    1,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    5,
+    1,
+    6,
+    2,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    7,
+    1,
+    1,
+    4,
+    4,
+    1,
+    34,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    45,
+    1,
+    1,
+    2,
+    2,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    4,
+    3,
+    1,
+    1,
+    1,
+    2,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    10,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    17,
+    2,
+    1,
+    2,
+    2,
+    1,
+    94,
+    320,
+    2,
+    1,
+    1,
+    3,
+    6,
+    106,
+    2,
+    5,
+    1,
+    8,
+    1,
+    1,
+    140,
+    1,
+    2,
+    1,
+    27,
+    2,
+    1,
+    1,
+    49,
+    1,
+    1,
+    1,
+    1,
+    13,
+    1
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_warlock_t3": {
+   "id": "promo_warlock_t3",
+   "cls": "mage",
+   "tier": 3,
+   "file": "assets/runtime/hero_promo_warlock_t3.webp",
+   "sourceRect": [
+    1944,
+    0,
+    744,
+    1520
+   ],
+   "trimOffset": [
+    1962,
+    190
+   ],
+   "size": [
+    172,
+    319
+   ],
+   "scale": 0.2457,
+   "bodyHeightPx": 302.4,
+   "pivot": [
+    84.3,
+    316.9
+   ],
+   "hitbox": [
+    12.1,
+    20.6,
+    148.1,
+    277.4
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    7,
+    4,
+    125,
+    39,
+    1,
+    1,
+    3,
+    75,
+    4,
+    2,
+    6,
+    2,
+    3,
+    1,
+    1,
+    7,
+    83,
+    1,
+    2,
+    2,
+    4,
+    19,
+    1,
+    1,
+    4,
+    10,
+    1,
+    5,
+    9,
+    2,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_ranger_t2": {
+   "id": "promo_ranger_t2",
+   "cls": "archer",
+   "tier": 2,
+   "file": "assets/runtime/hero_promo_ranger_t2.webp",
+   "sourceRect": [
+    0,
+    0,
+    620,
+    1520
+   ],
+   "trimOffset": [
+    0,
+    80
+   ],
+   "size": [
+    138,
+    308
+   ],
+   "scale": 0.2224,
+   "bodyHeightPx": 302.4,
+   "pivot": [
+    66.8,
+    306.2
+   ],
+   "hitbox": [
+    8.3,
+    20.0,
+    121.1,
+    267.9
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    2,
+    1,
+    1,
+    3,
+    2,
+    1,
+    1,
+    2,
+    8,
+    1,
+    20,
+    2,
+    17,
+    7,
+    5,
+    1,
+    1,
+    1,
+    22,
+    2,
+    5,
+    3,
+    20,
+    5,
+    3,
+    1,
+    4,
+    1,
+    503,
+    2,
+    168
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_ranger_t3": {
+   "id": "promo_ranger_t3",
+   "cls": "archer",
+   "tier": 3,
+   "file": "assets/runtime/hero_promo_ranger_t3.webp",
+   "sourceRect": [
+    620,
+    0,
+    733,
+    1520
+   ],
+   "trimOffset": [
+    620,
+    81
+   ],
+   "size": [
+    165,
+    311
+   ],
+   "scale": 0.2247,
+   "bodyHeightPx": 302.4,
+   "pivot": [
+    79.4,
+    308.9
+   ],
+   "hitbox": [
+    10.7,
+    20.2,
+    143.1,
+    270.3
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    1,
+    47,
+    1,
+    1,
+    23,
+    2,
+    2,
+    2,
+    1,
+    10,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    3,
+    7,
+    1,
+    10,
+    13,
+    10,
+    26,
+    1,
+    5
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_hunter_t2": {
+   "id": "promo_hunter_t2",
+   "cls": "archer",
+   "tier": 2,
+   "file": "assets/runtime/hero_promo_hunter_t2.webp",
+   "sourceRect": [
+    1353,
+    0,
+    633,
+    1520
+   ],
+   "trimOffset": [
+    1373,
+    99
+   ],
+   "size": [
+    139,
+    311
+   ],
+   "scale": 0.2275,
+   "bodyHeightPx": 302.4,
+   "pivot": [
+    63.7,
+    309.0
+   ],
+   "hitbox": [
+    10.3,
+    20.3,
+    120.7,
+    270.3
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    3,
+    4,
+    2,
+    7,
+    3,
+    3,
+    1,
+    1,
+    1,
+    2,
+    17,
+    2,
+    1,
+    1,
+    1,
+    2,
+    1,
+    7,
+    5,
+    1,
+    5,
+    1,
+    22,
+    2,
+    5,
+    1,
+    4,
+    4,
+    3,
+    29,
+    4,
+    4,
+    4,
+    5,
+    1,
+    1,
+    5,
+    5,
+    5,
+    6,
+    33,
+    1,
+    22,
+    1,
+    4,
+    1,
+    1,
+    1,
+    1,
+    20,
+    2,
+    1,
+    1,
+    3,
+    2,
+    1,
+    3,
+    9,
+    1,
+    134
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_hunter_t3": {
+   "id": "promo_hunter_t3",
+   "cls": "archer",
+   "tier": 3,
+   "file": "assets/runtime/hero_promo_hunter_t3.webp",
+   "sourceRect": [
+    1986,
+    0,
+    702,
+    1520
+   ],
+   "trimOffset": [
+    1986,
+    35
+   ],
+   "size": [
+    150,
+    322
+   ],
+   "scale": 0.2255,
+   "bodyHeightPx": 302.4,
+   "pivot": [
+    71.9,
+    320.7
+   ],
+   "hitbox": [
+    8.9,
+    20.7,
+    130.2,
+    280.8
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    8,
+    2,
+    1,
+    1,
+    8,
+    2,
+    2,
+    5,
+    2,
+    858,
+    55,
+    1,
+    4,
+    2,
+    7,
+    26,
+    2,
+    1,
+    1,
+    2,
+    35,
+    11,
+    5,
+    4,
+    26,
+    2,
+    18,
+    61,
+    1,
+    1,
+    1,
+    3,
+    1,
+    74,
+    75,
+    1,
+    5,
+    6,
+    16,
+    12,
+    16,
+    3,
+    18,
+    11,
+    1,
+    11,
+    46,
+    2,
+    2,
+    5,
+    2,
+    1,
+    3,
+    1,
+    1,
+    154
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_assassin_t2": {
+   "id": "promo_assassin_t2",
+   "cls": "rogue",
+   "tier": 2,
+   "file": "assets/runtime/hero_promo_assassin_t2.webp",
+   "sourceRect": [
+    0,
+    0,
+    660,
+    1520
+   ],
+   "trimOffset": [
+    29,
+    98
+   ],
+   "size": [
+    145,
+    308
+   ],
+   "scale": 0.23,
+   "bodyHeightPx": 302.4,
+   "pivot": [
+    62.4,
+    306.8
+   ],
+   "hitbox": [
+    10.2,
+    19.9,
+    125.3,
+    268.5
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    1,
+    6,
+    2,
+    11,
+    2,
+    3,
+    1,
+    107,
+    1
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_assassin_t3": {
+   "id": "promo_assassin_t3",
+   "cls": "rogue",
+   "tier": 3,
+   "file": "assets/runtime/hero_promo_assassin_t3.webp",
+   "sourceRect": [
+    660,
+    0,
+    651,
+    1520
+   ],
+   "trimOffset": [
+    686,
+    98
+   ],
+   "size": [
+    143,
+    308
+   ],
+   "scale": 0.2291,
+   "bodyHeightPx": 302.4,
+   "pivot": [
+    62.9,
+    306.3
+   ],
+   "hitbox": [
+    10.5,
+    19.9,
+    123.2,
+    268.1
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    26,
+    291,
+    1,
+    109,
+    1,
+    7,
+    7,
+    9,
+    1,
+    14,
+    6,
+    90,
+    87,
+    1,
+    1,
+    21,
+    3,
+    1,
+    47,
+    438,
+    3,
+    1,
+    1,
+    1,
+    1,
+    4,
+    2,
+    3,
+    2,
+    2,
+    8,
+    33,
+    49,
+    64,
+    2,
+    36,
+    15,
+    2,
+    1,
+    15,
+    1,
+    1,
+    24,
+    27,
+    4,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    15,
+    1,
+    1,
+    1,
+    11,
+    11,
+    4,
+    1,
+    1,
+    2,
+    1,
+    7,
+    15,
+    1,
+    2,
+    5,
+    1,
+    1,
+    2,
+    70,
+    1,
+    1,
+    2,
+    2,
+    2,
+    137,
+    1,
+    76,
+    1,
+    2,
+    40,
+    1,
+    27,
+    1,
+    27,
+    5,
+    3,
+    3,
+    1,
+    10,
+    1,
+    84,
+    5,
+    1,
+    1,
+    11,
+    1,
+    12,
+    14,
+    5,
+    1,
+    1,
+    3,
+    217,
+    3,
+    4
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_trickster_t2": {
+   "id": "promo_trickster_t2",
+   "cls": "rogue",
+   "tier": 2,
+   "file": "assets/runtime/hero_promo_trickster_t2.webp",
+   "sourceRect": [
+    1311,
+    0,
+    662,
+    1520
+   ],
+   "trimOffset": [
+    1321,
+    85
+   ],
+   "size": [
+    150,
+    313
+   ],
+   "scale": 0.2305,
+   "bodyHeightPx": 302.4,
+   "pivot": [
+    59.0,
+    310.9
+   ],
+   "hitbox": [
+    10.5,
+    20.4,
+    130.6,
+    272.0
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    2,
+    1,
+    13,
+    1,
+    1,
+    6,
+    5,
+    2,
+    1,
+    2,
+    1,
+    2,
+    2,
+    2,
+    2,
+    3,
+    5,
+    2,
+    2,
+    2,
+    60,
+    4,
+    24,
+    7,
+    2,
+    1,
+    3,
+    2,
+    15,
+    2,
+    109,
+    2,
+    1,
+    1,
+    4,
+    2,
+    1,
+    17,
+    32,
+    2,
+    1,
+    2,
+    1,
+    7,
+    1,
+    2,
+    1,
+    1,
+    2,
+    10,
+    1,
+    2,
+    1
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_trickster_t3": {
+   "id": "promo_trickster_t3",
+   "cls": "rogue",
+   "tier": 3,
+   "file": "assets/runtime/hero_promo_trickster_t3.webp",
+   "sourceRect": [
+    1973,
+    0,
+    715,
+    1520
+   ],
+   "trimOffset": [
+    1973,
+    97
+   ],
+   "size": [
+    157,
+    308
+   ],
+   "scale": 0.2279,
+   "bodyHeightPx": 302.4,
+   "pivot": [
+    75.2,
+    306.3
+   ],
+   "hitbox": [
+    9.3,
+    19.9,
+    136.8,
+    268.1
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    3,
+    5,
+    105,
+    1,
+    2,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    2,
+    38,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    110,
+    24,
+    1,
+    17,
+    48,
+    2,
+    1,
+    1,
+    11,
+    13,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    14,
+    1,
+    6,
+    1,
+    57,
+    12,
+    7,
+    1,
+    2,
+    20,
+    47,
+    3,
+    8,
+    1,
+    3,
+    2,
+    31,
+    6,
+    1,
+    2,
+    1,
+    2,
+    1,
+    1,
+    49,
+    16
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "pose_mage_idle": {
+   "id": "pose_mage_idle",
+   "cls": "mage",
+   "pose": "idle",
+   "file": "assets/runtime/hero_pose_mage_idle.webp",
+   "sourceRect": [
+    0,
+    0,
+    349,
+    651
+   ],
+   "trimOffset": [
+    11,
+    21
+   ],
+   "size": [
+    167,
+    311
+   ],
+   "scale": 0.4938,
+   "bodyHeightPx": 280.0,
+   "pivot": [
+    85.4,
+    308.6
+   ],
+   "hitbox": [
+    13.6,
+    22.7,
+    141.2,
+    267.7
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    2,
+    1
+   ],
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_mage_step": {
+   "id": "pose_mage_step",
+   "cls": "mage",
+   "pose": "step",
+   "file": "assets/runtime/hero_pose_mage_step.webp",
+   "sourceRect": [
+    349,
+    0,
+    573,
+    651
+   ],
+   "trimOffset": [
+    466,
+    108
+   ],
+   "size": [
+    225,
+    268
+   ],
+   "scale": 0.4938,
+   "bodyHeightPx": 255.8,
+   "pivot": [
+    150.3,
+    263.7
+   ],
+   "hitbox": [
+    17.1,
+    19.1,
+    192.5,
+    229.0
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    1,
+    1,
+    1,
+    9,
+    2
+   ],
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_mage_anticipation": {
+   "id": "pose_mage_anticipation",
+   "cls": "mage",
+   "pose": "anticipation",
+   "file": "assets/runtime/hero_pose_mage_anticipation.webp",
+   "sourceRect": [
+    922,
+    0,
+    502,
+    651
+   ],
+   "trimOffset": [
+    997,
+    134
+   ],
+   "size": [
+    211,
+    255
+   ],
+   "scale": 0.4938,
+   "bodyHeightPx": 243.5,
+   "pivot": [
+    124.9,
+    252.8
+   ],
+   "hitbox": [
+    16.3,
+    19.3,
+    181.2,
+    218.6
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    5,
+    18,
+    4,
+    12
+   ],
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_mage_thrust": {
+   "id": "pose_mage_thrust",
+   "cls": "mage",
+   "pose": "thrust",
+   "file": "assets/runtime/hero_pose_mage_thrust.webp",
+   "sourceRect": [
+    1424,
+    0,
+    624,
+    651
+   ],
+   "trimOffset": [
+    1424,
+    150
+   ],
+   "size": [
+    231,
+    247
+   ],
+   "scale": 0.4938,
+   "bodyHeightPx": 235.1,
+   "pivot": [
+    128.5,
+    243.5
+   ],
+   "hitbox": [
+    15.9,
+    17.4,
+    197.3,
+    211.6
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    45,
+    6,
+    1,
+    29
+   ],
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_mage_recovery": {
+   "id": "pose_mage_recovery",
+   "cls": "mage",
+   "pose": "recovery",
+   "file": "assets/runtime/hero_pose_mage_recovery.webp",
+   "sourceRect": [
+    0,
+    651,
+    451,
+    709
+   ],
+   "trimOffset": [
+    29,
+    766
+   ],
+   "size": [
+    208,
+    278
+   ],
+   "scale": 0.4938,
+   "bodyHeightPx": 267.7,
+   "pivot": [
+    75.2,
+    274.1
+   ],
+   "hitbox": [
+    15.6,
+    19.7,
+    178.2,
+    238.1
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    2
+   ],
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_mage_hit": {
+   "id": "pose_mage_hit",
+   "cls": "mage",
+   "pose": "hit",
+   "file": "assets/runtime/hero_pose_mage_hit.webp",
+   "sourceRect": [
+    451,
+    651,
+    488,
+    709
+   ],
+   "trimOffset": [
+    499,
+    771
+   ],
+   "size": [
+    217,
+    271
+   ],
+   "scale": 0.4938,
+   "bodyHeightPx": 256.3,
+   "pivot": [
+    140.1,
+    266.7
+   ],
+   "hitbox": [
+    16.6,
+    19.2,
+    185.6,
+    231.6
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    1
+   ],
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_mage_cast": {
+   "id": "pose_mage_cast",
+   "cls": "mage",
+   "pose": "cast",
+   "file": "assets/runtime/hero_pose_mage_cast.webp",
+   "sourceRect": [
+    939,
+    651,
+    508,
+    709
+   ],
+   "trimOffset": [
+    1013,
+    742
+   ],
+   "size": [
+    214,
+    290
+   ],
+   "scale": 0.4938,
+   "bodyHeightPx": 279.0,
+   "pivot": [
+    105.8,
+    285.9
+   ],
+   "hitbox": [
+    16.0,
+    21.3,
+    183.4,
+    247.7
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    1,
+    15,
+    87,
+    1,
+    1,
+    96,
+    11,
+    39,
+    7,
+    1,
+    2,
+    1,
+    1,
+    3
+   ],
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_mage_victory": {
+   "id": "pose_mage_victory",
+   "cls": "mage",
+   "pose": "victory",
+   "file": "assets/runtime/hero_pose_mage_victory.webp",
+   "sourceRect": [
+    1447,
+    651,
+    601,
+    709
+   ],
+   "trimOffset": [
+    1518,
+    651
+   ],
+   "size": [
+    209,
+    335
+   ],
+   "scale": 0.4938,
+   "bodyHeightPx": 310.6,
+   "pivot": [
+    115.2,
+    330.9
+   ],
+   "hitbox": [
+    15.5,
+    19.9,
+    177.3,
+    291.2
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    1
+   ],
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_archer_idle": {
+   "id": "pose_archer_idle",
+   "cls": "archer",
+   "pose": "idle",
+   "file": "assets/runtime/hero_pose_archer_idle.webp",
+   "sourceRect": [
+    0,
+    0,
+    427,
+    650
+   ],
+   "trimOffset": [
+    37,
+    60
+   ],
+   "size": [
+    192,
+    290
+   ],
+   "scale": 0.4912,
+   "bodyHeightPx": 280.0,
+   "pivot": [
+    99.7,
+    288.4
+   ],
+   "hitbox": [
+    14.6,
+    21.0,
+    163.4,
+    250.3
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    1,
+    1,
+    10,
+    1,
+    2
+   ],
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_archer_step": {
+   "id": "pose_archer_step",
+   "cls": "archer",
+   "pose": "step",
+   "file": "assets/runtime/hero_pose_archer_step.webp",
+   "sourceRect": [
+    427,
+    0,
+    514,
+    650
+   ],
+   "trimOffset": [
+    522,
+    63
+   ],
+   "size": [
+    206,
+    288
+   ],
+   "scale": 0.4912,
+   "bodyHeightPx": 277.5,
+   "pivot": [
+    135.5,
+    285.9
+   ],
+   "hitbox": [
+    15.4,
+    19.9,
+    175.9,
+    249.0
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    5,
+    1,
+    1,
+    3,
+    2,
+    2,
+    2,
+    4,
+    7
+   ],
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_archer_anticipation": {
+   "id": "pose_archer_anticipation",
+   "cls": "archer",
+   "pose": "anticipation",
+   "file": "assets/runtime/hero_pose_archer_anticipation.webp",
+   "sourceRect": [
+    941,
+    0,
+    510,
+    650
+   ],
+   "trimOffset": [
+    1003,
+    7
+   ],
+   "size": [
+    220,
+    316
+   ],
+   "scale": 0.4912,
+   "bodyHeightPx": 269.7,
+   "pivot": [
+    118.7,
+    313.4
+   ],
+   "hitbox": [
+    16.4,
+    22.5,
+    190.2,
+    272.3
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    4,
+    4,
+    4,
+    4,
+    1,
+    1,
+    4,
+    1,
+    2,
+    1,
+    1,
+    77,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1
+   ],
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_archer_thrust": {
+   "id": "pose_archer_thrust",
+   "cls": "archer",
+   "pose": "thrust",
+   "file": "assets/runtime/hero_pose_archer_thrust.webp",
+   "sourceRect": [
+    1451,
+    0,
+    597,
+    650
+   ],
+   "trimOffset": [
+    1451,
+    7
+   ],
+   "size": [
+    293,
+    316
+   ],
+   "scale": 0.4912,
+   "bodyHeightPx": 260.8,
+   "pivot": [
+    147.0,
+    313.9
+   ],
+   "hitbox": [
+    19.6,
+    22.5,
+    252.0,
+    272.8
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    1,
+    1,
+    141,
+    1,
+    2,
+    4,
+    2,
+    1,
+    1,
+    5,
+    1,
+    6,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    3,
+    103
+   ],
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_archer_recovery": {
+   "id": "pose_archer_recovery",
+   "cls": "archer",
+   "pose": "recovery",
+   "file": "assets/runtime/hero_pose_archer_recovery.webp",
+   "sourceRect": [
+    0,
+    650,
+    426,
+    710
+   ],
+   "trimOffset": [
+    46,
+    723
+   ],
+   "size": [
+    187,
+    295
+   ],
+   "scale": 0.4912,
+   "bodyHeightPx": 281.5,
+   "pivot": [
+    90.8,
+    290.3
+   ],
+   "hitbox": [
+    14.3,
+    21.1,
+    159.1,
+    252.0
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    2,
+    2,
+    6,
+    1,
+    1,
+    1
+   ],
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_archer_hit": {
+   "id": "pose_archer_hit",
+   "cls": "archer",
+   "pose": "hit",
+   "file": "assets/runtime/hero_pose_archer_hit.webp",
+   "sourceRect": [
+    426,
+    650,
+    523,
+    710
+   ],
+   "trimOffset": [
+    531,
+    742
+   ],
+   "size": [
+    205,
+    283
+   ],
+   "scale": 0.4912,
+   "bodyHeightPx": 270.2,
+   "pivot": [
+    130.0,
+    279.0
+   ],
+   "hitbox": [
+    15.9,
+    20.0,
+    175.1,
+    242.5
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    8,
+    1,
+    3,
+    1,
+    12
+   ],
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_archer_cast": {
+   "id": "pose_archer_cast",
+   "cls": "archer",
+   "pose": "cast",
+   "file": "assets/runtime/hero_pose_archer_cast.webp",
+   "sourceRect": [
+    949,
+    650,
+    474,
+    710
+   ],
+   "trimOffset": [
+    995,
+    657
+   ],
+   "size": [
+    210,
+    326
+   ],
+   "scale": 0.4912,
+   "bodyHeightPx": 299.2,
+   "pivot": [
+    129.1,
+    321.8
+   ],
+   "hitbox": [
+    15.7,
+    22.5,
+    179.8,
+    280.1
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    12,
+    1,
+    7,
+    10,
+    13,
+    1,
+    1,
+    4,
+    15,
+    3,
+    2,
+    27,
+    1,
+    18
+   ],
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_archer_victory": {
+   "id": "pose_archer_victory",
+   "cls": "archer",
+   "pose": "victory",
+   "file": "assets/runtime/hero_pose_archer_victory.webp",
+   "sourceRect": [
+    1423,
+    650,
+    625,
+    710
+   ],
+   "trimOffset": [
+    1525,
+    650
+   ],
+   "size": [
+    232,
+    331
+   ],
+   "scale": 0.4912,
+   "bodyHeightPx": 325.2,
+   "pivot": [
+    120.8,
+    326.2
+   ],
+   "hitbox": [
+    16.9,
+    19.6,
+    197.1,
+    287.0
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    7,
+    221,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2
+   ],
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_rogue_idle": {
+   "id": "pose_rogue_idle",
+   "cls": "rogue",
+   "pose": "idle",
+   "file": "assets/runtime/hero_pose_rogue_idle.webp",
+   "sourceRect": [
+    0,
+    0,
+    430,
+    643
+   ],
+   "trimOffset": [
+    44,
+    55
+   ],
+   "size": [
+    189,
+    288
+   ],
+   "scale": 0.4904,
+   "bodyHeightPx": 280.0,
+   "pivot": [
+    102.4,
+    285.9
+   ],
+   "hitbox": [
+    14.4,
+    20.8,
+    161.4,
+    248.1
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    2,
+    6,
+    1,
+    1,
+    1
+   ],
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_rogue_step": {
+   "id": "pose_rogue_step",
+   "cls": "rogue",
+   "pose": "step",
+   "file": "assets/runtime/hero_pose_rogue_step.webp",
+   "sourceRect": [
+    430,
+    0,
+    531,
+    643
+   ],
+   "trimOffset": [
+    543,
+    59
+   ],
+   "size": [
+    205,
+    286
+   ],
+   "scale": 0.4904,
+   "bodyHeightPx": 275.6,
+   "pivot": [
+    155.2,
+    281.5
+   ],
+   "hitbox": [
+    15.4,
+    20.1,
+    175.2,
+    244.7
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    2
+   ],
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_rogue_anticipation": {
+   "id": "pose_rogue_anticipation",
+   "cls": "rogue",
+   "pose": "anticipation",
+   "file": "assets/runtime/hero_pose_rogue_anticipation.webp",
+   "sourceRect": [
+    961,
+    0,
+    499,
+    643
+   ],
+   "trimOffset": [
+    1014,
+    137
+   ],
+   "size": [
+    219,
+    246
+   ],
+   "scale": 0.4904,
+   "bodyHeightPx": 235.9,
+   "pivot": [
+    108.3,
+    242.2
+   ],
+   "hitbox": [
+    16.3,
+    17.8,
+    189.0,
+    210.2
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    1,
+    5,
+    1,
+    2,
+    1
+   ],
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_rogue_thrust": {
+   "id": "pose_rogue_thrust",
+   "cls": "rogue",
+   "pose": "thrust",
+   "file": "assets/runtime/hero_pose_rogue_thrust.webp",
+   "sourceRect": [
+    1460,
+    0,
+    588,
+    643
+   ],
+   "trimOffset": [
+    1460,
+    133
+   ],
+   "size": [
+    285,
+    248
+   ],
+   "scale": 0.4904,
+   "bodyHeightPx": 237.8,
+   "pivot": [
+    138.6,
+    243.7
+   ],
+   "hitbox": [
+    18.7,
+    17.4,
+    245.1,
+    211.9
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    6,
+    4,
+    1,
+    65
+   ],
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_rogue_recovery": {
+   "id": "pose_rogue_recovery",
+   "cls": "rogue",
+   "pose": "recovery",
+   "file": "assets/runtime/hero_pose_rogue_recovery.webp",
+   "sourceRect": [
+    0,
+    643,
+    472,
+    717
+   ],
+   "trimOffset": [
+    27,
+    716
+   ],
+   "size": [
+    218,
+    292
+   ],
+   "scale": 0.4904,
+   "bodyHeightPx": 281.0,
+   "pivot": [
+    116.2,
+    287.4
+   ],
+   "hitbox": [
+    16.2,
+    20.5,
+    186.8,
+    249.9
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    2,
+    74,
+    1,
+    3
+   ],
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_rogue_hit": {
+   "id": "pose_rogue_hit",
+   "cls": "rogue",
+   "pose": "hit",
+   "file": "assets/runtime/hero_pose_rogue_hit.webp",
+   "sourceRect": [
+    472,
+    643,
+    496,
+    717
+   ],
+   "trimOffset": [
+    531,
+    719
+   ],
+   "size": [
+    214,
+    290
+   ],
+   "scale": 0.4904,
+   "bodyHeightPx": 277.5,
+   "pivot": [
+    115.1,
+    285.4
+   ],
+   "hitbox": [
+    15.9,
+    20.8,
+    183.4,
+    247.7
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    2,
+    2,
+    2,
+    2,
+    1,
+    234,
+    6,
+    1
+   ],
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_rogue_cast": {
+   "id": "pose_rogue_cast",
+   "cls": "rogue",
+   "pose": "cast",
+   "file": "assets/runtime/hero_pose_rogue_cast.webp",
+   "sourceRect": [
+    968,
+    643,
+    516,
+    717
+   ],
+   "trimOffset": [
+    991,
+    716
+   ],
+   "size": [
+    235,
+    292
+   ],
+   "scale": 0.4904,
+   "bodyHeightPx": 281.0,
+   "pivot": [
+    116.3,
+    287.4
+   ],
+   "hitbox": [
+    17.1,
+    20.5,
+    199.8,
+    249.9
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    1,
+    1,
+    68,
+    5,
+    1,
+    5,
+    46,
+    19,
+    8,
+    162,
+    32,
+    12,
+    1,
+    8,
+    1,
+    12,
+    1,
+    1,
+    2,
+    82,
+    48,
+    7,
+    34,
+    11,
+    13,
+    203,
+    24,
+    6,
+    31,
+    131,
+    6,
+    1
+   ],
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_rogue_victory": {
+   "id": "pose_rogue_victory",
+   "cls": "rogue",
+   "pose": "victory",
+   "file": "assets/runtime/hero_pose_rogue_victory.webp",
+   "sourceRect": [
+    1484,
+    643,
+    564,
+    717
+   ],
+   "trimOffset": [
+    1572,
+    704
+   ],
+   "size": [
+    222,
+    304
+   ],
+   "scale": 0.4904,
+   "bodyHeightPx": 293.2,
+   "pivot": [
+    113.5,
+    299.6
+   ],
+   "hitbox": [
+    16.8,
+    21.7,
+    188.6,
+    260.2
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    1,
+    5,
+    1
+   ],
+   "status": "RUNTIME_KEY_POSE"
   }
  },
  "items": {
@@ -4329,6 +9530,618 @@
    "scale": 0.2712,
    "droppedBleedComponents": [],
    "status": "RUNTIME_ICON"
+  },
+  "K00": {
+   "id": "K00",
+   "name": "m_fireball",
+   "file": "assets/runtime/skill_K00.webp",
+   "sourceRect": [
+    27,
+    24,
+    307,
+    303
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K01": {
+   "id": "K01",
+   "name": "m_frost",
+   "file": "assets/runtime/skill_K01.webp",
+   "sourceRect": [
+    364,
+    25,
+    307,
+    302
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K02": {
+   "id": "K02",
+   "name": "m_shield",
+   "file": "assets/runtime/skill_K02.webp",
+   "sourceRect": [
+    701,
+    24,
+    308,
+    303
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K03": {
+   "id": "K03",
+   "name": "m_chain",
+   "file": "assets/runtime/skill_K03.webp",
+   "sourceRect": [
+    1039,
+    24,
+    308,
+    303
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K04": {
+   "id": "K04",
+   "name": "m_curse",
+   "file": "assets/runtime/skill_K04.webp",
+   "sourceRect": [
+    1402,
+    52,
+    282,
+    275
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K05": {
+   "id": "K05",
+   "name": "m_blizzard",
+   "file": "assets/runtime/skill_K05.webp",
+   "sourceRect": [
+    1715,
+    24,
+    307,
+    303
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K06": {
+   "id": "K06",
+   "name": "m_drain",
+   "file": "assets/runtime/skill_K06.webp",
+   "sourceRect": [
+    28,
+    360,
+    306,
+    304
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K07": {
+   "id": "K07",
+   "name": "m_meteor",
+   "file": "assets/runtime/skill_K07.webp",
+   "sourceRect": [
+    364,
+    355,
+    307,
+    310
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K08": {
+   "id": "K08",
+   "name": "a_aim",
+   "file": "assets/runtime/skill_K08.webp",
+   "sourceRect": [
+    702,
+    356,
+    306,
+    308
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K09": {
+   "id": "K09",
+   "name": "a_multi",
+   "file": "assets/runtime/skill_K09.webp",
+   "sourceRect": [
+    1040,
+    355,
+    306,
+    310
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K10": {
+   "id": "K10",
+   "name": "a_leap",
+   "file": "assets/runtime/skill_K10.webp",
+   "sourceRect": [
+    1377,
+    355,
+    308,
+    310
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K11": {
+   "id": "K11",
+   "name": "a_pierce",
+   "file": "assets/runtime/skill_K11.webp",
+   "sourceRect": [
+    1715,
+    355,
+    306,
+    310
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K12": {
+   "id": "K12",
+   "name": "a_beast",
+   "file": "assets/runtime/skill_K12.webp",
+   "sourceRect": [
+    27,
+    694,
+    307,
+    311
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K13": {
+   "id": "K13",
+   "name": "a_snipe",
+   "file": "assets/runtime/skill_K13.webp",
+   "sourceRect": [
+    364,
+    693,
+    307,
+    311
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K14": {
+   "id": "K14",
+   "name": "a_pack",
+   "file": "assets/runtime/skill_K14.webp",
+   "sourceRect": [
+    701,
+    694,
+    308,
+    311
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K15": {
+   "id": "K15",
+   "name": "a_rain",
+   "file": "assets/runtime/skill_K15.webp",
+   "sourceRect": [
+    1039,
+    719,
+    307,
+    285
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K16": {
+   "id": "K16",
+   "name": "r_stab",
+   "file": "assets/runtime/skill_K16.webp",
+   "sourceRect": [
+    1378,
+    697,
+    307,
+    307
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K17": {
+   "id": "K17",
+   "name": "r_poison",
+   "file": "assets/runtime/skill_K17.webp",
+   "sourceRect": [
+    1716,
+    694,
+    305,
+    311
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K18": {
+   "id": "K18",
+   "name": "r_shadow",
+   "file": "assets/runtime/skill_K18.webp",
+   "sourceRect": [
+    28,
+    1045,
+    300,
+    301
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K19": {
+   "id": "K19",
+   "name": "r_execute",
+   "file": "assets/runtime/skill_K19.webp",
+   "sourceRect": [
+    365,
+    1038,
+    305,
+    309
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K20": {
+   "id": "K20",
+   "name": "r_smoke",
+   "file": "assets/runtime/skill_K20.webp",
+   "sourceRect": [
+    717,
+    1053,
+    271,
+    277
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K21": {
+   "id": "K21",
+   "name": "r_shadowstrike",
+   "file": "assets/runtime/skill_K21.webp",
+   "sourceRect": [
+    1039,
+    1047,
+    307,
+    277
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K22": {
+   "id": "K22",
+   "name": "r_illusion",
+   "file": "assets/runtime/skill_K22.webp",
+   "sourceRect": [
+    1377,
+    1050,
+    308,
+    297
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K23": {
+   "id": "K23",
+   "name": "r_blades",
+   "file": "assets/runtime/skill_K23.webp",
+   "sourceRect": [
+    1716,
+    1044,
+    305,
+    303
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K24": {
+   "id": "K24",
+   "name": "rune_lifesteal",
+   "file": "assets/runtime/skill_K24.webp",
+   "sourceRect": [
+    28,
+    1377,
+    306,
+    301
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K25": {
+   "id": "K25",
+   "name": "rune_combo",
+   "file": "assets/runtime/skill_K25.webp",
+   "sourceRect": [
+    364,
+    1376,
+    307,
+    302
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K26": {
+   "id": "K26",
+   "name": "rune_ward",
+   "file": "assets/runtime/skill_K26.webp",
+   "sourceRect": [
+    702,
+    1384,
+    307,
+    294
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K27": {
+   "id": "K27",
+   "name": "rune_midas",
+   "file": "assets/runtime/skill_K27.webp",
+   "sourceRect": [
+    1039,
+    1376,
+    307,
+    302
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K28": {
+   "id": "K28",
+   "name": "rune_focus",
+   "file": "assets/runtime/skill_K28.webp",
+   "sourceRect": [
+    1378,
+    1385,
+    307,
+    293
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K29": {
+   "id": "K29",
+   "name": "rune_gale",
+   "file": "assets/runtime/skill_K29.webp",
+   "sourceRect": [
+    1715,
+    1376,
+    306,
+    302
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K30": {
+   "id": "K30",
+   "name": "rune_bulwark",
+   "file": "assets/runtime/skill_K30.webp",
+   "sourceRect": [
+    28,
+    1723,
+    306,
+    288
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K31": {
+   "id": "K31",
+   "name": "rune_charge",
+   "file": "assets/runtime/skill_K31.webp",
+   "sourceRect": [
+    364,
+    1706,
+    307,
+    307
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K32": {
+   "id": "K32",
+   "name": "w_judgement",
+   "file": "assets/runtime/skill_K32.webp",
+   "sourceRect": [
+    702,
+    1706,
+    306,
+    307
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K33": {
+   "id": "K33",
+   "name": "w_whirl",
+   "file": "assets/runtime/skill_K33.webp",
+   "sourceRect": [
+    1039,
+    1706,
+    307,
+    307
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K34": {
+   "id": "K34",
+   "name": "emblem_tower",
+   "file": "assets/runtime/skill_K34.webp",
+   "sourceRect": [
+    1378,
+    1720,
+    307,
+    294
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
+  },
+  "K35": {
+   "id": "K35",
+   "name": "emblem_raid",
+   "file": "assets/runtime/skill_K35.webp",
+   "sourceRect": [
+    1715,
+    1707,
+    306,
+    307
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "generated/skills_v4.png"
   }
  },
  "backgrounds": {
@@ -4367,6 +10180,86 @@
    ],
    "groundRatio": 0.8,
    "status": "STATIC_SINGLE_LAYER_BACKGROUND"
+  },
+  "forest": {
+   "file": "assets/runtime/bg_forest.webp",
+   "size": [
+    1024,
+    680
+   ],
+   "groundRatio": 0.77,
+   "status": "STATIC_SINGLE_LAYER_BACKGROUND",
+   "source": "generated/bg_forest.png"
+  },
+  "glacier": {
+   "file": "assets/runtime/bg_glacier.webp",
+   "size": [
+    1024,
+    680
+   ],
+   "groundRatio": 0.79,
+   "status": "STATIC_SINGLE_LAYER_BACKGROUND",
+   "source": "generated/bg_glacier.png"
+  },
+  "volcano": {
+   "file": "assets/runtime/bg_volcano.webp",
+   "size": [
+    1024,
+    680
+   ],
+   "groundRatio": 0.8,
+   "status": "STATIC_SINGLE_LAYER_BACKGROUND",
+   "source": "generated/bg_volcano.png"
+  },
+  "abyssal": {
+   "file": "assets/runtime/bg_abyssal.webp",
+   "size": [
+    1024,
+    680
+   ],
+   "groundRatio": 0.83,
+   "status": "STATIC_SINGLE_LAYER_BACKGROUND",
+   "source": "generated/bg_abyssal.png"
+  },
+  "castle": {
+   "file": "assets/runtime/bg_castle.webp",
+   "size": [
+    1024,
+    680
+   ],
+   "groundRatio": 0.81,
+   "status": "STATIC_SINGLE_LAYER_BACKGROUND",
+   "source": "generated/bg_castle.png"
+  },
+  "sky": {
+   "file": "assets/runtime/bg_sky.webp",
+   "size": [
+    1024,
+    680
+   ],
+   "groundRatio": 0.82,
+   "status": "STATIC_SINGLE_LAYER_BACKGROUND",
+   "source": "generated/bg_sky.png"
+  },
+  "void": {
+   "file": "assets/runtime/bg_void.webp",
+   "size": [
+    1024,
+    680
+   ],
+   "groundRatio": 0.86,
+   "status": "STATIC_SINGLE_LAYER_BACKGROUND",
+   "source": "generated/bg_void.png"
+  },
+  "tower": {
+   "file": "assets/runtime/bg_tower.webp",
+   "size": [
+    1024,
+    680
+   ],
+   "groundRatio": 0.88,
+   "status": "STATIC_SINGLE_LAYER_BACKGROUND",
+   "source": "generated/bg_tower.png"
   }
  },
  "portraits": {
@@ -4565,6 +10458,150 @@
    "file": "assets/runtime/hero_promo_trickster.webp",
    "size": [
     174,
+    308
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_knight_t2": {
+   "id": "knight_t2",
+   "file": "assets/runtime/hero_promo_knight_t2.webp",
+   "size": [
+    153,
+    313
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_knight_t3": {
+   "id": "knight_t3",
+   "file": "assets/runtime/hero_promo_knight_t3.webp",
+   "size": [
+    148,
+    321
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_berserker_t2": {
+   "id": "berserker_t2",
+   "file": "assets/runtime/hero_promo_berserker_t2.webp",
+   "size": [
+    156,
+    311
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_berserker_t3": {
+   "id": "berserker_t3",
+   "file": "assets/runtime/hero_promo_berserker_t3.webp",
+   "size": [
+    156,
+    318
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_wizard_t2": {
+   "id": "wizard_t2",
+   "file": "assets/runtime/hero_promo_wizard_t2.webp",
+   "size": [
+    143,
+    327
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_wizard_t3": {
+   "id": "wizard_t3",
+   "file": "assets/runtime/hero_promo_wizard_t3.webp",
+   "size": [
+    133,
+    311
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_warlock_t2": {
+   "id": "warlock_t2",
+   "file": "assets/runtime/hero_promo_warlock_t2.webp",
+   "size": [
+    131,
+    315
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_warlock_t3": {
+   "id": "warlock_t3",
+   "file": "assets/runtime/hero_promo_warlock_t3.webp",
+   "size": [
+    172,
+    319
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_ranger_t2": {
+   "id": "ranger_t2",
+   "file": "assets/runtime/hero_promo_ranger_t2.webp",
+   "size": [
+    138,
+    308
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_ranger_t3": {
+   "id": "ranger_t3",
+   "file": "assets/runtime/hero_promo_ranger_t3.webp",
+   "size": [
+    165,
+    311
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_hunter_t2": {
+   "id": "hunter_t2",
+   "file": "assets/runtime/hero_promo_hunter_t2.webp",
+   "size": [
+    139,
+    311
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_hunter_t3": {
+   "id": "hunter_t3",
+   "file": "assets/runtime/hero_promo_hunter_t3.webp",
+   "size": [
+    150,
+    322
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_assassin_t2": {
+   "id": "assassin_t2",
+   "file": "assets/runtime/hero_promo_assassin_t2.webp",
+   "size": [
+    145,
+    308
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_assassin_t3": {
+   "id": "assassin_t3",
+   "file": "assets/runtime/hero_promo_assassin_t3.webp",
+   "size": [
+    143,
+    308
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_trickster_t2": {
+   "id": "trickster_t2",
+   "file": "assets/runtime/hero_promo_trickster_t2.webp",
+   "size": [
+    150,
+    313
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_trickster_t3": {
+   "id": "trickster_t3",
+   "file": "assets/runtime/hero_promo_trickster_t3.webp",
+   "size": [
+    157,
     308
    ],
    "status": "RUNTIME_STATIC_SPRITE"
