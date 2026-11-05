@@ -50,7 +50,9 @@ export function fmt(n) {
   const neg = n < 0;
   let v = Math.abs(n);
   if (v < 1000) return (neg ? '-' : '') + Math.floor(v).toLocaleString('en-US');
+  // idle-game style suffixes after T: aa, ab, … (each ×1000)
   const units = ['K', 'M', 'B', 'T'];
+  for (let a = 0; a < 26 && units.length < 60; a++) for (let b = 0; b < 26 && units.length < 60; b++) units.push(String.fromCharCode(97 + a) + String.fromCharCode(97 + b));
   let u = -1;
   while (v >= 1000 && u < units.length - 1) { v /= 1000; u++; }
   let r = Math.round(v * 100) / 100;
