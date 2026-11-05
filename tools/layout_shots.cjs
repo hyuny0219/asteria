@@ -16,7 +16,7 @@ require('fs').mkdirSync(out, { recursive: true });
     const p = await c.newPage();
     const errs = [];
     p.on('pageerror', (e) => errs.push(String(e)));
-    await p.goto(`http://127.0.0.1:${port}/?autostart`);
+    await p.goto(`http://127.0.0.1:${port}/?autostart&nodaily`);
     await p.waitForFunction(() => globalThis.__asteria?.app?.el, null, { timeout: 20000 });
     await p.waitForTimeout(2500);
     await p.evaluate((t) => __asteria.app.setTab(t), tab);

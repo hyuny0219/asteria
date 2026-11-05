@@ -421,7 +421,7 @@ export function menuPanel(app) {
   const grid = h('div', { class: 'tiles' });
   for (const t of menuTiles(app)) {
     grid.appendChild(h('button', { type: 'button', class: 'tile' + (t.dot ? ' hot' : ''), dataset: { key: 'tile-' + t.id }, 'aria-label': t.t + (t.dot ? ' (할 일 있음)' : ''), onClick: t.on },
-      icon(t.ic, 28), h('span', { class: 't' }, t.t), h('span', { class: 's' }, t.s), t.dot ? h('span', { class: 'dot', 'aria-hidden': 'true' }) : null));
+      icon(t.ic, 24), h('span', { class: 't' }, t.t), h('span', { class: 's' }, t.s), t.dot ? h('span', { class: 'dot', 'aria-hidden': 'true' }) : null));
   }
   sc.appendChild(grid);
   root.appendChild(sc);
@@ -465,7 +465,7 @@ export function openBoss(app, bossId = null) {
   const art = spriteMeta().bosses[bossId];
   const m = openModal({ id: 'boss', title: '보스 도전', body: h('div', { dataset: { screen: 'boss' } },
     img(art.file, b.name, 'boss-art'),
-    h('h3', { style: { fontSize: '24px', margin: '0 0 8px' } }, b.name),
+    h('h3', { style: { fontSize: '18px', margin: '0 0 8px' } }, b.name),
     h('div', { class: 'card' },
       h('div', { class: 'kv' }, '제한 시간', h('b', null, `${BALANCE.combat.bossTimeoutSec}초`)),
       h('div', { class: 'kv' }, '보스 레벨', h('b', null, `Lv ${b.level}`)),
@@ -563,7 +563,7 @@ export function openOffline(app) {
   const farm = c.farm ? `${REGION_BY_ID[c.farm.region].name} 웨이브 ${c.farm.wave} · 분당 ${fmt(c.farm.killsPerSec * 60)}마리` : '—';
   const body = h('div', { dataset: { screen: 'offline' } },
     h('div', { style: { display: 'flex', gap: '12px', alignItems: 'center' } }, img(portrait('serin_face'), '', 'face'), h('p', { style: { margin: 0 } }, nothing ? '기다리고 있었어요.' : '돌아오셨군요. 그동안 길을 지켜두었어요.')),
-    h('h3', { style: { fontSize: '24px', margin: '8px 0 0' } }, `${fmtDuration(c.elapsedSec)}의 여정`),
+    h('h3', { style: { fontSize: '18px', margin: '8px 0 0' } }, `${fmtDuration(c.elapsedSec)}의 여정`),
     nothing ? h('p', { class: 'muted' }, c.reason === 'unverified' ? '아직 검증된 사냥터가 없어 방치 보상이 없습니다. 같은 웨이브에서 10마리씩 3번 쓰러지지 않고 사냥하면 그 사냥터가 방치 기준이 됩니다.' : `${BALANCE.offline.minSeconds}초 미만은 정산하지 않습니다.`)
       : rewardTiles(tiles),
     h('div', { class: 'card' },
@@ -601,7 +601,7 @@ export function openQuest(app) {
     const s = app.state;
     const cl = prog.promotionChecklist(s);
     const body = h('div', { dataset: { screen: 'quest' } },
-      h('h3', { style: { fontSize: '20px', margin: '0 0 4px' } }, '별의 시험'),
+      h('h3', { style: { fontSize: '18px', margin: '0 0 4px' } }, '별의 시험'),
       cl.items.map((it) => h('div', { class: 'check' + (it.ok ? ' ok' : '') },
         h('span', { class: 'mark', 'aria-hidden': 'true' }, it.ok ? icon('check', 18) : ''),
         h('div', { class: 'c' }, h('b', null, it.label + (it.ok ? ' · 완료' : '')), it.hint ? h('span', { class: 'muted' }, it.hint) : null),
@@ -669,7 +669,7 @@ function playPromotion(app, branch, r) {
   nxt.style.opacity = 0;
   const stage = h('div', { style: { position: 'relative', height: '300px' } }, cur, nxt);
   const info = h('div', { style: { opacity: 0, transition: 'opacity 300ms' } },
-    h('h3', { style: { fontSize: '24px', margin: '8px 0 0', textAlign: 'center' } }, BRANCHES[branch].name),
+    h('h3', { style: { fontSize: '18px', margin: '8px 0 0', textAlign: 'center' } }, BRANCHES[branch].name),
     h('p', { style: { textAlign: 'center' } }, `신규 스킬 ${SKILLS[branch === 'knight' ? 'guardCounter' : 'berserkStrike'].name} · 4번 슬롯 해금`),
     r.exp && r.exp.amount ? h('p', { class: 'muted', style: { textAlign: 'center' } }, `보관 경험치 ${fmtFull(r.exp.amount)} 적용 · ${r.exp.levels}레벨 상승${r.exp.discarded ? ` · Lv ${BALANCE.levelCap} 초과분 ${fmtFull(r.exp.discarded)}은 MVP에서 적립되지 않음` : ''}`) : null);
   const m = openModal({ id: 'promoPlay', title: '서약 각성', dismissible: false, body: h('div', null, stage, info), actions: [button('계속', { cls: 'btn btn-primary', onClick: () => m.close() })] });

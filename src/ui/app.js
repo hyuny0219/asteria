@@ -93,7 +93,7 @@ export class App {
     E.nav = h('nav', { class: 'nav', 'aria-label': '주 메뉴' });
     this.navBtns = {};
     for (const t of TABS) {
-      const b = h('button', { type: 'button', onClick: () => this.setTab(t.id) }, icon(t.icon, 22), h('span', null, t.label));
+      const b = h('button', { type: 'button', onClick: () => this.setTab(t.id) }, icon(t.icon, 20), h('span', null, t.label));
       this.navBtns[t.id] = b;
       E.nav.appendChild(b);
     }
@@ -101,7 +101,7 @@ export class App {
     initModals(document.getElementById('modals'));
     initToasts(document.getElementById('toasts'));
 
-    this.renderer = new BattleRenderer(E.canvas, { getSettings: () => this.settings, topInset: 56 });
+    this.renderer = new BattleRenderer(E.canvas, { getSettings: () => this.settings, topInset: 46 });
     new ResizeObserver(() => this.renderer.resize()).observe(E.canvas);
     this.bindGame();
     this.buildSkills();
