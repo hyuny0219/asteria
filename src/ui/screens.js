@@ -15,6 +15,7 @@ import * as Profiles from '../platform/profiles.js';
 import { ATTENDANCE, RETURN_BONUS, attendanceStatus, boostActive, resolveReward } from '../core/rewards.js';
 import { enableAudio, setVolume, sfx } from '../platform/audio.js';
 import { button, closeAllModals, h, icon, img, modalOpen, openModal, toast } from './dom.js';
+import * as FS from './fullscreen.js';
 
 const STAT_INFO = {
   atk: { name: '공격력', fmt: (s) => fmtFull(s.atk) },
@@ -682,7 +683,14 @@ export function openSettings(app) {
   const render = () => {
     const s = app.state;
     const toggle = (key, label, after) => h('label', { class: 'switch-row' }, h('span', null, label), h('input', { type: 'checkbox', checked: !!s.settings[key], onChange: async (e) => { const r = fail(await app.game.setSetting(key, e.target.checked)); if (r.ok && after) after(e.target.checked); render(); } }));
+    const fsMode = FS.mode();
     const body = h('div', { dataset: { screen: 'settings' } },
+      h('h3', null, '화면'),
+      fsMode === 'standalone' ? h('p', { class: 'muted' }, '홈 화면 앱으로 실행 중이라 이미 전체 화면이에요.')
+        : fsMode === 'api' ? h('div', null,
+          h('label', { class: 'switch-row' }, h('span', null, '시작할 때 전체 화면'), h('input', { type: 'checkbox', checked: FS.autoPref(), onChange: (e) => FS.setAutoPref(e.target.checked) })),
+          button(FS.isFull() ? '전체 화면 끄기' : '지금 전체 화면으로', { cls: 'btn', onClick: async () => { if (FS.isFull()) await FS.exit(); else await FS.enter(); render(); } }))
+        : button('전체 화면으로 쓰는 법 (아이폰)', { cls: 'btn', onClick: () => openFullscreenGuide() }),
       h('h3', null, '접근성'),
       toggle('reduceMotion', '움직임 줄이기 (흔들림·줌·섬광 제거)', () => app.applyA11y()),
       toggle('shake', '화면 흔들림'),
@@ -939,4 +947,17 @@ export function openProfile(app) {
         button('취소', { cls: 'btn', onClick: () => cm.close() })] });
     } }),
     button('환경 설정', { cls: 'btn', onClick: () => { m.close(); openSettings(app); } })] });
+}
+
+
+// iPhone Safari cannot make a page full screen; "홈 화면에 추가" opens it like an app.
+export function openFullscreenGuide() {
+  const step = (n, t) => h('div', { class: 'check' }, h('span', { class: 'mark' }, String(n)), h('div', { class: 'c' }, t));
+  const m = openModal({ id: 'fsguide', title: '전체 화면으로 하기', body: h('div', { dataset: { screen: 'fsguide' } },
+    h('p', { class: 'modal-desc' }, '아이폰 Safari는 웹페이지 전체 화면을 지원하지 않아요. 홈 화면에 추가하면 주소창 없이 앱처럼 열립니다.'),
+    step(1, h('span', null, 'Safari 아래쪽 ', h('strong', null, '공유 버튼'), '(네모에서 화살표)을 눌러요.')),
+    step(2, h('span', null, '목록에서 ', h('strong', null, '홈 화면에 추가'), '를 골라요.')),
+    step(3, h('span', null, '오른쪽 위 ', h('strong', null, '추가'), '를 누르고, 홈 화면의 아스테리아 아이콘으로 실행해요.')),
+    h('p', { class: 'muted' }, '홈 화면 앱은 Safari와 저장소가 따로라서, 처음 열면 새 프로필로 시작돼요. 기존 진행을 옮기려면 Safari에서 환경 설정 → 내보내기 → 홈 화면 앱에서 가져오기를 해 주세요.')),
+    actions: [button('알겠어요', { cls: 'btn btn-primary', onClick: () => m.close() })] });
 }

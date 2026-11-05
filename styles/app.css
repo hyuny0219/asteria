@@ -274,3 +274,5 @@ input.text { width: 100%; min-height: 44px; background: var(--panel); border: 1p
 .profile-card span { font-size: 14px; color: var(--muted); }
 .profile-card.btn-primary span { color: #F1D7E0; }
 .title-screen .btns .text { text-align: center; font-size: 18px; min-height: 52px; }
+.fs-btn { width: 40px; height: 44px; margin-right: -8px; color: var(--muted); }
+:fullscreen, ::backdrop { background: var(--bg); }

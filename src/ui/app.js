@@ -8,6 +8,7 @@ import { fmt } from '../core/util.js';
 import { button, clear, closeAllModals, h, icon, img, initModals, initToasts, modalOpen, toast } from './dom.js';
 import * as S from './screens.js';
 import { sfx } from '../platform/audio.js';
+import * as FS from './fullscreen.js';
 
 export const TABS = [
   { id: 'growth', label: '성장', icon: 'growth' },
@@ -51,7 +52,10 @@ export class App {
     E.saveDot = h('span', { class: 'save-dot', title: '저장 상태', role: 'img', 'aria-label': '저장됨' });
     E.me = h('button', { type: 'button', class: 'me', 'aria-label': '프로필', onClick: () => S.openProfile ? S.openProfile(this) : S.openSettings(this) },
       E.face, h('div', { class: 'who' }, E.name, E.sub, h('span', { class: 'lvbar', 'aria-hidden': 'true' }, E.lvbar)));
-    app.appendChild(h('header', { class: 'status' }, E.me, h('div', { class: 'wallet' }, E.gold, E.ore, E.saveDot)));
+    E.fsBtn = h('button', { type: 'button', class: 'icon-btn fs-btn', 'aria-label': '전체 화면', onClick: () => this.toggleFullscreen() });
+    app.appendChild(h('header', { class: 'status' }, E.me, h('div', { class: 'wallet' }, E.gold, E.ore, E.saveDot, E.fsBtn)));
+    FS.onChange(() => { this.renderFsBtn(); setTimeout(() => this.renderer && this.renderer.resize(), 120); });
+    window.addEventListener('resize', () => this.renderFsBtn());
     E.banner = h('div', { class: 'banner-host' });
     app.appendChild(E.banner);
     // stage info lives on the battle as a top strip (saves a 40px row on short phones)
@@ -104,6 +108,7 @@ export class App {
     this.setTab('growth');
     this.applyView();
     this.applyA11y();
+    this.renderFsBtn();
   }
 
   bindGame() {
@@ -180,6 +185,22 @@ export class App {
   preload() {
     const s = this.state;
     return preloadFor({ region: REGION_BY_ID[s.progression.region], boss: null, branch: s.player.branch });
+  }
+
+  // ---------- fullscreen ----------
+  renderFsBtn() {
+    const b = this.el.fsBtn;
+    const m = FS.mode();
+    b.hidden = m === 'standalone' || m === 'none';
+    const full = FS.isFull();
+    b.innerHTML = full ? FS.ICON_EXIT : FS.ICON_ENTER;
+    b.setAttribute('aria-label', full ? '전체 화면 끄기' : '전체 화면');
+  }
+  async toggleFullscreen() {
+    const m = FS.mode();
+    if (m === 'ios-guide') return S.openFullscreenGuide();
+    if (FS.isFull()) await FS.exit(); else await FS.enter();
+    this.renderFsBtn();
   }
 
   // ---------- views ----------

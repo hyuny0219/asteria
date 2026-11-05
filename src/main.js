@@ -3,6 +3,7 @@ import { Game } from './core/game.js';
 import { REGION_BY_ID } from './data/content.js';
 import { createSaver, WriterLock } from './platform/save.js';
 import * as Profiles from './platform/profiles.js';
+import * as FS from './ui/fullscreen.js';
 import { MemorySaver } from './platform/memorySaver.js';
 import { loadMeta, preloadFor } from './render/assets.js';
 import { App } from './ui/app.js';
@@ -153,6 +154,8 @@ async function afterLoad() {
 }
 
 function enter() {
+  // the start tap is a user gesture, so the browser allows fullscreen here
+  if (FS.autoPref() && FS.mode() === 'api' && !new URLSearchParams(location.search).has('autostart')) FS.enter();
   title.hidden = true;
   title.setAttribute('aria-hidden', 'true');
   document.getElementById('app').hidden = false;
