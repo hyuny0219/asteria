@@ -3,7 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Game } from '../src/core/game.js';
 import { MemorySaver } from '../src/platform/memorySaver.js';
-import { newGame, migrate, validate } from '../src/core/state.js';
+import { newGame, migrate, validate, SCHEMA_VERSION } from '../src/core/state.js';
 import { ATTENDANCE, claimAttendance, attendanceStatus, prepareReturn, claimReturn, farmMultipliers } from '../src/core/rewards.js';
 import { unpack } from '../src/platform/save.js';
 import { hashString } from '../src/core/util.js';
@@ -93,7 +93,7 @@ test('schema 1 save migrates to the current schema and validates', () => {
   const data = JSON.stringify(s);
   const r = unpack({ data, sum: hashString(data) });
   assert.equal(r.ok, true, r.error);
-  assert.equal(r.state.schemaVersion, 3);   // v4: migrates through 2 → 3
+  assert.equal(r.state.schemaVersion, SCHEMA_VERSION);   // v4: migrates through 2 → 3
   assert.equal(r.state.wallet.gem, 0);
   assert.equal(r.state.attendance.count, 0);
   assert.deepEqual(validate(r.state), []);

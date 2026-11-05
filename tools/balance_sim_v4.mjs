@@ -6,6 +6,8 @@
 //
 //   node tools/balance_sim_v4.mjs [--seeds 2] [--days 22] [--sessions 4] [--session-min 30] [--class warrior] [--json out]
 import { Game } from '../src/core/game.js';
+import { upgradeCost as rbCost } from '../src/core/rebirth.js';
+import { riftOpen, runsLeft } from '../src/core/rift.js';
 import { MemorySaver } from '../src/platform/memorySaver.js';
 import { playerStats } from '../src/core/stats.js';
 import { quoteUpgrade, statPointsFree } from '../src/core/economy.js';
@@ -64,6 +66,7 @@ async function runOne(seed, cls) {
       if (r.kind === 'trial' && r.win) mark('trial' + r.tier);
       if (r.kind === 'tower' && !r.win) lastTower = clock;
       if (r.kind === 'raid') { (m.raid ||= []).push(r.grade); }
+      if (r.kind === 'rift' && r.ended) (m.rift ||= []).push(r.cleared || 0);
       g.returnToFarm();
       if (r.kind === 'boss' && r.win && r.unlocked) await g.setFarm(r.unlocked, 1, true);
       return;
@@ -105,6 +108,13 @@ async function runOne(seed, cls) {
       if (ids.length) await g.dismantle(ids);
     }
     if (g.state.overflow.length) await g.moveOverflow();
+    // milestones
+    const lv = g.state.player.level;
+    for (const L of [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]) if (lv >= L) mark('lv' + L);
+    // rebirth at Lv 100 (--rebirths, default 1), then spend essence on the cheapest upgrade
+    if (lv >= 100 && (g.state.rebirth.count || 0) < Number(args.rebirths ?? 1)) { const r = await g.doRebirth(); if (r.ok) { mark('rebirth' + g.state.rebirth.count); m.rebirthLevelAtDay = day(); return; } }
+    if (g.state.rebirth.count) { for (const L of [50, 100]) if (lv >= L) mark('rb_lv' + L); }
+    for (let k = 0; k < 20; k++) { const c = ['atk', 'hp', 'exp', 'gold'].map((x) => [x, rbCost(x, g.state.rebirth.levels[x] || 0)]).sort((a, b) => a[1] - b[1])[0]; if (g.state.rebirth.essence < c[1]) break; await g.rebirthUpgrade(c[0]); }
     // dungeons
     for (const type of ['quarry', 'gold', 'books']) {
       if (!dungeonOpen(g.state, type)) continue;
@@ -113,9 +123,6 @@ async function runOne(seed, cls) {
       if (!m['dfail_' + type] || clock - m['dfail_' + type] > 3 * 3600e3) { const r = await g.enterDungeon(type, d.best + 1); if (r.ok) { m.lastDungeon = type; return; } }
       if (d.best > 0) await g.sweepDungeon(type);
     }
-    // milestones
-    const lv = g.state.player.level;
-    for (const L of [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]) if (lv >= L) mark('lv' + L);
     // promotion
     const t = tierOf(g.state);
     if (t < 3) {
@@ -124,6 +131,10 @@ async function runOne(seed, cls) {
       if (cl.canTrial && clock - lastTrial > 600e3) { lastTrial = clock; if (g.startTrial(nt).ok) return; }
       if (cl.canPromote) { const r = await g.promote(nt, nt === 1 ? branch : null); if (r.ok) mark('tier' + nt); }
     }
+    // talents: one-toggle auto allocation from tier 1
+    if (t >= 1 && !g.state.talents.auto) await g.talentAuto(true);
+    // rift: free runs (always take the first blessing)
+    if (riftOpen(g.state) && (g.state.rift.run || runsLeft(g.state, clock) > 0)) { if (g.state.rift.run?.choices) await g.riftPick(g.state.rift.run.choices[0]); const r = await g.startRift(); if (r.ok) return; }
     // tower
     if (towerOpen(g.state) && clock - lastTower > 1800e3 && (g.state.tower.best < 5 || lv >= 55)) { if (g.startTower().ok) return; }
     // raid
@@ -150,21 +161,23 @@ async function runOne(seed, cls) {
       let guard = 0;
       while (['BOSS', 'DUNGEON', 'PROMOTION_TRIAL'].includes(g.mode) && guard++ < 400) { tickSecond(); await new Promise((r) => setImmediate(r)); }
       if (g.mode === 'RESULT') await policy();
+      if (g.state.rebirth.count) (m.rbTrace ||= []).push([Math.round(day() * 100) / 100, g.state.player.level, g.state.progression.region, g.state.progression.wave, g.mode]);
       await g.onHidden();
       clock += gapMs;
       g.onVisible();
-      if (g.mode === 'OFFLINE') await g.claimOffline();
+      if (g.mode === "OFFLINE") { const lv0 = g.state.player.level; const pc = g.state.offlineSnapshot.pendingClaim; await g.claimOffline(); if (args.trace && g.state.rebirth.count) console.error("off", lv0, "->", g.state.player.level, pc && pc.exp, pc && pc.reason, pc && pc.farm && pc.farm.level); }
     }
     if (g.state.player.level >= 100 && m.marks.tier3) break;
   }
+  if (args.trace) console.error("end", JSON.stringify(m.marks), g.state.player.exp, g.state.player.pendingExp, cls, g.mode, JSON.stringify(g.state.rift.run), g.state.player.level, g.state.progression.region);
   m.final = { level: g.state.player.level, tier: tierOf(g.state), region: g.state.progression.region, wave: g.state.progression.wave, tower: g.state.tower.best, stats: playerStats(g.state), gem: g.state.wallet.gem, days: day(), locked: lockTierAt(g.state) };
   return m;
 }
 
 const runs = [];
-for (const cls of CLASSES) for (let s = 1; s <= SEEDS; s++) { const t0 = Date.now(); const r = await runOne(s, cls); runs.push(r); console.error(`${cls}#${s} done in ${((Date.now() - t0) / 1000).toFixed(0)}s → L${r.final.level} T${r.final.tier}`); }
+for (const cls of CLASSES) for (let s = 1; s <= SEEDS; s++) { const t0 = Date.now(); const r = await runOne(s, cls); runs.push(r); console.error(`${cls}#${s} done in ${((Date.now() - t0) / 1000).toFixed(0)}s → L${r.final.level} T${r.final.tier}`); if (args.trace && r.rbTrace) console.error(JSON.stringify(r.rbTrace.filter((_, i) => i % 2 === 0))); }
 
-const keys = ['lv10', 'lv20', 'lv30', 'tier1', 'lv40', 'lv50', 'lv60', 'tier2', 'lv70', 'lv80', 'lv90', 'tier3', 'lv100', ...Object.keys(BOSSES).filter((b) => !BOSSES[b].raid).map((b) => 'win_' + b)];
+const keys = ['rebirth1', 'rb_lv50', 'rb_lv100', 'rebirth2', 'rebirth3', 'lv10', 'lv20', 'lv30', 'tier1', 'lv40', 'lv50', 'lv60', 'tier2', 'lv70', 'lv80', 'lv90', 'tier3', 'lv100', ...Object.keys(BOSSES).filter((b) => !BOSSES[b].raid).map((b) => 'win_' + b)];
 console.log(`balance ${BALANCE.version} · ${CLASSES.join('/')} × ${SEEDS} seeds · ${SESS}×${SESSION_MIN}min/day · max ${DAYS} days (days since start)`);
 console.log('milestone    median   p10     p90     reached');
 const report = { balanceVersion: BALANCE.version, classes: CLASSES, seeds: SEEDS, sessions: SESS, sessionMin: SESSION_MIN, milestones: {}, ttk: {}, bosses: {}, final: [] };

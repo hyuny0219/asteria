@@ -10,7 +10,7 @@
 // leaves the live state untouched, so nothing is spent or granted twice and no
 // reward animation starts before the save is confirmed.
 import { BALANCE } from '../data/balance.js';
-import { BOSSES, MONSTERS, REGION_BY_ID, waveLevel, DUNGEON, CLASSES, CLASS_SKILLS, SET_SLOTS } from '../data/content.js';
+import { REGIONS, BOSSES, MONSTERS, REGION_BY_ID, waveLevel, DUNGEON, CLASSES, CLASS_SKILLS, SET_SLOTS } from '../data/content.js';
 import { Battle, killRewards } from './combat.js';
 import * as eco from './economy.js';
 import { makeItem, rollRarity, rollSlot } from './items.js';
@@ -22,6 +22,9 @@ import { markTx, newGame } from './state.js';
 import * as rewards from './rewards.js';
 import * as shop from './shop.js';
 import { autoGrow } from './autogrow.js';
+import * as talents from './talents.js';
+import * as rebirth from './rebirth.js';
+import * as rift from './rift.js';
 import * as gacha from './gacha.js';
 import * as missions from './missions.js';
 import * as tower from './tower.js';
@@ -132,9 +135,47 @@ export class Game {
   runAutoGrow() {
     if (!this.state) return null;
     const r = autoGrow(this.state);
-    if (r.count) { this.syncHero(); this.emit('autoGrow', r); }
+    let tg = 0;
+    if (this.state.talents && this.state.talents.auto && talents.pointsFree(this.state) > 0) tg = talents.autoAllocate(this.state);
+    if (r.count || tg) { this.syncHero(); this.emit('autoGrow', r); }
     return r;
   }
+
+  // ---------- 특성 ----------
+  talentRank(id) { return this.transact('talent', (s) => talents.rankUp(s, id)); }
+  talentRespec() { return this.transact('talentRespec', (s) => talents.respec(s, this.now())); }
+  talentPreset(idx) { return this.transact('talentPreset', (s) => talents.setPreset(s, idx)); }
+  talentAuto(on) { return this.transact('talentAuto', (s) => { s.talents.auto = !!on; const given = on ? talents.autoAllocate(s) : 0; return { ok: true, given }; }); }
+  talentAutoSwitch(on) { return this.transact('talentAutoSwitch', (s) => { s.talents.autoSwitch = !!on; return { ok: true }; }); }
+
+  // ---------- 환생 ----------
+  doRebirth() {
+    if (this.mode !== 'FARM') return Promise.resolve({ ok: false, reason: 'mode' });
+    return this.transact('rebirth', (s) => rebirth.doRebirth(s, this.now())).then((r) => { if (r.ok) { this.startFarm(); this.emit('farmChanged', {}); } return r; });
+  }
+  rebirthUpgrade(key) { return this.transact('rebirthUp', (s) => rebirth.buyUpgrade(s, key)); }
+
+  // ---------- 균열 ----------
+  // Starts a new run (uses a free run) or continues the saved one at its current floor.
+  async startRift() {
+    if (this.mode !== 'FARM') return { ok: false, reason: 'mode' };
+    let run = this.state.rift.run;
+    if (!run) {
+      const r = await this.transact('riftBegin', (s) => rift.beginRun(s, uid('rift'), this.now()));
+      if (!r.ok) return r;
+      run = this.state.rift.run;
+    }
+    if (run.choices) return { ok: false, reason: 'choice', choices: run.choices };
+    const cfg = rift.floorConfig(this.state, run);
+    this.session = { kind: 'rift', id: run.id, floor: run.floor, bg: cfg.bg, startedAt: this.now(), viewBefore: this.state.settings.battleView };
+    this.active = new Battle({ kind: 'rift', rng: this.rng, hero: this.sessionHero({ session: true, rift: { mods: rift.runMods(run), curse: run.curse } }), rift: { ...cfg, hpPct: run.hpPct } });
+    this.acc = 0;
+    this.setMode('DUNGEON');
+    this.emit('session', this.session);
+    return { ok: true, floor: run.floor };
+  }
+  riftPick(id) { return this.transact('riftPick', (s) => rift.pickBlessing(s, id)); }
+  riftEnd() { return this.transact('riftEnd', (s) => rift.endRun(s, this.now(), this.rng, this.bookSkills(s))); }
 
   // ---------- daily / return rewards ----------
   claimAttendance() { return this.transact('attendance', (s) => rewards.claimAttendance(s, this.now())); }
@@ -142,22 +183,26 @@ export class Game {
   setNickname(name) { return this.transact('nickname', (s) => { s.profile.nickname = name; return { ok: true }; }); }
 
   // ---------- hero config for battles ----------
-  heroCfg() {
+  // opts.session: a boss/raid/tower/trial/rift fight (talent preset 2 when auto-switch is on)
+  // opts.rift: run blessings + weekly curse
+  heroCfg(opts = this.activeOpts || {}) {
     const s = this.state;
     const cls = s.player.cls || 'warrior';
-    return { stats: playerStats(s), skills: s.skills, branch: s.player.branch, cls, tier: prog.tierOf(s), ult: CLASS_SKILLS[cls].ult, range: CLASSES[cls].range, skillLevel: (id) => prog.skillLevel(s, id) };
+    const t = s.talents;
+    const preset = opts.session && t && t.autoSwitch ? 1 : (t ? t.active : 0);
+    return { stats: playerStats(s, { preset, rift: opts.rift || null }), skills: s.skills, branch: s.player.branch, cls, tier: prog.tierOf(s), ult: CLASS_SKILLS[cls].ult, range: CLASSES[cls].range, skillLevel: (id) => prog.skillLevel(s, id) };
   }
   syncHero() {
-    const h = this.heroCfg();
-    if (this.farm) this.farm.updateStats(h);
-    if (this.active && this.active !== this.farm) this.active.updateStats(h);
+    if (this.farm) this.farm.updateStats(this.heroCfg({}));
+    if (this.active && this.active !== this.farm) this.active.updateStats(this.heroCfg(this.activeOpts || { session: true }));
   }
+  sessionHero(opts = { session: true }) { this.activeOpts = opts; return this.heroCfg(opts); }
 
   startFarm() {
     const s = this.state;
     const region = REGION_BY_ID[s.progression.region];
     this.farm = new Battle({
-      kind: 'farm', rng: this.rng, hero: this.heroCfg(),
+      kind: 'farm', rng: this.rng, hero: this.heroCfg({}),
       farm: {
         monsters: region.monsters,
         levelFn: () => waveLevel(this.state.progression.region, this.state.progression.wave),
@@ -218,8 +263,9 @@ export class Game {
       const e = ev.enemy;
       const r = killRewards(e.level, { elite: e.elite, fieldBoss: e.fieldBoss });
       const mul = rewards.farmMultipliers(s, this.now());
-      const gp = 1 + (playerStats(s).goldPct || 0);
-      r.gold = Math.floor(r.gold * mul.gold * gp); r.exp = Math.floor(r.exp * mul.exp);
+      const pst = playerStats(s);
+      const gp = (1 + (pst.goldPct || 0)) * pst.rebirth.gold;
+      r.gold = Math.floor(r.gold * mul.gold * gp); r.exp = Math.floor(r.exp * mul.exp * (1 + (pst.expPct || 0)) * pst.rebirth.exp);
       missions.track(s, 'kills', 1, this.now());
       if (e.fieldBoss) { s.wallet.gem += 20; s.progression.counters.fieldBosses++; r.gem = 20; }
       s.wallet.gold += r.gold;
@@ -237,6 +283,16 @@ export class Game {
         if (p.holdKills > 0) { /* holding after a retreat */ }
         else if (p.wave < 10 && p.autoAdvance !== false) { p.wave++; advanced = true; }
         p.maxWave[p.region] = Math.max(p.maxWave[p.region] || 1, p.wave);
+        // after a rebirth, regions whose boss is already beaten are re-climbed automatically
+        // (only when the next region's first wave is at most 5 levels above the hero)
+        if (p.wave >= 10 && !advanced && p.autoAdvance !== false && s.rebirth?.count && !this.climbQueued) {
+          const reg = REGIONS.find((x) => x.id === p.region);
+          const next = REGIONS[REGIONS.indexOf(reg) + 1];
+          if (reg && next && s.progression.bossCleared[reg.boss] && prog.regionUnlocked(s, next.id) && next.minLv <= s.player.level + 5) {
+            this.climbQueued = true;
+            queueMicrotask(() => this.setFarm(next.id, 1, true).finally(() => { this.climbQueued = false; }));
+          }
+        }
       }
       const vf = this.verifier.onKill(p.region, p.wave, e.level, this.active.t);
       if (vf && !this.sameFarm(p.verifiedFarm, vf)) { p.verifiedFarm = vf; this.emit('farmVerified', vf); }
@@ -274,7 +330,7 @@ export class Game {
       const { mythic, ...noMythic } = EQ.bossRarity;
       items.push(makeItem(s, { slot: rollSlot(this.rng), rarity: rollRarity(this.rng, noMythic), level: e.level, rng: this.rng, source: 'fieldBoss' }));
     } else {
-      const chance = e.elite ? EQ.eliteDropChance : EQ.dropChance;
+      const chance = (e.elite ? EQ.eliteDropChance : EQ.dropChance) * (1 + (playerStats(s).dropPct || 0));
       if (this.rng() < chance) items.push(makeItem(s, { slot: rollSlot(this.rng), rarity: rollRarity(this.rng, e.elite ? EQ.eliteRarity : EQ.rarityConditional), level: e.level, rng: this.rng }));
     }
     const R = BALANCE.monster.rewards;
@@ -300,7 +356,7 @@ export class Game {
     if (!c.ok || this.mode !== 'FARM') return c.ok ? { ok: false, reason: 'mode' } : c;
     missions.track(this.state, 'boss', 1, this.now());
     this.session = { kind: 'boss', id: uid('boss'), bossId, startedAt: this.now(), viewBefore: this.state.settings.battleView };
-    this.active = new Battle({ kind: 'boss', rng: this.rng, hero: this.heroCfg(), boss: { id: bossId } });
+    this.active = new Battle({ kind: 'boss', rng: this.rng, hero: this.sessionHero(), boss: { id: bossId } });
     this.acc = 0;
     this.setMode('BOSS');
     this.emit('session', this.session);
@@ -311,7 +367,7 @@ export class Game {
     const cl = prog.promotionChecklist(this.state, tier);
     if (!cl.canTrial || this.mode !== 'FARM') return { ok: false, reason: cl.canTrial ? 'mode' : 'conditions' };
     this.session = { kind: 'trial', id: uid('trial'), tier, startedAt: this.now(), viewBefore: this.state.settings.battleView };
-    this.active = new Battle({ kind: 'trial', rng: this.rng, hero: this.heroCfg(), trial: { tier } });
+    this.active = new Battle({ kind: 'trial', rng: this.rng, hero: this.sessionHero(), trial: { tier } });
     this.acc = 0;
     this.setMode('PROMOTION_TRIAL');
     this.emit('session', this.session);
@@ -327,7 +383,7 @@ export class Game {
     const r = await this.transact('dungeonEnter', (s) => { const x = dun.beginRun(s, stage, runId, this.now(), type); if (x.ok) missions.track(s, 'dungeon', 1, this.now()); return x; });
     if (!r.ok) return r;
     this.session = { kind: 'dungeon', type, id: runId, stage, startedAt: this.now(), viewBefore: this.state.settings.battleView };
-    this.active = new Battle({ kind: 'dungeon', rng: this.rng, hero: this.heroCfg(), dungeon: dun.runConfig(type, stage) });
+    this.active = new Battle({ kind: 'dungeon', rng: this.rng, hero: this.sessionHero(), dungeon: dun.runConfig(type, stage) });
     this.acc = 0;
     this.setMode('DUNGEON');
     this.emit('session', this.session);
@@ -343,7 +399,7 @@ export class Game {
     if (!prog.towerOpen(this.state)) return { ok: false, reason: 'locked' };
     const floor = tower.nextFloor(this.state);
     this.session = { kind: 'tower', id: uid('tower'), floor, startedAt: this.now(), viewBefore: this.state.settings.battleView };
-    this.active = new Battle({ kind: 'tower', rng: this.rng, hero: this.heroCfg(), tower: tower.towerConfig(floor) });
+    this.active = new Battle({ kind: 'tower', rng: this.rng, hero: this.sessionHero(), tower: tower.towerConfig(floor) });
     this.acc = 0;
     this.setMode('DUNGEON');
     this.emit('session', this.session);
@@ -356,7 +412,7 @@ export class Game {
     const r = await this.transact('raidEnter', (s) => raid.beginRaid(s, this.now()));
     if (!r.ok) return r;
     this.session = { kind: 'raid', id, bossId: BALANCE.raid.boss, startedAt: this.now(), viewBefore: this.state.settings.battleView };
-    this.active = new Battle({ kind: 'raid', rng: this.rng, hero: this.heroCfg() });
+    this.active = new Battle({ kind: 'raid', rng: this.rng, hero: this.sessionHero() });
     this.acc = 0;
     this.setMode('BOSS');
     this.emit('session', this.session);
@@ -419,6 +475,8 @@ export class Game {
       });
     } else if (sess.kind === 'tower') {
       r = await this.transact('towerResult', (s) => ({ ...tower.finishFloor(s, sess.floor, win), win, kills: ev.kills, timeSec: Math.round(ev.t / 1000), reason: ev.reason }));
+    } else if (sess.kind === 'rift') {
+      r = await this.transact('riftResult', (s) => ({ ...rift.finishFloor(s, sess.id, win, ev.hpPct || 0, this.now(), this.rng, this.bookSkills(s)), kills: ev.kills, timeSec: Math.round(ev.t / 1000), reason: ev.reason }));
     } else if (sess.kind === 'raid') {
       r = await this.transact('raidResult', (s) => {
         if (!markTx(s, sess.id)) return { ok: false, reason: 'duplicate' };
@@ -458,6 +516,7 @@ export class Game {
     const sess = this.session;
     this.session = null;
     this.active = this.farm;
+    this.activeOpts = null;
     this.result = null;
     this.acc = 0;
     this.setMode('FARM');

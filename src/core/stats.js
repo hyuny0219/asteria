@@ -7,6 +7,8 @@
 import { BALANCE } from '../data/balance.js';
 import { BRANCHES, CLASSES, RUNES, SETS, SET_SLOTS } from '../data/content.js';
 import { itemOptions, itemStats } from './items.js';
+import { talentEffects } from './talents.js';
+import { rebirthMultipliers, farmMultipliers as rebirthFarm } from './rebirth.js';
 
 const P = BALANCE.player;
 const U = BALANCE.upgrade;
@@ -39,7 +41,9 @@ export function activeSetBonuses(state) {
 
 export function runeValue(id, level) { return RUNES[id].base * (1 + BALANCE.runes.perLevel * (level - 1)); }
 
-export function playerStats(state) {
+// opts.preset: talent preset index (default the active one)
+// opts.rift: { mods, curse } — blessings/curse, only inside a rift run
+export function playerStats(state, opts = {}) {
   const p = state.player;
   const lv = p.level;
   const cls = CLASSES[p.cls || 'warrior'];
@@ -55,7 +59,7 @@ export function playerStats(state) {
   let evade = SP.agi.evade * (sp.agi || 0) + (cls.evade || 0);
   let cdr = SP.wis.cdr * (sp.wis || 0);
   // percent pool
-  const pct = { atkPct: 0, hpPct: 0, defPct: 0, critChance: 0, critDmg: 0, aspd: 0, cdr: 0, ultCharge: 0, goldPct: 0, evade: 0, lifesteal: 0, combo: 0, dmgTaken: 0, mythUltCdr: 0, mythHeal: 0 };
+  const pct = { atkPct: 0, hpPct: 0, defPct: 0, critChance: 0, critDmg: 0, aspd: 0, cdr: 0, ultCharge: 0, goldPct: 0, evade: 0, lifesteal: 0, combo: 0, dmgTaken: 0, mythUltCdr: 0, mythHeal: 0, expPct: 0, offlinePct: 0, dropPct: 0, thorns: 0, regen: 0 };
   const add = (o) => { for (const [k, v] of Object.entries(o)) pct[k] = (pct[k] || 0) + v; };
   const equipBonus = { atk: 0, hp: 0, def: 0, crit: 0 };
   for (const it of equippedItems(state)) {
@@ -79,11 +83,22 @@ export function playerStats(state) {
     const st = RUNES[id].stat;
     add({ [st]: v });
   }
+  // talents (preset), rift blessings/curse
+  const tal = state.talents ? talentEffects(state, opts.preset !== undefined ? opts.preset : state.talents.active) : { pct: {}, caps: {} };
+  add(tal.pct);
+  const rift = opts.rift || null;
+  if (rift) {
+    const { clearHeal, riftReward, ...m } = rift.mods || {};
+    add(m);
+    if (rift.curse === 'c_glass') add({ hpPct: -0.25, atkPct: 0.15 });
+    if (rift.curse === 'c_dark') add({ critChance: -0.1 });
+  }
   atk += equipBonus.atk; hp += equipBonus.hp; def += equipBonus.def; crit += equipBonus.crit;
-  atk *= (cls.mods.atk || 1) * (1 + pct.atkPct);
-  hp *= (cls.mods.hp || 1) * (1 + pct.hpPct);
+  const rb = rebirthMultipliers(state);
+  atk *= (cls.mods.atk || 1) * (1 + pct.atkPct) * rb.atk;
+  hp *= (cls.mods.hp || 1) * Math.max(0.2, 1 + pct.hpPct) * rb.hp;
   def *= (cls.mods.def || 1) * (1 + pct.defPct);
-  crit += pct.critChance;
+  crit = Math.max(0, crit + pct.critChance);
   aspd *= 1 + pct.aspd;
   evade += pct.evade;
   cdr += pct.cdr;
@@ -94,7 +109,9 @@ export function playerStats(state) {
   return {
     atk: Math.floor(atk), hp: Math.floor(hp), def: Math.floor(def), crit, critMul, aspd,
     evade: Math.min(C.evadeCap, evade), cdr: Math.min(C.cdrCap, cdr),
-    ultCharge: pct.ultCharge, goldPct: pct.goldPct, lifesteal: pct.lifesteal, combo: pct.combo, dmgTaken: Math.min(0.5, pct.dmgTaken),
+    ultCharge: pct.ultCharge, goldPct: pct.goldPct, lifesteal: pct.lifesteal, combo: Math.min(0.8, pct.combo), dmgTaken: Math.min(0.5, pct.dmgTaken),
+    expPct: pct.expPct, offlinePct: pct.offlinePct, dropPct: pct.dropPct, thorns: pct.thorns, regen: pct.regen, caps: tal.caps,
+    rebirth: rebirthFarm(state),
     mythUltCdr: pct.mythUltCdr > 0, mythHeal: pct.mythHeal > 0,
     rawCrit, equipBonus, capped: { crit: rawCrit > C.critChanceCap, aspd: aspd >= C.attackSpeedCap },
   };

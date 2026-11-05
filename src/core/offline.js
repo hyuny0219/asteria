@@ -1,8 +1,8 @@
 // Offline (복귀) settlement.
 //
 // Farm verification: a farm spot becomes the offline baseline only after the hero
-// survives 3 consecutive wave cycles (10 kills each) with no death, measured over at
-// least 60 s of ×1 simulation time. The rate is the measured kills/s over that window
+// survives 3+ consecutive wave cycles (10 kills each) with no death, measured over at
+// least 60 s of ×1 simulation time (fast heroes keep more cycles to fill the window). The rate is the measured kills/s over that window
 // with rewards at the lowest wave level of the window. Boss or unverified waves never
 // set the rate, and combat power alone never raises it.
 //
@@ -14,6 +14,7 @@ import { REGION_BY_ID } from '../data/content.js';
 import { killRewards } from './combat.js';
 import { makeItem, rollRarity, rollSlot } from './items.js';
 import { hashString, makeRng } from './util.js';
+import { playerStats } from './stats.js';
 
 const O = BALANCE.offline;
 const EQ = BALANCE.equipment;
@@ -35,7 +36,10 @@ export class FarmVerifier {
     if (c.kills >= BALANCE.combat.waveKillTarget) {
       c.endMs = simMs;
       this.cycles.push(c);
-      if (this.cycles.length > O.validateCycles) this.cycles.shift();
+      // keep at least validateCycles cycles and at least minWindowSec of time: a very fast
+      // hero (e.g. after 환생) needs more than 3 cycles to fill the 60 s window
+      while (this.cycles.length > O.validateCycles && this.cycles[this.cycles.length - 1].endMs - this.cycles[1].startMs >= O.minWindowSec * 1000) this.cycles.shift();
+      if (this.cycles.length > 60) this.cycles.shift();
       this.start(region, wave, simMs);
     }
     if (this.cycles.length < O.validateCycles) return null;
@@ -77,9 +81,12 @@ export function computeClaim(state, now, claimId) {
     exp: 0, gold: 0, ore: 0, items: [], convertedItems: 0, reason: null };
   if (!rate) { claim.reason = 'unverified'; return claim; }
   if (applied < O.minSeconds) { claim.reason = 'short'; return claim; }
-  const k = applied * O.efficiency;
-  claim.exp = Math.floor(rate.exp * k);
-  claim.gold = Math.floor(rate.gold * k);
+  // permanent bonuses count offline (환생 배율, 특성 방치 효율·경험치); temporary buffs do not
+  const pst = playerStats(state);
+  claim.efficiency = O.efficiency + (pst.offlinePct || 0);
+  const k = applied * claim.efficiency;
+  claim.exp = Math.floor(rate.exp * k * (1 + (pst.expPct || 0)) * pst.rebirth.exp);
+  claim.gold = Math.floor(rate.gold * k * pst.rebirth.gold);
   // items: expected count, sampled deterministically from the claim id
   const rng = makeRng(hashString(claimId));
   const expected = rate.items * k;

@@ -4,6 +4,7 @@ import { BALANCE } from '../data/balance.js';
 import { STAT_KEYS, STAT_NAMES } from '../data/content.js';
 import { BOSSES, BRANCHES, CLASSES, CURRENCY_ICONS, OPTION_NAMES, REGIONS, REGION_BY_ID, SETS, SKILLS, SLOT_NAMES, RARITY, branchesOf, equipSlotFor, waveLevel } from '../data/content.js';
 import * as V4 from './v4.js';
+import * as V5 from './v5.js';
 import { MONSTERS } from '../data/content.js';
 const MONSTERS_NAME = (id) => (MONSTERS[id] ? MONSTERS[id].name : id);
 import { classPortrait, itemIcon, portrait, skillIcon, spriteMeta } from '../render/assets.js';
@@ -415,6 +416,7 @@ export function dungeonPanel(app) {
   for (const t of ['quarry', 'gold', 'books']) sc.appendChild(V4.dungeonCard(app, t));
   sc.appendChild(h('div', { class: 'section-title' }, '도전'));
   sc.appendChild(V4.towerCard(app));
+  sc.appendChild(V5.riftCard(app));
   sc.appendChild(V4.raidCard(app));
   sc.appendChild(h('p', { class: 'muted' }, `던전은 입장할 때 입장권 1장을 먼저 사용합니다. 시간 안에 실패하면 보상 30%만 받고, 전투 중 앱이 꺼지면 다음 실행 때 입장권을 돌려드립니다.`));
   root.appendChild(sc);
@@ -428,7 +430,7 @@ export function menuTiles(app) {
   const tier = prog.tierOf(s);
   const cl = tier < 3 ? prog.promotionChecklist(s) : null;
   const promoHot = !!cl && (cl.canChoose || cl.canTrial || cl.canPromote);
-  const extra = V4.v4Tiles(app);
+  const extra = [...V4.v4Tiles(app), ...V5.v5Tiles(app)];
   const att = attendanceStatus(s, Date.now());
   return [
     ...extra,
@@ -571,6 +573,7 @@ export function openResult(app, r) {
     return m;
   }
   if (r.kind === 'tower') return V4.openTowerResult(app, r, back);
+  if (r.kind === 'rift') return V5.openRiftResult(app, r, back);
   if (r.kind === 'raid') return V4.openRaidResult(app, r, back, itemRewards);
   if (r.kind === 'dungeon') {
     const tiles = [];

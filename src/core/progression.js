@@ -33,6 +33,7 @@ export function gainExp(state, amount) {
     if (p.exp < need) break;
     p.exp -= need;
     p.level += 1;
+    if (p.level > (p.peakLevel || 0)) p.peakLevel = p.level;
     res.levels += 1;
     if (isPromotionLocked(state)) { p.pendingExp += p.exp; res.toPending += p.exp; p.exp = 0; break; }
   }

@@ -4,7 +4,7 @@ import { CLASS_SKILLS } from '../data/content.js';
 import { kstDayIndex } from './util.js';
 import { refreshLook } from './items.js';
 
-export const SCHEMA_VERSION = 3;
+export const SCHEMA_VERSION = 4;
 
 export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0, cls = 'warrior') {
   return {
@@ -18,7 +18,12 @@ export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0, cls = 'wa
       cls, tier: 0, level: 1, exp: 0, pendingExp: 0, branch: null, branchChanges: 0, classChanges: 0,
       statsUpgrades: { atk: 0, hp: 0, def: 0, crit: 0, speed: 0 },
       stats: { str: 0, int: 0, dex: 0, agi: 0, vit: 0, wis: 0 }, statAuto: true,
+      peakLevel: 1,                               // highest level ever (talent points survive 환생)
     },
+    // 특성 / 환생 / 균열 (schema 4) — see talents.js, rebirth.js, rift.js
+    talents: { presets: [{}, {}], active: 0, autoSwitch: false, auto: false, respecDay: null, respecUsed: 0 },
+    rebirth: { count: 0, essence: 0, totalEssence: 0, levels: { atk: 0, hp: 0, gold: 0, exp: 0 }, lastAt: null },
+    rift: { day: null, runsToday: 0, best: 0, runs: 0, run: null },
     profile: { nickname: '' },
     wallet: { gold: 0, ore: 0, token: 0, gem: 0, eqTicket: 0, skTicket: 0, awakenStone: 0, starShard: 0, classTicket: 0 },
     shop: { buys: {} },
@@ -125,6 +130,12 @@ const MIGRATIONS = {
     s.settings.autoDismantle ||= 'off';
     s.progression.counters.draws ||= 0; s.progression.counters.fieldBosses ||= 0;
     s.progression.fieldBossSec ||= 0;
+    return s;
+  },
+  // 3 → 4: talents, rebirth, rift. Nothing to convert; peakLevel starts at the current level.
+  3: (s) => {
+    s.schemaVersion = 4;
+    s.player.peakLevel = Math.max(s.player.peakLevel || 1, s.player.level);
     return s;
   },
 };

@@ -1,0 +1,106 @@
+[
+ {
+  "name": "390x844 talent rank via tap",
+  "pass": true,
+  "info": {
+   "r1": 5
+  }
+ },
+ {
+  "name": "390x844 talents no overflow",
+  "pass": true,
+  "info": {}
+ },
+ {
+  "name": "390x844 rebirth no overflow",
+  "pass": true,
+  "info": {}
+ },
+ {
+  "name": "390x844 rebirth applied after confirm",
+  "pass": true,
+  "info": {
+   "lv": 1,
+   "n": 1,
+   "tier": 1
+  }
+ },
+ {
+  "name": "390x844 blessing modal after floor",
+  "pass": true,
+  "info": {
+   "choices": [
+    "b_regen",
+    "b_cdr",
+    "b_def"
+   ]
+  }
+ },
+ {
+  "name": "390x844 rift run closed with record",
+  "pass": true,
+  "info": {
+   "run": null,
+   "best": 1
+  }
+ },
+ {
+  "name": "390x844 no page errors",
+  "pass": true,
+  "info": {
+   "errs": []
+  }
+ },
+ {
+  "name": "360x700 talent rank via tap",
+  "pass": true,
+  "info": {
+   "r1": 5
+  }
+ },
+ {
+  "name": "360x700 talents no overflow",
+  "pass": true,
+  "info": {}
+ },
+ {
+  "name": "360x700 rebirth no overflow",
+  "pass": true,
+  "info": {}
+ },
+ {
+  "name": "360x700 rebirth applied after confirm",
+  "pass": true,
+  "info": {
+   "lv": 1,
+   "n": 1,
+   "tier": 1
+  }
+ },
+ {
+  "name": "360x700 blessing modal after floor",
+  "pass": true,
+  "info": {
+   "choices": [
+    "b_steal",
+    "b_evade",
+    "b_heal"
+   ]
+  }
+ },
+ {
+  "name": "360x700 rift run closed with record",
+  "pass": true,
+  "info": {
+   "run": null,
+   "best": 1
+  }
+ },
+ {
+  "name": "360x700 no page errors",
+  "pass": true,
+  "info": {
+   "errs": []
+  }
+ }
+]

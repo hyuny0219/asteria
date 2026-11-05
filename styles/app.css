@@ -385,3 +385,26 @@ input.text { width: 100%; min-height: 36px; background: var(--panel); border: 1p
 .stat-grid2 .kv { padding: 2px 0; }
 .panel-head .power-v { color: var(--gold); font-size: 16px; font-variant-numeric: tabular-nums; }
 .card h3 { font-size: 14px; }
+/* v5: talents */
+.tal-tree { display: flex; flex-direction: column; gap: 6px; }
+.tal-row { display: grid; grid-template-columns: 44px 1fr 1fr; gap: 6px; align-items: stretch; }
+.tal-row.locked { opacity: .5; }
+.tal-row .tal-gate { font-size: 12px; color: var(--muted); display: flex; align-items: center; justify-content: center; text-align: center; line-height: 1.2; }
+.tal-row:last-child { grid-template-columns: 44px 1fr; }
+.tal-node { display: flex; flex-direction: column; align-items: flex-start; gap: 0; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--panel); text-align: left; cursor: pointer; min-height: 64px; line-height: 1.3; color: inherit; position: relative; }
+.tal-node b { font-size: 13px; }
+.tal-node .rk { position: absolute; top: 5px; right: 7px; font-size: 12px; color: var(--gold); font-weight: 800; }
+.tal-node .ds { font-size: 12px; color: var(--muted); }
+.tal-node.on { border-color: var(--ibord); background: var(--panel-2); }
+.tal-node.full { border-color: var(--gold); }
+.tal-node.cap { border-style: double; border-width: 3px; border-color: rgba(216,182,117,.55); }
+.tal-node.cap.on { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(216,182,117,.25); }
+/* v5: rift blessings */
+.bless-list { display: flex; flex-direction: column; gap: 8px; }
+.bless { display: grid; grid-template-columns: 52px 1fr; grid-template-rows: auto auto; column-gap: 8px; text-align: left; padding: 10px; border-radius: 10px; border: 2px solid var(--border); background: var(--panel); cursor: pointer; color: inherit; min-height: 56px; }
+.bless .br { grid-row: 1 / span 2; align-self: center; font-size: 12px; font-weight: 800; text-align: center; }
+.bless b { font-size: 15px; }
+.bless .ds { font-size: 13px; color: var(--muted); }
+.bless.r-common { border-color: var(--r-common); } .bless.r-common .br { color: var(--r-common); }
+.bless.r-rare { border-color: var(--r-rare); } .bless.r-rare .br { color: var(--r-rare); }
+.bless.r-epic { border-color: #B98BFF; } .bless.r-epic .br { color: #B98BFF; }

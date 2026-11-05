@@ -4,7 +4,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Game } from '../src/core/game.js';
 import { MemorySaver } from '../src/platform/memorySaver.js';
-import { newGame, validate } from '../src/core/state.js';
+import { newGame, validate, SCHEMA_VERSION } from '../src/core/state.js';
 import { unpack } from '../src/platform/save.js';
 import { hashString, makeRng, kstDayIndex } from '../src/core/util.js';
 import { BALANCE, expToNext } from '../src/data/balance.js';
@@ -42,7 +42,7 @@ test('migration 2 → 3 keeps v3 progress (warrior, tier 1, necklace slot, skill
   const r = unpack({ data, sum: hashString(data) });
   assert.equal(r.ok, true, r.error);
   const m = r.state;
-  assert.equal(m.schemaVersion, 3);
+  assert.equal(m.schemaVersion, SCHEMA_VERSION);
   assert.equal(m.player.cls, 'warrior');
   assert.equal(m.player.tier, 1);
   assert.equal(m.equipped.necklace, it.id);

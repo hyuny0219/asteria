@@ -99,3 +99,19 @@
 | 저장 실패 시 소비 없음 (상점 구매로 교체) | PASS | browser_qa 흐름 |
 | 마법사·궁수·도적 8 키 포즈, 공격 순간 포즈 | PASS(정적 확인) | docs/qa/screens/pose_*_390x844.png |
 | 실기기 | 미검증 | — |
+
+## v5 1부 (특성·환생·균열) 검수
+| 항목 | 결과 | 근거 |
+|---|---|---|
+| 특성: 승급 전 잠금, 포인트 공식, 줄 관문, 랭크 상한, 자기 클래스 트리만 | PASS | tests/v5.test.mjs |
+| 핵심 특성 전투 효과 (이중 유성 추가 타격, 재기 생존, 그림자 일격) | PASS | tests/v5.test.mjs |
+| 프리셋 분리, 초기화 1일 1회 무료 후 골드 | PASS | tests/v5.test.mjs |
+| 환생: Lv 100 조건, 초기화/유지 항목, 승급 잠금 해제 유지, 강화 배율, 기억의 가속 | PASS | tests/v5.test.mjs |
+| 균열: B03 잠금, 1일 2회, 축복 3택(중복 없음, 결정적), 보상 1회, 30층 완주, 주간 저주 | PASS | tests/v5.test.mjs |
+| 균열 저장 후 다시 열면 이어하기, 포기 시 보상 | PASS | tests/v5.test.mjs (Game + MemorySaver) |
+| 스키마 3 → 4 이전 | PASS | tests/v5.test.mjs |
+| 특성 화면 탭으로 랭크 올리기, 넘침 없음 | PASS | tools/qa_v5.cjs, `talents_390x844.png`, `talents_360x700.png` |
+| 환생 화면 설명 + 빨간 확인 후에만 적용 | PASS | `rebirth_390x844.png`, `rebirth_360x700.png` |
+| 균열 입장 → 층 클리어 → 축복 선택 → 마치기 → 보상 | PASS | `rift_*.png`, `riftBless_*.png`, `riftResult_*.png` |
+| 단위 테스트 / 브라우저 / 로그인 / v5 | 72/72 · 123/123 화면(35종), 13/13 흐름 · 10/10 · 14/14 | `npm test`, `tools/browser_qa.cjs`, `tools/qa_login.cjs`, `tools/qa_v5.cjs` |
+| 실기기 | 미검증 | — |

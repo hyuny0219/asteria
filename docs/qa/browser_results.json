@@ -1,6 +1,6 @@
 {
- "startedAt": "2026-11-05T04:48:18.738Z",
- "base": "http://127.0.0.1:8141/",
+ "startedAt": "2026-11-05T11:13:57.451Z",
+ "base": "http://127.0.0.1:8140/",
  "viewports": [
   [
    390,
@@ -353,6 +353,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid"
    ],
    "tiny": [],
@@ -375,6 +376,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "offline",
     "offline"
@@ -399,6 +401,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "quest",
     "quest"
@@ -423,6 +426,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "promotion",
     "promotion"
@@ -447,6 +451,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "settings",
     "settings"
@@ -471,6 +476,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "gacha",
     "gacha"
@@ -495,6 +501,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "gacha",
     "gacha",
@@ -521,6 +528,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "gacha",
     "gachaskill"
@@ -545,6 +553,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "gacha",
     "gachaskill",
@@ -571,9 +580,83 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "missions",
     "missions"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "talents",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "특성 트리",
+   "file": "talents_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid",
+    "talents",
+    "talents"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "rebirth",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "환생",
+   "file": "rebirth_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid",
+    "rebirth",
+    "rebirth"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "rift",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "균열 카드",
+   "file": "rift_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid"
    ],
    "tiny": [],
    "errors": []
@@ -595,6 +678,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "classpick",
     "classpick"
@@ -675,6 +759,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid"
    ],
    "tiny": [],
@@ -697,6 +782,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "towerResult",
     "towerResult"
@@ -721,6 +807,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "raidResult",
     "raidResult"
@@ -745,6 +832,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "promotion",
     "promotion"
@@ -769,6 +857,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "promoPlay",
     "promoPlay"
@@ -793,6 +882,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "quest",
     "quest"
@@ -1174,6 +1264,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid"
    ],
    "tiny": [],
@@ -1196,6 +1287,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "offline",
     "offline"
@@ -1220,6 +1312,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "quest",
     "quest"
@@ -1244,6 +1337,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "promotion",
     "promotion"
@@ -1268,6 +1362,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "settings",
     "settings"
@@ -1292,6 +1387,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "gacha",
     "gacha"
@@ -1316,6 +1412,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "gacha",
     "gacha",
@@ -1342,6 +1439,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "gacha",
     "gachaskill"
@@ -1366,6 +1464,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "gacha",
     "gachaskill",
@@ -1392,9 +1491,83 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "missions",
     "missions"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "talents",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "특성 트리",
+   "file": "talents_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid",
+    "talents",
+    "talents"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "rebirth",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "환생",
+   "file": "rebirth_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid",
+    "rebirth",
+    "rebirth"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "rift",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "균열 카드",
+   "file": "rift_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid"
    ],
    "tiny": [],
    "errors": []
@@ -1416,6 +1589,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "classpick",
     "classpick"
@@ -1496,6 +1670,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid"
    ],
    "tiny": [],
@@ -1518,6 +1693,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "towerResult",
     "towerResult"
@@ -1542,6 +1718,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "raidResult",
     "raidResult"
@@ -1566,6 +1743,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "promotion",
     "promotion"
@@ -1590,6 +1768,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "promoPlay",
     "promoPlay"
@@ -1614,6 +1793,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "quest",
     "quest"
@@ -1988,6 +2168,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid"
    ],
    "tiny": [],
@@ -2010,6 +2191,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "offline",
     "offline"
@@ -2034,6 +2216,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "quest",
     "quest"
@@ -2058,6 +2241,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "promotion",
     "promotion"
@@ -2082,6 +2266,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "settings",
     "settings"
@@ -2106,6 +2291,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "gacha",
     "gacha"
@@ -2130,6 +2316,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "gacha",
     "gacha",
@@ -2156,6 +2343,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "gacha",
     "gachaskill"
@@ -2180,6 +2368,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "gacha",
     "gachaskill",
@@ -2206,9 +2395,83 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "missions",
     "missions"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "talents",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "특성 트리",
+   "file": "talents_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid",
+    "talents",
+    "talents"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "rebirth",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "환생",
+   "file": "rebirth_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid",
+    "rebirth",
+    "rebirth"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "rift",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "균열 카드",
+   "file": "rift_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid"
    ],
    "tiny": [],
    "errors": []
@@ -2230,6 +2493,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "classpick",
     "classpick"
@@ -2309,6 +2573,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid"
    ],
    "tiny": [],
@@ -2331,6 +2596,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "towerResult",
     "towerResult"
@@ -2355,6 +2621,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "raidResult",
     "raidResult"
@@ -2379,6 +2646,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "promotion",
     "promotion"
@@ -2403,6 +2671,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "promoPlay",
     "promoPlay"
@@ -2427,6 +2696,7 @@
     "dungeon-gold",
     "dungeon-books",
     "tower",
+    "rift",
     "raid",
     "quest",
     "quest"
@@ -2477,8 +2747,8 @@
    "name": "reload keeps the same pending claim",
    "pass": true,
    "detail": {
-    "first": "claim_mw32grfj_1oui92",
-    "after": "claim_mw32grfj_1oui92"
+    "first": "claim_mw3g8u7n_1uvp5xl",
+    "after": "claim_mw3g8u7n_1uvp5xl"
    }
   },
   {
@@ -2547,10 +2817,10 @@
    "name": "hidden → visible does not replay ticks",
    "pass": true,
    "detail": {
-    "k0": 1,
+    "k0": 2,
     "k1": {
-     "kills": 1,
-     "acc": 0.10000000000002274,
+     "kills": 2,
+     "acc": 0,
      "mode": "FARM"
     }
    }
@@ -2589,11 +2859,11 @@
   }
  ],
  "errors": [],
- "finishedAt": "2026-11-05T04:49:59.794Z",
+ "finishedAt": "2026-11-05T11:15:45.949Z",
  "summary": {
-  "screenChecks": 114,
-  "screenPass": 114,
-  "distinctScreens": 32,
+  "screenChecks": 123,
+  "screenPass": 123,
+  "distinctScreens": 35,
   "ids": [
    "title",
    "main",
@@ -2618,6 +2888,9 @@
    "gachaResult",
    "gachaskill",
    "missions",
+   "talents",
+   "rebirth",
+   "rift",
    "classpick",
    "statpoints",
    "runes",

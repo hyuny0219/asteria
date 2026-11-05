@@ -213,6 +213,17 @@ async function screensAt(browser, vp) {
   await v4('openMissions');
   await check(page, 'missions', vp);
   await closeAll(page);
+  // v5: 특성 / 환생 / 균열
+  const v5 = (fn, ...args) => page.evaluate(async ([fn, args]) => { const V = await import('./src/ui/v5.js'); V[fn](window.__asteria.app, ...args); }, [fn, args]);
+  await page.evaluate(async () => { await window.__qaTx((s) => { s.player.tier = Math.max(1, s.player.tier || 0); s.player.branch = s.player.branch || 'knight'; s.player.peakLevel = 70; s.progression.bossCleared.B03 = true; return { ok: true }; }); });
+  await v5('openTalents');
+  await check(page, 'talents', vp, '특성 트리');
+  await closeAll(page);
+  await v5('openRebirth');
+  await check(page, 'rebirth', vp, '환생');
+  await closeAll(page);
+  await page.evaluate(() => { window.__asteria.app.setTab('dungeon'); const r = document.querySelector('[data-screen="rift"]'); if (r) r.scrollIntoView(); });
+  await check(page, 'rift', vp, '균열 카드');
   await v4('openClassPicker');
   await check(page, 'classpick', vp, '클래스 선택 4종');
   await closeAll(page);
@@ -257,8 +268,8 @@ async function screensAt(browser, vp) {
   await page.waitForTimeout(300);
   await page.click('[data-key="tile-shop"]');
   await page.waitForSelector('[data-key="shop-ore100"] .btn');
-  await page.evaluate(() => { window.__asteria.saver.failNext = 1; });
-  await page.click('[data-key="shop-ore100"] .btn');
+  // set the failure and tap in the same task, so a background checkpoint cannot consume it
+  await page.evaluate(() => { window.__asteria.saver.failNext = 1; document.querySelector('[data-key="shop-ore100"] .btn').click(); });
   await page.waitForTimeout(500);
   await check(page, 'saveerror', vp, '저장 실패 시뮬레이션');
   await closeAll(page);

@@ -10,6 +10,7 @@ import * as S from './screens.js';
 import * as V4 from './v4.js';
 import { sfx } from '../platform/audio.js';
 import * as FS from './fullscreen.js';
+import * as V5 from './v5.js';
 
 export const TABS = [
   { id: 'growth', label: '능력치', icon: 'growth' },
@@ -170,7 +171,7 @@ export class App {
       // boss/dungeon/trial always shows the real battle; restore the user's view after
       this.forcedBattleView = true;
       this.applyView();
-      preloadFor({ region: REGION_BY_ID[this.state.progression.region], boss: sess.bossId || null, branch: this.state.player.branch, cls: this.state.player.cls, tier: prog.tierOf(this.state), bg: sess.kind === 'tower' ? 'tower' : sess.kind === 'raid' ? 'void' : null });
+      preloadFor({ region: REGION_BY_ID[this.state.progression.region], boss: sess.bossId || null, branch: this.state.player.branch, cls: this.state.player.cls, tier: prog.tierOf(this.state), bg: sess.kind === 'tower' ? 'tower' : sess.kind === 'raid' ? 'void' : sess.kind === 'rift' ? sess.bg : null });
     } else {
       this.forcedBattleView = false;
       this.applyView();
@@ -314,12 +315,13 @@ export class App {
     if (view === 'battle') {
       const region = REGION_BY_ID[s.progression.region];
       const sess = g.session;
-      const SB = { quarry: ['mine', null], gold: ['desert', 40], books: ['cathedral', null], tower: ['tower', null], raid: ['void', null] };
+      const SB = { quarry: ['mine', null], gold: ['desert', 40], books: ['cathedral', null], tower: ['tower', null], raid: ['void', null], rift: [(sess && sess.bg) || 'void', null] };
       const sk = sess ? (sess.kind === 'dungeon' ? sess.type || 'quarry' : sess.kind) : null;
       const [bg, bgTint] = g.mode === 'PROMOTION_TRIAL' ? ['cathedral', null] : SB[sk] || [region.bg, region.bgTint || null];
       const left = b.timeLeftMs ? b.timeLeftMs() : null;
       const DN = { quarry: '채석장', gold: '황금 금고', books: '스킬북 서고' };
-      const label = sk === 'tower' ? `시련의 탑 ${sess.floor}층 · 처치 ${b.kills}/${BALANCE.tower.killTarget} · ${Math.ceil((left || 0) / 1000)}초`
+      const label = sk === 'rift' ? `균열 ${sess.floor}층 · 처치 ${b.kills}/${b.killTarget} · ${Math.ceil((left || 0) / 1000)}초`
+        : sk === 'tower' ? `시련의 탑 ${sess.floor}층 · 처치 ${b.kills}/${BALANCE.tower.killTarget} · ${Math.ceil((left || 0) / 1000)}초`
         : g.mode === 'DUNGEON' && sess ? `${DN[sk] || '던전'} ${sess.stage}단계 · 처치 ${b.kills} · ${Math.ceil((left || 0) / 1000)}초`
         : sk === 'raid' ? `레이드 · 누적 피해 ${fmt(b.raidDamage || b.damageDealt || 0)} · ${Math.ceil((left || 0) / 1000)}초`
         : g.mode === 'DEFEAT' ? '쓰러졌습니다 · 3초 뒤 재개 (손실 없음)' : null;
@@ -366,6 +368,7 @@ export class App {
     const m = this.game.mode;
     let pv = 0;
     if (m === 'BOSS') { E.where.textContent = BOSSES[this.game.session.bossId].name; E.prog.textContent = '보스전'; }
+    else if (m === 'DUNGEON' && this.game.session && this.game.session.kind === 'rift') { E.where.textContent = '균열'; E.prog.textContent = `${this.game.session.floor}층`; }
     else if (m === 'DUNGEON' && this.game.session && this.game.session.kind === 'tower') { E.where.textContent = '시련의 탑'; E.prog.textContent = `${this.game.session.floor}층`; }
     else if (m === 'DUNGEON') { E.where.textContent = BALANCE.dungeons[this.game.session.type || 'quarry'].name; E.prog.textContent = `${this.game.session.stage}단계`; }
     else if (m === 'PROMOTION_TRIAL') { E.where.textContent = (this.game.session && this.game.session.tier === 3) ? '영웅의 시련' : '교관 시련'; E.prog.textContent = '승급 시련'; }
@@ -388,7 +391,7 @@ export class App {
     const newItems = s.inventory.some((i) => i.isNew) || s.overflow.length > 0;
     this.navDot('equipment', newItems);
     const dunHot = ['quarry', 'gold', 'books'].some((t) => prog.dungeonOpen(s, t) && (t === 'quarry' ? s.dungeon : s.dungeons[t]).tickets > 0);
-    this.navDot('dungeon', dunHot);
+    this.navDot('dungeon', dunHot || V5.riftDot(s));
     this.navDot('skills', prog.unlockedSkills(s).some((id) => { const c = prog.skillLevelCost(s, id); return c && (s.skills.books[id] || 0) >= c.books && s.wallet.gold >= c.gold; }));
     this.navDot('menu', S.todoCount(this) > 0);
     // growth: patch values in place. Other tabs: rebuild when data changed, at most once

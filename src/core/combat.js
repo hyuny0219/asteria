@@ -83,20 +83,26 @@ export class Battle {
     this.manualQueue = [];
     this.hitChargeWindow = { start: 0, count: 0 };
     const T = BALANCE;
-    this.killTarget = o.kind === 'dungeon' ? (o.dungeon.killTarget || T.dungeon.killTarget) : o.kind === 'tower' ? T.tower.killTarget : Infinity;
+    this.killTarget = o.kind === 'dungeon' ? (o.dungeon.killTarget || T.dungeon.killTarget) : o.kind === 'tower' ? T.tower.killTarget : o.kind === 'rift' ? o.rift.killTarget : Infinity;
     this.timeLimitMs = o.kind === 'boss' ? C.bossTimeoutSec * 1000
       : o.kind === 'trial' ? T.promotion.trialTimeSec * 1000
       : o.kind === 'dungeon' ? T.dungeon.stageTimeSec * 1000
       : o.kind === 'tower' ? T.tower.timeSec * 1000
-      : o.kind === 'raid' ? T.raid.timeSec * 1000 : Infinity;
+      : o.kind === 'raid' ? T.raid.timeSec * 1000
+      : o.kind === 'rift' ? o.rift.timeSec * 1000 : Infinity;
+    this.secondWindUsed = false;
     this.respawnAt = null;
     this.setHero(o.hero, true);
     if (o.kind === 'boss') this.spawnBoss(BOSSES[o.boss.id]);
     if (o.kind === 'raid') this.spawnBoss(BOSSES[T.raid.boss], { raid: true });
     if (o.kind === 'trial') { const tier = (o.trial && o.trial.tier) || 1; this.spawnBoss({ ...TRIALS[tier], isTrial: true, tier }); }
+    // rift: HP carries over between floors
+    if (o.kind === 'rift' && o.rift.hpPct !== undefined) this.hero.hp = Math.max(1, Math.floor(this.hero.maxHp * o.rift.hpPct));
   }
 
   get ultId() { return this.heroCfg.ult || 'starSlash'; }
+  get caps() { return (this.heroCfg.stats && this.heroCfg.stats.caps) || {}; }
+  get curse() { return this.kind === 'rift' ? this.cfg.rift.curse : null; }
 
   setHero(h, reset = false) {
     const prev = this.hero;
@@ -139,6 +145,11 @@ export class Battle {
   }
   addEnemy(def, level, { elite = false, boss = false, fieldBoss = false } = {}) {
     const st = monsterStats(level, { elite, boss, fieldBoss });
+    if (this.kind === 'rift') {
+      const r = this.cfg.rift;
+      st.hp = Math.floor(st.hp * r.statMul * (r.curse === 'c_iron' ? 1.4 : 1));
+      st.atk = Math.floor(st.atk * r.statMul * (r.curse === 'c_fury' ? 1.3 : 1));
+    }
     const e = {
       uid: ++this.enemySeq, def, id: def.id, name: def.name, level, elite, boss, fieldBoss,
       hp: st.hp, maxHp: st.hp, atk: st.atk, defense: st.def,
@@ -166,6 +177,12 @@ export class Battle {
     if (raid) { e.raid = true; e.maxHp = e.hp = Math.floor(e.hp * 3); }
   }
   spawnSessionEnemy() {
+    if (this.kind === 'rift') {
+      const r = this.cfg.rift;
+      const ids = r.monsters;
+      this.addEnemy(MONSTERS[ids[this.rng.int(0, ids.length - 1)]], r.level, { elite: r.eliteRush || this.rng() < 0.15 });
+      return;
+    }
     if (this.kind === 'tower') {
       const T = BALANCE.tower;
       const f = this.cfg.tower.floor;
@@ -213,7 +230,7 @@ export class Battle {
       this.finish(this.kind === 'raid' ? 'victory' : 'defeat', 'timeout');
       return;
     }
-    if (this.kind === 'farm' || this.kind === 'dungeon' || this.kind === 'tower') {
+    if (this.kind === 'farm' || this.kind === 'dungeon' || this.kind === 'tower' || this.kind === 'rift') {
       if (this.alive().length < C.maxEnemiesOnField && t >= this.nextSpawnAt) {
         if (this.kind === 'farm') this.spawnFarmEnemy(); else this.spawnSessionEnemy();
         this.nextSpawnAt = t + C.spawnGapSec * 1000;
@@ -270,6 +287,8 @@ export class Battle {
     const engaged = this.alive().some((e) => e.state !== 'approach');
     const rate = engaged ? 0.006 : 0.06;
     if (this.kind === 'farm' || this.kind === 'dungeon' || this.kind === 'tower') h.hp = Math.min(h.maxHp, h.hp + h.maxHp * rate * (TICK / 1000));
+    const rg = this.heroCfg.stats.regen || 0;   // rift blessing 재생
+    if (rg && !h.dead) this.heal(h.maxHp * rg * (TICK / 1000));
   }
 
   heroAtk() {
@@ -277,7 +296,9 @@ export class Battle {
     let mul = 1;
     if (this.hero.buffs.atk) mul += this.hero.buffs.atk.mul;
     const bs = SKILLS.berserkStrike.lowHpBonus;
-    if (this.heroCfg.branch === 'berserker' && this.hero.hp / this.hero.maxHp <= bs.below) mul += bs.atkMul;
+    const low = this.hero.hp / this.hero.maxHp <= bs.below;
+    if (this.caps.cap_berserk && low) mul += 0.5;
+    else if (this.heroCfg.branch === 'berserker' && low) mul += bs.atkMul;
     return st.atk * mul;
   }
 
@@ -286,6 +307,7 @@ export class Battle {
     const lvl = this.heroCfg.skillLevel(id);
     let c = sk.coef * (1 + BALANCE.skills.levelBonusPerLevel * (lvl - 1));
     if (isUlt(id)) { const tier = this.heroCfg.tier || (this.heroCfg.branch ? 1 : 0); if (tier >= 3) c *= 2; else if (tier >= 2) c *= 1.5; }
+    if (this.caps.cap_beast2 && (id === 'a_beast' || id === 'a_pack')) c *= 2;
     return c;
   }
   cooldownMs(id) {
@@ -357,6 +379,7 @@ export class Battle {
       }
       h.nextAttackAt = Math.max(h.nextAttackAt, t + h.action.dur);
     }
+    if (h.echo && t >= h.echo.at) { const e = h.echo; h.echo = null; this.resolveEcho(e); }
     const ac = h.action;
     if (ac && !ac.hit && t >= ac.impactAt) { ac.hit = true; this.resolveHeroImpact(ac); }
     if (ac && t >= ac.start + ac.dur) h.action = null;
@@ -380,13 +403,15 @@ export class Battle {
       if (sk.kind === 'evade') {
         h.buffs.evade = { until: this.t + sk.evade.sec * 1000 };
         if (sk.evade.nextCrit) h.buffs.nextCrit = { until: this.t + 6000 };
+        if (this.caps.cap_shadowCrit) h.buffs.critStacks = { n: 3, until: this.t + 8000 };
         this.events.push({ type: 'buff', skill: ac.skill, evade: true, t: this.t });
         return;
       }
       coef = this.skillCoef(ac.skill);
       hits = sk.hits || 1;
+      if (this.caps.cap_rainPlus && ac.skill === 'a_rain') hits = Math.ceil(hits * 1.5);
       targets = this.targetsFor(sk, front);
-      if (sk.guard) h.buffs.guard = { reduce: sk.guard.reduce, until: this.t + sk.guard.sec * 1000 };
+      if (sk.guard) h.buffs.guard = { reduce: sk.guard.reduce, until: this.t + (sk.guard.sec + (this.caps.cap_counter2 && !this.heroCfg.skills.equipped.includes('guardCounter') ? 1 : 0)) * 1000 };
       if (sk.evadeSec) h.buffs.evade = { until: this.t + sk.evadeSec * 1000 };
     }
     const atk = this.heroAtk();
@@ -396,6 +421,7 @@ export class Battle {
       if (!e || e.state === 'dying') return;
       let crit = this.rng() < Math.min(1, st.crit + extraCrit);
       if (h.buffs.nextCrit) { crit = true; delete h.buffs.nextCrit; }
+      else if (h.buffs.critStacks && h.buffs.critStacks.n > 0) { crit = true; if (--h.buffs.critStacks.n <= 0) delete h.buffs.critStacks; }
       let cc = c;
       if (sk && sk.executeBelow && e.hp / e.maxHp <= sk.executeBelow) cc *= 2;
       const dmg = damageFormula(atk, cc, e.defense, e.level, crit, this.rng(), st.critMul);
@@ -404,6 +430,9 @@ export class Battle {
       if (st.combo && this.rng() < st.combo && e.state !== 'dying') {
         const d2 = Math.max(1, Math.floor(dmg * 0.5));
         if (this.dealDamage(e, d2, { crit: false, action: 'combo', skill: null, ranged })) kills++;
+      }
+      if (this.caps.cap_illusion && e.state !== 'dying' && this.rng() < 0.25) {
+        if (this.dealDamage(e, dmg, { crit, action: 'combo', skill: 'illusion', ranged })) kills++;
       }
     };
     if (sk && sk.target === 'spread') {
@@ -417,16 +446,28 @@ export class Battle {
         if (sk.stunSec && !e.boss) e.stunUntil = Math.max(e.stunUntil, this.t + sk.stunSec * 1000);
         else if (sk.stunSec && e.boss) e.stunUntil = Math.max(e.stunUntil, this.t + sk.stunSec * 400);     // bosses resist
         if (sk.slow) { e.slowUntil = this.t + sk.slow.sec * 1000; e.slowMul = sk.slow.mul; }
-        if (sk.dot) e.dots.push({ coef: sk.dot.coefPerSec * (1 + BALANCE.skills.levelBonusPerLevel * (this.heroCfg.skillLevel(ac.skill) - 1)), until: this.t + sk.dot.sec * 1000, nextAt: this.t + 1000, skill: ac.skill });
+        if (sk.dot) e.dots.push({ coef: (this.caps.cap_dot2 ? 2 : 1) * sk.dot.coefPerSec * (1 + BALANCE.skills.levelBonusPerLevel * (this.heroCfg.skillLevel(ac.skill) - 1)), until: this.t + sk.dot.sec * 1000, nextAt: this.t + 1000, skill: ac.skill });
       }
       if (sk.heal) this.heal(h.maxHp * sk.heal);
+      if (this.caps.cap_beast2 && (ac.skill === 'a_beast' || ac.skill === 'a_pack')) this.heal(h.maxHp * 0.02);
     }
+    // 이중 유성: the meteor falls again 400 ms later at 60%
+    if (ac.kind === 'ult' && ac.skill === 'm_meteor' && this.caps.cap_meteor2 && !ac.echo) h.echo = { at: this.t + 400, coef: coef * 0.6, skill: ac.skill };
     const U = C.ultCharge;
     let charge = 0;
     if (ac.kind === 'attack' && targets.length) charge += U.perAttack;
     charge += Math.min(kills * U.perKill, U.killChargeCapPerAction);
     if (ac.kind === 'ult') charge = Math.min(kills * U.perKill, U.killChargeCapPerAction);
     this.addGauge(charge);
+  }
+
+  resolveEcho(e) {
+    const st = this.heroCfg.stats;
+    const atk = this.heroAtk();
+    for (const t of this.alive().filter((x) => x.state !== 'approach' || x.x < 400)) {
+      const crit = this.rng() < st.crit;
+      this.dealDamage(t, damageFormula(atk, e.coef, t.defense, t.level, crit, this.rng(), st.critMul), { crit, action: 'ult', skill: e.skill });
+    }
   }
 
   // Applies damage; returns true when the enemy died.
@@ -437,6 +478,7 @@ export class Battle {
     this.damageDealt += dmg;
     this.events.push({ type: 'hit', by: 'hero', target: e.uid, dmg, crit, action, skill, ranged, t: this.t, x: e.x });
     if (st.lifesteal) this.heal(dmg * st.lifesteal);
+    if (this.caps.cap_berserk && this.hero.hp / this.hero.maxHp <= 0.5) this.heal(dmg * 0.03);
     if (e.boss && !e.enraged && e.hp > 0 && e.hp / e.maxHp < C.enrage.below && !e.trial) {
       e.enraged = true;
       e.atk = Math.floor(e.atk * C.enrage.atkMul);
@@ -445,7 +487,7 @@ export class Battle {
     if (e.hp <= 0) { this.kill(e); return true; }
     return false;
   }
-  heal(v) { const h = this.hero; if (!h.dead) h.hp = Math.min(h.maxHp, h.hp + v); }
+  heal(v) { const h = this.hero; if (h.dead) return; if (this.curse === 'c_famine') v *= 0.5; h.hp = Math.min(h.maxHp, h.hp + v); }
 
   addGauge(v) {
     const mul = 1 + (this.heroCfg.stats.ultCharge || 0);
@@ -459,7 +501,7 @@ export class Battle {
     this.events.push({ type: 'kill', enemy: { uid: e.uid, id: e.id, level: e.level, elite: e.elite, boss: e.boss, fieldBoss: !!e.fieldBoss, trial: !!e.trial }, t: this.t });
     if (this.heroCfg.stats.mythHeal && this.rng() < 0.1) this.heal(this.hero.maxHp * 0.2);
     if (this.kind === 'boss' || this.kind === 'trial' || this.kind === 'raid') { if (e.boss) this.finish('victory'); }
-    if ((this.kind === 'dungeon' || this.kind === 'tower') && this.kills >= this.killTarget) this.finish('victory');
+    if ((this.kind === 'dungeon' || this.kind === 'tower' || this.kind === 'rift') && this.kills >= this.killTarget) this.finish('victory');
   }
 
   enemiesAct() {
@@ -477,6 +519,7 @@ export class Battle {
           this.enemyHits(e, p.mult, p.heavy);
           let interval = C.enemyAttackIntervalSec * 1000;
           if (e.enraged) interval *= C.enrage.intervalMul;
+          if (this.curse === 'c_haste') interval *= 0.75;
           if (e.slowUntil > t) interval /= e.slowMul;
           e.nextAttackAt = t + interval;
         }
@@ -517,16 +560,19 @@ export class Battle {
       h.shield.amount -= ab; dmg -= ab;
       if (h.shield.amount <= 0) h.shield = null;
     }
+    // 재기: once per battle a lethal hit leaves 30% HP
+    if (h.hp - dmg <= 0 && this.caps.cap_secondWind && !this.secondWindUsed) { this.secondWindUsed = true; dmg = 0; h.hp = Math.max(h.hp, Math.floor(h.maxHp * 0.3)); this.events.push({ type: 'buff', skill: 'secondWind', t: this.t }); }
     h.hp -= dmg;
     h.hitFxUntil = this.t + 240;
+    if (st.thorns && dmg > 0 && e.state !== 'dying') this.dealDamage(e, Math.max(1, Math.floor(dmg * st.thorns)), { crit: false, action: 'thorns', skill: null });
     this.events.push({ type: 'hit', by: 'enemy', target: 'hero', source: e.uid, dmg, heavy, guarded: !!guard, t: this.t });
     const w = this.hitChargeWindow;
     if (this.t - w.start >= 1000) { w.start = this.t; w.count = 0; }
     if (w.count < C.ultCharge.hitTakenPerSecCap) { w.count++; this.addGauge(C.ultCharge.perHitTaken); }
     if (guard && this.heroCfg.skills.equipped.includes('guardCounter') && this.t >= h.counterReadyAt && h.hp > 0) {
-      h.counterReadyAt = this.t + SKILLS.guardCounter.internalCd * 1000;
+      h.counterReadyAt = this.t + (this.caps.cap_counter2 ? 500 : SKILLS.guardCounter.internalCd * 1000);
       const crit = this.rng() < st.crit;
-      const cd = damageFormula(this.heroAtk(), this.skillCoef('guardCounter'), e.defense, e.level, crit, this.rng(), st.critMul);
+      const cd = damageFormula(this.heroAtk(), this.skillCoef('guardCounter') * (this.caps.cap_counter2 ? 2 : 1), e.defense, e.level, crit, this.rng(), st.critMul);
       if (this.dealDamage(e, cd, { crit, action: 'counter', skill: 'guardCounter' })) this.addGauge(C.ultCharge.perKill);
     }
     if (h.hp <= 0) this.heroDown();
@@ -554,7 +600,7 @@ export class Battle {
   finish(result, reason = null) {
     if (this.over) return;
     this.over = result;
-    this.events.push({ type: result, reason, t: this.t, kills: this.kills, damage: this.damageDealt });
+    this.events.push({ type: result, reason, t: this.t, kills: this.kills, damage: this.damageDealt, hpPct: this.hero.maxHp ? Math.max(0, this.hero.hp) / this.hero.maxHp : 0 });
   }
 
   drainEvents() { const e = this.events; this.events = []; return e; }
