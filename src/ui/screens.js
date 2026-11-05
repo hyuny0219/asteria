@@ -11,6 +11,8 @@ import { playerStats, powerRating } from '../core/stats.js';
 import { RATE_METHOD } from '../core/offline.js';
 import { fmt, fmtDuration, fmtFull, fmtPct, kstDayIndex } from '../core/util.js';
 import { parseExport } from '../platform/save.js';
+import * as Profiles from '../platform/profiles.js';
+import { ATTENDANCE, RETURN_BONUS, attendanceStatus, boostActive, resolveReward } from '../core/rewards.js';
 import { enableAudio, setVolume, sfx } from '../platform/audio.js';
 import { button, closeAllModals, h, icon, img, modalOpen, openModal, toast } from './dom.js';
 
@@ -330,13 +332,32 @@ export function openSkillDetail(app, id) {
     h('p', { class: 'muted' }, '레벨당 피해 +8% (합연산). 피해는 공격 동작의 타격 시점에 한 번 계산됩니다.')) });
 }
 
+// ======================= S14 adventure panel (region + boss + dungeon) =======================
+function adventureHeader(app) {
+  const s = app.state;
+  const region = REGION_BY_ID[s.progression.region];
+  const boss = BOSSES[region.boss];
+  const can = app.game.canChallengeBoss(region.boss);
+  const cleared = s.progression.bossCleared[region.boss];
+  const wrap = h('div');
+  wrap.appendChild(h('div', { class: 'section-title' }, '사냥터 · 보스'));
+  wrap.appendChild(h('div', { class: 'card' },
+    h('div', { class: 'kv' }, region.name, h('b', null, `웨이브 ${s.progression.wave}/10 · 최고 ${s.progression.maxWave[region.id] || 1}`)),
+    h('div', { class: 'kv' }, boss.name, h('b', null, cleared ? '처치 완료' : can.ok ? '도전 가능' : '웨이브 10 도달 시')),
+    h('div', { class: 'btn-row', style: { marginTop: '8px' } },
+      button('지역 선택', { cls: 'btn', onClick: () => openWorld(app) }),
+      button(cleared ? '보스 재도전' : '보스 도전', { cls: 'btn' + (can.ok && !cleared ? ' btn-primary' : ''), onClick: () => openBoss(app, region.boss) }))));
+  return wrap;
+}
 // ======================= S14 dungeon panel =======================
 export function dungeonPanel(app) {
   const s = app.state;
   const d = s.dungeon;
   const root = h('div', { class: 'panel', dataset: { screen: 'dungeon' }, style: { height: '100%', margin: 0 } });
-  root.appendChild(h('div', { class: 'panel-head' }, h('h2', null, '별의 채석장'), h('span', { class: 'spacer' }), h('span', { class: 'cur' }, curIcon('ticket'), `${d.tickets}/${BALANCE.dungeon.ticketCap}`)));
+  root.appendChild(h('div', { class: 'panel-head' }, h('h2', null, '모험'), h('span', { class: 'spacer' }), h('span', { class: 'cur' }, curIcon('ticket'), `${d.tickets}/${BALANCE.dungeon.ticketCap}`)));
   const sc = h('div', { class: 'panel-scroll' });
+  sc.appendChild(adventureHeader(app));
+  sc.appendChild(h('div', { class: 'section-title' }, '재료 던전 · 별의 채석장'));
   if (!prog.dungeonOpen(s)) {
     sc.appendChild(h('div', { class: 'card' }, h('h3', null, '아직 열리지 않았습니다'), h('p', { class: 'muted' }, `${BOSSES.B01.name}을(를) 처치하면 재료 던전이 열립니다.`), button('보스 도전 보기', { cls: 'btn', onClick: () => openBoss(app, 'B01') })));
     root.appendChild(sc);
@@ -373,20 +394,35 @@ export function dungeonPanel(app) {
 }
 
 // ======================= menu panel =======================
-export function menuPanel(app) {
+// Things the player can act on now get a red dot; everything is one tap from here.
+export function menuTiles(app) {
   const s = app.state;
   const cl = prog.promotionChecklist(s);
+  const promoHot = cl.canChoose || cl.canTrial;
+  const extra = (globalThis.__menuExtras || []).map((f) => f(app)).filter(Boolean);
+  const att = attendanceStatus(s, Date.now());
+  return [
+    ...extra,
+    { id: 'attendance', ic: 'check', t: '출석', s: att.claimedToday ? `오늘 완료 · ${att.count}일` : `${att.index + 1}일차 받기`, dot: att.canClaim, on: () => openAttendance(app) },
+    { id: 'promotion', ic: 'star', t: '서약 각성', s: s.player.branch ? BRANCHES[s.player.branch].name : cl.canChoose ? '분기 선택 가능' : cl.canTrial ? '시련 도전 가능' : `Lv ${BALANCE.promotionLevel} 승급`, dot: promoHot,
+      on: () => (cl.canChoose || s.player.branch ? openPromotion(app) : openQuest(app)) },
+    { id: 'world', ic: 'dungeon', t: '지역 선택', s: REGION_BY_ID[s.progression.region].name, on: () => openWorld(app) },
+    { id: 'summon', ic: 'equipment', t: '별의 유산', s: '장비 소환', on: () => openSummon(app) },
+    { id: 'settings', ic: 'menu', t: '환경 설정', s: '저장 · 소리 · 접근성', on: () => openSettings(app) },
+    { id: 'help', ic: 'info', t: '도움말', s: '처음 하는 분', on: () => openHelp(app) },
+  ];
+}
+export function todoCount(app) { return menuTiles(app).filter((t) => t.dot).length; }
+export function menuPanel(app) {
   const root = h('div', { class: 'panel', style: { height: '100%', margin: 0 } });
   root.appendChild(h('div', { class: 'panel-head' }, h('h2', null, '메뉴')));
   const sc = h('div', { class: 'panel-scroll' });
-  const row = (label, sub, onClick, ic) => h('button', { type: 'button', class: 'skill-line', style: { width: '100%', textAlign: 'left', cursor: 'pointer', color: 'inherit' }, onClick },
-    h('span', { style: { display: 'flex', justifyContent: 'center' } }, icon(ic, 26)), h('div', null, h('div', { class: 't' }, label), h('div', { class: 'muted' }, sub)), icon('back', 18));
-  sc.append(
-    row('지역 선택', `${REGION_BY_ID[s.progression.region].name} · 웨이브 ${s.progression.wave}`, () => openWorld(app), 'dungeon'),
-    row('서약 각성 (승급)', s.player.branch ? BRANCHES[s.player.branch].name : cl.canChoose ? '분기 선택 가능' : cl.canTrial ? '교관 시련 도전 가능' : `Lv ${BALANCE.promotionLevel} · 조건 확인`, () => (cl.canChoose || s.player.branch ? openPromotion(app) : openQuest(app)), 'star'),
-    row('환경 설정', '접근성 · 오디오 · 저장 · 내보내기', () => openSettings(app), 'menu'),
-    row('별의 유산 · 확장', 'MVP 비활성 · 장비 소환 시안', () => openSummon(app), 'equipment'),
-    row('도움말', '배속 · 방치 보상 · 저장 안내', () => openHelp(app), 'info'));
+  const grid = h('div', { class: 'tiles' });
+  for (const t of menuTiles(app)) {
+    grid.appendChild(h('button', { type: 'button', class: 'tile' + (t.dot ? ' hot' : ''), dataset: { key: 'tile-' + t.id }, 'aria-label': t.t + (t.dot ? ' (할 일 있음)' : ''), onClick: t.on },
+      icon(t.ic, 28), h('span', { class: 't' }, t.t), h('span', { class: 's' }, t.s), t.dot ? h('span', { class: 'dot', 'aria-hidden': 'true' }) : null));
+  }
+  sc.appendChild(grid);
   root.appendChild(sc);
   return root;
 }
@@ -551,6 +587,7 @@ export function openOffline(app) {
         toast(`방치 보상을 받았습니다${got.length ? ' · ' + got.join(', ') : ''}`, 'good');
       }
       app.applyView();
+      app.showDailyPopups();
     } }),
     h('p', { class: 'muted', style: { margin: 0 } }, '받기 처리 중에는 버튼이 잠깁니다. 저장에 실패하면 지급하지 않고 다시 시도할 수 있습니다.')] });
   // spec 08 timing: dim 0–150, panel 150–350, items 350–650; reduced motion: fade only
@@ -794,4 +831,112 @@ async function devOffline(app, sec) {
   // commit sets lastActiveAt = now, so set it again directly on live state then simulate a return
   app.game.state.offlineSnapshot.lastActiveAt = Date.now() - sec * 1000;
   app.game.onVisible();
+}
+
+
+// ======================= rewards: attendance / return / profile =======================
+const REWARD_INFO = {
+  gold: { icon: CURRENCY_ICONS.gold, name: '골드' }, gem: { icon: CURRENCY_ICONS.gem, name: '보석' }, ore: { icon: CURRENCY_ICONS.ore, name: '강화 광석' },
+  ticket: { icon: CURRENCY_ICONS.ticket, name: '입장권' }, eqTicket: { icon: CURRENCY_ICONS.chest, name: '장비 뽑기권' }, skTicket: { icon: CURRENCY_ICONS.goldChest, name: '스킬 뽑기권' },
+};
+export const rewardName = (k) => (REWARD_INFO[k] ? REWARD_INFO[k].name : k);
+function rewardList(rw) { return Object.entries(rw).filter(([, v]) => v).map(([k, v]) => ({ icon: itemIcon(REWARD_INFO[k].icon), value: '+' + fmt(v), label: REWARD_INFO[k].name })); }
+function rewardText(rw) { return Object.entries(rw).filter(([, v]) => v).map(([k, v]) => `${REWARD_INFO[k].name} +${fmt(v)}`).join(' · '); }
+
+export function openAttendance(app, { auto = false } = {}) {
+  const g = app.game;
+  const st = attendanceStatus(g.state, Date.now());
+  if (auto && !st.canClaim) return null;
+  const lv = g.state.player.level;
+  const grid = h('div', { class: 'att-grid', role: 'list' });
+  ATTENDANCE.forEach((r, i) => {
+    const got = i < (st.count % ATTENDANCE.length) || (st.count > 0 && st.count % ATTENDANCE.length === 0 && st.claimedToday);
+    const today = i === st.index && st.canClaim;
+    const rw = resolveReward(r, lv);
+    const k = Object.keys(rw)[0];
+    grid.appendChild(h('div', { class: 'att' + (got ? ' got' : '') + (today ? ' today' : '') + (r.big ? ' big' : ''), role: 'listitem', 'aria-label': `${i + 1}일차 ${rewardText(rw)}${got ? ' 받음' : today ? ' 오늘' : ''}` },
+      h('span', { class: 'd' }, `${i + 1}일`), img(itemIcon(REWARD_INFO[k].icon), ''), h('b', null, fmt(rw[k])), Object.keys(rw).length > 1 ? h('span', { class: 'more' }, '+' + (Object.keys(rw).length - 1)) : null,
+      got ? h('span', { class: 'stamp', 'aria-hidden': 'true' }, '✓') : null));
+  });
+  const todayRw = resolveReward(ATTENDANCE[st.index], lv);
+  const body = h('div', { dataset: { screen: 'attendance' } },
+    h('p', { class: 'modal-desc' }, `누적 출석 ${st.count}일 · ${st.cycle}회차. 빠진 날이 있어도 이어서 받을 수 있어요. 매일 00:00(한국 시간)에 바뀝니다.`),
+    grid,
+    st.rolledBack ? h('p', { class: 'warn' }, '기기 시계가 마지막 출석보다 과거라 오늘은 받을 수 없어요.') : null,
+    st.canClaim ? h('div', { class: 'card' }, h('div', { class: 'kv' }, `오늘 (${st.index + 1}일차)`, h('b', null, rewardText(todayRw)))) : h('p', { class: 'muted' }, '오늘 출석 보상을 받았어요. 내일 다시 와 주세요.'));
+  const m = openModal({ id: 'attendance', title: '출석 보상', body, actions: [
+    st.canClaim ? button('오늘 보상 받기', { cls: 'btn btn-primary', busy: true, onClick: async () => {
+      const r = fail(await g.claimAttendance());
+      if (!r.ok) return;
+      if (app.state.settings.sound) sfx('bell');
+      m.close();
+      showGrant(app, `${r.day}일차 출석 보상`, r.reward, () => app.showDailyPopups());
+    } }) : button('닫기', { cls: 'btn', onClick: () => m.close() })] });
+  return m;
+}
+
+export function openReturnBonus(app) {
+  const g = app.game;
+  const p = g.state.returnBonus.pending;
+  if (!p || modalOpen('return')) return null;
+  const body = h('div', { dataset: { screen: 'return' } },
+    h('div', { style: { display: 'flex', gap: '12px', alignItems: 'center' } }, img(portrait('serin_face'), '', 'face'),
+      h('p', { style: { margin: 0 } }, `${p.days}일 만이에요. 다시 와 줘서 고마워요. 준비해 둔 게 있어요.`)),
+    rewardTiles(rewardList(p.reward)),
+    h('div', { class: 'card' },
+      h('div', { class: 'kv' }, '복귀 가속', h('b', null, `${p.boostHours}시간 동안 사냥 EXP·골드 ×${RETURN_BONUS.boost.exp}`)),
+      h('p', { class: 'muted', style: { margin: '6px 0 0' } }, `${RETURN_BONUS.minDays}일 이상 접속하지 않으면 한 번 받을 수 있어요. 오래 쉴수록 커집니다(3·7·14일). 방치 정산에는 가속이 적용되지 않아요.`)));
+  const m = openModal({ id: 'return', title: '복귀 보상', dismissible: false, body, actions: [
+    button('복귀 보상 받기', { cls: 'btn btn-primary', busy: true, onClick: async () => {
+      const r = fail(await g.claimReturn());
+      if (!r.ok) return;
+      if (app.state.settings.sound) sfx('bell');
+      m.close();
+      toast(`복귀 가속 시작 · ${r.boostHours}시간 EXP·골드 ×${RETURN_BONUS.boost.exp}`, 'good', 3500);
+      app.showDailyPopups();
+    } })] });
+  if (reduce(app)) body.querySelectorAll('.reward').forEach((e) => { e.style.animation = 'none'; e.style.opacity = 1; e.style.transform = 'none'; });
+  return m;
+}
+
+// Plays after the save is confirmed (callers only reach here on r.ok).
+function showGrant(app, title, rw, after) {
+  const body = h('div', { dataset: { screen: 'grant' } }, rewardTiles(rewardList(rw)));
+  if (reduce(app)) body.querySelectorAll('.reward').forEach((e) => { e.style.animation = 'none'; e.style.opacity = 1; e.style.transform = 'none'; });
+  const m = openModal({ id: 'grant', title, kind: 'center', body, onClose: () => after && after(), actions: [button('확인', { cls: 'btn btn-primary', onClick: () => m.close() })] });
+}
+
+export function openProfile(app) {
+  const g = app.game;
+  const pid = globalThis.__asteria && globalThis.__asteria.profileId;
+  const me = Profiles.get(pid);
+  const nick = h('input', { class: 'text', type: 'text', maxlength: '10', value: g.state.profile.nickname || (me && me.nickname) || '', 'aria-label': '닉네임' });
+  const err = h('p', { class: 'warn', 'aria-live': 'polite' });
+  const st = playerStats(g.state);
+  const body = h('div', { dataset: { screen: 'profile' } },
+    h('div', { style: { display: 'flex', gap: '12px', alignItems: 'center', marginBottom: '8px' } }, img(portrait('serin_face'), '', 'face'),
+      h('div', null, h('b', { style: { fontSize: '20px' } }, g.state.profile.nickname || '모험가'), h('div', { class: 'muted' }, `게스트 · Lv ${g.state.player.level} · 전투력 ${fmt(powerRating(st))}`))),
+    h('div', { class: 'card' },
+      h('div', { class: 'kv' }, '보석', h('b', null, fmt(g.state.wallet.gem))),
+      h('div', { class: 'kv' }, '장비 / 스킬 뽑기권', h('b', null, `${g.state.wallet.eqTicket} / ${g.state.wallet.skTicket}`)),
+      h('div', { class: 'kv' }, '누적 출석', h('b', null, `${g.state.attendance.count}일`)),
+      boostActive(g.state, Date.now()) ? h('div', { class: 'kv' }, '복귀 가속', h('b', null, `${fmtDuration((g.state.returnBonus.boostUntil - Date.now()) / 1000)} 남음`)) : null,
+      h('div', { class: 'kv' }, '시작한 날', h('b', null, new Date(g.state.createdAt).toLocaleDateString('ko-KR')))),
+    h('label', { class: 'field' }, '닉네임 바꾸기'), nick, err,
+    button('닉네임 저장', { cls: 'btn', busy: true, onClick: async () => {
+      const v = nick.value.trim();
+      const pr = Profiles.rename(pid, v);
+      if (!pr.ok) { err.textContent = pr.reason; return; }
+      const r = fail(await g.setNickname(v));
+      if (r.ok) { err.textContent = ''; toast('닉네임을 바꿨어요.', 'good'); app.updateHud(true); }
+    } }),
+    h('p', { class: 'muted' }, '게스트 프로필은 이 기기 브라우저에만 저장됩니다. 다른 기기로 옮기려면 환경 설정 → 내보내기 파일을 쓰세요.'));
+  const m = openModal({ id: 'profile', title: '프로필', body, actions: [
+    button('프로필 바꾸기 (다른 게스트)', { cls: 'btn', onClick: () => {
+      m.close();
+      const cm = openModal({ id: 'switch', title: '프로필 바꾸기', kind: 'center', desc: '지금 진행은 저장된 상태로 남고, 시작 화면에서 다른 프로필을 고를 수 있어요.', actions: [
+        button('시작 화면으로', { cls: 'btn btn-primary', busy: true, onClick: async () => { await g.checkpoint('switch'); location.href = location.pathname; } }),
+        button('취소', { cls: 'btn', onClick: () => cm.close() })] });
+    } }),
+    button('환경 설정', { cls: 'btn', onClick: () => { m.close(); openSettings(app); } })] });
 }

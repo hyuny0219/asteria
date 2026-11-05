@@ -3,7 +3,7 @@ import { BALANCE } from '../data/balance.js';
 import { NORMAL_SKILLS_BASE } from '../data/content.js';
 import { kstDayIndex } from './util.js';
 
-export const SCHEMA_VERSION = 1;
+export const SCHEMA_VERSION = 2;
 
 export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0) {
   return {
@@ -17,7 +17,10 @@ export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0) {
       level: 1, exp: 0, pendingExp: 0, branch: null, branchChanges: 0,
       statsUpgrades: { atk: 0, hp: 0, def: 0, crit: 0, speed: 0 },
     },
-    wallet: { gold: 0, ore: 0, token: 0 },
+    profile: { nickname: '' },
+    wallet: { gold: 0, ore: 0, token: 0, gem: 0, eqTicket: 0, skTicket: 0 },
+    attendance: { lastDay: null, count: 0 },
+    returnBonus: { pending: null, lastAwayFrom: null, claimed: 0, boostUntil: 0 },
     inventory: [],          // item objects
     overflow: [],           // items that did not fit (never auto-deleted)
     equipped: { weapon: null, helmet: null, armor: null, accessory: null },
@@ -56,7 +59,7 @@ export function validate(s) {
   if (!s || typeof s !== 'object') return ['not an object'];
   if (typeof s.schemaVersion !== 'number') p.push('schemaVersion');
   if (!s.player || typeof s.player.level !== 'number' || s.player.level < 1 || s.player.level > BALANCE.levelCap) p.push('player.level');
-  if (!s.wallet || ['gold', 'ore', 'token'].some((k) => typeof s.wallet[k] !== 'number' || s.wallet[k] < 0 || !Number.isFinite(s.wallet[k]))) p.push('wallet');
+  if (!s.wallet || ['gold', 'ore', 'token', 'gem', 'eqTicket', 'skTicket'].filter((k) => k in s.wallet || ['gold', 'ore', 'token'].includes(k)).some((k) => typeof s.wallet[k] !== 'number' || s.wallet[k] < 0 || !Number.isFinite(s.wallet[k]))) p.push('wallet');
   if (!Array.isArray(s.inventory)) p.push('inventory');
   if (!Array.isArray(s.overflow)) p.push('overflow');
   if (!s.equipped || typeof s.equipped !== 'object') p.push('equipped');
@@ -70,7 +73,17 @@ export function validate(s) {
 
 // Migrations keyed by the version they upgrade FROM. None needed yet (schema 1),
 // but loading always runs through here so future versions have one entry point.
-const MIGRATIONS = {};
+const MIGRATIONS = {
+  // 1 → 2: profile, gems & draw tickets, attendance, return bonus
+  1: (s) => {
+    s.schemaVersion = 2;
+    s.profile ||= { nickname: '' };
+    Object.assign(s.wallet, { gem: s.wallet.gem || 0, eqTicket: s.wallet.eqTicket || 0, skTicket: s.wallet.skTicket || 0 });
+    s.attendance ||= { lastDay: null, count: 0 };
+    s.returnBonus ||= { pending: null, lastAwayFrom: null, claimed: 0, boostUntil: 0 };
+    return s;
+  },
+};
 export function migrate(s) {
   let cur = s;
   while (cur.schemaVersion < SCHEMA_VERSION) {
@@ -83,6 +96,7 @@ export function migrate(s) {
   for (const k of Object.keys(d)) if (cur[k] === undefined) cur[k] = d[k];
   for (const k of Object.keys(d.settings)) if (cur.settings[k] === undefined) cur.settings[k] = d.settings[k];
   for (const k of Object.keys(d.progression)) if (cur.progression[k] === undefined) cur.progression[k] = d.progression[k];
+  for (const k of Object.keys(d.wallet)) if (cur.wallet[k] === undefined) cur.wallet[k] = d.wallet[k];
   return cur;
 }
 

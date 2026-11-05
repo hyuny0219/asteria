@@ -2,6 +2,7 @@
 import { Game } from './core/game.js';
 import { REGION_BY_ID } from './data/content.js';
 import { createSaver, WriterLock } from './platform/save.js';
+import * as Profiles from './platform/profiles.js';
 import { MemorySaver } from './platform/memorySaver.js';
 import { loadMeta, preloadFor } from './render/assets.js';
 import { App } from './ui/app.js';
@@ -16,7 +17,7 @@ const btns = title.querySelector('.btns');
 const setProgress = (p, text) => { bar.style.width = Math.round(p * 100) + '%'; if (text) msg.textContent = text; };
 const showButtons = (list) => { btns.replaceChildren(...list); const f = btns.querySelector('button'); if (f) f.focus(); };
 
-let game, app, lock, saver, saverWarning;
+let game, app, lock, saver, saverWarning, profileId;
 
 async function boot() {
   try {
@@ -27,7 +28,7 @@ async function boot() {
     const got = await lock.acquire();
     if (!got) return conflictAtBoot();
     lock.onLost = () => game && game.setMode('CONFLICT');
-    await start();
+    await pickProfile();
   } catch (e) {
     console.error(e);
     msg.textContent = '시작하지 못했습니다: ' + (e.message || e);
@@ -38,17 +39,78 @@ async function boot() {
 function conflictAtBoot() {
   msg.textContent = '아스테리아가 다른 탭에서 이미 실행 중입니다. 중복 저장을 막기 위해 이 탭은 대기합니다.';
   title.dataset.screen = 'conflict';
-  showButtons([button('이 탭에서 계속', { cls: 'btn btn-primary', onClick: async () => { await lock.acquire({ steal: true }); lock.onLost = () => game && game.setMode('CONFLICT'); title.dataset.screen = 'title'; await start(); } })]);
+  showButtons([button('이 탭에서 계속', { cls: 'btn btn-primary', onClick: async () => { await lock.acquire({ steal: true }); lock.onLost = () => game && game.setMode('CONFLICT'); title.dataset.screen = 'title'; const lp = Profiles.last(); if (lp) await start(lp.id); else await pickProfile(); } })]);
 }
 
-async function start() {
+// ---------- guest login ----------
+async function pickProfile() {
+  setProgress(0.35, '');
+  // saves made before profiles existed become the first profile
+  if (!Profiles.list().length) {
+    const legacy = await createSaver('default');
+    if (legacy.saver && legacy.saver.exists && await legacy.saver.exists()) Profiles.create('모험가', { id: 'default' });
+  }
+  const qs = new URLSearchParams(location.search);
+  const list = Profiles.list();
+  if (qs.has('autostart')) {
+    const p = Profiles.last() || list[0] || Profiles.create('QA' + Math.floor(Math.random() * 9000 + 1000)).profile;
+    return start(p.id);
+  }
+  btns.dataset.screen = 'login';
+  title.querySelector('.bar').hidden = true;
+  if (!list.length) return newProfileForm(true);
+  msg.textContent = '프로필을 골라 주세요';
+  const lastP = Profiles.last();
+  const cards = list.map((p) => {
+    const b = button('', { cls: 'btn profile-card' + (lastP && lastP.id === p.id ? ' btn-primary' : ''), onClick: () => start(p.id) });
+    b.replaceChildren(h('b', null, p.nickname), h('span', null, `Lv ${p.level || 1}${p.job ? ' · ' + p.job : ''} · ${relTime(p.lastPlayedAt)}`));
+    b.setAttribute('aria-label', `${p.nickname} Lv ${p.level || 1}로 시작`);
+    return b;
+  });
+  const add = list.length < Profiles.MAX_PROFILES ? button('+ 새 게스트 만들기', { cls: 'btn', onClick: () => newProfileForm(false) }) : null;
+  showButtons([...cards, add, h('p', { class: 'muted' }, '게스트 프로필은 이 기기 브라우저에만 저장돼요. 다른 기기로 옮기려면 환경 설정의 내보내기를 써 주세요.')].filter(Boolean));
+}
+
+function relTime(t) {
+  if (!t) return '';
+  const m = Math.floor((Date.now() - t) / 60000);
+  if (m < 1) return '방금';
+  if (m < 60) return `${m}분 전`;
+  if (m < 1440) return `${Math.floor(m / 60)}시간 전`;
+  return `${Math.floor(m / 1440)}일 전`;
+}
+
+function newProfileForm(first) {
+  msg.textContent = first ? '모험가 이름을 정해 주세요' : '새 게스트 프로필';
+  const input = h('input', { class: 'text', type: 'text', maxlength: '10', autocomplete: 'nickname', 'aria-label': '닉네임', placeholder: '닉네임 (2~10자)', enterkeyhint: 'done' });
+  const err = h('p', { class: 'warn', 'aria-live': 'polite' });
+  const go = button('게스트로 시작', { cls: 'btn btn-primary', onClick: () => {
+    const r = Profiles.create(input.value);
+    if (!r.ok) { err.textContent = r.reason; input.focus(); return; }
+    start(r.profile.id);
+  } });
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') go.click(); });
+  const back = first ? null : button('뒤로', { cls: 'btn', onClick: () => pickProfile() });
+  showButtons([input, err, go, back, h('p', { class: 'muted' }, '서버 계정이 아닌 이 기기 전용 게스트예요. 브라우저 데이터를 지우면 함께 지워집니다.')].filter(Boolean));
+  input.focus();
+}
+
+async function start(pid) {
+  profileId = pid;
+  Profiles.setLast(pid);
+  showButtons([]);
+  delete btns.dataset.screen;
+  title.querySelector('.bar').hidden = false;
   setProgress(0.4, '저장 데이터 확인 중…');
-  const c = await createSaver();
+  const c = await createSaver(pid);
   saver = c.saver || new MemorySaver();
   saverWarning = c.warning;
   game = new Game({ saver, log: (...a) => console.warn(...a) });
-  globalThis.__asteria = { game, saver, screens: Screens, get app() { return app; } };   // QA hook (dev tools / browser tests)
+  globalThis.__asteria = { game, saver, screens: Screens, profiles: Profiles, get profileId() { return profileId; }, get app() { return app; } };   // QA hook (dev tools / browser tests)
   const res = await game.load();
+  // keep the profile card (level, job) fresh
+  game.on('saveStatus', (st) => { if (st.ok && game.state) Profiles.touch(pid, { level: game.state.player.level, job: game.state.player.branch ? (game.state.player.branch === 'knight' ? '흑장미 기사' : '진홍의 집행자') : '' }); });
+  if (game.state && !game.state.profile.nickname) { const p = Profiles.get(pid); if (p) await game.setNickname(p.nickname); }
   if (res.status === 'corrupt' || res.status === 'error') return recovery(res);
   await afterLoad(res);
 }
@@ -100,6 +162,7 @@ function enter() {
     if (n.type === 'clockRollback') import('./ui/dom.js').then((d) => d.toast('기기 시계가 과거로 바뀌어 입장권 충전을 건너뛰었습니다.', 'error', 4000));
   }
   if (game.mode === 'OFFLINE') app.onMode('OFFLINE');
+  else app.showDailyPopups();
   if (game.mode === 'CONFLICT') app.onMode('CONFLICT');
   loop();
 }

@@ -20,6 +20,10 @@ const results = { startedAt: new Date().toISOString(), base: BASE, viewports: VI
 
 async function freshPage(browser, vp, { dpr = 1, ctx = null } = {}) {
   const context = ctx || await browser.newContext({ viewport: { width: vp[0], height: vp[1] }, deviceScaleFactor: dpr });
+  if (!ctx) await context.addInitScript(() => {
+    // one guest profile, so the title shows the profile card instead of the nickname form
+    if (!localStorage.getItem('asteria-profiles')) localStorage.setItem('asteria-profiles', JSON.stringify({ list: [{ id: 'qa', nickname: 'QA선배', createdAt: Date.now(), lastPlayedAt: Date.now(), level: 1, job: '' }], last: 'qa' }));
+  });
   const page = await context.newPage();
   page.qaErrors = [];
   page.on('pageerror', (e) => page.qaErrors.push('pageerror: ' + e.message));
@@ -27,7 +31,7 @@ async function freshPage(browser, vp, { dpr = 1, ctx = null } = {}) {
   page.on('requestfailed', (r) => page.qaErrors.push('requestfailed: ' + r.url()));
   return { context, page };
 }
-async function boot(page, query = '?autostart') {
+async function boot(page, query = '?autostart&nodaily') {
   await page.goto(BASE + query, { waitUntil: 'load' });
   await page.waitForFunction(() => window.__asteria && window.__asteria.app && window.__asteria.game.state && !document.getElementById('app').hidden, null, { timeout: 20000 });
   await page.waitForTimeout(500);
@@ -75,10 +79,12 @@ const closeAll = (page) => page.evaluate(() => { document.querySelectorAll('.mod
 async function screensAt(browser, vp) {
   // ---- title (20) before entering ----
   let { context, page } = await freshPage(browser, vp);
-  await page.goto(BASE, { waitUntil: 'load' });
-  await page.waitForSelector('#title .btns button', { timeout: 20000 });
-  await check(page, 'title', vp, '시작 화면');
-  await page.click('#title .btns button');
+  await page.goto(BASE + '?nodaily', { waitUntil: 'load' });
+  await page.waitForSelector('#title .btns .profile-card', { timeout: 20000 });
+  await check(page, 'title', vp, '시작 화면 · 프로필 선택');
+  await page.click('#title .btns .profile-card');
+  await page.waitForSelector('#title .btns .btn-primary:not(.profile-card)', { timeout: 20000 });
+  await page.click('#title .btns .btn-primary');
   await page.waitForTimeout(800);
   await ff(page, 20);
   await check(page, 'main', vp, '실제 전투 20초 후');

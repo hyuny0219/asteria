@@ -16,7 +16,8 @@ const LOGICAL_H = 220;
 const GROUND = 0.8;
 
 export class BattleRenderer {
-  constructor(canvas, { getSettings }) {
+  constructor(canvas, { getSettings, topInset = 0 }) {
+    this.topInset = topInset;   // DOM strip over the top of the canvas
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d', { alpha: false });
     this.getSettings = getSettings;
@@ -347,13 +348,13 @@ export class BattleRenderer {
 
   drawBossBar(boss, battle) {
     const W = this.cssW;
-    const x = 12, w = W - 24, y = 8;
+    const x = 12, w = W - 24, y = this.topInset;
     this.text(boss.name, x, y + 12, 13, '#F5EDF0', 'left', 700, true);
     const left = battle.timeLeftMs();
     if (left !== null) this.text(Math.ceil(left / 1000) + '초', W - 12, y + 12, 13, left < 15000 ? '#FF9DB2' : '#D8B675', 'right', 700, true);
     this.bar(x, y + 18, w, 7, boss.hp / boss.maxHp, '#C9455F');
   }
-  drawLabel(text) { this.text(text, 12, this.cssH - 10, 12, '#C8BAC9', 'left', 500, true); }
+  drawLabel(text) { this.text(text, 12, this.cssH - 60, 14, '#C8BAC9', 'left', 500, true); }
 
   bar(x, y, w, hgt, v, color) {
     const ctx = this.ctx;

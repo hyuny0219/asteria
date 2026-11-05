@@ -1,5 +1,5 @@
 // App shell: layout (spec 08 table), per-frame updates, and mode → screen routing.
-import { BALANCE } from '../data/balance.js';
+import { BALANCE, expToNext } from '../data/balance.js';
 import { BOSSES, CURRENCY_ICONS, REGION_BY_ID, SKILLS } from '../data/content.js';
 import { BattleRenderer } from '../render/battle.js';
 import { itemIcon, portrait, preloadFor, skillIcon } from '../render/assets.js';
@@ -10,11 +10,11 @@ import * as S from './screens.js';
 import { sfx } from '../platform/audio.js';
 
 export const TABS = [
-  { id: 'growth', label: '성장' },
-  { id: 'equipment', label: '장비' },
-  { id: 'skills', label: '스킬' },
-  { id: 'dungeon', label: '던전' },
-  { id: 'menu', label: '메뉴' },
+  { id: 'growth', label: '성장', icon: 'growth' },
+  { id: 'equipment', label: '장비', icon: 'equipment' },
+  { id: 'skills', label: '스킬', icon: 'skill' },
+  { id: 'dungeon', label: '모험', icon: 'dungeon' },
+  { id: 'menu', label: '메뉴', icon: 'menu' },
 ];
 
 export class App {
@@ -43,20 +43,24 @@ export class App {
     E.face = img(portrait('serin_face'), '', 'face');
     E.name = h('b', null, '세린');
     E.sub = h('small', null, '');
+    E.lvbar = h('i', { style: { width: '0%' } });
     E.gold = h('span', { class: 'cur' }, img(itemIcon(CURRENCY_ICONS.gold), ''), h('span', { class: 'v' }, '0'));
     E.gold.setAttribute('aria-label', '골드');
     E.ore = h('span', { class: 'cur' }, img(itemIcon(CURRENCY_ICONS.ore), ''), h('span', { class: 'v' }, '0'));
     E.ore.setAttribute('aria-label', '강화 광석');
     E.saveDot = h('span', { class: 'save-dot', title: '저장 상태', role: 'img', 'aria-label': '저장됨' });
-    app.appendChild(h('header', { class: 'status' }, E.face, h('div', { class: 'who' }, E.name, E.sub), h('div', { class: 'wallet' }, E.gold, E.ore, E.saveDot)));
+    E.me = h('button', { type: 'button', class: 'me', 'aria-label': '프로필', onClick: () => S.openProfile ? S.openProfile(this) : S.openSettings(this) },
+      E.face, h('div', { class: 'who' }, E.name, E.sub, h('span', { class: 'lvbar', 'aria-hidden': 'true' }, E.lvbar)));
+    app.appendChild(h('header', { class: 'status' }, E.me, h('div', { class: 'wallet' }, E.gold, E.ore, E.saveDot)));
     E.banner = h('div', { class: 'banner-host' });
     app.appendChild(E.banner);
-    // stage 40
-    E.where = h('span', { class: 'where' }, '');
-    E.prog = h('span', { class: 'prog' }, '');
-    E.bossBtn = button('보스 도전', { cls: 'chip-btn', onClick: () => S.openBoss(this) });
-    E.worldBtn = button(icon('dungeon', 20, '지역 선택'), { cls: 'icon-btn', ariaLabel: '지역 선택', onClick: () => S.openWorld(this) });
-    app.appendChild(h('div', { class: 'stage' }, E.where, E.prog, h('span', { class: 'spacer' }), E.worldBtn, E.bossBtn));
+    // stage info lives on the battle as a top strip (saves a 40px row on short phones)
+    E.where = h('span', { class: 'nm' }, '');
+    E.prog = h('span', { class: 'pt' }, '');
+    E.progBar = h('i', { style: { width: '0%' } });
+    E.worldBtn = h('button', { type: 'button', class: 'where-btn', 'aria-label': '지역 선택', onClick: () => S.openWorld(this) },
+      h('b', null, E.where, h('span', { 'aria-hidden': 'true', style: { color: 'var(--gold)' } }, '▾')), h('span', { class: 'wp' }, E.prog, h('span', { class: 'pb' }, E.progBar)));
+    E.bossBtn = button('보스 도전', { cls: 'boss-chip', onClick: () => S.openBoss(this) });
     // battle 220
     E.canvas = h('canvas', { role: 'img', 'aria-label': '자동 전투 화면' });
     E.liveText = h('div', { class: 'sr-only', 'aria-live': 'polite' });
@@ -68,12 +72,13 @@ export class App {
     E.autoBadge = h('span', { class: 'badge' }, '자동 전투');
     E.sessionBar = h('div', { class: 'session-bar' });
     E.battle = h('section', { class: 'battle', 'aria-label': '전투' }, E.canvas, E.portrait,
+      h('div', { class: 'topstrip' }, h('span', { class: 'spacer' }), E.worldBtn, E.bossBtn),
       h('div', { class: 'overlay-tl' }, E.autoBadge), h('div', { class: 'overlay-tr' }, E.speedBtn, E.viewBtn), E.sessionBar, E.liveText);
     app.appendChild(E.battle);
     // skills 64
     E.skills = h('div', { class: 'skills', role: 'toolbar', 'aria-label': '스킬' });
     app.appendChild(E.skills);
-    // lower: goal 56 + panel 312
+    // lower: goal + panel (panel takes the rest of the screen)
     E.goal = h('button', { type: 'button', class: 'goal', onClick: () => this.goGoal() });
     E.panel = h('section', { class: 'panel', 'aria-live': 'off' });
     E.panel.addEventListener('pointerdown', () => { this.pointerDown = true; });
@@ -84,7 +89,7 @@ export class App {
     E.nav = h('nav', { class: 'nav', 'aria-label': '주 메뉴' });
     this.navBtns = {};
     for (const t of TABS) {
-      const b = h('button', { type: 'button', onClick: () => this.setTab(t.id) }, t.label);
+      const b = h('button', { type: 'button', onClick: () => this.setTab(t.id) }, icon(t.icon, 22), h('span', null, t.label));
       this.navBtns[t.id] = b;
       E.nav.appendChild(b);
     }
@@ -92,7 +97,7 @@ export class App {
     initModals(document.getElementById('modals'));
     initToasts(document.getElementById('toasts'));
 
-    this.renderer = new BattleRenderer(E.canvas, { getSettings: () => this.settings });
+    this.renderer = new BattleRenderer(E.canvas, { getSettings: () => this.settings, topInset: 56 });
     new ResizeObserver(() => this.renderer.resize()).observe(E.canvas);
     this.bindGame();
     this.buildSkills();
@@ -131,6 +136,16 @@ export class App {
     g.on('result', (r) => S.openResult(this, r));
     g.on('session', (sess) => this.onSession(sess));
     g.on('farmChanged', () => { this.panelDirty = true; this.preload(); });
+  }
+
+  // Offline claim → return bonus → today's attendance, one after another, each only
+  // when there is something to claim. Called on entering and after each claim.
+  showDailyPopups() {
+    if (this.game.mode === 'OFFLINE' || this.game.mode === 'CONFLICT') return;
+    if (new URLSearchParams(location.search).has('nodaily')) return;   // QA screenshots
+    if (modalOpen()) return;
+    if (this.state.returnBonus.pending) { S.openReturnBonus(this); return; }
+    if (!this._attShown) { this._attShown = true; S.openAttendance(this, { auto: true }); }
   }
 
   onMode(mode, prev) {
@@ -216,7 +231,10 @@ export class App {
     const goal = prog.nextGoal(this.state);
     this.goal = goal;
     clear(this.el.goal);
-    this.el.goal.append(...[h('span', { class: 'lbl' }, '다음 목표'), h('span', { class: 'txt' }, goal.text), goal.progress ? h('span', { class: 'pr' }, goal.progress) : null].filter(Boolean));
+    const todo = S.todoCount ? S.todoCount(this) : 0;
+    this.el.goal.append(...[h('span', { class: 'lbl' }, '다음 목표'), h('span', { class: 'txt' }, goal.text), goal.progress ? h('span', { class: 'pr' }, goal.progress) : null,
+      goal.action ? h('span', { class: 'chev', 'aria-hidden': 'true' }, '›') : null].filter(Boolean));
+    this._todo = todo;
     this.el.goal.disabled = !goal.action;
     this.el.goal.setAttribute('aria-label', `다음 목표: ${goal.text}${goal.progress ? ' ' + goal.progress : ''}`);
   }
@@ -293,18 +311,24 @@ export class App {
     const E = this.el;
     const p = s.player;
     const region = REGION_BY_ID[s.progression.region];
+    E.name.textContent = s.profile.nickname || '모험가';
     E.sub.textContent = `Lv ${p.level}${p.branch ? ' · ' + (p.branch === 'knight' ? '흑장미 기사' : '진홍의 집행자') : ''}${p.pendingExp ? ' · 보관 EXP ' + fmt(p.pendingExp) : ''}`;
     E.gold.querySelector('.v').textContent = fmt(s.wallet.gold);
     E.ore.querySelector('.v').textContent = fmt(s.wallet.ore);
     const m = this.game.mode;
+    let pv = 0;
     if (m === 'BOSS') { E.where.textContent = BOSSES[this.game.session.bossId].name; E.prog.textContent = '보스전'; }
     else if (m === 'DUNGEON') { E.where.textContent = '별의 채석장'; E.prog.textContent = `${this.game.session.stage}단계`; }
     else if (m === 'PROMOTION_TRIAL') { E.where.textContent = '교관 시련'; E.prog.textContent = '서약 각성'; }
-    else { E.where.textContent = region.name; E.prog.textContent = `웨이브 ${s.progression.wave}/10 · ${s.progression.waveKills}/${BALANCE.combat.waveKillTarget}`; }
+    else { E.where.textContent = region.name; E.prog.textContent = `W${s.progression.wave}/10`; pv = s.progression.waveKills / BALANCE.combat.waveKillTarget; }
+    E.progBar.style.width = Math.round(Math.min(1, pv) * 100) + '%';
+    E.worldBtn.disabled = m !== 'FARM' && m !== 'DEFEAT';
+    const need = expToNext(p.level);
+    E.lvbar.style.width = need ? Math.min(100, (p.exp / need) * 100).toFixed(1) + '%' : '0%';
     const bossId = region.boss;
     const can = this.game.canChallengeBoss(bossId);
     E.bossBtn.disabled = m !== 'FARM';
-    E.bossBtn.textContent = s.progression.bossCleared[bossId] ? '보스 재도전' : can.ok ? '보스 도전' : `보스 · W${s.progression.maxWave[region.id] || 1}/10`;
+    E.bossBtn.textContent = m === 'BOSS' || m === 'DUNGEON' || m === 'PROMOTION_TRIAL' ? '전투 중' : s.progression.bossCleared[bossId] ? '보스 재도전' : can.ok ? '보스 도전!' : `보스 · W10 필요`;
     E.bossBtn.classList.toggle('hot', can.ok && !s.progression.bossCleared[bossId]);
     E.speedBtn.textContent = s.settings.speed === 2 ? '×2' : '×1';
     E.autoBadge.textContent = m === 'DEFEAT' ? '재정비 중' : m === 'BOSS' ? '보스전' : m === 'DUNGEON' ? '던전' : m === 'PROMOTION_TRIAL' ? '시련' : `자동 전투 · ×${s.settings.speed}`;
@@ -315,7 +339,7 @@ export class App {
     const newItems = s.inventory.some((i) => i.isNew) || s.overflow.length > 0;
     this.navDot('equipment', newItems);
     this.navDot('dungeon', prog.dungeonOpen(s) && s.dungeon.tickets > 0);
-    this.navDot('menu', prog.promotionChecklist(s).canChoose || prog.promotionChecklist(s).canTrial);
+    this.navDot('menu', S.todoCount(this) > 0);
     // growth: patch values in place. Other tabs: rebuild when data changed, at most once
     // a second and never while a finger/mouse is down on the panel (no lost taps).
     const live = this.el.panel.firstChild;

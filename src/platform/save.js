@@ -99,16 +99,21 @@ export class WriterLock {
 }
 
 // ---------- savers ----------
+// Profile namespaces: 'default' keeps the original unprefixed keys (saves made before
+// profiles existed load as the first profile); others use '<ns>:current'.
+const keyFor = (ns, k) => (!ns || ns === 'default' ? k : `${ns}:${k}`);
+
 export class IdbSaver {
-  constructor() { this.kind = 'indexeddb'; this.db = null; this.failNext = 0; this.knownRevision = 0; }
+  constructor(ns = 'default') { this.kind = 'indexeddb'; this.ns = ns; this.db = null; this.failNext = 0; this.knownRevision = 0; }
+  k(name) { return keyFor(this.ns, name); }
   async init() { this.db = await openDb(); }
   tx(mode) { return this.db.transaction(STORE, mode).objectStore(STORE); }
   get(key) { return new Promise((res, rej) => { const r = this.tx('readonly').get(key); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
 
   async load() {
     try {
-      const cur = await this.get('current');
-      const prev = await this.get('previousGood');
+      const cur = await this.get(this.k('current'));
+      const prev = await this.get(this.k('previousGood'));
       if (!cur) {
         if (prev) { const p = unpack(prev); if (p.ok) return { status: 'corrupt', error: 'current missing', previous: p.state }; }
         return { status: 'empty', state: null };
@@ -130,15 +135,15 @@ export class IdbSaver {
       const store = t.objectStore(STORE);
       const expected = state.revision;
       let result = null;
-      const getReq = store.get('current');
+      const getReq = store.get(this.k('current'));
       getReq.onsuccess = () => {
         const cur = getReq.result;
         const stored = cur ? cur.revision : 0;
         if (stored !== expected) { result = { ok: false, conflict: true, error: `revision ${stored} ≠ ${expected}` }; t.abort(); return; }
         state.revision = expected + 1;
         const rec = pack(state);
-        if (cur && unpack(cur).ok) store.put(cur, 'previousGood');
-        store.put(rec, 'current');
+        if (cur && unpack(cur).ok) store.put(cur, this.k('previousGood'));
+        store.put(rec, this.k('current'));
         result = { ok: true, revision: state.revision };
       };
       t.oncomplete = () => { this.knownRevision = state.revision; resolve(result || { ok: true }); };
@@ -151,22 +156,25 @@ export class IdbSaver {
   }
 
   async restorePrevious() {
-    const prev = await this.get('previousGood');
+    const prev = await this.get(this.k('previousGood'));
     const p = unpack(prev);
     if (!p.ok) return { ok: false, error: p.error };
-    const cur = await this.get('current');
+    const cur = await this.get(this.k('current'));
     p.state.revision = cur ? cur.revision : 0;
     return { ok: true, state: p.state };
   }
   async wipe() {
-    return new Promise((res) => { const t = this.db.transaction(STORE, 'readwrite'); t.objectStore(STORE).clear(); t.oncomplete = () => res({ ok: true }); t.onabort = () => res({ ok: false }); });
+    return new Promise((res) => { const t = this.db.transaction(STORE, 'readwrite'); const st = t.objectStore(STORE); st.delete(this.k('current')); st.delete(this.k('previousGood')); t.oncomplete = () => res({ ok: true }); t.onabort = () => res({ ok: false }); });
+  }
+  async exists() { try { return !!(await this.get(this.k('current'))); } catch { return false; }
   }
 }
 
 export class LocalStorageSaver {
-  constructor() { this.kind = 'localStorage'; this.failNext = 0; }
+  constructor(ns = 'default') { this.kind = 'localStorage'; this.ns = ns; this.failNext = 0; }
+  key(k) { return LS_KEY + ':' + keyFor(this.ns, k); }
   async init() { localStorage.setItem(LS_KEY + ':probe', '1'); localStorage.removeItem(LS_KEY + ':probe'); }
-  read(k) { try { return JSON.parse(localStorage.getItem(LS_KEY + ':' + k) || 'null'); } catch { return null; } }
+  read(k) { try { return JSON.parse(localStorage.getItem(this.key(k)) || 'null'); } catch { return null; } }
   async load() {
     const cur = this.read('current');
     const prev = this.read('previousGood');
@@ -184,8 +192,8 @@ export class LocalStorageSaver {
     const expected = state.revision;
     state.revision = expected + 1;
     try {
-      if (cur) localStorage.setItem(LS_KEY + ':previousGood', JSON.stringify(cur));
-      localStorage.setItem(LS_KEY + ':current', JSON.stringify(pack(state)));
+      if (cur) localStorage.setItem(this.key('previousGood'), JSON.stringify(cur));
+      localStorage.setItem(this.key('current'), JSON.stringify(pack(state)));
       return { ok: true, revision: state.revision };
     } catch (e) {
       state.revision = expected;
@@ -199,14 +207,15 @@ export class LocalStorageSaver {
     p.state.revision = cur ? cur.revision : 0;
     return { ok: true, state: p.state };
   }
-  async wipe() { localStorage.removeItem(LS_KEY + ':current'); localStorage.removeItem(LS_KEY + ':previousGood'); return { ok: true }; }
+  async wipe() { localStorage.removeItem(this.key('current')); localStorage.removeItem(this.key('previousGood')); return { ok: true }; }
+  async exists() { return !!this.read('current'); }
 }
 
 // Pick the best available store. Returns {saver, warning}.
-export async function createSaver() {
-  try { const s = new IdbSaver(); await s.init(); return { saver: s, warning: null }; }
+export async function createSaver(ns = 'default') {
+  try { const s = new IdbSaver(ns); await s.init(); return { saver: s, warning: null }; }
   catch (e) {
-    try { const s = new LocalStorageSaver(); await s.init(); return { saver: s, warning: 'IndexedDB를 사용할 수 없어 브라우저 로컬 저장소(용량 작음)에 저장합니다.' }; }
+    try { const s = new LocalStorageSaver(ns); await s.init(); return { saver: s, warning: 'IndexedDB를 사용할 수 없어 브라우저 로컬 저장소(용량 작음)에 저장합니다.' }; }
     catch { return { saver: null, warning: '이 브라우저에서는 저장할 수 없습니다. 진행 내용이 보존되지 않습니다.' }; }
   }
 }

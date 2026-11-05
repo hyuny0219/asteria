@@ -152,7 +152,7 @@ export function openModal(o) {
 }
 export function closeAllModals(except = null) { for (const m of [...stack]) if (m.id !== except) m.close('closeAll'); }
 export function topModal() { return stack[stack.length - 1] || null; }
-export function modalOpen(id) { return stack.some((m) => m.id === id); }
+export function modalOpen(id) { return id === undefined ? stack.length > 0 : stack.some((m) => m.id === id); }
 
 // ---------- toasts (secondary info only; critical errors use modals) ----------
 let toastEl = null;

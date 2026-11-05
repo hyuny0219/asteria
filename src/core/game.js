@@ -19,6 +19,7 @@ import { FarmVerifier, applyClaim, computeClaim } from './offline.js';
 import * as dun from './dungeon.js';
 import { playerStats } from './stats.js';
 import { markTx, newGame } from './state.js';
+import * as rewards from './rewards.js';
 import { deepClone, makeRng, uid } from './util.js';
 
 const TICK = BALANCE.combat.tickMs;
@@ -70,6 +71,7 @@ export class Game {
     const refund = dun.recoverPendingRun(this.state);
     if (refund) this.notices.push({ type: 'dungeonRefund', ...refund });
     if (tickets.rollback) this.notices.push({ type: 'clockRollback' });
+    if (!isNew) rewards.prepareReturn(this.state, this.state.offlineSnapshot.lastActiveAt, this.now(), uid('ret'));
     this.startFarm();
     const pending = this.state.offlineSnapshot.pendingClaim;
     if (pending) {
@@ -117,6 +119,11 @@ export class Game {
     if (r.ok || r.reason === 'duplicate') { this.claim = null; this.setMode('FARM'); this.acc = 0; }
     return r;
   }
+
+  // ---------- daily / return rewards ----------
+  claimAttendance() { return this.transact('attendance', (s) => rewards.claimAttendance(s, this.now())); }
+  claimReturn() { return this.transact('returnBonus', (s) => rewards.claimReturn(s, this.now())); }
+  setNickname(name) { return this.transact('nickname', (s) => { s.profile.nickname = name; return { ok: true }; }); }
 
   // ---------- hero config for battles ----------
   heroCfg() {
@@ -182,6 +189,8 @@ export class Game {
     if (ev.type === 'kill') {
       const e = ev.enemy;
       const r = killRewards(e.level, { elite: e.elite });
+      const mul = rewards.farmMultipliers(s, this.now());
+      r.gold = Math.floor(r.gold * mul.gold); r.exp = Math.floor(r.exp * mul.exp);
       s.wallet.gold += r.gold;
       const expRes = prog.gainExp(s, r.exp);
       const loot = this.rollLoot(e);
