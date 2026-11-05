@@ -18,6 +18,7 @@ const GROUND = 0.8;
 export class BattleRenderer {
   constructor(canvas, { getSettings, topInset = 0 }) {
     this.topInset = topInset;   // DOM strip over the top of the canvas
+    this.figScale = 0.78;       // characters & monsters drawn smaller than the 220px-stage spec (선배 요청)
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d', { alpha: false });
     this.getSettings = getSettings;
@@ -145,7 +146,7 @@ export class BattleRenderer {
   }
 
   spriteDims(m, extraScale = 1) {
-    const f = this.fit * 0.5 * extraScale;   // runtime art is stored at 2x
+    const f = this.fit * 0.5 * extraScale * this.figScale;   // runtime art is stored at 2x
     return { w: m.size[0] * f, h: m.size[1] * f, px: m.pivot[0] * f, py: m.pivot[1] * f, f };
   }
 
@@ -181,7 +182,7 @@ export class BattleRenderer {
     const breathe = motion && pose === 'idle' ? 1 + 0.012 * Math.sin(t / 420) : 1;
     // shadow
     ctx.fillStyle = 'rgba(0,0,0,0.35)';
-    ctx.beginPath(); ctx.ellipse(x + dx, gy + 2, 30 * this.fit, 6 * this.fit, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(x + dx, gy + 2, 30 * this.fit * this.figScale, 6 * this.fit * this.figScale, 0, 0, Math.PI * 2); ctx.fill();
     if (img) {
       const sc = scaledImage(img, d.w * this.dpr, d.h * this.dpr, m.file);
       ctx.save();
@@ -202,7 +203,7 @@ export class BattleRenderer {
       ctx.restore();
     } else this.placeholder(x, gy, 46, 140 * this.fit, '세린');
     // hero HP bar (above head, clear of the figure)
-    const bw = 64 * this.fit, top = gy - d.py - 12;
+    const bw = 56 * this.fit, top = gy - d.py - 10;
     this.bar(x - bw / 2, Math.max(4, top), bw, 5, h.hp / h.maxHp, '#E06A86');
     // ult gauge ring under bar
     this.bar(x - bw / 2, Math.max(11, top + 7), bw, 3, h.gauge / 100, '#D8B675');
@@ -220,7 +221,7 @@ export class BattleRenderer {
     const bossScale = e.boss && !isTrial ? Math.min(1, 150 / meta.bodyHeightPx * 2) : 1;
     const d = this.spriteDims(meta, bossScale);
     let dx = 0, dy = 0, sy = 1, sxx = 1, rot = 0, alpha = 1;
-    if (e.def.flying) dy = -14 * this.fit + (motion ? Math.sin(t / 300) * 3 : 0);
+    if (e.def.flying) dy = -14 * this.fit * this.figScale + (motion ? Math.sin(t / 300) * 3 : 0);
     if (e.state === 'telegraph' && motion) {
       const p = Math.min(1, (t - e.stateAt) / (e.pending ? e.pending.impactAt - e.stateAt : 500));
       const kind = e.pending && e.pending.heavy ? 'heavy' : e.def.telegraph;
@@ -290,7 +291,7 @@ export class BattleRenderer {
     }
     ctx.setLineDash([]);
     // warning icon above the attacker (shape + icon + text, not colour alone)
-    const iy = Math.max(30, gy - (heavy ? 150 : 100) * this.fit);
+    const iy = Math.max(30, gy - (heavy ? 150 : 100) * this.fit * this.figScale);
     ctx.fillStyle = heavy ? '#EDBD68' : '#F5EDF0';
     ctx.beginPath(); ctx.moveTo(x, iy - 11); ctx.lineTo(x + 10, iy + 7); ctx.lineTo(x - 10, iy + 7); ctx.closePath(); ctx.fill();
     this.text('!', x, iy + 5, 12, '#100D18', 'center', 900);
