@@ -7,6 +7,11 @@
   }
  },
  {
+  "name": "no in-game class picker after choosing on the form",
+  "pass": true,
+  "info": {}
+ },
+ {
   "name": "class picker → mage saved, mage ult on bar",
   "pass": true,
   "info": {

@@ -20,6 +20,7 @@ import * as dun from './dungeon.js';
 import { playerStats } from './stats.js';
 import { markTx, newGame } from './state.js';
 import * as rewards from './rewards.js';
+import * as shop from './shop.js';
 import * as gacha from './gacha.js';
 import * as missions from './missions.js';
 import * as tower from './tower.js';
@@ -498,6 +499,9 @@ export class Game {
       return { ok: true, cls };
     });
   }
+  // Later class changes: first one free, then a 클래스 전환권 (shop.js).
+  changeClass(cls, branch = null) { if (this.mode !== 'FARM') return Promise.resolve({ ok: false, reason: 'mode' }); return this.transact('changeClass', (s) => shop.changeClass(s, cls, branch)); }
+  buyShop(id) { return this.transact('shop', (s) => shop.buy(s, id, this.now())); }
   drawEquipment(n) {
     return this.transact('drawEquipment', (s) => {
       const r = gacha.drawEquipment(s, n, this.rng);

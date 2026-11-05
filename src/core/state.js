@@ -14,12 +14,13 @@ export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0, cls = 'wa
     savedAt: now,
     rngSeed: seed >>> 0,
     player: {
-      cls, tier: 0, level: 1, exp: 0, pendingExp: 0, branch: null, branchChanges: 0,
+      cls, tier: 0, level: 1, exp: 0, pendingExp: 0, branch: null, branchChanges: 0, classChanges: 0,
       statsUpgrades: { atk: 0, hp: 0, def: 0, crit: 0, speed: 0 },
       stats: { str: 0, int: 0, dex: 0, agi: 0, vit: 0, wis: 0 }, statAuto: true,
     },
     profile: { nickname: '' },
-    wallet: { gold: 0, ore: 0, token: 0, gem: 0, eqTicket: 0, skTicket: 0, awakenStone: 0, starShard: 0 },
+    wallet: { gold: 0, ore: 0, token: 0, gem: 0, eqTicket: 0, skTicket: 0, awakenStone: 0, starShard: 0, classTicket: 0 },
+    shop: { buys: {} },
     attendance: { lastDay: null, count: 0 },
     returnBonus: { pending: null, lastAwayFrom: null, claimed: 0, boostUntil: 0 },
     inventory: [],          // item objects
@@ -72,7 +73,7 @@ export function validate(s) {
   if (!s || typeof s !== 'object') return ['not an object'];
   if (typeof s.schemaVersion !== 'number') p.push('schemaVersion');
   if (!s.player || typeof s.player.level !== 'number' || s.player.level < 1 || s.player.level > BALANCE.levelCap) p.push('player.level');
-  if (!s.wallet || ['gold', 'ore', 'token', 'gem', 'eqTicket', 'skTicket', 'awakenStone', 'starShard'].filter((k) => k in s.wallet || ['gold', 'ore', 'token'].includes(k)).some((k) => typeof s.wallet[k] !== 'number' || s.wallet[k] < 0 || !Number.isFinite(s.wallet[k]))) p.push('wallet');
+  if (!s.wallet || ['gold', 'ore', 'token', 'gem', 'eqTicket', 'skTicket', 'awakenStone', 'starShard', 'classTicket'].filter((k) => k in s.wallet || ['gold', 'ore', 'token'].includes(k)).some((k) => typeof s.wallet[k] !== 'number' || s.wallet[k] < 0 || !Number.isFinite(s.wallet[k]))) p.push('wallet');
   if (!Array.isArray(s.inventory)) p.push('inventory');
   if (!Array.isArray(s.overflow)) p.push('overflow');
   if (!s.equipped || typeof s.equipped !== 'object') p.push('equipped');
@@ -139,6 +140,7 @@ export function migrate(s) {
   for (const k of Object.keys(d.settings)) if (cur.settings[k] === undefined) cur.settings[k] = d.settings[k];
   for (const k of Object.keys(d.progression)) if (cur.progression[k] === undefined) cur.progression[k] = d.progression[k];
   for (const k of Object.keys(d.wallet)) if (cur.wallet[k] === undefined) cur.wallet[k] = d.wallet[k];
+  if (cur.player.classChanges === undefined) cur.player.classChanges = 0;
   for (const k of Object.keys(d.skills)) if (cur.skills[k] === undefined) cur.skills[k] = d.skills[k];
   for (const k of Object.keys(d.dungeons)) if (!cur.dungeons[k]) cur.dungeons[k] = d.dungeons[k];
   for (const k of Object.keys(d.player)) if (cur.player[k] === undefined) cur.player[k] = d.player[k];

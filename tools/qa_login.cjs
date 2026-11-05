@@ -18,19 +18,19 @@ const ok = (name, pass, info = {}) => { results.push({ name, pass, info }); cons
   await p.screenshot({ path: out + 'login_new_390.png' });
   // invalid nickname
   await p.fill('#title input.text', 'a');
-  await p.click('text=게스트로 시작');
+  await p.click('#title .btns .btn-primary');
   const err = await p.textContent('#title .warn');
   ok('nickname rule shown', /2~10자/.test(err || ''), { err });
   await p.fill('#title input.text', '선배테스트');
-  await p.click('text=게스트로 시작');
+  // class is chosen on the profile form itself
+  await p.click('#title .class-card:nth-child(2)');
+  await p.waitForTimeout(200);
+  await p.screenshot({ path: out + 'login_classpick_390.png' });
+  await p.click('text=마법사(으)로 시작');
   await p.waitForSelector('text=모험 시작', { timeout: 20000 });
   await p.click('text=모험 시작');
-  await p.waitForSelector('[data-screen="classpick"]', { timeout: 8000 });
-  await p.waitForTimeout(300);
-  await p.screenshot({ path: out + 'classpick_390.png' });
-  await p.click('.class-card:nth-child(2)');
-  await p.click('text=마법사(으)로 시작');
   await p.waitForSelector('[data-screen="attendance"]', { timeout: 8000 });
+  ok('no in-game class picker after choosing on the form', !(await p.$('[data-screen="classpick"]')));
   const cls = await p.evaluate(() => ({ cls: __asteria.game.state.player.cls, chosen: __asteria.game.state.classChosen, ult: document.querySelector('.skill.ult').getAttribute('aria-label') }));
   ok('class picker → mage saved, mage ult on bar', cls.cls === 'mage' && cls.chosen && /메테오/.test(cls.ult), cls);
   await p.waitForTimeout(400);
@@ -83,13 +83,11 @@ const ok = (name, pass, info = {}) => { results.push({ name, pass, info }); cons
   await p.waitForSelector('text=+ 새 게스트 만들기', { timeout: 20000 });
   await p.click('text=+ 새 게스트 만들기');
   await p.fill('#title input.text', '둘째');
-  await p.click('text=게스트로 시작');
+  await p.click('text=전사(으)로 시작');
   await p.waitForSelector('text=모험 시작', { timeout: 20000 });
   const sep = await p.evaluate(() => __asteria.game.state.attendance.count);
   ok('second profile has its own save', sep === 0, { attendance: sep });
   await p.click('text=모험 시작');
-  await p.waitForSelector('[data-screen="classpick"]', { timeout: 8000 });
-  await p.click('text=전사(으)로 시작');
   await p.waitForTimeout(600);
   const menu = await p.$('[data-screen="attendance"]');
   if (menu) await p.click('text=오늘 보상 받기').catch(() => {});

@@ -19,6 +19,7 @@ import { ATTENDANCE, RETURN_BONUS, attendanceStatus, boostActive, resolveReward 
 import { enableAudio, setVolume, sfx } from '../platform/audio.js';
 import { button, closeAllModals, h, icon, img, modalOpen, openModal, toast } from './dom.js';
 import * as FS from './fullscreen.js';
+import { openShop, openClassChange } from './shop.js';
 
 const STAT_INFO = {
   atk: { name: '공격력', fmt: (s) => fmtFull(s.atk) },
@@ -33,7 +34,7 @@ const reasonText = {
   pending: '진행 중인 도전이 있습니다', stage: '도전할 수 없는 단계입니다', locked: '아직 열리지 않았습니다', wave: '웨이브 10에 먼저 도달해야 합니다',
   region: '지역이 아직 열리지 않았습니다', mode: '지금은 할 수 없습니다 (다른 전투 진행 중)', save: '저장하지 못해 취소되었습니다', busy: '처리 중입니다',
   conditions: '조건이 충족되지 않았습니다', conflict: '다른 탭이 저장 권한을 가지고 있습니다', 'switch-dev-only': '분기 재전환은 개발 설정에서만 가능합니다',
-  'locked-slot': '승급 후 열리는 슬롯입니다', books: '스킬북이 부족합니다', gem: '보석이 부족합니다', tries: '이번 주 레이드 횟수를 모두 사용했습니다', 'class-locked': '클래스는 처음에만 고를 수 있습니다', branch: '이 클래스의 갈래가 아닙니다', points: '남은 능력치 포인트가 없습니다', count: '뽑기 횟수가 올바르지 않습니다', 'locked-skill': '아직 배우지 않은 스킬입니다', duplicate: '이미 처리되었습니다', full: '보관함에 빈 칸이 없습니다', 'already-best': '이미 주 스탯 기준 최고 장비를 착용 중입니다', missing: '장비를 찾을 수 없습니다', empty: '빈 슬롯입니다',
+  'locked-slot': '승급 후 열리는 슬롯입니다', books: '스킬북이 부족합니다', gem: '보석이 부족합니다', tries: '이번 주 레이드 횟수를 모두 사용했습니다', 'class-locked': '클래스는 처음에만 고를 수 있습니다', 'same-class': '지금 클래스와 같습니다', 'class-ticket': '클래스 전환권이 없습니다 (상점에서 구매)', limit: '구매 한도에 도달했습니다', branch: '이 클래스의 갈래가 아닙니다', points: '남은 능력치 포인트가 없습니다', count: '뽑기 횟수가 올바르지 않습니다', 'locked-skill': '아직 배우지 않은 스킬입니다', duplicate: '이미 처리되었습니다', full: '보관함에 빈 칸이 없습니다', 'already-best': '이미 주 스탯 기준 최고 장비를 착용 중입니다', missing: '장비를 찾을 수 없습니다', empty: '빈 슬롯입니다',
 };
 export const why = (r) => (r && r.reason ? reasonText[r.reason] || r.reason : '');
 export function fail(r) { if (r && !r.ok && r.reason !== 'save' && r.reason !== 'conflict') toast(why(r), 'error'); return r; }
@@ -438,6 +439,8 @@ export function menuTiles(app) {
     { id: 'attendance', ic: 'check', t: '출석', s: att.claimedToday ? `오늘 완료 · ${att.count}일` : `${att.index + 1}일차 받기`, dot: att.canClaim, on: () => openAttendance(app) },
     { id: 'promotion', ic: 'star', t: '승급', s: tier >= 3 ? `${prog.tierName(s)} · 최종` : cl.canChoose || cl.canPromote ? `${cl.tier}차 승급 가능` : cl.canTrial ? '시련 도전 가능' : `${cl.tier}차 · Lv ${[0, 30, 60, 90][cl.tier]}`, dot: promoHot,
       on: () => (cl && cl.canChoose ? openPromotion(app) : cl && cl.canPromote && tier >= 1 ? V4.openPromotionTier(app, cl.tier) : openQuest(app)) },
+    { id: 'shop', ic: 'equipment', t: '상점', s: '보석·골드로 구매', on: () => openShop(app) },
+    { id: 'classChange', ic: 'growth', t: '클래스 전환', s: (s.player.classChanges || 0) === 0 ? '1회 무료' : `전환권 ${s.wallet.classTicket || 0}장`, on: () => openClassChange(app) },
     { id: 'world', ic: 'dungeon', t: '지역 선택', s: REGION_BY_ID[s.progression.region].name, on: () => openWorld(app) },
     { id: 'settings', ic: 'menu', t: '환경 설정', s: '저장 · 소리 · 접근성', on: () => openSettings(app) },
     { id: 'help', ic: 'info', t: '도움말', s: '처음 하는 분', on: () => openHelp(app) },

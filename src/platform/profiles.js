@@ -26,12 +26,12 @@ export function validNick(name) {
   return { ok: true, name: n };
 }
 
-export function create(nickname, { id = null } = {}) {
+export function create(nickname, { id = null, cls = null } = {}) {
   const r = read();
   if (r.list.length >= MAX_PROFILES) return { ok: false, reason: `프로필은 ${MAX_PROFILES}개까지 만들 수 있어요.` };
   const v = validNick(nickname);
   if (!v.ok) return v;
-  const p = { id: id || 'g' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), nickname: v.name, createdAt: Date.now(), lastPlayedAt: Date.now(), level: 1, job: '' };
+  const p = { id: id || 'g' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), nickname: v.name, createdAt: Date.now(), lastPlayedAt: Date.now(), level: 1, job: '', cls };
   r.list.push(p);
   r.last = p.id;
   write(r);

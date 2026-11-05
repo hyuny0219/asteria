@@ -4,6 +4,8 @@ import { REGION_BY_ID } from './data/content.js';
 import { createSaver, WriterLock } from './platform/save.js';
 import * as Profiles from './platform/profiles.js';
 import * as FS from './ui/fullscreen.js';
+import { CLASSES, CLASS_IDS, CLASS_SKILLS, SKILLS } from './data/content.js';
+import { classArt, needsClassPick } from './ui/v4.js';
 import { MemorySaver } from './platform/memorySaver.js';
 import { loadMeta, preloadFor } from './render/assets.js';
 import { App } from './ui/app.js';
@@ -85,14 +87,31 @@ function newProfileForm(first) {
   msg.textContent = first ? '모험가 이름을 정해 주세요' : '새 게스트 프로필';
   const input = h('input', { class: 'text', type: 'text', maxlength: '10', autocomplete: 'nickname', 'aria-label': '닉네임', placeholder: '닉네임 (2~10자)', enterkeyhint: 'done' });
   const err = h('p', { class: 'warn', 'aria-live': 'polite' });
-  const go = button('게스트로 시작', { cls: 'btn btn-primary', onClick: () => {
-    const r = Profiles.create(input.value);
+  // class is picked here, together with the nickname (applied right after the save loads)
+  let pick = 'warrior';
+  const info = h('p', { class: 'muted class-info', 'aria-live': 'polite' });
+  const cards = h('div', { class: 'class-cards', role: 'radiogroup', 'aria-label': '클래스 선택' });
+  const go = button('', { cls: 'btn btn-primary', onClick: () => {
+    const r = Profiles.create(input.value, { cls: pick });
     if (!r.ok) { err.textContent = r.reason; input.focus(); return; }
     start(r.profile.id);
   } });
+  const renderCards = () => {
+    cards.replaceChildren(...CLASS_IDS.map((id) => {
+      const k = CLASSES[id];
+      return h('button', { type: 'button', class: 'class-card' + (pick === id ? ' pick' : ''), role: 'radio', 'aria-checked': String(pick === id), 'aria-label': `${k.name} ${k.hero}`, onClick: () => { pick = id; renderCards(); } },
+        h('span', { class: 'art' }, classArt(id), k.artPending ? h('span', { class: 'pending-tag' }, '준비 중') : null), h('b', null, k.name), h('span', { class: 'muted' }, `${k.hero} · ${k.age}세`));
+    }));
+    const k = CLASSES[pick];
+    const cs = CLASS_SKILLS[pick];
+    info.textContent = `${k.role} · ${k.range === 'ranged' ? '원거리' : '근접'} · 스킬 ${cs.base.map((x) => SKILLS[x].name).join('·')} · 궁극기 ${SKILLS[cs.ult].name}`;
+    go.textContent = `${k.name}(으)로 시작`;
+  };
+  renderCards();
   input.addEventListener('keydown', (e) => { if (e.key === 'Enter') go.click(); });
+  input.addEventListener('input', () => { err.textContent = ''; });
   const back = first ? null : button('뒤로', { cls: 'btn', onClick: () => pickProfile() });
-  showButtons([input, err, go, back, h('p', { class: 'muted' }, '서버 계정이 아닌 이 기기 전용 게스트예요. 브라우저 데이터를 지우면 함께 지워집니다.')].filter(Boolean));
+  showButtons([input, err, h('p', { class: 'section-title', style: { margin: '4px 0 0' } }, '클래스 (나중에 바꿀 수 없어요)'), cards, info, go, back, h('p', { class: 'muted' }, '서버 계정이 아닌 이 기기 전용 게스트예요. 브라우저 데이터를 지우면 함께 지워집니다.')].filter(Boolean));
   input.focus();
 }
 
@@ -112,6 +131,8 @@ async function start(pid) {
   // keep the profile card (level, job) fresh
   game.on('saveStatus', (st) => { if (st.ok && game.state) Profiles.touch(pid, { level: game.state.player.level, job: game.state.player.branch ? (game.state.player.branch === 'knight' ? '흑장미 기사' : '진홍의 집행자') : '' }); });
   if (game.state && !game.state.profile.nickname) { const p = Profiles.get(pid); if (p) await game.setNickname(p.nickname); }
+  // class chosen on the profile form → apply once to the fresh save
+  { const p = Profiles.get(pid); if (game.state && p && p.cls && needsClassPick(game.state)) await game.chooseClass(p.cls); }
   if (res.status === 'corrupt' || res.status === 'error') return recovery(res);
   await afterLoad(res);
 }
@@ -198,3 +219,6 @@ document.addEventListener('visibilitychange', () => {
 window.addEventListener('pagehide', () => { if (game && game.state) game.onHidden(); });
 
 boot();
+
+// keep deployed files fresh (see sw.js); https only, so local QA servers are unaffected
+if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});

@@ -1,6 +1,6 @@
 {
- "startedAt": "2026-11-05T02:35:14.194Z",
- "base": "http://127.0.0.1:8140/",
+ "startedAt": "2026-11-05T02:46:25.419Z",
+ "base": "http://127.0.0.1:8123/",
  "viewports": [
   [
    390,
@@ -599,7 +599,9 @@
     "classpick",
     "classpick"
    ],
-   "tiny": [],
+   "tiny": [
+    "그림 준비 중"
+   ],
    "errors": []
   },
   {
@@ -1420,7 +1422,9 @@
     "classpick",
     "classpick"
    ],
-   "tiny": [],
+   "tiny": [
+    "그림 준비 중"
+   ],
    "errors": []
   },
   {
@@ -2234,7 +2238,9 @@
     "classpick",
     "classpick"
    ],
-   "tiny": [],
+   "tiny": [
+    "그림 준비 중"
+   ],
    "errors": []
   },
   {
@@ -2477,8 +2483,8 @@
    "name": "reload keeps the same pending claim",
    "pass": true,
    "detail": {
-    "first": "claim_mw2xpkvc_1ljwgyc",
-    "after": "claim_mw2xpkvc_1ljwgyc"
+    "first": "claim_mw2y3yu0_nntt2g",
+    "after": "claim_mw2y3yu0_nntt2g"
    }
   },
   {
@@ -2550,7 +2556,7 @@
     "k0": 1,
     "k1": {
      "kills": 1,
-     "acc": 0.10000000000002274,
+     "acc": 49.89999999999998,
      "mode": "FARM"
     }
    }
@@ -2589,7 +2595,7 @@
   }
  ],
  "errors": [],
- "finishedAt": "2026-11-05T02:36:51.305Z",
+ "finishedAt": "2026-11-05T02:48:02.677Z",
  "summary": {
   "screenChecks": 114,
   "screenPass": 114,
