@@ -1,0 +1,91 @@
+# 아스테리아 연대기 · NOCTURNE — MVP
+
+모바일 세로형(390×844 기준, 360×700 대응) 자동전투 방치 RPG의 **실행 가능한 MVP**입니다.
+`docs/handoff/`의 NOCTURNE v3 인계(CLAUDE_START.md, spec 01–08)를 기준으로 구현했습니다.
+
+- 주인공 세린(28세) 1인 · Lv 1–35 · 지역 3(별빛 초원 / 고대 사막 / 잊힌 폐광) · 보스 3 · 재료 던전 1(별의 채석장) · 첫 승급 2갈래(흑장미 기사 / 진홍의 집행자)
+- 전투 Canvas2D, UI DOM/SVG, Vanilla JS(ES 모듈, 빌드 도구·외부 의존성 없음), 폰트 Noto Sans KR(WOFF2 서브셋, OFL)
+- 비도트 성인 여성 다크 판타지 일러스트. 도트·치비·픽셀 폰트·정수 확대는 사용하지 않습니다.
+- 실제 광고·결제·장비 소환·캐릭터 가챠·호감도는 없습니다(소환은 "확장" 비활성 화면만).
+
+## 실행
+
+```bash
+node tools/serve.mjs          # http://localhost:8000/
+# 또는 python3 -m http.server 8000
+```
+브라우저에서 `http://localhost:8000/`을 엽니다. ES 모듈과 fetch를 쓰므로 `file://`로 직접 열면 동작하지 않습니다.
+`?autostart`를 붙이면 시작 버튼을 건너뜁니다(QA용).
+
+### 휴대폰에서
+```bash
+node tools/serve.mjs 8000 --lan   # 같은 Wi-Fi 주소를 출력합니다
+```
+PC와 휴대폰을 같은 Wi-Fi에 두고 출력된 `http://<PC IP>:8000/`을 휴대폰 브라우저로 엽니다. Windows 방화벽이 묻으면 개인 네트워크 허용.
+`http://IP` 주소는 보안 컨텍스트가 아니라 Web Locks 대신 localStorage 하트비트로 단일 탭을 지킵니다(Chromium 모바일 에뮬레이션에서 동작 확인). 저장은 휴대폰 브라우저에 따로 쌓이고 PC 진행과 공유되지 않습니다.
+
+## 테스트와 검수
+
+```bash
+npm test                                        # node --test: 로직 23개 (03_QA 체크리스트 대응)
+node tools/balance_sim.mjs --seeds 4 --hours 34 # 몬테카를로 밸런스 시뮬레이션 (스크립트 플레이어)
+node tools/branch_parity.mjs 30                 # 두 갈래로 같은 보스 비교
+node tools/serve.mjs 8123 & NODE_PATH=$(npm root -g) node tools/browser_qa.cjs   # Playwright: 22화면 × 3해상도 + 흐름 13개
+python3 tools/extract_assets.py                 # 원화 보드 → assets/runtime (원본 불변)
+python3 tools/contact_sheet.py                  # 추출 결과 검수 시트 (docs/qa/assets_*.png)
+```
+결과: `docs/QA_REPORT.md`(PASS/FAIL/미검증), `docs/qa/`(스크린샷·JSON), `docs/BALANCE_CHANGES.md`, `docs/KNOWN_ISSUES.md`.
+
+## 개발용 가속 세이브
+메뉴 → 환경 설정 → 개발 설정(QA용) → "개발 도구 사용"을 켜면 다음을 쓸 수 있습니다.
+- 가속 세이브: 첫 보스 직전 / Lv 29·폐광 W10(승급 직전)
+- 다음 저장 1회 실패 시뮬레이션, 마지막 접속 13시간 전으로(방치 정산), 입장권 날짜 하루 전으로
+- 승급 분기 재전환(개발 설정에서만 허용, 상품화 금지 규칙)
+
+## 구조
+
+```
+index.html, styles/app.css      화면 골격·토큰 (docs/handoff/tokens.json 값)
+src/main.js                     부팅: 시작/로딩/복구(S20) → 쓰기 잠금 → 저장소 → 루프
+src/data/                       balance.js(실험값), content.js(지역·몬스터·보스·스킬·장비)
+src/core/                       DOM 없는 게임 로직 (node 테스트 대상)
+  combat.js   50ms 고정 틱 전투, 행동 타격 이벤트로 피해·궁극기 게이지·보상
+  game.js     상태 머신, 전투↔상태 연결, 저장 트랜잭션, 방치 흐름
+  economy.js  강화 ×1/×10/×100/MAX, 장비·잠금·분해·초과 보관
+  progression.js  EXP·보관 EXP·승급·지역 개방·다음 목표
+  offline.js  사냥터 검증과 방치 정산(12시간·75%)
+  dungeon.js  입장권(KST 00:00), 입장 트랜잭션, 소탕, 중단 환급
+src/platform/save.js            IndexedDB(current/previousGood, 체크섬, revision 충돌), Web Locks 단일 쓰기, localStorage 대체
+src/render/                     에셋 로더, Canvas 전투 렌더러
+src/ui/                         앱 셸, 22개 화면, 접근성 모달
+assets/source/                  인계 원본(보드·배경·원화·SVG) — 수정하지 않음
+assets/runtime/                 추출·축소한 실행용 에셋 + sprites.json(피벗·히트박스·trimOffset)
+tools/                          서버, 에셋 추출, 폰트 서브셋, 시뮬레이터, 브라우저 QA
+docs/handoff/                   인계 사양 사본
+```
+
+## 상태 구분 (설계 / 구현 / 검증)
+
+| 영역 | 설계 | 구현 | 검증 |
+|---|---|---|---|
+| 전투 상태 머신·고정 틱·타격 이벤트 | 완료 | 완료 | 단위 테스트(FPS 15/30/60 동일) |
+| 성장 강화 5종, 배수 구매, 상한 | 완료 | 완료 | 단위 테스트 |
+| 장비 4부위·3등급·강화 +10·분해·잠금·비교·초과 보관 | 완료 | 완료 | 단위 + 브라우저 |
+| 스킬 3+1(승급 후 4)+궁극기, 자동 시전 옵션 | 완료 | 완료 | 단위 + 브라우저 |
+| 보스 3(예고·강공), 실패 복귀 | 완료 | 완료 | 단위 + 시뮬레이션 + 브라우저 |
+| 승급(EXP 보관, 증표, 교관 시련, 2갈래) | 완료 | 완료 | 단위 + 시뮬레이션(갈래 비교) |
+| 재료 던전(입장권·소탕·중단 환급) | 완료 | 완료 | 단위 + 브라우저 |
+| 방치 정산 | 완료 | 완료 | 단위 + 브라우저(새로고침·연타·저장 실패) |
+| 저장 트랜잭션·복구·다중 탭 | 완료 | 완료 | 단위 + 브라우저(Chromium) |
+| 22개 화면/상태 | 완료 | 실제 상태 연결 | 브라우저 3해상도 72회 |
+| 에셋 추출(일반6·보스3·승급2·아이콘32·배경3·세린 8포즈) | 완료 | 정적 스프라이트로 적용 | 검수 시트 육안 확인 |
+| 연속 프레임 애니메이션 / 리깅 | 인계 명세만 | **미구현** — 키 포즈 전환 + 트윈 | — |
+| 실기기(iOS Safari / Android Chrome) | — | — | **미검증** |
+
+## 저장과 그 한계
+진행은 이 브라우저의 IndexedDB에만 저장됩니다(실패 시 localStorage, 둘 다 안 되면 저장 안 됨을 표시).
+**로컬 저장은 개발 도구로 수정할 수 있어 치트를 막지 못하며, 기기 시계 조작도 완전히 막을 수 없습니다.**
+기기 이동은 환경 설정의 내보내기/가져오기 파일로만 가능합니다. 계정·결제·랭킹을 넣기 전에 서버 기준의 재화·시간·지급 멱등성이 필요합니다.
+
+## 공개·배포
+이 저장소는 로컬 작업본입니다. 인계 지시에 따라 공개 배포나 원격 push는 하지 않았습니다.

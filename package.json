@@ -1,0 +1,13 @@
+{
+  "name": "asteria-nocturne-mvp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "아스테리아 연대기 NOCTURNE v3 — mobile portrait idle RPG MVP (vanilla JS, Canvas2D + DOM)",
+  "scripts": {
+    "start": "node tools/serve.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "sim": "node tools/balance_sim.mjs",
+    "qa": "node tools/browser_qa.mjs"
+  }
+}

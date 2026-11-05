@@ -1,0 +1,1624 @@
+{
+ "version": "runtime-1",
+ "generatedBy": "tools/extract_assets.py",
+ "note": "Static sprites cut from concept boards. Not frame animations. Pivot = feet (flying: lowest body pixel).",
+ "haze": {
+  "lo": 56,
+  "hi": 200
+ },
+ "sources": {
+  "atlases/monsters_6.png": "1f9c60a51e72ce4a579b41e1942ace89c213bbaa626b9883bb61e6444ba4770d",
+  "atlases/bosses_3.png": "572344f1f7dc8187f5aa5b66cb3ce42d657d808541d1bc1a5da86184ae729dff",
+  "character/serin_poses.png": "f82f37a54a1ed0d8a6dfdff782e1858d72967ab0eaaec139d2caada9ffc713f2",
+  "atlases/serin_promotions.png": "5be49e248569f69fe47d751d6b7e8a09af4ec4402e6bd1167df745d09ed8d094",
+  "atlases/items_24.png": "070ba516ddf146b7f90d037ff1da01bce06739a69d9be8ec070dc4f9aa0e929a",
+  "atlases/skills_8.png": "da83d42497aca06eb396f2f6afdca954d78aabcdb8322532cc9448a2b580006c",
+  "backgrounds/meadow.png": "1675c9bddbd34178ac36c62c12cb6054455c953da79357a9ba64a236d7e8c212",
+  "backgrounds/desert.png": "29351ca3cdb3c0a610b5b81f389c645961347897cbb7432822ad348cbeec8002",
+  "backgrounds/mine.png": "9800ac0c090961b735832968d1a0692e83fbe15804806509364ca6aa89feb8a4",
+  "character/cathedral_stage.png": "c0218b71fab9cf27203bdb3f2a8a87839e965d0ed0144e9a155f18e051ff293a",
+  "character/serin_key_visual.png": "502c4467e78e8541f33912307ff21728b39b9f895328394878122518a561dcb9"
+ },
+ "monsters": {
+  "M01": {
+   "id": "M01",
+   "name": "가시 슬라임",
+   "displayBodyPx": 60,
+   "file": "assets/runtime/mon_M01.webp",
+   "sourceRect": [
+    0,
+    0,
+    480,
+    430
+   ],
+   "trimOffset": [
+    21,
+    111
+   ],
+   "size": [
+    195,
+    126
+   ],
+   "scale": 0.4255,
+   "bodyHeightPx": 120.0,
+   "pivot": [
+    101.2,
+    122.6
+   ],
+   "hitbox": [
+    14.3,
+    9.8,
+    165.9,
+    105.6
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "M02": {
+   "id": "M02",
+   "name": "잿빛 가시늑대",
+   "displayBodyPx": 85,
+   "file": "assets/runtime/mon_M02.webp",
+   "sourceRect": [
+    490,
+    0,
+    530,
+    430
+   ],
+   "trimOffset": [
+    13,
+    10
+   ],
+   "size": [
+    222,
+    176
+   ],
+   "scale": 0.4326,
+   "bodyHeightPx": 170.0,
+   "pivot": [
+    73.0,
+    173.0
+   ],
+   "hitbox": [
+    15.6,
+    13.2,
+    190.3,
+    149.6
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "M03": {
+   "id": "M03",
+   "name": "사암 풍뎅이",
+   "displayBodyPx": 80,
+   "file": "assets/runtime/mon_M03.webp",
+   "sourceRect": [
+    1020,
+    0,
+    516,
+    440
+   ],
+   "trimOffset": [
+    1,
+    54
+   ],
+   "size": [
+    232,
+    166
+   ],
+   "scale": 0.4585,
+   "bodyHeightPx": 160.0,
+   "pivot": [
+    62.5,
+    162.8
+   ],
+   "hitbox": [
+    16.3,
+    12.4,
+    198.5,
+    140.8
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "M04": {
+   "id": "M04",
+   "name": "황금 가면 망령",
+   "displayBodyPx": 115,
+   "file": "assets/runtime/mon_M04.webp",
+   "sourceRect": [
+    0,
+    430,
+    490,
+    594
+   ],
+   "trimOffset": [
+    10,
+    0
+   ],
+   "size": [
+    192,
+    234
+   ],
+   "scale": 0.4,
+   "bodyHeightPx": 230.0,
+   "pivot": [
+    97.0,
+    231.2
+   ],
+   "hitbox": [
+    13.7,
+    15.0,
+    165.8,
+    202.4
+   ],
+   "flying": true,
+   "mirrored": false,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "M05": {
+   "id": "M05",
+   "name": "해골 광부",
+   "displayBodyPx": 110,
+   "file": "assets/runtime/mon_M05.webp",
+   "sourceRect": [
+    490,
+    430,
+    530,
+    594
+   ],
+   "trimOffset": [
+    9,
+    28
+   ],
+   "size": [
+    204,
+    226
+   ],
+   "scale": 0.4112,
+   "bodyHeightPx": 220.0,
+   "pivot": [
+    120.7,
+    222.5
+   ],
+   "hitbox": [
+    14.4,
+    15.7,
+    174.4,
+    193.6
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "M06": {
+   "id": "M06",
+   "name": "흑요석 거미",
+   "displayBodyPx": 75,
+   "file": "assets/runtime/mon_M06.webp",
+   "sourceRect": [
+    1020,
+    440,
+    516,
+    584
+   ],
+   "trimOffset": [
+    0,
+    71
+   ],
+   "size": [
+    174,
+    155
+   ],
+   "scale": 0.3448,
+   "bodyHeightPx": 150.0,
+   "pivot": [
+    118.0,
+    152.1
+   ],
+   "hitbox": [
+    10.3,
+    11.1,
+    151.1,
+    132.0
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_STATIC_SPRITE"
+  }
+ },
+ "bosses": {
+  "B01": {
+   "id": "B01",
+   "name": "가시 슬라임 군주",
+   "displayBodyPx": 120,
+   "reviewRect": [
+    0,
+    0,
+    500,
+    1024
+   ],
+   "file": "assets/runtime/boss_B01.webp",
+   "sourceRect": [
+    0,
+    300,
+    575,
+    600
+   ],
+   "trimOffset": [
+    5,
+    97
+   ],
+   "size": [
+    299,
+    248
+   ],
+   "scale": 0.5647,
+   "bodyHeightPx": 240.0,
+   "pivot": [
+    151.2,
+    244.0
+   ],
+   "hitbox": [
+    20.9,
+    18.4,
+    256.9,
+    211.2
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    7908,
+    10349,
+    1522
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "B02": {
+   "id": "B02",
+   "name": "모래 수호자",
+   "displayBodyPx": 190,
+   "reviewRect": [
+    490,
+    0,
+    535,
+    1024
+   ],
+   "file": "assets/runtime/boss_B02.webp",
+   "sourceRect": [
+    460,
+    0,
+    600,
+    1024
+   ],
+   "trimOffset": [
+    9,
+    121
+   ],
+   "size": [
+    309,
+    388
+   ],
+   "scale": 0.5531,
+   "bodyHeightPx": 380.0,
+   "pivot": [
+    164.3,
+    383.9
+   ],
+   "hitbox": [
+    21.4,
+    26.7,
+    265.8,
+    334.4
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    5951,
+    5315
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "B03": {
+   "id": "B03",
+   "name": "폐광 파수꾼",
+   "displayBodyPx": 185,
+   "reviewRect": [
+    1024,
+    0,
+    512,
+    1024
+   ],
+   "file": "assets/runtime/boss_B03.webp",
+   "sourceRect": [
+    985,
+    0,
+    551,
+    1024
+   ],
+   "trimOffset": [
+    19,
+    222
+   ],
+   "size": [
+    319,
+    378
+   ],
+   "scale": 0.6066,
+   "bodyHeightPx": 370.0,
+   "pivot": [
+    204.3,
+    373.6
+   ],
+   "hitbox": [
+    22.3,
+    25.8,
+    273.8,
+    325.6
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    1700,
+    5127
+   ],
+   "status": "RUNTIME_STATIC_SPRITE"
+  }
+ },
+ "hero": {
+  "idle": {
+   "id": "idle",
+   "designPivot": [
+    210,
+    480
+   ],
+   "file": "assets/runtime/serin_idle.webp",
+   "sourceRect": [
+    0,
+    0,
+    384,
+    512
+   ],
+   "trimOffset": [
+    51,
+    40
+   ],
+   "size": [
+    181,
+    288
+   ],
+   "scale": 0.6437,
+   "bodyHeightPx": 280.0,
+   "pivot": [
+    102.3,
+    283.2
+   ],
+   "hitbox": [
+    14.2,
+    20.7,
+    151.8,
+    246.4
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "pivotAuto": [
+    97.7,
+    283.9
+   ],
+   "pivotSource": "motion/atlas.json"
+  },
+  "step": {
+   "id": "step",
+   "designPivot": [
+    200,
+    478
+   ],
+   "file": "assets/runtime/serin_step.webp",
+   "sourceRect": [
+    384,
+    0,
+    384,
+    512
+   ],
+   "trimOffset": [
+    11,
+    61
+   ],
+   "size": [
+    209,
+    271
+   ],
+   "scale": 0.6437,
+   "bodyHeightPx": 262.6,
+   "pivot": [
+    121.7,
+    268.4
+   ],
+   "hitbox": [
+    15.9,
+    19.6,
+    176.2,
+    231.1
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "pivotAuto": [
+    125.4,
+    266.5
+   ],
+   "pivotSource": "motion/atlas.json"
+  },
+  "anticipation": {
+   "id": "anticipation",
+   "designPivot": [
+    190,
+    478
+   ],
+   "file": "assets/runtime/serin_anticipation.webp",
+   "sourceRect": [
+    768,
+    0,
+    384,
+    512
+   ],
+   "trimOffset": [
+    10,
+    33
+   ],
+   "size": [
+    205,
+    292
+   ],
+   "scale": 0.6437,
+   "bodyHeightPx": 283.2,
+   "pivot": [
+    115.9,
+    286.4
+   ],
+   "hitbox": [
+    15.6,
+    20.9,
+    172.8,
+    249.2
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    560
+   ],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "pivotAuto": [
+    115.1,
+    287.1
+   ],
+   "pivotSource": "motion/atlas.json"
+  },
+  "thrust": {
+   "id": "thrust",
+   "designPivot": [
+    180,
+    478
+   ],
+   "file": "assets/runtime/serin_thrust.webp",
+   "sourceRect": [
+    1152,
+    0,
+    384,
+    512
+   ],
+   "trimOffset": [
+    0,
+    83
+   ],
+   "size": [
+    247,
+    259
+   ],
+   "scale": 0.6437,
+   "bodyHeightPx": 250.4,
+   "pivot": [
+    115.9,
+    254.3
+   ],
+   "hitbox": [
+    14.6,
+    19.5,
+    213.5,
+    220.3
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "pivotAuto": [
+    112.2,
+    254.9
+   ],
+   "pivotSource": "motion/atlas.json"
+  },
+  "recovery": {
+   "id": "recovery",
+   "designPivot": [
+    200,
+    488
+   ],
+   "file": "assets/runtime/serin_recovery.webp",
+   "sourceRect": [
+    0,
+    512,
+    384,
+    512
+   ],
+   "trimOffset": [
+    28,
+    81
+   ],
+   "size": [
+    213,
+    266
+   ],
+   "scale": 0.6437,
+   "bodyHeightPx": 257.5,
+   "pivot": [
+    110.7,
+    262.0
+   ],
+   "hitbox": [
+    16.1,
+    20.0,
+    180.1,
+    226.6
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "pivotAuto": [
+    130.5,
+    262.0
+   ],
+   "pivotSource": "motion/atlas.json"
+  },
+  "hit": {
+   "id": "hit",
+   "designPivot": [
+    200,
+    488
+   ],
+   "file": "assets/runtime/serin_hit.webp",
+   "sourceRect": [
+    384,
+    512,
+    384,
+    512
+   ],
+   "trimOffset": [
+    29,
+    61
+   ],
+   "size": [
+    196,
+    279
+   ],
+   "scale": 0.6437,
+   "bodyHeightPx": 271.0,
+   "pivot": [
+    110.1,
+    274.9
+   ],
+   "hitbox": [
+    15.7,
+    20.1,
+    163.7,
+    238.5
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "pivotAuto": [
+    113.6,
+    274.9
+   ],
+   "pivotSource": "motion/atlas.json"
+  },
+  "cast": {
+   "id": "cast",
+   "designPivot": [
+    200,
+    488
+   ],
+   "file": "assets/runtime/serin_cast.webp",
+   "sourceRect": [
+    768,
+    512,
+    384,
+    512
+   ],
+   "trimOffset": [
+    6,
+    6
+   ],
+   "size": [
+    223,
+    315
+   ],
+   "scale": 0.6437,
+   "bodyHeightPx": 306.4,
+   "pivot": [
+    124.9,
+    310.3
+   ],
+   "hitbox": [
+    16.8,
+    22.9,
+    189.2,
+    269.6
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "pivotAuto": [
+    116.9,
+    310.9
+   ],
+   "pivotSource": "motion/atlas.json"
+  },
+  "victory": {
+   "id": "victory",
+   "designPivot": [
+    200,
+    488
+   ],
+   "file": "assets/runtime/serin_victory.webp",
+   "sourceRect": [
+    1152,
+    512,
+    384,
+    512
+   ],
+   "trimOffset": [
+    19,
+    30
+   ],
+   "size": [
+    175,
+    300
+   ],
+   "scale": 0.6437,
+   "bodyHeightPx": 290.9,
+   "pivot": [
+    116.5,
+    294.8
+   ],
+   "hitbox": [
+    13.9,
+    21.3,
+    146.7,
+    256.0
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_STATIC_SPRITE",
+   "pivotAuto": [
+    112.5,
+    294.8
+   ],
+   "pivotSource": "motion/atlas.json"
+  },
+  "promo_knight": {
+   "id": "knight",
+   "file": "assets/runtime/serin_knight.webp",
+   "sourceRect": [
+    0,
+    0,
+    768,
+    1024
+   ],
+   "trimOffset": [
+    20,
+    15
+   ],
+   "size": [
+    201,
+    307
+   ],
+   "scale": 0.3073,
+   "bodyHeightPx": 302.4,
+   "pivot": [
+    99.3,
+    304.6
+   ],
+   "hitbox": [
+    13.9,
+    20.3,
+    172.8,
+    266.1
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_berserker": {
+   "id": "berserker",
+   "file": "assets/runtime/serin_berserker.webp",
+   "sourceRect": [
+    768,
+    0,
+    768,
+    1024
+   ],
+   "trimOffset": [
+    0,
+    15
+   ],
+   "size": [
+    218,
+    307
+   ],
+   "scale": 0.3067,
+   "bodyHeightPx": 302.4,
+   "pivot": [
+    119.3,
+    304.5
+   ],
+   "hitbox": [
+    13.0,
+    20.3,
+    190.0,
+    266.1
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_STATIC_SPRITE"
+  }
+ },
+ "items": {
+  "I00": {
+   "id": "I00",
+   "name": "철검",
+   "file": "assets/runtime/item_00.webp",
+   "sourceRect": [
+    0,
+    0,
+    256,
+    256
+   ],
+   "trimOffset": [
+    41,
+    40
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.4593,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "I01": {
+   "id": "I01",
+   "name": "금장 장검",
+   "file": "assets/runtime/item_01.webp",
+   "sourceRect": [
+    256,
+    0,
+    256,
+    256
+   ],
+   "trimOffset": [
+    34,
+    26
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.4174,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "I02": {
+   "id": "I02",
+   "name": "흑장미 검",
+   "file": "assets/runtime/item_02.webp",
+   "sourceRect": [
+    512,
+    0,
+    256,
+    256
+   ],
+   "trimOffset": [
+    22,
+    26
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.4174,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "I03": {
+   "id": "I03",
+   "name": "철 투구",
+   "file": "assets/runtime/item_03.webp",
+   "sourceRect": [
+    768,
+    0,
+    256,
+    256
+   ],
+   "trimOffset": [
+    43,
+    46
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.4974,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "I04": {
+   "id": "I04",
+   "name": "금장 투구",
+   "file": "assets/runtime/item_04.webp",
+   "sourceRect": [
+    1024,
+    0,
+    256,
+    256
+   ],
+   "trimOffset": [
+    42,
+    21
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.4248,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "I05": {
+   "id": "I05",
+   "name": "흑장미 투구",
+   "file": "assets/runtime/item_05.webp",
+   "sourceRect": [
+    1280,
+    0,
+    256,
+    256
+   ],
+   "trimOffset": [
+    37,
+    26
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.4324,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "I06": {
+   "id": "I06",
+   "name": "가죽 갑옷",
+   "file": "assets/runtime/item_06.webp",
+   "sourceRect": [
+    0,
+    256,
+    256,
+    256
+   ],
+   "trimOffset": [
+    41,
+    33
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.4706,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "I07": {
+   "id": "I07",
+   "name": "금장 갑옷",
+   "file": "assets/runtime/item_07.webp",
+   "sourceRect": [
+    256,
+    256,
+    256,
+    256
+   ],
+   "trimOffset": [
+    26,
+    29
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.4465,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "I08": {
+   "id": "I08",
+   "name": "흑장미 갑옷",
+   "file": "assets/runtime/item_08.webp",
+   "sourceRect": [
+    512,
+    256,
+    256,
+    256
+   ],
+   "trimOffset": [
+    19,
+    25
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.4344,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "I09": {
+   "id": "I09",
+   "name": "은 펜던트",
+   "file": "assets/runtime/item_09.webp",
+   "sourceRect": [
+    768,
+    256,
+    256,
+    256
+   ],
+   "trimOffset": [
+    67,
+    23
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.4593,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "I10": {
+   "id": "I10",
+   "name": "자수정 펜던트",
+   "file": "assets/runtime/item_10.webp",
+   "sourceRect": [
+    1024,
+    256,
+    256,
+    256
+   ],
+   "trimOffset": [
+    61,
+    24
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.4324,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "I11": {
+   "id": "I11",
+   "name": "장미별 펜던트",
+   "file": "assets/runtime/item_11.webp",
+   "sourceRect": [
+    1280,
+    256,
+    256,
+    256
+   ],
+   "trimOffset": [
+    46,
+    23
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.4344,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "I12": {
+   "id": "I12",
+   "name": "골드",
+   "file": "assets/runtime/item_12.webp",
+   "sourceRect": [
+    0,
+    512,
+    256,
+    256
+   ],
+   "trimOffset": [
+    26,
+    45
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.4571,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "I13": {
+   "id": "I13",
+   "name": "보석 · 확장",
+   "file": "assets/runtime/item_13.webp",
+   "sourceRect": [
+    256,
+    512,
+    256,
+    256
+   ],
+   "trimOffset": [
+    40,
+    33
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.4898,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "I14": {
+   "id": "I14",
+   "name": "강화 광석",
+   "file": "assets/runtime/item_14.webp",
+   "sourceRect": [
+    512,
+    512,
+    256,
+    256
+   ],
+   "trimOffset": [
+    21,
+    29
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.4507,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "I15": {
+   "id": "I15",
+   "name": "경험치",
+   "file": "assets/runtime/item_15.webp",
+   "sourceRect": [
+    768,
+    512,
+    256,
+    256
+   ],
+   "trimOffset": [
+    29,
+    25
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.4465,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "I16": {
+   "id": "I16",
+   "name": "던전 입장권",
+   "file": "assets/runtime/item_16.webp",
+   "sourceRect": [
+    1024,
+    512,
+    256,
+    256
+   ],
+   "trimOffset": [
+    10,
+    30
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.4156,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "I17": {
+   "id": "I17",
+   "name": "승급 증표",
+   "file": "assets/runtime/item_17.webp",
+   "sourceRect": [
+    1280,
+    512,
+    256,
+    256
+   ],
+   "trimOffset": [
+    38,
+    15
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.4267,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "I18": {
+   "id": "I18",
+   "name": "나무 상자",
+   "file": "assets/runtime/item_18.webp",
+   "sourceRect": [
+    0,
+    768,
+    256,
+    256
+   ],
+   "trimOffset": [
+    20,
+    51
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.4404,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "I19": {
+   "id": "I19",
+   "name": "금장 상자",
+   "file": "assets/runtime/item_19.webp",
+   "sourceRect": [
+    256,
+    768,
+    256,
+    256
+   ],
+   "trimOffset": [
+    14,
+    30
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.4156,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "I20": {
+   "id": "I20",
+   "name": "전설 상자 · 확장",
+   "file": "assets/runtime/item_20.webp",
+   "sourceRect": [
+    512,
+    768,
+    256,
+    256
+   ],
+   "trimOffset": [
+    5,
+    18
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.3902,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "I21": {
+   "id": "I21",
+   "name": "장비 가방",
+   "file": "assets/runtime/item_21.webp",
+   "sourceRect": [
+    768,
+    768,
+    256,
+    256
+   ],
+   "trimOffset": [
+    13,
+    29
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.4192,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "I22": {
+   "id": "I22",
+   "name": "별 열쇠 · 확장",
+   "file": "assets/runtime/item_22.webp",
+   "sourceRect": [
+    1024,
+    768,
+    256,
+    256
+   ],
+   "trimOffset": [
+    28,
+    19
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.4444,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "I23": {
+   "id": "I23",
+   "name": "보상 우편",
+   "file": "assets/runtime/item_23.webp",
+   "sourceRect": [
+    1280,
+    768,
+    256,
+    256
+   ],
+   "trimOffset": [
+    15,
+    40
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.4229,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  }
+ },
+ "skills": {
+  "S0": {
+   "id": "S0",
+   "name": "강타",
+   "file": "assets/runtime/skill_0.webp",
+   "sourceRect": [
+    0,
+    0,
+    384,
+    512
+   ],
+   "trimOffset": [
+    13,
+    110
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.2616,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "S1": {
+   "id": "S1",
+   "name": "방패 돌진",
+   "file": "assets/runtime/skill_1.webp",
+   "sourceRect": [
+    384,
+    0,
+    384,
+    512
+   ],
+   "trimOffset": [
+    4,
+    123
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.2637,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "S2": {
+   "id": "S2",
+   "name": "전장의 외침",
+   "file": "assets/runtime/skill_2.webp",
+   "sourceRect": [
+    768,
+    0,
+    384,
+    512
+   ],
+   "trimOffset": [
+    0,
+    109
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.2546,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "S3": {
+   "id": "S3",
+   "name": "수호 반격",
+   "file": "assets/runtime/skill_3.webp",
+   "sourceRect": [
+    1152,
+    0,
+    384,
+    512
+   ],
+   "trimOffset": [
+    3,
+    110
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.2567,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "S4": {
+   "id": "S4",
+   "name": "광폭 일격",
+   "file": "assets/runtime/skill_4.webp",
+   "sourceRect": [
+    0,
+    512,
+    384,
+    512
+   ],
+   "trimOffset": [
+    22,
+    31
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.25,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "S5": {
+   "id": "S5",
+   "name": "별빛 참격",
+   "file": "assets/runtime/skill_5.webp",
+   "sourceRect": [
+    384,
+    512,
+    384,
+    512
+   ],
+   "trimOffset": [
+    6,
+    37
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.2494,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "S6": {
+   "id": "S6",
+   "name": "공격력 증가",
+   "file": "assets/runtime/skill_6.webp",
+   "sourceRect": [
+    768,
+    512,
+    384,
+    512
+   ],
+   "trimOffset": [
+    18,
+    40
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.2637,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  },
+  "S7": {
+   "id": "S7",
+   "name": "방어력 감소",
+   "file": "assets/runtime/skill_7.webp",
+   "sourceRect": [
+    1152,
+    512,
+    384,
+    512
+   ],
+   "trimOffset": [
+    48,
+    57
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "scale": 0.2712,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_ICON"
+  }
+ },
+ "backgrounds": {
+  "meadow": {
+   "file": "assets/runtime/bg_meadow.webp",
+   "size": [
+    1024,
+    683
+   ],
+   "groundRatio": 0.8,
+   "status": "STATIC_SINGLE_LAYER_BACKGROUND"
+  },
+  "desert": {
+   "file": "assets/runtime/bg_desert.webp",
+   "size": [
+    1024,
+    683
+   ],
+   "groundRatio": 0.8,
+   "status": "STATIC_SINGLE_LAYER_BACKGROUND"
+  },
+  "mine": {
+   "file": "assets/runtime/bg_mine.webp",
+   "size": [
+    1024,
+    683
+   ],
+   "groundRatio": 0.8,
+   "status": "STATIC_SINGLE_LAYER_BACKGROUND"
+  },
+  "cathedral": {
+   "file": "assets/runtime/bg_cathedral.webp",
+   "size": [
+    1024,
+    683
+   ],
+   "groundRatio": 0.8,
+   "status": "STATIC_SINGLE_LAYER_BACKGROUND"
+  }
+ },
+ "portraits": {
+  "promo_knight": {
+   "id": "knight",
+   "file": "assets/runtime/portrait_knight.webp",
+   "sourceRect": [
+    0,
+    0,
+    768,
+    1024
+   ],
+   "trimOffset": [
+    20,
+    15
+   ],
+   "size": [
+    425,
+    649
+   ],
+   "scale": 0.6504,
+   "bodyHeightPx": 640.0,
+   "pivot": [
+    210.1,
+    644.6
+   ],
+   "hitbox": [
+    29.5,
+    43.0,
+    365.7,
+    563.2
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "promo_berserker": {
+   "id": "berserker",
+   "file": "assets/runtime/portrait_berserker.webp",
+   "sourceRect": [
+    768,
+    0,
+    768,
+    1024
+   ],
+   "trimOffset": [
+    0,
+    15
+   ],
+   "size": [
+    462,
+    649
+   ],
+   "scale": 0.6491,
+   "bodyHeightPx": 640.0,
+   "pivot": [
+    252.4,
+    644.5
+   ],
+   "hitbox": [
+    27.4,
+    42.9,
+    402.1,
+    563.2
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [],
+   "status": "RUNTIME_STATIC_SPRITE"
+  },
+  "serin_key": {
+   "file": "assets/runtime/serin_key_visual.webp",
+   "size": [
+    720,
+    1080
+   ]
+  },
+  "serin_face": {
+   "file": "assets/runtime/serin_face.webp",
+   "size": [
+    192,
+    192
+   ]
+  }
+ }
+}

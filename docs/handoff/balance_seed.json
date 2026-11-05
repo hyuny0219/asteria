@@ -1,0 +1,12 @@
+{
+  "version":"0.1-experimental", "status":"UNVALIDATED_STARTING_VALUES",
+  "levelCap":35, "promotionLevel":30,
+  "combat":{"tickMs":50,"bossTimeoutSec":90,"baseAttackPerSec":1,"attackSpeedCap":3,"critChance":0.05,"critChanceCap":0.6,"critMultiplier":1.5,"enemyAttackIntervalSec":1.8,"defenseKBase":50,"defenseKPerEnemyLevel":10},
+  "player":{"atk":20,"hp":200,"def":10,"levelGain":{"atk":3,"hp":25,"def":1}},
+  "upgrade":{"costGrowth":1.15,"baseCosts":{"atk":10,"hp":10,"def":12,"crit":30,"speed":30},"gains":{"atk":2,"hp":20,"def":1,"crit":0.002,"speed":0.01}},
+  "offline":{"maxSeconds":43200,"efficiency":0.75,"maxEquipmentItems":20,"speedMultiplier":1,"promotionMaterial":false},
+  "equipment":{"slots":["weapon","helmet","armor","accessory"],"dropChance":0.05,"rarityConditional":{"common":0.7,"uncommon":0.25,"rare":0.05},"rarityMultiplier":{"common":1,"uncommon":1.25,"rare":1.6},"enhanceMax":10,"enhanceSuccess":1,"enhanceStatPerLevel":0.05,"refundRate":0.8,"inventoryCapacity":200},
+  "dungeon":{"dailyTickets":3,"ticketCap":9,"resetTimezone":"Asia/Seoul"},
+  "summon":{"enabled":false,"paidEnabled":false,"adEnabled":false},
+  "tuningRequired":["monsterRewards","equipmentBaseValues","spawnIntervals","bossMechanics","levelProgressionTimes","branchParity"]
+}

@@ -1,0 +1,25 @@
+balance 0.2-mvp-tuned · seeds 4 · max 34h active
+milestone            median      p10        p90      reached
+firstUpgrade         0.2분        0.2분       0.2분     4/4
+firstItem            1.0분        0.9분       1.4분     4/4
+firstBossTry_B01     3.1분        2.8분       3.3분     4/4
+win_B01              5.5분        4.2분       5.9분     4/4
+win_B02              22.1분       16.7분      25.9분    4/4
+lv25                 14.01시간     13.94시간    14.10시간  4/4
+tokens               14.07시간     14.00시간    14.16시간  4/4
+lv30                 21.96시간     21.87시간    22.05시간  4/4
+win_B03              7.22시간      5.70시간     7.31시간   4/4
+trial                21.97시간     21.87시간    22.06시간  4/4
+promotion            21.97시간     21.87시간    22.06시간  4/4
+lv35                 30.89시간     30.62시간    31.44시간  4/4
+TTK meadow: median 3.05s p10 1.70 p90 4.35 (n=482)
+TTK desert: median 3.20s p10 2.00 p90 4.55 (n=1380)
+TTK mine: median 3.00s p10 1.55 p90 4.60 (n=199959)
+   B01 hero level at fights: first 3 median 4  atk/hp first 59/370, at first win 4 82/811
+B01: fights 8, win rate 50%, win time median 47s, tries/run median 2
+   B02 hero level at fights: first 5 median 6  atk/hp first 104/1101, at first win 7 130/1474
+B02: fights 18, win rate 22%, win time median 56s, tries/run median 4
+   B03 hero level at fights: first 8 median 9  atk/hp first 148/1734, at first win 19 319/3326
+B03: fights 48, win rate 8%, win time median 60s, tries/run median 12
+deaths per run 57,77,64,63
+final L35/mine10/d3 L35/mine10/d3 L35/mine10/d3 L35/mine10/d3

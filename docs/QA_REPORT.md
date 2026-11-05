@@ -1,0 +1,69 @@
+# 검수 결과 (03_QA 체크리스트)
+
+환경: Linux 컨테이너, Node 22 `node --test`, Playwright Chromium(헤드리스). **실제 iOS Safari / Android Chrome은 미검증.**
+근거: `tests/core.test.mjs`(23/23 통과), `docs/qa/browser_results.json`(화면 72/72, 흐름 13/13), `docs/qa/balance_sim.txt`, `docs/qa/branch_parity.json`, `docs/qa/screens/*.png`(22화면 × 390×844·360×700·412×915).
+
+## 기능
+| 항목 | 결과 | 근거 |
+|---|---|---|
+| 첫 60초 안 골드 강화, 첫 10분 안 첫 보스 | PASS | 시뮬: 첫 강화 0.2분, 첫 보스 도전 3.1분 |
+| 일반 사냥 → 보스 실패 → 자동 복귀 | PASS | 단위 "boss failure", 브라우저 defeat |
+| 15/30/60FPS 같은 결과(seed 고정) | PASS | 단위 "FPS invariance" |
+| 다단/광역 궁극기 충전 상한 | PASS | 단위 "ult caps" |
+| 공속·치명 상한 초과 구매 불가, 재화 음수 없음 | PASS | 단위 "upgrade caps" |
+| ×10/MAX 수량·비용·차감·부족액 | PASS | 단위 "×10/MAX" |
+| 장착/잠금 일괄 분해 불가, 80% 내림, 중복 환급 없음 | PASS | 단위 "dismantle", 브라우저 dismantle |
+| 장비 가득/방치 20개 초과 시 보관·전환 표시 | PASS | 단위 "overflow conversion", offline 정산 화면 |
+| 스킬 4 + 궁극기 1, 미해금 칸 조건 표시 | PASS | 브라우저 skills (승급 해금 칸) |
+| Lv 30 EXP 보관 → 승급 → 순차 적용, Lv 35 처리 | PASS | 단위 "pending EXP" |
+| 증표 부족/보스 미처치/시련 실패 이유·바로가기 | PASS | 단위 "checklist", 브라우저 promotion |
+| 자동 시련만으로 승급 가능, 실패 시 재료 차감 없음 | PASS | 단위 "trial", 시뮬(자동 정책으로 승급) |
+| 두 갈래 동일 보스 클리어, 한쪽 압도 없음 | PASS | branch_parity: 둘 다 100%, 43.7초 vs 49.4초 |
+| 던전 소탕 ≤ 최고 단계, 입장권·날짜 경계·9개 상한 | PASS | 단위 "dungeon" |
+
+## 저장·보상
+| 항목 | 결과 | 근거 |
+|---|---|---|
+| 경과 0초/1h/12h/24h/시계 역행 | PASS | 단위 offline 케이스 |
+| 24h 경과 → 12h 지급, 손실 시간 표시 | PASS | 단위 + 브라우저 offline(13h → 12h) |
+| ×1·일시 버프 제외·75%, 반올림 일관 | PASS | 단위 offline |
+| 검증 안 된 보스/새 지역으로 수익 급등 없음 | PASS | 단위 "verifier" |
+| 더블탭/새로고침/창 닫기/두 탭 중복 지급 없음 | PASS | 브라우저 흐름 4종(연타 1회 지급, 새로고침 같은 claimId, 두 번째 탭 차단) |
+| 숨김 복귀 보상 + 누적 dt 중복 적용 없음 | PASS | 단위 + 브라우저 "hidden → visible" |
+| 소비 직후 종료·세이브 손상·마이그레이션·이전 정상본 복구 | PASS(부분) | 단위 checksum/migrate/validate, 복구 화면 S20. 실제 강제 종료는 Chromium 탭 닫기로만 |
+| 저장 거부/용량 부족 오류 표시, '저장됨' 오표시 없음 | PASS(시뮬레이션) | 브라우저 saveerror·"failed save spends nothing". 실제 QuotaExceeded 미검증 |
+| 로컬 저장을 보안 완료로 주장하지 않음 | PASS | README·설정 화면 문구 |
+
+## UI·아트
+| 항목 | 결과 | 근거 |
+|---|---|---|
+| 3해상도 가로 넘침 없음, 중요 버튼 접근 | PASS | 72/72 |
+| 버튼 48px, 본문 16px, 보조 14px | **부분** | 주 버튼·하단 탭 48px, 본문 16px, 보조 텍스트 최소 14px(12px 전부 상향). 상단 칩·배수 선택·필터 탭은 44px(08 높이표 40px 줄 안에 들어가야 해서) |
+| 200% 텍스트 접근(스크롤 허용) | PASS(CSS) | 브라우저 흐름. OS 글꼴 확대 미검증 |
+| 모달 포커스·키보드·음소거·감소된 모션 | PASS | 포커스 트랩/Escape/복귀, 설정 화면 |
+| 등급 흑백 구분(배지·이름) | PASS | I/II/III 표시 + 등급명 |
+| 접지점·축척·윤곽 품질 | PASS(정적) | `docs/qa/assets_*.png`. 애니메이션 프레임은 없음(KNOWN_ISSUES) |
+| PNG 시안과 차이 목록 | PASS | 아래 |
+| 닫힘·백그라운드·저전력 복귀 | 부분 | visibility/pagehide 처리. 저전력 실기기 미검증 |
+| 실제 iOS Safari / Android Chrome | **미검증** | 장비 없음 |
+
+## v2 추가
+| 항목 | 결과 |
+|---|---|
+| 모든 캐릭터 성인, 도트/치비 잔재 없음 | PASS |
+| 일러스트 모드 ↔ 전투 모드 전환 시 전투·재화·쿨타임 연속 | PASS(같은 Game 상태, 표시만 전환) |
+| 보스 진입 시 실전투 표시, 결과 후 이전 모드 복원 | PASS |
+| 세린 기본/기사/집행자 얼굴·나이·머리색 동일성 | PASS(인계 원화 그대로 사용) |
+| 생성 원본 vs 분리 에셋·애니 시트 구분 | PASS(`assets/source` vs `assets/runtime`, 애니 시트는 미제작 명시) |
+| imageSmoothingEnabled=true, 고해상도 축소·알파 가장자리 | PASS |
+| 주색/등급색 대비, 일러스트 위 스크림 | PASS |
+| 등급 표시가 심의 등급으로 오해되지 않음 | PASS(I/II/III + 일반/고급/희귀) |
+
+## PNG 시안 대비 실제 UI 차이 (의도)
+1. 광고 +25% 버튼 제거(실광고 미포함 범위).
+2. 카드형 스크롤 대신 08 명세 높이표(52/40/220/64/56/312/56) 고정 배치.
+3. 보조 텍스트 12px → 14px(03_QA 기준).
+4. 토스트를 하단에서 상단으로(모달 버튼 가림 방지), 최대 2개.
+5. 장비 타일의 장착·잠금 표시를 이름 위 오른쪽으로 이동.
+6. 소환 화면은 "확장 예정" 비활성.
+7. 승급 후 전투는 정적 원화 + 트윈(전용 시트 없음).

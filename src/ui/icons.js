@@ -1,0 +1,19 @@
+// Generated from assets/source/ui/ui_*.svg (handoff v3 system icons). stroke = currentColor.
+export const ICONS = {
+ "back": "<path d=\"M15 4L7 12L15 20\"/>",
+ "check": "<path d=\"M4 12L9 17L20 6\"/>",
+ "close": "<path d=\"M5 5L19 19 M19 5L5 19\"/>",
+ "compare": "<path d=\"M3 7H20L16 3 M21 17H4L8 21\"/>",
+ "dungeon": "<path d=\"M4 21V8L8 3H16L20 8V21 M9 21V13A3 3 0 0 1 15 13V21\"/>",
+ "equipment": "<path d=\"M5 4L9 3L12 6L15 3L19 4L22 9L18 12V21H6V12L2 9Z\"/>",
+ "filter": "<path d=\"M3 4H21L14 12V20L10 18V12Z\"/>",
+ "growth": "<path d=\"M4 20V12H8V20 M10 20V8H14V20 M16 20V3H20V20\"/>",
+ "info": "<path d=\"M12 11V18 M12 6V7 M12 2A10 10 0 1 1 11.99 2\"/>",
+ "lock": "<path d=\"M7 10V7A5 5 0 0 1 17 7V10 M5 10H19V21H5Z M12 14V17\"/>",
+ "menu": "<path d=\"M4 5H20 M4 12H20 M4 19H20\"/>",
+ "save": "<path d=\"M4 3H17L21 7V21H3V3Z M7 3V9H16V3 M7 21V14H17V21\"/>",
+ "skill": "<path d=\"M14 2L5 13H11L10 22L20 10H14Z\"/>",
+ "sound": "<path d=\"M3 9H7L12 4V20L7 15H3Z M16 8Q21 12 16 16 M19 4Q28 12 19 20\"/>",
+ "star": "<path d=\"M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9Z\"/>",
+ "warning": "<path d=\"M12 3L22 21H2Z M12 9V14 M12 17V18\"/>"
+};

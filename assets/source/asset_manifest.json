@@ -1,0 +1,423 @@
+{
+  "version": "3.0",
+  "scope": "MVP design reference",
+  "assets": [
+    {
+      "id": "bosses_3",
+      "file": "art/atlases/bosses_3.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        254
+      ],
+      "sha256": "572344f1f7dc8187f5aa5b66cb3ce42d657d808541d1bc1a5da86184ae729dff",
+      "concept_count": 3,
+      "status": "CONCEPT_BOARD_NEEDS_EXTRACTION",
+      "source": "built-in image generation",
+      "usage": "See catalog, spec/07 and spec/08. Not a finished animation atlas."
+    },
+    {
+      "id": "items_24",
+      "file": "art/atlases/items_24.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        254
+      ],
+      "sha256": "070ba516ddf146b7f90d037ff1da01bce06739a69d9be8ec070dc4f9aa0e929a",
+      "concept_count": 24,
+      "status": "CONCEPT_BOARD_NEEDS_EXTRACTION",
+      "source": "built-in image generation",
+      "usage": "See catalog, spec/07 and spec/08. Not a finished animation atlas."
+    },
+    {
+      "id": "monsters_6",
+      "file": "art/atlases/monsters_6.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        254
+      ],
+      "sha256": "1f9c60a51e72ce4a579b41e1942ace89c213bbaa626b9883bb61e6444ba4770d",
+      "concept_count": 6,
+      "status": "CONCEPT_BOARD_NEEDS_EXTRACTION",
+      "source": "built-in image generation",
+      "usage": "See catalog, spec/07 and spec/08. Not a finished animation atlas."
+    },
+    {
+      "id": "serin_promotions",
+      "file": "art/atlases/serin_promotions.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        254
+      ],
+      "sha256": "5be49e248569f69fe47d751d6b7e8a09af4ec4402e6bd1167df745d09ed8d094",
+      "concept_count": 2,
+      "status": "CONCEPT_BOARD_NEEDS_EXTRACTION",
+      "source": "built-in image generation",
+      "usage": "See catalog, spec/07 and spec/08. Not a finished animation atlas."
+    },
+    {
+      "id": "skills_8",
+      "file": "art/atlases/skills_8.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        254
+      ],
+      "sha256": "da83d42497aca06eb396f2f6afdca954d78aabcdb8322532cc9448a2b580006c",
+      "concept_count": 8,
+      "status": "CONCEPT_BOARD_NEEDS_EXTRACTION",
+      "source": "built-in image generation",
+      "usage": "See catalog, spec/07 and spec/08. Not a finished animation atlas."
+    },
+    {
+      "id": "desert",
+      "file": "art/backgrounds/desert.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "mode": "RGB",
+      "alpha_range": null,
+      "sha256": "29351ca3cdb3c0a610b5b81f389c645961347897cbb7432822ad348cbeec8002",
+      "concept_count": 1,
+      "status": "STATIC_SINGLE_LAYER_BACKGROUND",
+      "source": "built-in image generation",
+      "usage": "See catalog, spec/07 and spec/08. Not a finished animation atlas."
+    },
+    {
+      "id": "meadow",
+      "file": "art/backgrounds/meadow.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "mode": "RGB",
+      "alpha_range": null,
+      "sha256": "1675c9bddbd34178ac36c62c12cb6054455c953da79357a9ba64a236d7e8c212",
+      "concept_count": 1,
+      "status": "STATIC_SINGLE_LAYER_BACKGROUND",
+      "source": "built-in image generation",
+      "usage": "See catalog, spec/07 and spec/08. Not a finished animation atlas."
+    },
+    {
+      "id": "mine",
+      "file": "art/backgrounds/mine.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "mode": "RGB",
+      "alpha_range": null,
+      "sha256": "9800ac0c090961b735832968d1a0692e83fbe15804806509364ca6aa89feb8a4",
+      "concept_count": 1,
+      "status": "STATIC_SINGLE_LAYER_BACKGROUND",
+      "source": "built-in image generation",
+      "usage": "See catalog, spec/07 and spec/08. Not a finished animation atlas."
+    },
+    {
+      "id": "ui_back",
+      "file": "design/system/ui_back.svg",
+      "sha256": "b77283d2891155e896ed3428685ec29c36bc8aab4d12e63ed496a542166d5a75",
+      "status": "NATIVE_UI_SVG",
+      "source": "Authored vector paths/text",
+      "usage": "24px UI glyph or title wordmark; wordmark serif fallback can differ by OS."
+    },
+    {
+      "id": "ui_check",
+      "file": "design/system/ui_check.svg",
+      "sha256": "60d91cfab55af66739d084fa360bb6038adbde415bc8d96be55c022b6f3c77e5",
+      "status": "NATIVE_UI_SVG",
+      "source": "Authored vector paths/text",
+      "usage": "24px UI glyph or title wordmark; wordmark serif fallback can differ by OS."
+    },
+    {
+      "id": "ui_close",
+      "file": "design/system/ui_close.svg",
+      "sha256": "9751bb3032226524593ffae9f24eed9e7dc7e7f3dfb68453815339af0e7a2638",
+      "status": "NATIVE_UI_SVG",
+      "source": "Authored vector paths/text",
+      "usage": "24px UI glyph or title wordmark; wordmark serif fallback can differ by OS."
+    },
+    {
+      "id": "ui_compare",
+      "file": "design/system/ui_compare.svg",
+      "sha256": "048336bb255e45d59564de338a8a4612d85db5d96d274a347f91c92bb11e9812",
+      "status": "NATIVE_UI_SVG",
+      "source": "Authored vector paths/text",
+      "usage": "24px UI glyph or title wordmark; wordmark serif fallback can differ by OS."
+    },
+    {
+      "id": "ui_dungeon",
+      "file": "design/system/ui_dungeon.svg",
+      "sha256": "9f6976efa4a61f424b2ddaa02fd9318260a679813a9d849ad67b71467e792ca6",
+      "status": "NATIVE_UI_SVG",
+      "source": "Authored vector paths/text",
+      "usage": "24px UI glyph or title wordmark; wordmark serif fallback can differ by OS."
+    },
+    {
+      "id": "ui_equipment",
+      "file": "design/system/ui_equipment.svg",
+      "sha256": "662bf3372757bf63779578b459b020c35aa100971d0b82295010618db49a851f",
+      "status": "NATIVE_UI_SVG",
+      "source": "Authored vector paths/text",
+      "usage": "24px UI glyph or title wordmark; wordmark serif fallback can differ by OS."
+    },
+    {
+      "id": "ui_filter",
+      "file": "design/system/ui_filter.svg",
+      "sha256": "732e5891a027de9cd499e3b951e8a003719d93b0a73566aa5ae401d820f07ff3",
+      "status": "NATIVE_UI_SVG",
+      "source": "Authored vector paths/text",
+      "usage": "24px UI glyph or title wordmark; wordmark serif fallback can differ by OS."
+    },
+    {
+      "id": "ui_growth",
+      "file": "design/system/ui_growth.svg",
+      "sha256": "f8832647d324cb59a11377ae282159c71dd9f7c82aa1af5690f8b406c42413da",
+      "status": "NATIVE_UI_SVG",
+      "source": "Authored vector paths/text",
+      "usage": "24px UI glyph or title wordmark; wordmark serif fallback can differ by OS."
+    },
+    {
+      "id": "ui_info",
+      "file": "design/system/ui_info.svg",
+      "sha256": "18f5db8bcd424da7442a60301c8a8e4fa6b15b0f544286ac6e4690694eb4720b",
+      "status": "NATIVE_UI_SVG",
+      "source": "Authored vector paths/text",
+      "usage": "24px UI glyph or title wordmark; wordmark serif fallback can differ by OS."
+    },
+    {
+      "id": "ui_lock",
+      "file": "design/system/ui_lock.svg",
+      "sha256": "5509965078d70a2e91a26141f36b4deb8413954c3c208cf5d37d0ac316d7ee76",
+      "status": "NATIVE_UI_SVG",
+      "source": "Authored vector paths/text",
+      "usage": "24px UI glyph or title wordmark; wordmark serif fallback can differ by OS."
+    },
+    {
+      "id": "ui_menu",
+      "file": "design/system/ui_menu.svg",
+      "sha256": "e61d82c7ecb48cd0257d28a0f840f14f533c29913f0f6217cea1b9a696fee9d4",
+      "status": "NATIVE_UI_SVG",
+      "source": "Authored vector paths/text",
+      "usage": "24px UI glyph or title wordmark; wordmark serif fallback can differ by OS."
+    },
+    {
+      "id": "ui_save",
+      "file": "design/system/ui_save.svg",
+      "sha256": "c37984c21ddaed6d1145602c1b6a9f77bc8cae1ff71acada14fcc7b57d782080",
+      "status": "NATIVE_UI_SVG",
+      "source": "Authored vector paths/text",
+      "usage": "24px UI glyph or title wordmark; wordmark serif fallback can differ by OS."
+    },
+    {
+      "id": "ui_skill",
+      "file": "design/system/ui_skill.svg",
+      "sha256": "6741623476a50c5ef2aca42dbdbec6ec475f9d4be041640f2e8067cfc3aad280",
+      "status": "NATIVE_UI_SVG",
+      "source": "Authored vector paths/text",
+      "usage": "24px UI glyph or title wordmark; wordmark serif fallback can differ by OS."
+    },
+    {
+      "id": "ui_sound",
+      "file": "design/system/ui_sound.svg",
+      "sha256": "bafd005472a07140ad526d6172284978ced9802a2b2a6382bb27d0938b9acc3f",
+      "status": "NATIVE_UI_SVG",
+      "source": "Authored vector paths/text",
+      "usage": "24px UI glyph or title wordmark; wordmark serif fallback can differ by OS."
+    },
+    {
+      "id": "ui_star",
+      "file": "design/system/ui_star.svg",
+      "sha256": "47f6d04a30ab230395b3d877c6fa930be1d06b76daba534b6b4c975f9e9975c5",
+      "status": "NATIVE_UI_SVG",
+      "source": "Authored vector paths/text",
+      "usage": "24px UI glyph or title wordmark; wordmark serif fallback can differ by OS."
+    },
+    {
+      "id": "ui_warning",
+      "file": "design/system/ui_warning.svg",
+      "sha256": "bc201e501ee8f3ca10bb9fd38ad5d145fc14c78f78adf3b2ba9b2795755063af",
+      "status": "NATIVE_UI_SVG",
+      "source": "Authored vector paths/text",
+      "usage": "24px UI glyph or title wordmark; wordmark serif fallback can differ by OS."
+    },
+    {
+      "id": "wordmark",
+      "file": "design/system/wordmark.svg",
+      "sha256": "9569eb3d0525cdfb6f669a6cef747a761559884f414d5a6b1768b8ba2bf9092c",
+      "status": "NATIVE_UI_SVG",
+      "source": "Authored vector paths/text",
+      "usage": "24px UI glyph or title wordmark; wordmark serif fallback can differ by OS."
+    }
+  ],
+  "regions": {
+    "status": "CONCEPT_REGIONS_NOT_PRODUCTION_ATLAS",
+    "monsters": [
+      {
+        "id": "M01",
+        "name": "가시 슬라임",
+        "rect": [
+          0,
+          0,
+          480,
+          430
+        ]
+      },
+      {
+        "id": "M02",
+        "name": "잿빛 가시늑대",
+        "rect": [
+          490,
+          0,
+          530,
+          430
+        ]
+      },
+      {
+        "id": "M03",
+        "name": "사암 풍뎅이",
+        "rect": [
+          1020,
+          0,
+          516,
+          440
+        ]
+      },
+      {
+        "id": "M04",
+        "name": "황금 가면 망령",
+        "rect": [
+          0,
+          430,
+          490,
+          594
+        ]
+      },
+      {
+        "id": "M05",
+        "name": "해골 광부",
+        "rect": [
+          490,
+          430,
+          530,
+          594
+        ]
+      },
+      {
+        "id": "M06",
+        "name": "흑요석 거미",
+        "rect": [
+          1020,
+          440,
+          516,
+          584
+        ]
+      }
+    ],
+    "bosses": [
+      {
+        "id": "B01",
+        "name": "가시 슬라임 군주",
+        "rect": [
+          0,
+          0,
+          500,
+          1024
+        ]
+      },
+      {
+        "id": "B02",
+        "name": "모래 수호자",
+        "rect": [
+          490,
+          0,
+          535,
+          1024
+        ]
+      },
+      {
+        "id": "B03",
+        "name": "폐광 파수꾼",
+        "rect": [
+          1024,
+          0,
+          512,
+          1024
+        ]
+      }
+    ],
+    "items": [
+      "철검",
+      "금장 장검",
+      "흑장미 검",
+      "철 투구",
+      "금장 투구",
+      "흑장미 투구",
+      "가죽 갑옷",
+      "금장 갑옷",
+      "흑장미 갑옷",
+      "은 펜던트",
+      "자수정 펜던트",
+      "장미별 펜던트",
+      "골드",
+      "보석 · 확장",
+      "강화 광석",
+      "경험치",
+      "던전 입장권",
+      "승급 증표",
+      "나무 상자",
+      "금장 상자",
+      "전설 상자 · 확장",
+      "장비 가방",
+      "별 열쇠 · 확장",
+      "보상 우편"
+    ],
+    "skills": [
+      "강타",
+      "방패 돌진",
+      "전장의 외침",
+      "수호 반격",
+      "광폭 일격",
+      "별빛 참격",
+      "공격력 증가",
+      "방어력 감소"
+    ]
+  },
+  "inherited_assets": [
+    "design/assets/serin_key_visual.png",
+    "design/assets/adult_heroine_lineup.png",
+    "motion/assets/serin_poses.png",
+    "motion/assets/cathedral_stage.png"
+  ],
+  "remaining": [
+    "animation inbetweens or rigging",
+    "promotion combat costumes",
+    "individual atlas extraction cleanup",
+    "runtime game integration",
+    "device performance tests"
+  ]
+}

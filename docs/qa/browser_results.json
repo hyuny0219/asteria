@@ -1,0 +1,1489 @@
+{
+ "startedAt": "2026-11-05T00:29:49.421Z",
+ "base": "http://127.0.0.1:8123/",
+ "viewports": [
+  [
+   390,
+   844
+  ],
+  [
+   360,
+   700
+  ],
+  [
+   412,
+   915
+  ]
+ ],
+ "screens": [
+  {
+   "id": "title",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "시작 화면",
+   "file": "title_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "title"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "main",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "실제 전투 20초 후",
+   "file": "main_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "main"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "empty",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "장비 없음",
+   "file": "empty_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "empty"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "inventory",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "",
+   "file": "inventory_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "inventory"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "compare",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "",
+   "file": "compare_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "inventory",
+    "compare",
+    "compare"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "enhance",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "",
+   "file": "enhance_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "inventory",
+    "enhance",
+    "enhance"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "enhance",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "강화 성공 후",
+   "file": "enhance_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "inventory",
+    "enhance",
+    "enhance"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "dismantle",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "",
+   "file": "dismantle_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "inventory",
+    "dismantle",
+    "dismantle"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "overflow",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "",
+   "file": "overflow_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "inventory",
+    "overflow",
+    "overflow"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "skills",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "",
+   "file": "skills_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "skills"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "skilldetail",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "",
+   "file": "skilldetail_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "skills",
+    "skilldetail",
+    "skilldetail"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "world",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "",
+   "file": "world_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "skills",
+    "world",
+    "world"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "boss",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "",
+   "file": "boss_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "skills",
+    "boss",
+    "boss"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "skills",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "보스전 진행 중 (탭은 스킬)",
+   "file": "skills_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "skills"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "victory",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "실제 보스전 승리",
+   "file": "victory_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "skills",
+    "victory",
+    "victory"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "defeat",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "중단 → 손실 없음",
+   "file": "defeat_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "skills",
+    "defeat",
+    "defeat"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "dungeon",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "",
+   "file": "dungeon_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "offline",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "13시간 경과 → 12시간 적용",
+   "file": "offline_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "offline",
+    "offline"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "quest",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "",
+   "file": "quest_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "quest",
+    "quest"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "promotion",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "",
+   "file": "promotion_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "promotion",
+    "promotion"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "settings",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "",
+   "file": "settings_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "settings",
+    "settings"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "summon",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "",
+   "file": "summon_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "summon",
+    "summon"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "saveerror",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "저장 실패 시뮬레이션",
+   "file": "saveerror_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "main",
+    "saveerror",
+    "saveerror"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "conflict",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "두 번째 탭",
+   "file": "conflict_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "conflict"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "title",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "시작 화면",
+   "file": "title_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "title"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "main",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "실제 전투 20초 후",
+   "file": "main_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "main"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "empty",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "장비 없음",
+   "file": "empty_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "empty"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "inventory",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "",
+   "file": "inventory_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "inventory"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "compare",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "",
+   "file": "compare_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "inventory",
+    "compare",
+    "compare"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "enhance",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "",
+   "file": "enhance_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "inventory",
+    "enhance",
+    "enhance"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "enhance",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "강화 성공 후",
+   "file": "enhance_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "inventory",
+    "enhance",
+    "enhance"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "dismantle",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "",
+   "file": "dismantle_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "inventory",
+    "dismantle",
+    "dismantle"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "overflow",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "",
+   "file": "overflow_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "inventory",
+    "overflow",
+    "overflow"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "skills",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "",
+   "file": "skills_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "skills"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "skilldetail",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "",
+   "file": "skilldetail_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "skills",
+    "skilldetail",
+    "skilldetail"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "world",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "",
+   "file": "world_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "skills",
+    "world",
+    "world"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "boss",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "",
+   "file": "boss_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "skills",
+    "boss",
+    "boss"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "skills",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "보스전 진행 중 (탭은 스킬)",
+   "file": "skills_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "skills"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "victory",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "실제 보스전 승리",
+   "file": "victory_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "skills",
+    "victory",
+    "victory"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "defeat",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "중단 → 손실 없음",
+   "file": "defeat_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "skills",
+    "defeat",
+    "defeat"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "dungeon",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "",
+   "file": "dungeon_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "offline",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "13시간 경과 → 12시간 적용",
+   "file": "offline_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "offline",
+    "offline"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "quest",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "",
+   "file": "quest_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "quest",
+    "quest"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "promotion",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "",
+   "file": "promotion_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "promotion",
+    "promotion"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "settings",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "",
+   "file": "settings_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "settings",
+    "settings"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "summon",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "",
+   "file": "summon_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "summon",
+    "summon"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "saveerror",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "저장 실패 시뮬레이션",
+   "file": "saveerror_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "main",
+    "saveerror",
+    "saveerror"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "conflict",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "두 번째 탭",
+   "file": "conflict_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "conflict"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "title",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "시작 화면",
+   "file": "title_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "title"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "main",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "실제 전투 20초 후",
+   "file": "main_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "main"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "empty",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "장비 없음",
+   "file": "empty_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "empty"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "inventory",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "",
+   "file": "inventory_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "inventory"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "compare",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "",
+   "file": "compare_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "inventory",
+    "compare",
+    "compare"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "enhance",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "",
+   "file": "enhance_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "inventory",
+    "enhance",
+    "enhance"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "enhance",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "강화 성공 후",
+   "file": "enhance_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "inventory",
+    "enhance",
+    "enhance"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "dismantle",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "",
+   "file": "dismantle_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "inventory",
+    "dismantle",
+    "dismantle"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "overflow",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "",
+   "file": "overflow_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "inventory",
+    "overflow",
+    "overflow"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "skills",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "",
+   "file": "skills_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "skills"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "skilldetail",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "",
+   "file": "skilldetail_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "skills",
+    "skilldetail",
+    "skilldetail"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "world",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "",
+   "file": "world_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "skills",
+    "world",
+    "world"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "boss",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "",
+   "file": "boss_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "skills",
+    "boss",
+    "boss"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "skills",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "보스전 진행 중 (탭은 스킬)",
+   "file": "skills_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "skills"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "victory",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "실제 보스전 승리",
+   "file": "victory_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "skills",
+    "victory",
+    "victory"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "defeat",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "중단 → 손실 없음",
+   "file": "defeat_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "skills",
+    "defeat",
+    "defeat"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "dungeon",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "",
+   "file": "dungeon_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "offline",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "13시간 경과 → 12시간 적용",
+   "file": "offline_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "offline",
+    "offline"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "quest",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "",
+   "file": "quest_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "quest",
+    "quest"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "promotion",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "",
+   "file": "promotion_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "promotion",
+    "promotion"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "settings",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "",
+   "file": "settings_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "settings",
+    "settings"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "summon",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "",
+   "file": "summon_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "summon",
+    "summon"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "saveerror",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "저장 실패 시뮬레이션",
+   "file": "saveerror_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "main",
+    "saveerror",
+    "saveerror"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "conflict",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "두 번째 탭",
+   "file": "conflict_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "conflict"
+   ],
+   "tiny": [],
+   "errors": []
+  }
+ ],
+ "flows": [
+  {
+   "name": "reload keeps the same pending claim",
+   "pass": true,
+   "detail": {
+    "first": "claim_mw2t7ly7_d1sipi",
+    "after": "claim_mw2t7ly7_d1sipi"
+   }
+  },
+  {
+   "name": "triple-tap claim grants once",
+   "pass": true,
+   "detail": {
+    "expected": 6480,
+    "claimGold": 6480,
+    "killGold": 0,
+    "claims": 1
+   }
+  },
+  {
+   "name": "no second claim after reload",
+   "pass": true,
+   "detail": {}
+  },
+  {
+   "name": "failed save spends nothing",
+   "pass": true,
+   "detail": {
+    "g0": {
+     "gold": 500,
+     "up": 0
+    },
+    "g1": {
+     "gold": 500,
+     "up": 0,
+     "modal": true,
+     "dot": true
+    }
+   }
+  },
+  {
+   "name": "retry save succeeds",
+   "pass": true,
+   "detail": {}
+  },
+  {
+   "name": "claim with failed save grants nothing and keeps the claim",
+   "pass": true,
+   "detail": {
+    "gold": 0,
+    "offline": true,
+    "err": true,
+    "mode": "OFFLINE"
+   }
+  },
+  {
+   "name": "second tab blocked, takeover stops first tab",
+   "pass": true,
+   "detail": {
+    "waiting": "conflict",
+    "first": "CONFLICT",
+    "second": "FARM"
+   }
+  },
+  {
+   "name": "stopped tab cannot commit",
+   "pass": true,
+   "detail": {
+    "rev1": 2
+   }
+  },
+  {
+   "name": "hidden → visible does not replay ticks",
+   "pass": true,
+   "detail": {
+    "k0": 1,
+    "k1": {
+     "kills": 1,
+     "acc": 16.600000000000023,
+     "mode": "FARM"
+    }
+   }
+  },
+  {
+   "name": "DPR 1 canvas backing = css × min(dpr,2)",
+   "pass": true,
+   "detail": {
+    "w": 390,
+    "cw": 390
+   }
+  },
+  {
+   "name": "DPR 2 canvas backing = css × min(dpr,2)",
+   "pass": true,
+   "detail": {
+    "w": 780,
+    "cw": 390
+   }
+  },
+  {
+   "name": "DPR 3 canvas backing = css × min(dpr,2)",
+   "pass": true,
+   "detail": {
+    "w": 780,
+    "cw": 390
+   }
+  },
+  {
+   "name": "200% text: no horizontal overflow",
+   "pass": true,
+   "detail": {
+    "over": false,
+    "navVisible": true
+   }
+  }
+ ],
+ "errors": [],
+ "finishedAt": "2026-11-05T00:30:54.630Z",
+ "summary": {
+  "screenChecks": 72,
+  "screenPass": 72,
+  "distinctScreens": 22,
+  "ids": [
+   "title",
+   "main",
+   "empty",
+   "inventory",
+   "compare",
+   "enhance",
+   "dismantle",
+   "overflow",
+   "skills",
+   "skilldetail",
+   "world",
+   "boss",
+   "victory",
+   "defeat",
+   "dungeon",
+   "offline",
+   "quest",
+   "promotion",
+   "settings",
+   "summon",
+   "saveerror",
+   "conflict"
+  ],
+  "flows": 13,
+  "flowPass": 13
+ }
+}

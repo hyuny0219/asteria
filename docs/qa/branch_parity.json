@@ -1,0 +1,65 @@
+{
+ "power0.8:unpromoted": {
+  "winRate": 0,
+  "medianWinSec": null,
+  "medianHpLeft": null,
+  "atk": 296,
+  "hp": 3051
+ },
+ "power0.8:knight": {
+  "winRate": 1,
+  "medianWinSec": 54.65,
+  "medianHpLeft": 0.20410490307867732,
+  "atk": 296,
+  "hp": 3508
+ },
+ "power0.8:berserker": {
+  "winRate": 1,
+  "medianWinSec": 44.3,
+  "medianHpLeft": 0.25204850868567685,
+  "atk": 331,
+  "hp": 3051
+ },
+ "power1:unpromoted": {
+  "winRate": 1,
+  "medianWinSec": 60.65,
+  "medianHpLeft": 0.061827130113811135,
+  "atk": 318,
+  "hp": 3251
+ },
+ "power1:knight": {
+  "winRate": 1,
+  "medianWinSec": 49.35,
+  "medianHpLeft": 0.3394863563402889,
+  "atk": 318,
+  "hp": 3738
+ },
+ "power1:berserker": {
+  "winRate": 1,
+  "medianWinSec": 43.65,
+  "medianHpLeft": 0.3125192248538911,
+  "atk": 356,
+  "hp": 3251
+ },
+ "power1.2:unpromoted": {
+  "winRate": 1,
+  "medianWinSec": 55.95,
+  "medianHpLeft": 0.16951608229498696,
+  "atk": 340,
+  "hp": 3451
+ },
+ "power1.2:knight": {
+  "winRate": 1,
+  "medianWinSec": 46.1,
+  "medianHpLeft": 0.4657258064516129,
+  "atk": 340,
+  "hp": 3968
+ },
+ "power1.2:berserker": {
+  "winRate": 1,
+  "medianWinSec": 41.65,
+  "medianHpLeft": 0.38481599536366273,
+  "atk": 380,
+  "hp": 3451
+ }
+}

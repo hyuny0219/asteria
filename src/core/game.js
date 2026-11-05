@@ -1,0 +1,517 @@
+// Game orchestrator: state machine, combat <-> state, transactions, offline flow.
+//
+// Modes: BOOT → LOAD → FARM ↔ BOSS; FARM → DEFEAT → FARM (death, 3 s);
+//        DUNGEON → RESULT → FARM; PROMOTION_TRIAL → RESULT → FARM;
+//        OFFLINE (claim pending, sim paused); CONFLICT (another tab owns the save).
+// UI tab changes never change the mode. Hidden tab = sim stopped + settle on return.
+//
+// Transactions: `transact(fn)` runs fn on a clone of the state, commits the clone,
+// and only on a successful commit swaps it in and emits the result. A failed save
+// leaves the live state untouched, so nothing is spent or granted twice and no
+// reward animation starts before the save is confirmed.
+import { BALANCE } from '../data/balance.js';
+import { BOSSES, MONSTERS, REGION_BY_ID, waveLevel, DUNGEON } from '../data/content.js';
+import { Battle, killRewards } from './combat.js';
+import * as eco from './economy.js';
+import { makeItem, rollRarity, rollSlot } from './items.js';
+import * as prog from './progression.js';
+import { FarmVerifier, applyClaim, computeClaim } from './offline.js';
+import * as dun from './dungeon.js';
+import { playerStats } from './stats.js';
+import { markTx, newGame } from './state.js';
+import { deepClone, makeRng, uid } from './util.js';
+
+const TICK = BALANCE.combat.tickMs;
+const EQ = BALANCE.equipment;
+
+export class Game {
+  constructor({ saver, now = () => Date.now(), log = () => {} }) {
+    this.saver = saver;
+    this.now = now;
+    this.log = log;
+    this.mode = 'BOOT';
+    this.listeners = {};
+    this.acc = 0;
+    this.busy = false;          // a transaction commit is in flight → sim paused
+    this.verifier = new FarmVerifier();
+    this.lastCheckpoint = 0;
+    this.realSinceCheckpoint = 0;
+    this.farm = null;           // farm battle (kept while boss/dungeon run)
+    this.active = null;         // battle currently simulated & shown
+    this.result = null;         // last boss/dungeon/trial result for the RESULT screen
+    this.saveStatus = { ok: true, at: null, error: null };
+    this.notices = [];
+  }
+
+  // ---------- events ----------
+  on(type, fn) { (this.listeners[type] ||= []).push(fn); return () => { this.listeners[type] = this.listeners[type].filter((f) => f !== fn); }; }
+  emit(type, payload) { for (const fn of this.listeners[type] || []) fn(payload); for (const fn of this.listeners['*'] || []) fn(type, payload); }
+  setMode(m) { if (this.mode !== m) { const prev = this.mode; this.mode = m; this.emit('mode', { mode: m, prev }); } }
+
+  // ---------- boot / load ----------
+  async load() {
+    this.setMode('LOAD');
+    const res = await this.saver.load();
+    this.loadInfo = res;
+    if (res.status === 'conflict') { this.setMode('CONFLICT'); return res; }
+    if (res.status === 'corrupt' || res.status === 'error') return res;     // UI offers previousGood / export / new game
+    return this.start(res.state);
+  }
+
+  // Continue loading with a given state (null = new game). Also used after
+  // restoring previousGood or wiping a corrupt save.
+  async start(loaded) {
+    this.state = loaded || newGame(this.now());
+    if (loaded && this.loadInfo && this.loadInfo.status !== 'ok') this.state.diagnostics.recovered++;
+    this.rng = makeRng(this.state.rngSeed);
+    const isNew = !loaded;
+    // fixed housekeeping that must be saved together
+    const tickets = dun.refreshTickets(this.state, this.now());
+    const refund = dun.recoverPendingRun(this.state);
+    if (refund) this.notices.push({ type: 'dungeonRefund', ...refund });
+    if (tickets.rollback) this.notices.push({ type: 'clockRollback' });
+    this.startFarm();
+    const pending = this.state.offlineSnapshot.pendingClaim;
+    if (pending) {
+      this.claim = pending;
+      this.setMode('OFFLINE');
+    } else if (!isNew) {
+      this.prepareOffline();
+    } else {
+      this.state.offlineSnapshot.lastActiveAt = this.now();
+      this.setMode('FARM');
+    }
+    const c = await this.commit('load');
+    if (!c.ok && this.mode !== 'CONFLICT') this.emit('saveError', { reason: 'load', error: c.error });
+    this.emit('loaded', { isNew, notices: this.notices });
+    return { status: 'ok', isNew };
+  }
+
+  prepareOffline() {
+    const now = this.now();
+    const elapsed = (now - this.state.offlineSnapshot.lastActiveAt) / 1000;
+    if (elapsed < BALANCE.offline.minSeconds && elapsed >= 0) {
+      // short gap: nothing to settle, just continue
+      this.state.offlineSnapshot.lastActiveAt = now;
+      if (this.mode === 'LOAD' || this.mode === 'BOOT') this.setMode('FARM');
+      return null;
+    }
+    const claim = computeClaim(this.state, now, uid('claim'));
+    if (claim.diag.includes('clock-rollback')) this.state.diagnostics.clockRollbacks++;
+    if (claim.diag.includes('future-clamped')) this.state.diagnostics.futureClamps++;
+    // persist the claim first: reload / double tap shows the same claim, never a second one
+    this.state.offlineSnapshot.pendingClaim = claim;
+    this.state.offlineSnapshot.lastActiveAt = now;
+    this.claim = claim;
+    this.setMode('OFFLINE');
+    return claim;
+  }
+
+  async claimOffline() {
+    const claim = this.state.offlineSnapshot.pendingClaim;
+    if (!claim) return { ok: false, reason: 'none' };
+    const r = await this.transact('offlineClaim', (s) => {
+      if (!markTx(s, claim.claimId)) return { ok: false, reason: 'duplicate' };
+      return applyClaim(s, claim, prog.gainExp, eco.addItems);
+    });
+    if (r.ok || r.reason === 'duplicate') { this.claim = null; this.setMode('FARM'); this.acc = 0; }
+    return r;
+  }
+
+  // ---------- hero config for battles ----------
+  heroCfg() {
+    const s = this.state;
+    return { stats: playerStats(s), skills: s.skills, branch: s.player.branch, skillLevel: (id) => prog.skillLevel(s, id) };
+  }
+  syncHero() {
+    const h = this.heroCfg();
+    if (this.farm) this.farm.updateStats(h);
+    if (this.active && this.active !== this.farm) this.active.updateStats(h);
+  }
+
+  startFarm() {
+    const s = this.state;
+    const region = REGION_BY_ID[s.progression.region];
+    this.farm = new Battle({
+      kind: 'farm', rng: this.rng, hero: this.heroCfg(),
+      farm: {
+        monsters: region.monsters,
+        levelFn: () => waveLevel(this.state.progression.region, this.state.progression.wave),
+        eliteAllowed: () => this.state.progression.wave >= BALANCE.monster.elite.fromWave,
+      },
+    });
+    this.active = this.farm;
+    this.verifier.reset();
+    this.verifier.start(s.progression.region, s.progression.wave, 0);
+  }
+
+  // ---------- main loop ----------
+  // realDtMs: wall time since last call (caller caps it). Returns ticks run.
+  advance(realDtMs) {
+    if (!this.state || this.busy) return 0;
+    if (!['FARM', 'BOSS', 'DUNGEON', 'PROMOTION_TRIAL', 'DEFEAT'].includes(this.mode)) return 0;
+    const speed = this.state.settings.speed === 2 ? 2 : 1;
+    this.acc += realDtMs * speed;
+    let n = 0;
+    while (this.acc >= TICK && n < 200) {
+      this.acc -= TICK;
+      this.active.step();
+      n++;
+      this.process(this.active.drainEvents());
+      if (this.busy) break;
+    }
+    this.realSinceCheckpoint += realDtMs;
+    if (this.realSinceCheckpoint >= BALANCE.save.checkpointSec * 1000 && !this.busy) {
+      this.realSinceCheckpoint = 0;
+      this.checkpoint('interval');
+    }
+    return n;
+  }
+  get alpha() { return this.acc / TICK; }
+
+  process(events) {
+    for (const ev of events) {
+      if (this.active.kind === 'farm') this.processFarm(ev);
+      else this.processSession(ev);
+      this.emit('combat', ev);
+    }
+  }
+
+  processFarm(ev) {
+    const s = this.state;
+    if (ev.type === 'kill') {
+      const e = ev.enemy;
+      const r = killRewards(e.level, { elite: e.elite });
+      s.wallet.gold += r.gold;
+      const expRes = prog.gainExp(s, r.exp);
+      const loot = this.rollLoot(e);
+      const tok = prog.onTokenKill(s, e.level);
+      s.progression.counters.kills++;
+      // wave progress
+      const p = s.progression;
+      p.waveKills++;
+      if (p.holdKills > 0) p.holdKills--;
+      let advanced = false;
+      if (p.waveKills >= BALANCE.combat.waveKillTarget) {
+        p.waveKills = 0;
+        if (p.holdKills > 0) { /* holding after a retreat */ }
+        else if (p.wave < 10 && p.autoAdvance !== false) { p.wave++; advanced = true; }
+        p.maxWave[p.region] = Math.max(p.maxWave[p.region] || 1, p.wave);
+      }
+      const vf = this.verifier.onKill(p.region, p.wave, e.level, this.active.t);
+      if (vf && !this.sameFarm(p.verifiedFarm, vf)) { p.verifiedFarm = vf; this.emit('farmVerified', vf); }
+      this.emit('reward', { gold: r.gold, exp: r.exp, expRes, loot, token: tok, advanced, enemy: e });
+      if (expRes.levels) { this.syncHero(); this.emit('levelUp', { level: s.player.level }); this.checkpoint('levelUp'); }
+      if (loot.items.length) this.checkpoint('loot');
+    } else if (ev.type === 'heroDown') {
+      s.progression.counters.deaths++;
+      this.verifier.onDeath();
+      // idle-friendly: repeated deaths on one wave step back one wave for a while
+      const p = s.progression;
+      p.waveDeaths = (p.waveDeathsWave === p.wave ? (p.waveDeaths || 0) : 0) + 1;
+      p.waveDeathsWave = p.wave;
+      if (p.waveDeaths >= BALANCE.combat.retreatAfterDeaths && p.wave > 1) {
+        p.wave -= 1; p.waveKills = 0; p.waveDeaths = 0;
+        p.holdKills = BALANCE.combat.retreatHoldKills;
+        this.emit('retreat', { wave: p.wave });
+      }
+      this.setMode('DEFEAT');
+    } else if (ev.type === 'respawn') {
+      this.verifier.start(s.progression.region, s.progression.wave, this.active.t);
+      this.setMode('FARM');
+    }
+  }
+
+  sameFarm(a, b) { return a && a.region === b.region && a.wave === b.wave && Math.abs(a.killsPerSec - b.killsPerSec) < 0.02; }
+
+  rollLoot(e) {
+    const s = this.state;
+    const items = [];
+    let ore = 0;
+    const chance = e.elite ? EQ.eliteDropChance : EQ.dropChance;
+    if (this.rng() < chance) {
+      const it = makeItem(s, { slot: rollSlot(this.rng), rarity: rollRarity(this.rng, e.elite ? EQ.eliteRarity : EQ.rarityConditional), level: e.level, rng: this.rng });
+      items.push(it);
+    }
+    if (e.elite && this.rng() < BALANCE.monster.rewards.oreChanceElite) ore += 1 + Math.floor(e.level / 8);
+    s.wallet.ore += ore;
+    const added = eco.addItems(s, items);
+    if (added.overflowed.length) this.emit('overflow', { count: s.overflow.length });
+    return { items, ore, overflowed: added.overflowed };
+  }
+
+  // ---------- sessions: boss / dungeon / trial ----------
+  canChallengeBoss(bossId) {
+    const b = BOSSES[bossId];
+    const s = this.state;
+    if (!prog.regionUnlocked(s, b.region)) return { ok: false, reason: 'region' };
+    if ((s.progression.maxWave[b.region] || 1) < 10) return { ok: false, reason: 'wave', need: 10, have: s.progression.maxWave[b.region] || 1 };
+    return { ok: true };
+  }
+  startBoss(bossId) {
+    const c = this.canChallengeBoss(bossId);
+    if (!c.ok || this.mode !== 'FARM') return c.ok ? { ok: false, reason: 'mode' } : c;
+    this.session = { kind: 'boss', id: uid('boss'), bossId, startedAt: this.now(), viewBefore: this.state.settings.battleView };
+    this.active = new Battle({ kind: 'boss', rng: this.rng, hero: this.heroCfg(), boss: { id: bossId } });
+    this.acc = 0;
+    this.setMode('BOSS');
+    this.emit('session', this.session);
+    return { ok: true };
+  }
+  startTrial() {
+    const cl = prog.promotionChecklist(this.state);
+    if (!cl.canTrial || this.mode !== 'FARM') return { ok: false, reason: cl.canTrial ? 'mode' : 'conditions' };
+    this.session = { kind: 'trial', id: uid('trial'), startedAt: this.now(), viewBefore: this.state.settings.battleView };
+    this.active = new Battle({ kind: 'trial', rng: this.rng, hero: this.heroCfg() });
+    this.acc = 0;
+    this.setMode('PROMOTION_TRIAL');
+    this.emit('session', this.session);
+    return { ok: true };
+  }
+  async enterDungeon(stage) {
+    if (this.mode !== 'FARM') return { ok: false, reason: 'mode' };
+    if (!prog.dungeonOpen(this.state)) return { ok: false, reason: 'locked' };
+    const runId = uid('run');
+    const r = await this.transact('dungeonEnter', (s) => dun.beginRun(s, stage, runId, this.now()));
+    if (!r.ok) return r;
+    this.session = { kind: 'dungeon', id: runId, stage, startedAt: this.now(), viewBefore: this.state.settings.battleView };
+    this.active = new Battle({ kind: 'dungeon', rng: this.rng, hero: this.heroCfg(), dungeon: { stage, monsters: DUNGEON.monsters } });
+    this.acc = 0;
+    this.setMode('DUNGEON');
+    this.emit('session', this.session);
+    return { ok: true };
+  }
+  async sweepDungeon() {
+    return this.transact('dungeonSweep', (s) => dun.sweep(s));
+  }
+
+  processSession(ev) {
+    if (ev.type !== 'victory' && ev.type !== 'defeat') return;
+    const sess = this.session;
+    const win = ev.type === 'victory';
+    this.busy = true;   // stop simulating the finished battle
+    queueMicrotask(() => this.finishSession(sess, win, ev).catch((err) => this.log('finish error', err)));
+  }
+
+  async finishSession(sess, win, ev) {
+    this.busy = false;
+    let r;
+    if (sess.kind === 'boss') {
+      r = await this.transact('bossResult', (s) => {
+        if (!markTx(s, sess.id)) return { ok: false, reason: 'duplicate' };
+        const res = { ok: true, win, bossId: sess.bossId, timeSec: Math.round(ev.t / 1000), reason: ev.reason };
+        if (!win) { s.progression.counters.bossLosses++; return res; }
+        s.progression.counters.bossWins++;
+        const b = BOSSES[sess.bossId];
+        const rw = killRewards(b.level, { boss: true });
+        s.wallet.gold += rw.gold;
+        res.gold = rw.gold;
+        res.exp = rw.exp;
+        res.expRes = prog.gainExp(s, rw.exp);
+        const cleared = prog.onBossCleared(s, sess.bossId);
+        res.first = cleared.first;
+        res.unlocked = cleared.unlocked;
+        const items = [];
+        if (cleared.first && !s.progression.firstClearClaimed[sess.bossId]) {
+          s.progression.firstClearClaimed[sess.bossId] = sess.id;
+          // first boss: rare weapon guaranteed; later bosses: a rare piece; plus ore
+          const slot = sess.bossId === 'B01' ? 'weapon' : sess.bossId === 'B02' ? 'armor' : 'accessory';
+          items.push(makeItem(s, { slot, rarity: 'rare', level: b.level, rng: this.rng, source: 'firstClear' }));
+          s.wallet.ore += 30 * (Object.keys(BOSSES).indexOf(sess.bossId) + 1);
+          res.ore = 30 * (Object.keys(BOSSES).indexOf(sess.bossId) + 1);
+        } else {
+          items.push(makeItem(s, { slot: rollSlot(this.rng), rarity: rollRarity(this.rng, { uncommon: 0.6, rare: 0.4 }), level: b.level, rng: this.rng, source: 'boss' }));
+        }
+        res.items = items;
+        res.overflowed = eco.addItems(s, items).overflowed;
+        return res;
+      });
+    } else if (sess.kind === 'dungeon') {
+      r = await this.transact('dungeonResult', (s) => {
+        const fr = dun.finishRun(s, sess.id, win);
+        return { ...fr, win, kills: ev.kills, timeSec: Math.round(ev.t / 1000), reason: ev.reason };
+      });
+    } else if (sess.kind === 'trial') {
+      r = await this.transact('trialResult', (s) => {
+        if (win) s.promotion.trialCleared = true;
+        return { ok: true, win, timeSec: Math.round(ev.t / 1000), reason: ev.reason };
+      });
+    }
+    // Save failed: keep the finished battle frozen and let the user retry the commit.
+    if (!r.ok && r.reason === 'save') {
+      this.pendingFinish = { sess, win, ev };
+      this.setMode('RESULT');
+      this.result = { kind: sess.kind, saveFailed: true };
+      this.emit('result', this.result);
+      return;
+    }
+    this.result = { kind: sess.kind, ...r, session: sess };
+    this.setMode('RESULT');
+    this.emit('result', this.result);
+  }
+
+  async retryFinish() {
+    if (!this.pendingFinish) return { ok: false };
+    const { sess, win, ev } = this.pendingFinish;
+    this.pendingFinish = null;
+    return this.finishSession(sess, win, ev);
+  }
+
+  // RESULT → FARM. The farm battle kept running state; it was simply not stepped.
+  returnToFarm() {
+    if (this.pendingFinish) return { ok: false, reason: 'unsaved' };
+    const sess = this.session;
+    this.session = null;
+    this.active = this.farm;
+    this.result = null;
+    this.acc = 0;
+    this.setMode('FARM');
+    this.emit('session', null);
+    return { ok: true, viewBefore: sess?.viewBefore };
+  }
+
+  // Leave a boss fight early (counts as a loss, no penalty).
+  forfeit() {
+    if (!this.active || this.active === this.farm || this.active.over) return;
+    this.active.finish('defeat', 'forfeit');
+    this.process(this.active.drainEvents());
+  }
+
+  // ---------- farm location ----------
+  async setFarm(regionId, wave, autoAdvance = true) {
+    const r = await this.transact('setFarm', (s) => {
+      if (!prog.regionUnlocked(s, regionId)) return { ok: false, reason: 'locked' };
+      const max = s.progression.maxWave[regionId] || 1;
+      if (wave > max) return { ok: false, reason: 'wave' };
+      s.progression.region = regionId;
+      s.progression.wave = wave;
+      s.progression.waveKills = 0;
+      s.progression.autoAdvance = autoAdvance;
+      return { ok: true };
+    });
+    if (r.ok && this.mode === 'FARM') { this.startFarm(); this.emit('farmChanged', {}); }
+    return r;
+  }
+
+  // ---------- player actions ----------
+  buyUpgrade(stat, want) { return this.transact('upgrade', (s) => eco.buyUpgrade(s, stat, want)); }
+  equip(id) { return this.transact('equip', (s) => eco.equip(s, id)); }
+  unequip(slot) { return this.transact('unequip', (s) => eco.unequip(s, slot)); }
+  autoEquip() { return this.transact('autoEquip', (s) => eco.autoEquip(s)); }
+  setLock(id, v) { return this.transact('lock', (s) => eco.setLock(s, id, v)); }
+  enhance(id) { return this.transact('enhance', (s) => eco.enhance(s, id)); }
+  dismantle(ids) { return this.transact('dismantle', (s) => eco.dismantle(s, ids)); }
+  moveOverflow() { return this.transact('overflow', (s) => eco.moveOverflow(s)); }
+  markSeen(ids) { for (const it of this.state.inventory) if (ids.includes(it.id)) it.isNew = false; }
+  choosePromotion(branch, opts) { return this.transact('promotion', (s) => prog.choosePromotion(s, branch, opts)); }
+  setSkillSlot(idx, skillId) {
+    return this.transact('skillSlot', (s) => {
+      const max = prog.slotCount(s);
+      if (idx >= max) return { ok: false, reason: 'locked-slot' };
+      if (skillId && !prog.unlockedSkills(s).includes(skillId)) return { ok: false, reason: 'locked-skill' };
+      const eq = s.skills.equipped;
+      const at = skillId ? eq.indexOf(skillId) : -1;
+      if (at >= 0) eq[at] = eq[idx];       // swap if already equipped elsewhere
+      eq[idx] = skillId;
+      return { ok: true };
+    });
+  }
+  setUltAuto(mode) { return this.transact('ultAuto', (s) => { s.skills.ultAuto = mode; return { ok: true }; }); }
+  setAutoCast(v) { return this.transact('autoCast', (s) => { s.skills.autoCast = v; return { ok: true }; }); }
+  setSetting(k, v) { return this.transact('setting', (s) => { s.settings[k] = v; return { ok: true }; }); }
+  castManual(id) { return this.active ? this.active.castManual(id) : false; }
+
+  // ---------- persistence ----------
+  async transact(label, fn) {
+    if (!this.state) return { ok: false, reason: 'noState' };
+    if (this.busy) return { ok: false, reason: 'busy' };
+    if (this.mode === 'CONFLICT') return { ok: false, reason: 'conflict' };
+    this.busy = true;
+    try {
+      const draft = deepClone(this.state);
+      const res = fn(draft) || { ok: true };
+      if (!res.ok) return res;
+      draft.rngSeed = this.rng.state();
+      const c = await this.commitState(draft, label);
+      if (!c.ok) {
+        this.emit('saveError', { reason: label, error: c.error, conflict: c.conflict });
+        return { ok: false, reason: c.conflict ? 'conflict' : 'save', error: c.error };
+      }
+      this.state = draft;
+      this.syncHero();
+      this.emit('tx', { label, res });
+      this.emit('state', this.state);
+      return res;
+    } finally {
+      this.busy = false;
+    }
+  }
+
+  async commitState(s, label) {
+    s.savedAt = this.now();
+    s.offlineSnapshot.lastActiveAt = this.mode === 'OFFLINE' ? s.offlineSnapshot.lastActiveAt : this.now();
+    const c = await this.saver.commit(s, label);
+    if (c.ok) { this.saveStatus = { ok: true, at: s.savedAt, error: null }; }
+    else {
+      this.state && this.state.diagnostics && this.state.diagnostics.saveFailures++;
+      this.saveStatus = { ok: false, at: this.saveStatus.at, error: c.error };
+      if (c.conflict) this.setMode('CONFLICT');
+    }
+    this.emit('saveStatus', this.saveStatus);
+    return c;
+  }
+
+  async commit(label) {
+    if (!this.state) return { ok: false };
+    this.state.rngSeed = this.rng.state();
+    return this.commitState(this.state, label);
+  }
+
+  // Routine progress (kills, gold). Live state is saved as-is.
+  async checkpoint(label) {
+    if (this.busy || this.mode === 'CONFLICT' || !this.state) return;
+    this.busy = true;
+    try { await this.commit(label); } finally { this.busy = false; }
+  }
+
+  async onHidden() {
+    this.hidden = true;
+    if (this.mode === 'CONFLICT' || !this.state) return;
+    await this.checkpoint('hidden');
+  }
+  onVisible() {
+    this.hidden = false;
+    this.acc = 0;          // never replay the hidden time as foreground ticks
+    if (!this.state || this.mode === 'CONFLICT') return;
+    if (this.mode === 'FARM' || this.mode === 'DEFEAT') {
+      const claim = this.prepareOffline();
+      if (claim) this.commit('offlinePrepared').then((c) => { if (!c.ok) this.emit('saveError', { reason: 'offline', error: c.error }); });
+    }
+    this.emit('state', this.state);
+  }
+
+  // Export / import / reset (UI asks for confirmation before calling these).
+  exportJson() { return JSON.stringify({ format: 'asteria-save', exportedAt: this.now(), state: this.state }, null, 1); }
+  async importState(next) {
+    return this.replaceState(next, 'import');
+  }
+  async resetGame() { return this.replaceState(newGame(this.now()), 'reset'); }
+  async replaceState(next, label) {
+    if (this.busy) return { ok: false, reason: 'busy' };
+    this.busy = true;
+    try {
+      next.revision = this.state ? this.state.revision : (next.revision || 0);
+      const c = await this.commitState(next, label);
+      if (!c.ok) return { ok: false, reason: 'save', error: c.error };
+      this.state = next;
+      this.rng = makeRng(next.rngSeed);
+      this.session = null; this.result = null; this.claim = null;
+      this.startFarm();
+      this.setMode('FARM');
+      this.emit('state', this.state);
+      return { ok: true };
+    } finally { this.busy = false; }
+  }
+}
+
+export { MONSTERS };

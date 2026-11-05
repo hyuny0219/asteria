@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#100D18">
+<title>아스테리아 연대기 · NOCTURNE</title>
+<link rel="preload" href="assets/runtime/fonts/NotoSansKR-regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles/app.css">
+</head>
+<body>
+<div id="title" class="title-screen" data-screen="title" role="main" aria-label="시작 화면">
+  <img class="wm" src="assets/runtime/ui/wordmark.svg" alt="ASTERIA NOCTURNE">
+  <div class="bar" role="progressbar" aria-label="불러오는 중"><i></i></div>
+  <p class="msg muted" aria-live="polite">불러오는 중…</p>
+  <div class="btns"></div>
+  <noscript><p>이 게임은 JavaScript가 필요합니다.</p></noscript>
+</div>
+<main id="app" hidden></main>
+<div id="modals"></div>
+<div id="toasts" class="toasts" aria-live="polite"></div>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>

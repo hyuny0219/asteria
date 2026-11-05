@@ -1,0 +1,254 @@
+{
+ "balanceVersion": "0.2-mvp-tuned",
+ "seeds": 4,
+ "hours": 34,
+ "sessions": false,
+ "milestones": {
+  "firstUpgrade": {
+   "median": 14,
+   "p10": 12,
+   "p90": 14,
+   "reached": 4
+  },
+  "firstItem": {
+   "median": 60,
+   "p10": 53,
+   "p90": 86,
+   "reached": 4
+  },
+  "firstBossTry_B01": {
+   "median": 185,
+   "p10": 167,
+   "p90": 197,
+   "reached": 4
+  },
+  "win_B01": {
+   "median": 331,
+   "p10": 249,
+   "p90": 354,
+   "reached": 4
+  },
+  "win_B02": {
+   "median": 1326,
+   "p10": 1003,
+   "p90": 1553,
+   "reached": 4
+  },
+  "lv25": {
+   "median": 50440,
+   "p10": 50200,
+   "p90": 50773,
+   "reached": 4
+  },
+  "tokens": {
+   "median": 50645,
+   "p10": 50402,
+   "p90": 50982,
+   "reached": 4
+  },
+  "lv30": {
+   "median": 79065,
+   "p10": 78718,
+   "p90": 79394,
+   "reached": 4
+  },
+  "win_B03": {
+   "median": 25986,
+   "p10": 20511,
+   "p90": 26301,
+   "reached": 4
+  },
+  "trial": {
+   "median": 79086,
+   "p10": 78742,
+   "p90": 79414,
+   "reached": 4
+  },
+  "promotion": {
+   "median": 79087,
+   "p10": 78743,
+   "p90": 79415,
+   "reached": 4
+  },
+  "lv35": {
+   "median": 111204,
+   "p10": 110219,
+   "p90": 113191,
+   "reached": 4
+  }
+ },
+ "ttk": {
+  "meadow": {
+   "median": 3.05,
+   "p10": 1.7,
+   "p90": 4.35,
+   "n": 482
+  },
+  "desert": {
+   "median": 3.2,
+   "p10": 2,
+   "p90": 4.55,
+   "n": 1380
+  },
+  "mine": {
+   "median": 3,
+   "p10": 1.55,
+   "p90": 4.6,
+   "n": 199959
+  }
+ },
+ "bosses": {
+  "B01": {
+   "fights": 8,
+   "winRate": 0.5,
+   "winSecMedian": 47,
+   "tries": 2
+  },
+  "B02": {
+   "fights": 18,
+   "winRate": 0.2222222222222222,
+   "winSecMedian": 56,
+   "tries": 4
+  },
+  "B03": {
+   "fights": 48,
+   "winRate": 0.08333333333333333,
+   "winSecMedian": 60,
+   "tries": 12
+  }
+ },
+ "deaths": [
+  57,
+  77,
+  64,
+  63
+ ],
+ "branchParity": {
+  "berserker": [
+   31476,
+   31789
+  ],
+  "knight": [
+   35215,
+   34104
+  ]
+ },
+ "final": [
+  {
+   "level": 35,
+   "region": "mine",
+   "wave": 10,
+   "gold": 36299,
+   "ore": 13190,
+   "dungeonBest": 3,
+   "kills": 53644,
+   "stats": {
+    "atk": 440,
+    "hp": 4021,
+    "def": 175,
+    "crit": 0.19625,
+    "critMul": 1.5,
+    "aspd": 1.57,
+    "rawCrit": 0.19625,
+    "equipBonus": {
+     "atk": 141,
+     "hp": 1671,
+     "def": 67,
+     "crit": 0.03225
+    },
+    "capped": {
+     "crit": false,
+     "aspd": false
+    }
+   },
+   "playedSec": 110219
+  },
+  {
+   "level": 35,
+   "region": "mine",
+   "wave": 10,
+   "gold": 43094,
+   "ore": 13492,
+   "dungeonBest": 3,
+   "kills": 53780,
+   "stats": {
+    "atk": 359,
+    "hp": 4529,
+    "def": 196,
+    "crit": 0.20528000000000002,
+    "critMul": 1.5,
+    "aspd": 1.57,
+    "rawCrit": 0.20528000000000002,
+    "equipBonus": {
+     "atk": 107,
+     "hp": 1589,
+     "def": 63,
+     "crit": 0.041280000000000004
+    },
+    "capped": {
+     "crit": false,
+     "aspd": false
+    }
+   },
+   "playedSec": 120336
+  },
+  {
+   "level": 35,
+   "region": "mine",
+   "wave": 10,
+   "gold": 50086,
+   "ore": 13328,
+   "dungeonBest": 3,
+   "kills": 53722,
+   "stats": {
+    "atk": 435,
+    "hp": 4048,
+    "def": 176,
+    "crit": 0.20432,
+    "critMul": 1.5,
+    "aspd": 1.57,
+    "rawCrit": 0.20432,
+    "equipBonus": {
+     "atk": 137,
+     "hp": 1698,
+     "def": 68,
+     "crit": 0.04032000000000001
+    },
+    "capped": {
+     "crit": false,
+     "aspd": false
+    }
+   },
+   "playedSec": 111204
+  },
+  {
+   "level": 35,
+   "region": "mine",
+   "wave": 10,
+   "gold": 47375,
+   "ore": 13289,
+   "dungeonBest": 3,
+   "kills": 53546,
+   "stats": {
+    "atk": 389,
+    "hp": 4820,
+    "def": 209,
+    "crit": 0.20432,
+    "critMul": 1.5,
+    "aspd": 1.57,
+    "rawCrit": 0.20432,
+    "equipBonus": {
+     "atk": 137,
+     "hp": 1842,
+     "def": 74,
+     "crit": 0.04032000000000001
+    },
+    "capped": {
+     "crit": false,
+     "aspd": false
+    }
+   },
+   "playedSec": 113191
+  }
+ ]
+}
