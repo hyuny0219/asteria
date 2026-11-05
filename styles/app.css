@@ -14,8 +14,10 @@
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 html, body { margin: 0; background: var(--bg); color: var(--text); overscroll-behavior: none; }
-html { height: 100%; }
-body { min-height: 100%; -webkit-tap-highlight-color: transparent; }
+/* The page itself never scrolls (no rubber-band, no address-bar shift): only the
+   panel list inside the app scrolls, so the top bar and bottom menu stay put. */
+html { height: 100%; overflow: hidden; }
+body { position: fixed; inset: 0; width: 100%; height: 100%; overflow: hidden; -webkit-tap-highlight-color: transparent; }
 button { touch-action: manipulation; -webkit-user-select: none; user-select: none; }
 body { font-family: 'Noto Sans KR', system-ui, sans-serif; font-size: 16px; line-height: 1.6; -webkit-text-size-adjust: 100%; }
 button, input, select, textarea { font: inherit; color: inherit; }
@@ -25,7 +27,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 /* Shell: exactly one screen tall. Battle and panel flex; everything else is fixed.
    Below 560px of height the page scrolls instead of squeezing. */
-#app { max-width: 480px; margin: 0 auto; height: 100vh; height: 100dvh; min-height: 560px; display: flex; flex-direction: column; padding-top: var(--safe-t); overflow: hidden; position: relative; }
+#app { max-width: 480px; margin: 0 auto; height: 100%; display: flex; flex-direction: column; padding-top: var(--safe-t); overflow: hidden; position: relative; }
 @media (min-width: 481px) { #app { border-left: 1px solid var(--border); border-right: 1px solid var(--border); } }
 #app[inert] { filter: brightness(0.75); }
 
@@ -61,8 +63,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .chip-btn[disabled] { opacity: .55; cursor: default; }
 
 /* ---- battle 220 ---- */
-.battle { position: relative; flex: 0 0 clamp(200px, 31dvh, 300px); background: #1b1526; overflow: hidden; }
-@supports not (height: 1dvh) { .battle { flex-basis: clamp(200px, 31vh, 300px); } }
+.battle { position: relative; flex: 0 0 clamp(150px, 31dvh, 300px); background: #1b1526; overflow: hidden; }
+@supports not (height: 1dvh) { .battle { flex-basis: clamp(150px, 31vh, 300px); } }
 .battle canvas { width: 100%; height: 100%; display: block; touch-action: manipulation; }
 .battle .overlay-tl { position: absolute; left: 8px; bottom: 8px; display: flex; gap: 6px; z-index: 2; }
 .battle .overlay-tr { position: absolute; right: 8px; bottom: 8px; display: flex; gap: 6px; z-index: 2; }
@@ -95,7 +97,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .skill-divider { width: 1px; height: 40px; background: var(--border); }
 
 /* ---- lower area: goal 56 + panel 312 ---- */
-.lower { display: flex; flex-direction: column; flex: 1 1 0; min-height: 0; }
+.lower { display: flex; flex-direction: column; flex: 1 1 0; min-height: 120px; }
 .goal { height: 52px; flex: none; margin: 0 var(--gutter); padding: 0 12px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel); display: flex; align-items: center; gap: 10px; text-align: left; cursor: pointer; width: calc(100% - 2 * var(--gutter)); }
 .goal .lbl { font-size: 14px; color: var(--gold); font-weight: 700; flex: none; }
 .goal .txt { font-size: 14px; font-weight: 700; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -218,7 +220,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .check .p { font-size: 14px; color: var(--gold); font-weight: 700; font-variant-numeric: tabular-nums; }
 .check .go { width: auto; min-height: 44px; font-size: 14px; }
 
-.title-screen { position: fixed; inset: 0; z-index: 60; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 24px; text-align: center; }
+.title-screen { position: fixed; inset: 0; z-index: 60; overflow-y: auto; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 24px; text-align: center; }
 .title-screen .wm { width: min(320px, 80vw); }
 .title-screen .bar { width: 220px; height: 6px; border-radius: 3px; background: var(--panel); overflow: hidden; }
 .title-screen .bar i { display: block; height: 100%; width: 0; background: var(--gold); transition: width .2s; }
@@ -276,3 +278,9 @@ input.text { width: 100%; min-height: 44px; background: var(--panel); border: 1p
 .title-screen .btns .text { text-align: center; font-size: 18px; min-height: 52px; }
 .fs-btn { width: 40px; height: 44px; margin-right: -8px; color: var(--muted); }
 :fullscreen, ::backdrop { background: var(--bg); }
+
+/* very short screens (landscape, keyboard open): shrink the fixed rows a bit */
+@media (max-height: 560px) {
+  .skills { height: 56px; } .skill { width: 46px; height: 46px; } .skill.ult { width: 50px; height: 50px; }
+  .goal { height: 44px; } .panel { margin-top: 4px; }
+}
