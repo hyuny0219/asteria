@@ -89,7 +89,7 @@ export function computeClaim(state, now, claimId) {
   claim.ore += claim.convertedItems * O.overflowItemToOre;
   // items are described here; real item objects are created at apply time
   claim.items = [];
-  for (let i = 0; i < make; i++) claim.items.push({ slot: rollSlot(rng), rarity: rollRarity(rng, EQ.rarityConditional), level: vf.level });
+  for (let i = 0; i < make; i++) claim.items.push({ slot: rollSlot(rng), rarity: rollRarity(rng, EQ.offlineRarity), level: vf.level });
   return claim;
 }
 

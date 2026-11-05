@@ -1,0 +1,66 @@
+[
+ {
+  "name": "nickname rule shown",
+  "pass": true,
+  "info": {
+   "err": "2~10자, 한글·영문·숫자·_ 만 쓸 수 있어요."
+  }
+ },
+ {
+  "name": "class picker → mage saved, mage ult on bar",
+  "pass": true,
+  "info": {
+   "cls": "mage",
+   "chosen": true,
+   "ult": "궁극기 메테오 · 게이지 0/100"
+  }
+ },
+ {
+  "name": "attendance popup on first entry",
+  "pass": true,
+  "info": {}
+ },
+ {
+  "name": "attendance claimed once",
+  "pass": true,
+  "info": {
+   "count": 1,
+   "nick": "선배테스트",
+   "gold": 400
+  }
+ },
+ {
+  "name": "nickname in status bar",
+  "pass": true,
+  "info": {
+   "nm": "선배테스트"
+  }
+ },
+ {
+  "name": "no attendance popup after claiming today",
+  "pass": true,
+  "info": {}
+ },
+ {
+  "name": "return bonus claimed and boost active",
+  "pass": true,
+  "info": {
+   "pending": false,
+   "boost": true
+  }
+ },
+ {
+  "name": "second profile has its own save",
+  "pass": true,
+  "info": {
+   "attendance": 0
+  }
+ },
+ {
+  "name": "no page errors",
+  "pass": true,
+  "info": {
+   "errs": []
+  }
+ }
+]

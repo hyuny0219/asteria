@@ -57,7 +57,7 @@ async function check(page, id, vp, note = '') {
       const visible = r.width > 0 && r.height > 0 && getComputedStyle(e).visibility !== 'hidden' && !e.closest('[hidden]') && !e.closest('[inert]');
       return visible;
     });
-    const small = els.filter((e) => { const r = e.getBoundingClientRect(); return (r.height < 40 || r.width < 40) && e.type !== 'checkbox' && e.type !== 'range' && e.type !== 'file'; })
+    const small = els.filter((e) => { const r = e.getBoundingClientRect(); return (r.height < 32 || r.width < 32) && e.type !== 'checkbox' && e.type !== 'range' && e.type !== 'file'; })
       .map((e) => (e.getAttribute('aria-label') || e.textContent || e.tagName).trim().slice(0, 24) + ` ${Math.round(e.getBoundingClientRect().width)}x${Math.round(e.getBoundingClientRect().height)}`);
     const wide = [...document.querySelectorAll('body *')].filter((e) => { const r = e.getBoundingClientRect(); return r.width > 0 && (r.right > vw + 1 || r.left < -1) && !e.closest('canvas') && getComputedStyle(e).position !== 'fixed'; }).slice(0, 5).map((e) => e.className || e.tagName);
     const brokenImg = [...document.images].filter((i) => i.complete && i.naturalWidth === 0 && !i.closest('[hidden]')).map((i) => i.src.split('/').pop());
@@ -68,7 +68,7 @@ async function check(page, id, vp, note = '') {
   const file = `${id}_${vp[0]}x${vp[1]}.png`;
   await page.screenshot({ path: path.join(SHOTS, file) });
   const errors = page.qaErrors.splice(0);
-  const pass = !r.over && !r.modalOver && !r.brokenImg.length && !errors.length && r.screens.includes(id);
+  const pass = !r.over && !r.modalOver && !r.brokenImg.length && !errors.length && !r.small.length && r.screens.includes(id);
   results.screens.push({ id, viewport: `${vp[0]}x${vp[1]}`, pass, note, file, ...r, errors });
   console.log(`${pass ? 'PASS' : 'FAIL'} ${id.padEnd(12)} ${vp[0]}x${vp[1]} overflow=${r.over || r.modalOver} small=${r.small.length} imgs=${r.brokenImg.length} err=${errors.length} screens=${r.screens.join(',')}${note ? ' · ' + note : ''}`);
   return r;
@@ -174,7 +174,7 @@ async function screensAt(browser, vp) {
   await modal(page, 'openQuest');
   await check(page, 'quest', vp);
   await closeAll(page);
-  await page.evaluate(async () => { const g = window.__asteria.game; await g.transact('qa', (s) => { s.promotion.trialCleared = true; return { ok: true }; }); });
+  await page.evaluate(async () => { const g = window.__asteria.game; await g.transact('qa', (s) => { s.promotion.trialCleared = true; s.promotion.trials = { ...(s.promotion.trials || {}), 1: true }; return { ok: true }; }); });
   await modal(page, 'openPromotion');
   await check(page, 'promotion', vp);
   await closeAll(page);
@@ -182,9 +182,65 @@ async function screensAt(browser, vp) {
   await modal(page, 'openSettings');
   await check(page, 'settings', vp);
   await closeAll(page);
-  await modal(page, 'openSummon');
-  await check(page, 'summon', vp);
+  // ---- v4 screens ----
+  const v4 = (fn, ...args) => page.evaluate(async ([fn, args]) => { const V = await import('./src/ui/v4.js'); V[fn](window.__asteria.app, ...args); }, [fn, args]);
+  await page.evaluate(async () => { await window.__asteria.game.transact('qa', (s) => { s.wallet.gem = 20000; s.wallet.eqTicket = 2; s.wallet.skTicket = 1; return { ok: true }; }); });
+  await v4('openGacha', 'eq');
+  await check(page, 'gacha', vp, '장비 뽑기 · 확률 공개 · 천장');
+  await page.click('.modal-actions .btn-primary');
+  await page.waitForSelector('[data-screen=gachaResult]', { timeout: 5000 });
+  await page.waitForTimeout(1200);
+  await check(page, 'gachaResult', vp, '11회 결과 (저장 후 공개)');
   await closeAll(page);
+  await v4('openGacha', 'sk');
+  await check(page, 'gachaskill', vp, '스킬 뽑기');
+  await page.click('.modal-actions .btn-primary');
+  await page.waitForSelector('[data-screen=gachaResult]', { timeout: 5000 });
+  await page.waitForTimeout(1200);
+  await check(page, 'gachaResult', vp, '스킬 11회 결과');
+  await closeAll(page);
+  await v4('openMissions');
+  await check(page, 'missions', vp);
+  await closeAll(page);
+  await v4('openClassPicker');
+  await check(page, 'classpick', vp, '클래스 선택 4종');
+  await closeAll(page);
+  await page.evaluate(() => window.__asteria.app.setTab('growth'));
+  await check(page, 'statpoints', vp, '능력치 포인트');
+  await page.evaluate(async () => { await window.__asteria.game.transact('qa', (s) => { s.skills.runes.owned = { lifesteal: 2, focus: 1, gale: 1 }; s.skills.runes.equipped = ['lifesteal', null]; return { ok: true }; }); window.__asteria.app.setTab('skills'); });
+  await check(page, 'runes', vp, '각인 2칸');
+  await page.evaluate(() => window.__asteria.app.setTab('equipment'));
+  await check(page, 'inventory', vp, '8부위 · 6등급');
+  // tower / raid
+  await page.evaluate(async () => { await window.__asteria.game.transact('qa', (s) => { s.progression.bossCleared.B03 = true; s.player.level = 95; s.progression.bossCleared.B09 = true; return { ok: true }; }); window.__asteria.app.setTab('dungeon'); });
+  await check(page, 'tower', vp, '시련의 탑 · 레이드 카드');
+  await page.evaluate(() => { window.__asteria.game.startTower(); });
+  await ff(page, 3);
+  await page.evaluate(() => window.__asteria.game.forfeit());
+  await page.waitForSelector('[data-screen=towerResult]', { timeout: 5000 }).catch(() => {});
+  await check(page, 'towerResult', vp, '탑 결과');
+  await page.click('.modal-actions .btn:last-child');
+  await page.waitForTimeout(300);
+  await page.evaluate(async () => { await window.__asteria.game.startRaid(); });
+  await ff(page, 4);
+  await page.evaluate(() => window.__asteria.game.forfeit());
+  await page.waitForSelector('[data-screen=raidResult]', { timeout: 5000 }).catch(() => {});
+  await check(page, 'raidResult', vp, '레이드 결과');
+  await page.click('.modal-actions .btn-primary');
+  await page.waitForTimeout(300);
+  // tier 2 / 3 promotion
+  await page.evaluate(async () => { await window.__asteria.game.transact('qa', (s) => { s.player.branch = 'knight'; s.player.tier = 1; s.player.level = 60; s.wallet.awakenStone = 10; s.wallet.gold = 1e9; s.progression.bossCleared.B06 = true; s.tower.best = 5; return { ok: true }; }); });
+  await v4('openPromotionTier', 2);
+  await check(page, 'promotion', vp, '2차 승급');
+  await page.click('.modal-actions .btn-primary');
+  await page.waitForSelector('[data-screen=promoPlay]', { timeout: 5000 }).catch(() => {});
+  await check(page, 'promoPlay', vp, '2차 승급 완료');
+  await closeAll(page);
+  await page.evaluate(async () => { await window.__asteria.game.transact('qa', (s) => { s.player.level = 90; s.wallet.starShard = 3; s.progression.bossCleared.B09 = true; s.promotion.trials = { ...(s.promotion.trials || {}), 3: true }; return { ok: true }; }); });
+  await modal(page, 'openQuest');
+  await check(page, 'quest', vp, '3차 승급 체크리스트');
+  await closeAll(page);
+  await page.evaluate(async () => { await window.__asteria.game.transact('qa', (s) => { s.player.tier = 1; s.player.level = 30; s.wallet.gold = 1e6; return { ok: true }; }); });
   // save error (18): next save fails, try an upgrade
   await page.evaluate(async () => { await window.__asteria.game.transact('qa', (s) => { s.player.statsUpgrades.atk = 3; s.wallet.gold = 1e6; return { ok: true }; }); window.__asteria.app.setTab('growth'); });
   await page.waitForTimeout(300);

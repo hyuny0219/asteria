@@ -135,13 +135,16 @@ test('dismantle: locked/equipped protected, 80% refund floored, no double refund
   assert.ok(s.inventory.find((i) => i.id === a.id) && s.inventory.find((i) => i.id === b.id));
 });
 
-test('enhance: +10 cap, ore never negative, guaranteed success', () => {
+// v4: +1..+5 guaranteed, max +15 (fail rules tested in v4.test.mjs)
+test('enhance: +5 guaranteed, +15 cap, ore never negative', () => {
   const s = newGame(T0);
   const it = makeItem(s, { slot: 'weapon', rarity: 'common', level: 1, rng: makeRng(2) });
   addItems(s, [it]);
-  s.wallet.ore = 10000;
-  for (let i = 0; i < 12; i++) enhance(s, it.id);
-  assert.equal(it.enhance, 10);
+  s.wallet.ore = 1e9;
+  for (let i = 0; i < 5; i++) assert.equal(enhance(s, it.id, () => 0.99).success, true);
+  assert.equal(it.enhance, 5);
+  for (let i = 0; i < 10; i++) enhance(s, it.id, () => 0);   // rng 0 → always succeeds
+  assert.equal(it.enhance, 15);
   assert.equal(enhance(s, it.id).reason, 'max');
   s.wallet.ore = 0;
   const it2 = makeItem(s, { slot: 'weapon', rarity: 'common', level: 1, rng: makeRng(2) });
@@ -165,16 +168,20 @@ test('inventory 200: extra items go to overflow, never deleted', () => {
   assert.equal(s.progression.counters.overflowConverted, 5);
 });
 
-test('skills: 3 slots before promotion, 4 after; ult separate', () => {
+// v4: 5 slot entries (3 base, 4th at tier 1, 5th at tier 2)
+test('skills: 3 slots before promotion, 4 after tier 1, 5 after tier 2; ult separate', () => {
   const s = newGame(T0);
   assert.equal(slotCount(s), 3);
-  assert.equal(s.skills.equipped.length, 4);
+  assert.equal(s.skills.equipped.length, 5);
   assert.equal(s.skills.equipped[3], null);
-  s.player.branch = 'knight';
+  s.player.branch = 'knight'; s.player.tier = 1;
   assert.equal(slotCount(s), 4);
+  s.player.tier = 2;
+  assert.equal(slotCount(s), 5);
 });
 
-test('Lv30 EXP is stored, applied in order after promotion, capped at 35', () => {
+// v4: cap is Lv 100 (was 35)
+test('Lv30 EXP is stored, applied in order after promotion, capped at 100', () => {
   const s = newGame(T0);
   s.player.level = 29;
   const r = gainExp(s, expToNext(29) + 5000);
@@ -188,10 +195,11 @@ test('Lv30 EXP is stored, applied in order after promotion, capped at 35', () =>
   const p = choosePromotion(s, 'berserker');
   assert.ok(p.ok); assert.equal(s.wallet.token, 0); assert.equal(s.player.level, 32); assert.equal(s.player.exp, 10); assert.equal(s.player.pendingExp, 0);
   assert.equal(s.skills.equipped[3], 'berserkStrike');
-  // cap 35: overflow EXP is discarded (MVP MAX)
-  s.player.level = 34; s.player.exp = 0;
-  const c = gainExp(s, expToNext(34) + 999);
-  assert.equal(s.player.level, 35); assert.equal(s.player.exp, 0); assert.equal(c.discarded, 999);
+  // cap 100: overflow EXP is discarded
+  s.player.level = 99; s.player.tier = 3; s.player.exp = 0;
+  const c = gainExp(s, expToNext(99) + 999);
+  assert.equal(s.player.level, 100); assert.equal(s.player.exp, 0); assert.equal(c.discarded, 999);
+  s.player.tier = 1;
   // re-switch only in dev
   assert.equal(choosePromotion(s, 'knight').reason, 'switch-dev-only');
   assert.ok(choosePromotion(s, 'knight', { dev: true }).ok);

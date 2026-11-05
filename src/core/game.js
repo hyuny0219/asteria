@@ -10,7 +10,7 @@
 // leaves the live state untouched, so nothing is spent or granted twice and no
 // reward animation starts before the save is confirmed.
 import { BALANCE } from '../data/balance.js';
-import { BOSSES, MONSTERS, REGION_BY_ID, waveLevel, DUNGEON } from '../data/content.js';
+import { BOSSES, MONSTERS, REGION_BY_ID, waveLevel, DUNGEON, CLASSES, CLASS_SKILLS, SET_SLOTS } from '../data/content.js';
 import { Battle, killRewards } from './combat.js';
 import * as eco from './economy.js';
 import { makeItem, rollRarity, rollSlot } from './items.js';
@@ -20,6 +20,10 @@ import * as dun from './dungeon.js';
 import { playerStats } from './stats.js';
 import { markTx, newGame } from './state.js';
 import * as rewards from './rewards.js';
+import * as gacha from './gacha.js';
+import * as missions from './missions.js';
+import * as tower from './tower.js';
+import * as raid from './raid.js';
 import { deepClone, makeRng, uid } from './util.js';
 
 const TICK = BALANCE.combat.tickMs;
@@ -68,6 +72,9 @@ export class Game {
     const isNew = !loaded;
     // fixed housekeeping that must be saved together
     const tickets = dun.refreshTickets(this.state, this.now());
+    missions.refreshMissions(this.state, this.now());
+    raid.refreshRaid(this.state, this.now());
+    eco.applyAutoStats(this.state);
     const refund = dun.recoverPendingRun(this.state);
     if (refund) this.notices.push({ type: 'dungeonRefund', ...refund });
     if (tickets.rollback) this.notices.push({ type: 'clockRollback' });
@@ -128,7 +135,8 @@ export class Game {
   // ---------- hero config for battles ----------
   heroCfg() {
     const s = this.state;
-    return { stats: playerStats(s), skills: s.skills, branch: s.player.branch, skillLevel: (id) => prog.skillLevel(s, id) };
+    const cls = s.player.cls || 'warrior';
+    return { stats: playerStats(s), skills: s.skills, branch: s.player.branch, cls, tier: prog.tierOf(s), ult: CLASS_SKILLS[cls].ult, range: CLASSES[cls].range, skillLevel: (id) => prog.skillLevel(s, id) };
   }
   syncHero() {
     const h = this.heroCfg();
@@ -164,6 +172,11 @@ export class Game {
       this.acc -= TICK;
       this.active.step();
       n++;
+      if (this.mode === 'FARM' && this.active === this.farm) {
+        const p = this.state.progression;
+        p.fieldBossSec = (p.fieldBossSec || 0) + TICK / 1000;
+        if (p.fieldBossSec >= BALANCE.combat.fieldBossEverySec && this.farm.spawnFieldBoss(waveLevel(p.region, p.wave))) p.fieldBossSec = 0;
+      }
       this.process(this.active.drainEvents());
       if (this.busy) break;
     }
@@ -188,9 +201,12 @@ export class Game {
     const s = this.state;
     if (ev.type === 'kill') {
       const e = ev.enemy;
-      const r = killRewards(e.level, { elite: e.elite });
+      const r = killRewards(e.level, { elite: e.elite, fieldBoss: e.fieldBoss });
       const mul = rewards.farmMultipliers(s, this.now());
-      r.gold = Math.floor(r.gold * mul.gold); r.exp = Math.floor(r.exp * mul.exp);
+      const gp = 1 + (playerStats(s).goldPct || 0);
+      r.gold = Math.floor(r.gold * mul.gold * gp); r.exp = Math.floor(r.exp * mul.exp);
+      missions.track(s, 'kills', 1, this.now());
+      if (e.fieldBoss) { s.wallet.gem += 20; s.progression.counters.fieldBosses++; r.gem = 20; }
       s.wallet.gold += r.gold;
       const expRes = prog.gainExp(s, r.exp);
       const loot = this.rollLoot(e);
@@ -211,6 +227,7 @@ export class Game {
       if (vf && !this.sameFarm(p.verifiedFarm, vf)) { p.verifiedFarm = vf; this.emit('farmVerified', vf); }
       this.emit('reward', { gold: r.gold, exp: r.exp, expRes, loot, token: tok, advanced, enemy: e });
       if (expRes.levels) { this.syncHero(); this.emit('levelUp', { level: s.player.level }); this.checkpoint('levelUp'); }
+      if (e.fieldBoss) this.checkpoint('fieldBoss');
       if (loot.items.length) this.checkpoint('loot');
     } else if (ev.type === 'heroDown') {
       s.progression.counters.deaths++;
@@ -237,22 +254,28 @@ export class Game {
     const s = this.state;
     const items = [];
     let ore = 0;
-    const chance = e.elite ? EQ.eliteDropChance : EQ.dropChance;
-    if (this.rng() < chance) {
-      const it = makeItem(s, { slot: rollSlot(this.rng), rarity: rollRarity(this.rng, e.elite ? EQ.eliteRarity : EQ.rarityConditional), level: e.level, rng: this.rng });
-      items.push(it);
+    let awaken = 0;
+    if (e.fieldBoss) {
+      const { mythic, ...noMythic } = EQ.bossRarity;
+      items.push(makeItem(s, { slot: rollSlot(this.rng), rarity: rollRarity(this.rng, noMythic), level: e.level, rng: this.rng, source: 'fieldBoss' }));
+    } else {
+      const chance = e.elite ? EQ.eliteDropChance : EQ.dropChance;
+      if (this.rng() < chance) items.push(makeItem(s, { slot: rollSlot(this.rng), rarity: rollRarity(this.rng, e.elite ? EQ.eliteRarity : EQ.rarityConditional), level: e.level, rng: this.rng }));
     }
-    if (e.elite && this.rng() < BALANCE.monster.rewards.oreChanceElite) ore += 1 + Math.floor(e.level / 8);
+    const R = BALANCE.monster.rewards;
+    if (e.elite && this.rng() < R.oreChanceElite) ore += 1 + Math.floor(e.level / 8);
+    if (e.elite && e.level >= R.awakenFromLevel && this.rng() < R.awakenChanceElite) { awaken = 1; s.wallet.awakenStone += 1; }
     s.wallet.ore += ore;
     const added = eco.addItems(s, items);
     if (added.overflowed.length) this.emit('overflow', { count: s.overflow.length });
-    return { items, ore, overflowed: added.overflowed };
+    return { items: added.stored.concat(added.overflowed), ore, awaken, overflowed: added.overflowed, autoDismantled: added.autoDismantled };
   }
 
   // ---------- sessions: boss / dungeon / trial ----------
   canChallengeBoss(bossId) {
     const b = BOSSES[bossId];
     const s = this.state;
+    if (b.raid) return { ok: false, reason: 'raid' };
     if (!prog.regionUnlocked(s, b.region)) return { ok: false, reason: 'region' };
     if ((s.progression.maxWave[b.region] || 1) < 10) return { ok: false, reason: 'wave', need: 10, have: s.progression.maxWave[b.region] || 1 };
     return { ok: true };
@@ -260,6 +283,7 @@ export class Game {
   startBoss(bossId) {
     const c = this.canChallengeBoss(bossId);
     if (!c.ok || this.mode !== 'FARM') return c.ok ? { ok: false, reason: 'mode' } : c;
+    missions.track(this.state, 'boss', 1, this.now());
     this.session = { kind: 'boss', id: uid('boss'), bossId, startedAt: this.now(), viewBefore: this.state.settings.battleView };
     this.active = new Battle({ kind: 'boss', rng: this.rng, hero: this.heroCfg(), boss: { id: bossId } });
     this.acc = 0;
@@ -267,31 +291,61 @@ export class Game {
     this.emit('session', this.session);
     return { ok: true };
   }
-  startTrial() {
-    const cl = prog.promotionChecklist(this.state);
+  startTrial(tier = null) {
+    tier = tier || prog.nextTier(this.state);
+    const cl = prog.promotionChecklist(this.state, tier);
     if (!cl.canTrial || this.mode !== 'FARM') return { ok: false, reason: cl.canTrial ? 'mode' : 'conditions' };
-    this.session = { kind: 'trial', id: uid('trial'), startedAt: this.now(), viewBefore: this.state.settings.battleView };
-    this.active = new Battle({ kind: 'trial', rng: this.rng, hero: this.heroCfg() });
+    this.session = { kind: 'trial', id: uid('trial'), tier, startedAt: this.now(), viewBefore: this.state.settings.battleView };
+    this.active = new Battle({ kind: 'trial', rng: this.rng, hero: this.heroCfg(), trial: { tier } });
     this.acc = 0;
     this.setMode('PROMOTION_TRIAL');
     this.emit('session', this.session);
     return { ok: true };
   }
-  async enterDungeon(stage) {
+  // enterDungeon(stage) keeps the v3 signature (quarry); enterDungeon(type, stage) for others.
+  async enterDungeon(a, b) {
+    const type = typeof a === 'string' ? a : 'quarry';
+    const stage = typeof a === 'string' ? b : a;
     if (this.mode !== 'FARM') return { ok: false, reason: 'mode' };
-    if (!prog.dungeonOpen(this.state)) return { ok: false, reason: 'locked' };
+    if (!prog.dungeonOpen(this.state, type)) return { ok: false, reason: 'locked' };
     const runId = uid('run');
-    const r = await this.transact('dungeonEnter', (s) => dun.beginRun(s, stage, runId, this.now()));
+    const r = await this.transact('dungeonEnter', (s) => { const x = dun.beginRun(s, stage, runId, this.now(), type); if (x.ok) missions.track(s, 'dungeon', 1, this.now()); return x; });
     if (!r.ok) return r;
-    this.session = { kind: 'dungeon', id: runId, stage, startedAt: this.now(), viewBefore: this.state.settings.battleView };
-    this.active = new Battle({ kind: 'dungeon', rng: this.rng, hero: this.heroCfg(), dungeon: { stage, monsters: DUNGEON.monsters } });
+    this.session = { kind: 'dungeon', type, id: runId, stage, startedAt: this.now(), viewBefore: this.state.settings.battleView };
+    this.active = new Battle({ kind: 'dungeon', rng: this.rng, hero: this.heroCfg(), dungeon: dun.runConfig(type, stage) });
     this.acc = 0;
     this.setMode('DUNGEON');
     this.emit('session', this.session);
     return { ok: true };
   }
-  async sweepDungeon() {
-    return this.transact('dungeonSweep', (s) => dun.sweep(s));
+  async sweepDungeon(type = 'quarry') {
+    return this.transact('dungeonSweep', (s) => { const x = dun.sweep(s, { type, skills: this.bookSkills(s), rng: this.rng }); if (x.ok) missions.track(s, 'dungeon', 1, this.now()); return x; });
+  }
+  bookSkills(s) { const u = prog.unlockedSkills(s); const ult = prog.ultId(s); return u.filter((id) => id !== ult); }
+
+  startTower() {
+    if (this.mode !== 'FARM') return { ok: false, reason: 'mode' };
+    if (!prog.towerOpen(this.state)) return { ok: false, reason: 'locked' };
+    const floor = tower.nextFloor(this.state);
+    this.session = { kind: 'tower', id: uid('tower'), floor, startedAt: this.now(), viewBefore: this.state.settings.battleView };
+    this.active = new Battle({ kind: 'tower', rng: this.rng, hero: this.heroCfg(), tower: tower.towerConfig(floor) });
+    this.acc = 0;
+    this.setMode('DUNGEON');
+    this.emit('session', this.session);
+    return { ok: true, floor };
+  }
+  async startRaid() {
+    if (this.mode !== 'FARM') return { ok: false, reason: 'mode' };
+    if (!prog.raidOpen(this.state)) return { ok: false, reason: 'locked' };
+    const id = uid('raid');
+    const r = await this.transact('raidEnter', (s) => raid.beginRaid(s, this.now()));
+    if (!r.ok) return r;
+    this.session = { kind: 'raid', id, bossId: BALANCE.raid.boss, startedAt: this.now(), viewBefore: this.state.settings.battleView };
+    this.active = new Battle({ kind: 'raid', rng: this.rng, hero: this.heroCfg() });
+    this.acc = 0;
+    this.setMode('BOSS');
+    this.emit('session', this.session);
+    return { ok: true };
   }
 
   processSession(ev) {
@@ -321,15 +375,23 @@ export class Game {
         res.first = cleared.first;
         res.unlocked = cleared.unlocked;
         const items = [];
+        const order = Object.keys(BOSSES).indexOf(sess.bossId);
+        const setSlot = () => SET_SLOTS[Math.floor(this.rng() * SET_SLOTS.length)];
         if (cleared.first && !s.progression.firstClearClaimed[sess.bossId]) {
           s.progression.firstClearClaimed[sess.bossId] = sess.id;
-          // first boss: rare weapon guaranteed; later bosses: a rare piece; plus ore
-          const slot = sess.bossId === 'B01' ? 'weapon' : sess.bossId === 'B02' ? 'armor' : 'accessory';
-          items.push(makeItem(s, { slot, rarity: 'rare', level: b.level, rng: this.rng, source: 'firstClear' }));
-          s.wallet.ore += 30 * (Object.keys(BOSSES).indexOf(sess.bossId) + 1);
-          res.ore = 30 * (Object.keys(BOSSES).indexOf(sess.bossId) + 1);
+          // first clear: a guaranteed piece (rare for the first three bosses, epic after), ore and gems
+          const slot = sess.bossId === 'B01' ? 'weapon' : sess.bossId === 'B02' ? 'armor' : order === 2 ? 'necklace' : setSlot();
+          items.push(makeItem(s, { slot, rarity: order < 3 ? 'rare' : 'epic', level: b.level, rng: this.rng, source: 'firstClear', set: b.region }));
+          s.wallet.ore += 30 * (order + 1);
+          res.ore = 30 * (order + 1);
+          s.wallet.gem += 100; res.gem = 100;
+          if (sess.bossId === 'B09') { s.wallet.starShard += 1; res.starShard = 1; }
         } else {
-          items.push(makeItem(s, { slot: rollSlot(this.rng), rarity: rollRarity(this.rng, { uncommon: 0.6, rare: 0.4 }), level: b.level, rng: this.rng, source: 'boss' }));
+          // repeat: one uncommon set piece guaranteed + the boss table (no mythic outside the raid)
+          const { mythic, ...table } = EQ.bossRarity;
+          items.push(makeItem(s, { slot: setSlot(), rarity: 'uncommon', level: b.level, rng: this.rng, source: 'boss', set: b.region }));
+          if (order >= 2) items.push(makeItem(s, { slot: this.rng() < 0.5 ? setSlot() : rollSlot(this.rng), rarity: rollRarity(this.rng, table), level: b.level, rng: this.rng, source: 'boss', set: b.region }));
+          if (sess.bossId === 'B09' && this.rng() < 0.3) { s.wallet.starShard += 1; res.starShard = 1; }
         }
         res.items = items;
         res.overflowed = eco.addItems(s, items).overflowed;
@@ -337,13 +399,22 @@ export class Game {
       });
     } else if (sess.kind === 'dungeon') {
       r = await this.transact('dungeonResult', (s) => {
-        const fr = dun.finishRun(s, sess.id, win);
+        const fr = dun.finishRun(s, sess.id, win, { type: sess.type || 'quarry', skills: this.bookSkills(s), rng: this.rng });
         return { ...fr, win, kills: ev.kills, timeSec: Math.round(ev.t / 1000), reason: ev.reason };
+      });
+    } else if (sess.kind === 'tower') {
+      r = await this.transact('towerResult', (s) => ({ ...tower.finishFloor(s, sess.floor, win), win, kills: ev.kills, timeSec: Math.round(ev.t / 1000), reason: ev.reason }));
+    } else if (sess.kind === 'raid') {
+      r = await this.transact('raidResult', (s) => {
+        if (!markTx(s, sess.id)) return { ok: false, reason: 'duplicate' };
+        const fr = raid.finishRaid(s, ev.damage || 0, this.rng);
+        fr.overflowed = eco.addItems(s, fr.items).overflowed;
+        return { ...fr, win: true, timeSec: Math.round(ev.t / 1000), reason: ev.reason };
       });
     } else if (sess.kind === 'trial') {
       r = await this.transact('trialResult', (s) => {
-        if (win) s.promotion.trialCleared = true;
-        return { ok: true, win, timeSec: Math.round(ev.t / 1000), reason: ev.reason };
+        if (win) { s.promotion.trials[sess.tier || 1] = true; if ((sess.tier || 1) === 1) s.promotion.trialCleared = true; }
+        return { ok: true, win, tier: sess.tier || 1, timeSec: Math.round(ev.t / 1000), reason: ev.reason };
       });
     }
     // Save failed: keep the finished battle frozen and let the user retry the commit.
@@ -404,20 +475,54 @@ export class Game {
 
   // ---------- player actions ----------
   buyUpgrade(stat, want) { return this.transact('upgrade', (s) => eco.buyUpgrade(s, stat, want)); }
-  equip(id) { return this.transact('equip', (s) => eco.equip(s, id)); }
+  equip(id, slot = null) { return this.transact('equip', (s) => eco.equip(s, id, slot)); }
   unequip(slot) { return this.transact('unequip', (s) => eco.unequip(s, slot)); }
   autoEquip() { return this.transact('autoEquip', (s) => eco.autoEquip(s)); }
   setLock(id, v) { return this.transact('lock', (s) => eco.setLock(s, id, v)); }
-  enhance(id) { return this.transact('enhance', (s) => eco.enhance(s, id)); }
+  enhance(id) { return this.transact('enhance', (s) => { const r = eco.enhance(s, id, this.rng); if (r.ok) missions.track(s, 'enhance', 1, this.now()); return r; }); }
   dismantle(ids) { return this.transact('dismantle', (s) => eco.dismantle(s, ids)); }
   moveOverflow() { return this.transact('overflow', (s) => eco.moveOverflow(s)); }
   markSeen(ids) { for (const it of this.state.inventory) if (ids.includes(it.id)) it.isNew = false; }
   choosePromotion(branch, opts) { return this.transact('promotion', (s) => prog.choosePromotion(s, branch, opts)); }
+  promote(tier, branch = null) { return this.transact('promotion', (s) => prog.promote(s, tier, branch, this.now())); }
+  // Class is chosen once, at the very start (before real progress).
+  chooseClass(cls) {
+    return this.transact('chooseClass', (s) => {
+      if (!CLASSES[cls]) return { ok: false, reason: 'class' };
+      if (s.classChosen || s.player.level > 2 || prog.tierOf(s) > 0) return { ok: false, reason: 'class-locked' };
+      s.player.cls = cls;
+      s.skills.equipped = [...CLASS_SKILLS[cls].base, null, null];
+      for (const k of Object.keys(s.player.stats)) s.player.stats[k] = 0;
+      eco.applyAutoStats(s);
+      s.classChosen = true;
+      return { ok: true, cls };
+    });
+  }
+  drawEquipment(n) {
+    return this.transact('drawEquipment', (s) => {
+      const r = gacha.drawEquipment(s, n, this.rng);
+      if (!r.ok) return r;
+      missions.track(s, 'draw', 1, this.now());
+      const added = eco.addItems(s, r.items);
+      return { ...r, overflowed: added.overflowed, converted: added.converted };
+    });
+  }
+  drawSkill(n) { return this.transact('drawSkill', (s) => { const r = gacha.drawSkill(s, n, this.rng); if (r.ok) missions.track(s, 'draw', 1, this.now()); return r; }); }
+  levelSkill(id) { return this.transact('levelSkill', (s) => prog.levelSkill(s, id)); }
+  equipRune(id, slot) { return this.transact('rune', (s) => gacha.equipRune(s, id, slot)); }
+  unequipRune(slot) { return this.transact('rune', (s) => gacha.unequipRune(s, slot)); }
+  allocateStat(key, n = 1) { return this.transact('stat', (s) => eco.allocateStat(s, key, n)); }
+  resetStats() { return this.transact('stat', (s) => eco.resetStats(s)); }
+  setAutoStats(on) { return this.transact('stat', (s) => eco.setAutoStats(s, on)); }
+  setAutoDismantle(v) { return this.transact('setting', (s) => { if (!['off', 'common', 'uncommon', 'rare'].includes(v)) return { ok: false, reason: 'value' }; s.settings.autoDismantle = v; return { ok: true }; }); }
+  claimMission(id) { return this.transact('mission', (s) => missions.claimMission(s, id, this.now())); }
+  claimMissionBonus() { return this.transact('missionBonus', (s) => missions.claimMissionBonus(s, this.now())); }
   setSkillSlot(idx, skillId) {
     return this.transact('skillSlot', (s) => {
       const max = prog.slotCount(s);
       if (idx >= max) return { ok: false, reason: 'locked-slot' };
       if (skillId && !prog.unlockedSkills(s).includes(skillId)) return { ok: false, reason: 'locked-skill' };
+      if (skillId === prog.ultId(s)) return { ok: false, reason: 'locked-skill' };
       const eq = s.skills.equipped;
       const at = skillId ? eq.indexOf(skillId) : -1;
       if (at >= 0) eq[at] = eq[idx];       // swap if already equipped elsewhere

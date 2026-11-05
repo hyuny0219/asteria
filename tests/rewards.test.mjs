@@ -85,7 +85,7 @@ test('return bonus is prepared on load and claimed through a transaction', async
   assert.equal((await g3.claimReturn()).ok, false);
 });
 
-test('schema 1 save migrates to 2 and validates', () => {
+test('schema 1 save migrates to the current schema and validates', () => {
   const s = newGame(T0);
   delete s.profile; delete s.attendance; delete s.returnBonus;
   s.wallet = { gold: 5, ore: 1, token: 0 };
@@ -93,7 +93,7 @@ test('schema 1 save migrates to 2 and validates', () => {
   const data = JSON.stringify(s);
   const r = unpack({ data, sum: hashString(data) });
   assert.equal(r.ok, true, r.error);
-  assert.equal(r.state.schemaVersion, 2);
+  assert.equal(r.state.schemaVersion, 3);   // v4: migrates through 2 → 3
   assert.equal(r.state.wallet.gem, 0);
   assert.equal(r.state.attendance.count, 0);
   assert.deepEqual(validate(r.state), []);

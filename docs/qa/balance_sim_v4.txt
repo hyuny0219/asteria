@@ -1,0 +1,48 @@
+balance 0.4-v4-experimental · warrior/mage/archer/rogue × 2 seeds · 4×30min/day · max 24 days (days since start)
+milestone    median   p10     p90     reached
+lv10         0.25     0.25    0.25    8/8
+lv20         0.5      0.5     0.5     8/8
+lv30         1        1       1.25    8/8
+tier1        1        1       1.25    8/8
+lv40         1.75     1.75    2.25    8/8
+lv50         3.25     3       3.75    8/8
+lv60         5.25     4.75    6       8/8
+tier2        5.25     4.76    6.26    8/8
+lv70         7.75     7       8.5     8/8
+lv80         10.75    9.75    11.75   8/8
+lv90         14.5     13.5    15.5    8/8
+tier3        14.5     13.5    15.5    8/8
+lv100        19.5     18.5    19.75   6/8
+win_B01      0        0       0       8/8
+win_B02      0.01     0.01    0.01    8/8
+win_B03      0.02     0.01    0.25    8/8
+win_B04      0.25     0.25    0.26    8/8
+win_B05      0.5      0.26    0.77    8/8
+win_B06      1.25     0.75    1.5     8/8
+win_B07      2.25     1.76    3.01    8/8
+win_B08      4.75     3.52    6.5     8/8
+win_B09      6.26     4.27    10.76   8/8
+TTK Lv0–9: median 2.60s p90 4.50 (n=5236)
+TTK Lv10–19: median 3.25s p90 4.90 (n=4953)
+TTK Lv20–29: median 3.65s p90 5.55 (n=11304)
+TTK Lv30–39: median 3.10s p90 4.75 (n=19886)
+TTK Lv40–49: median 3.15s p90 4.85 (n=33536)
+TTK Lv50–59: median 3.10s p90 4.70 (n=41650)
+TTK Lv60–69: median 2.85s p90 5.00 (n=60154)
+TTK Lv70–79: median 2.75s p90 4.55 (n=76325)
+TTK Lv80–89: median 2.70s p90 4.30 (n=97624)
+TTK Lv90–99: median 2.30s p90 3.60 (n=125214)
+TTK Lv100–109: median 2.35s p90 3.60 (n=8675)
+B01: fights 8, win 100%, win time median 29s
+B02: fights 8, win 100%, win time median 29s
+B03: fights 26, win 31%, win time median 48s
+B04: fights 18, win 44%, win time median 50s
+B05: fights 34, win 24%, win time median 52s
+B06: fights 43, win 19%, win time median 51s
+B07: fights 36, win 22%, win time median 52s
+B08: fights 47, win 17%, win time median 49s
+B09: fights 27, win 30%, win time median 52s
+warrior: final L100/T3/tower66/void L100/T3/tower65/void · lv100 day 19.75,22.5 · raid BCB CBB · deaths 39,28
+mage: final L100/T3/tower75/void L100/T3/tower74/void · lv100 day 18.5,19.5 · raid AAA CCC · deaths 28,35
+archer: final L100/T3/tower79/void L100/T3/tower75/void · lv100 day —,— · raid BBB BCC · deaths 50,83
+rogue: final L100/T3/tower71/void L100/T3/tower73/void · lv100 day 19.75,18.5 · raid CBB BBB · deaths 47,127

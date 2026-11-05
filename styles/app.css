@@ -6,7 +6,7 @@
   --bg: #100D18; --panel: #211B2B; --panel-2: #302036; --text: #F5EDF0; --muted: #C8BAC9;
   --primary: #8E294C; --primary-h: #AB3D64; --gold: #D8B675; --border: #493547; --ibord: #715D71;
   --danger: #B84D68; --ad: #574071; --ok: #55C59A;
-  --r-common: #9AA3AD; --r-uncommon: #55C59A; --r-rare: #74B8FF;
+  --r-common: #9AA3AD; --r-uncommon: #55C59A; --r-rare: #74B8FF; --r-epic: #B784F5; --r-legendary: #F2A04A; --r-mythic: #F0506E;
   --radius: 10px; --radius-btn: 6px; --gutter: 12px;
   --safe-t: env(safe-area-inset-top, 0px); --safe-b: env(safe-area-inset-bottom, 0px);
   color-scheme: dark;
@@ -289,3 +289,73 @@ input.text { width: 100%; min-height: 36px; background: var(--panel); border: 1p
   .goal { height: 44px; } .panel { margin-top: 4px; }
 }
 .grid4:not(.inv) { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+/* v4: six rarities (border + mark + name; never colour alone) */
+.item.r-epic { border-color: var(--r-epic); } .item.r-legendary { border-color: var(--r-legendary); } .item.r-mythic { border-color: var(--r-mythic); box-shadow: 0 0 0 1px rgba(240,80,110,.45); }
+.mk.r-epic, .rar.r-epic { color: var(--r-epic); } .mk.r-legendary, .rar.r-legendary { color: var(--r-legendary); } .mk.r-mythic, .rar.r-mythic { color: var(--r-mythic); }
+.kv.unique b { color: var(--r-mythic); text-align: right; }
+.pending-tag { position: absolute; left: 4px; bottom: 4px; font-size: 12px; line-height: 1; padding: 3px 5px; border-radius: 4px; background: rgba(16,13,24,.85); color: var(--muted); border: 1px solid var(--border); }
+/* class picker */
+.class-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-bottom: 8px; }
+.class-card { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 4px 2px 6px; border-radius: 8px; border: 1px solid var(--border); background: var(--panel); cursor: pointer; min-width: 0; line-height: 1.25; }
+.class-card .art { position: relative; display: block; width: 100%; aspect-ratio: 3 / 4; overflow: hidden; border-radius: 6px; }
+.class-card .art img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 10%; display: block; }
+.class-card .art .pending-tag { left: 2px; bottom: 2px; font-size: 12px; padding: 2px 3px; }
+.class-card b { font-size: 14px; }
+.class-card .muted { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.class-card.pick { border: 2px solid var(--gold); box-shadow: 0 0 0 2px rgba(216,182,117,.25); }
+/* progress bars */
+.pbar { height: 6px; border-radius: 3px; background: var(--panel-2); overflow: hidden; margin: 3px 0 6px; }
+.pbar i { display: block; height: 100%; background: var(--ok); }
+.pbar.gold i { background: var(--gold); }
+.check .c .pbar { margin: 4px 0 0; }
+/* gacha */
+.wallet-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 8px 0; }
+.wallet-row .cur { margin-left: 4px; }
+.draw-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.draw { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 6px 2px; border-radius: 8px; border: 2px solid var(--r-common); background: #1a1522; min-width: 0; line-height: 1.25; }
+.draw img, .draw .ico { width: 38px; height: 38px; margin: 6px 0 2px; }
+.draw b { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.draw .muted { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.draw .mk { position: absolute; left: 4px; top: 2px; font-size: 12px; font-weight: 800; }
+.draw .tag { position: absolute; right: 3px; top: 3px; font-size: 12px; line-height: 1; padding: 1px 3px; border-radius: 3px; background: var(--gold); color: #100D18; }
+.draw.r-uncommon { border-color: var(--r-uncommon); } .draw.r-rare { border-color: var(--r-rare); } .draw.r-epic { border-color: var(--r-epic); }
+.draw.r-legendary { border-color: var(--r-legendary); background: #2a2014; } .draw.r-mythic { border-color: var(--r-mythic); background: #2a1420; }
+.draw.top { box-shadow: 0 0 0 3px rgba(242,160,74,.35), 0 0 16px rgba(242,160,74,.45); }
+.draw-grid.reveal .draw { opacity: 0; transform: translateY(8px) scale(.96); animation: rv .32s ease-out forwards; }
+.draw-best { text-align: center; font-weight: 800; color: var(--r-legendary); font-size: 16px; margin: 0 0 8px; }
+/* stat points */
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 6px 0; }
+.stat-pt { display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto; gap: 2px 6px; align-items: center; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--border); background: var(--panel-2); }
+.stat-pt span { font-size: 13px; } .stat-pt b { text-align: right; font-variant-numeric: tabular-nums; }
+.stat-pt .chip-btn { padding: 0 6px; }
+.stat-pt.main { border-color: var(--gold); }
+/* runes, skills */
+.rune-ic { width: 44px; height: 44px; border-radius: 50%; border: 1px dashed var(--ibord); display: inline-flex; align-items: center; justify-content: center; color: var(--muted); }
+.rune-ic.on { border: 2px solid var(--r-legendary); color: var(--r-legendary); }
+.rune-list { margin: 6px 0; }
+.rune-list .kv { align-items: center; }
+.sk-lv { font-size: 13px; color: var(--gold); }
+.chip-btn.hot { border-color: var(--gold); color: var(--gold); }
+.locked-card { opacity: .8; }
+.raid-grade { text-align: center; font-size: 22px; font-weight: 900; margin: 0; width: 64px; height: 64px; line-height: 64px; border-radius: 50%; margin: 0 auto 6px; border: 3px solid var(--ibord); }
+.raid-grade.g-S { border-color: var(--r-legendary); color: var(--r-legendary); } .raid-grade.g-A { border-color: var(--r-epic); color: var(--r-epic); } .raid-grade.g-B { border-color: var(--r-rare); color: var(--r-rare); }
+.promo-stage { display: flex; justify-content: center; height: 260px; }
+.promo-stage img { height: 100%; width: auto; object-fit: contain; border-radius: 8px; }
+.promo-info { text-align: center; }
+.promo-info h3 { margin: 8px 0 0; }
+.draw-btn { flex-direction: column; gap: 0; line-height: 1.25; padding: 4px 8px; }
+.draw-btn small { font-size: 12px; font-weight: 500; opacity: .9; }
+.status .me { flex: 1 1 auto; }
+.status .who small { display: block; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.status .wallet { flex: none; }
+.unique-line { margin: 4px 0 0; font-size: 13px; color: var(--r-mythic); line-height: 1.35; }
+.world-card { border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel); margin-bottom: 6px; overflow: hidden; }
+.world-row { width: 100%; display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 6px 10px; border: 0; background: transparent; cursor: pointer; text-align: left; }
+.world-row .wn { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.world-row .ws { flex: none; font-size: 13px; color: var(--gold); font-weight: 700; max-width: 48%; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.world-row .ws.ok { color: var(--ok); }
+.world-row.here { box-shadow: inset 3px 0 0 var(--gold); }
+.world-row.locked { cursor: default; opacity: .65; }
+.world-row.locked .ws { color: var(--muted); font-weight: 500; }
+.world-body { padding: 0 10px 10px; }

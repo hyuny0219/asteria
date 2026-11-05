@@ -57,8 +57,13 @@ export class BattleRenderer {
       const show = s.damageNumbers === 'all' || (s.damageNumbers === 'crit' && ev.crit) || (s.damageNumbers === 'crit' && ev.by === 'enemy');
       const x = ev.by === 'hero' ? (ev.x ?? 220) : HERO_X;
       if (show) this.pushNumber({ x, y: ev.by === 'hero' ? 0.42 : 0.38, text: fmt(ev.dmg), crit: ev.crit, enemy: ev.by === 'enemy', heavy: ev.heavy, guarded: ev.guarded, born: now });
-      if (ev.by === 'hero') this.pushFx({ kind: ev.action === 'ult' ? 'star' : ev.action === 'skill' ? 'arc2' : ev.action === 'counter' ? 'rose' : 'arc', x, born: now, dur: ev.action === 'ult' ? 520 : 200 });
+      if (ev.by === 'hero' && ev.ranged && ev.action !== 'dot') this.pushFx({ kind: 'shot', x, born: now, dur: 180, crit: ev.crit });
+      if (ev.by === 'hero' && ev.action !== 'dot') this.pushFx({ kind: ev.action === 'ult' ? 'star' : ev.action === 'skill' ? 'arc2' : ev.action === 'counter' ? 'rose' : 'arc', x, born: now, dur: ev.action === 'ult' ? 520 : 200 });
       if (ev.by === 'enemy' && ev.heavy) this.kick(3, 100);
+    } else if (ev.type === 'miss') {
+      this.pushNumber({ x: HERO_X, y: 0.38, text: '회피', miss: true, born: now });
+    } else if (ev.type === 'enrage') {
+      this.kick(3, 140);
     } else if (ev.type === 'ultStart') {
       this.pushFx({ kind: 'charge', x: HERO_X, born: now, dur: 700 });
     } else if (ev.type === 'kill') {
@@ -77,7 +82,8 @@ export class BattleRenderer {
   }
 
   // ---------- frame ----------
-  draw(battle, { alpha = 0, region = null, bgId = null, branch = null, label = null, victory = false }) {
+  draw(battle, { alpha = 0, region = null, bgId = null, bgTint = null, branch = null, heroTint = 0, label = null, victory = false }) {
+    this.heroTint = heroTint;
     const ctx = this.ctx;
     const W = this.cssW, H = this.cssH;
     const now = performance.now();
@@ -87,7 +93,7 @@ export class BattleRenderer {
       const a = this.shake.amp;
       ctx.translate((Math.random() * 2 - 1) * a, (Math.random() * 2 - 1) * a);
     }
-    this.drawBg(bgId || (region && region.bg) || 'meadow');
+    this.drawBg(bgId || (region && region.bg) || 'meadow', bgTint ?? (region && !bgId ? region.bgTint : null));
     if (!battle) { ctx.restore(); return; }
     const gy = this.groundY;
     const sx = this.sx;
@@ -113,10 +119,10 @@ export class BattleRenderer {
     ctx.restore();
   }
 
-  drawBg(id) {
+  drawBg(id, tint = null) {
     const ctx = this.ctx;
     const W = this.cssW, H = this.cssH;
-    const key = id + ':' + W + 'x' + H + '@' + this.dpr;
+    const key = id + ':' + W + 'x' + H + '@' + this.dpr + ':' + (tint || 0);
     if (this.bgKey !== key || !this.bgCache) {
       const m = bgMeta(id);
       const img = m && ready(m.file);
@@ -130,7 +136,9 @@ export class BattleRenderer {
         // align the art's ground line (80%) with the stage ground (80%)
         let y0 = c.height * GROUND - dh * (m.groundRatio || GROUND);
         y0 = Math.min(0, Math.max(c.height - dh, y0));
+        if (tint) x.filter = `hue-rotate(${tint}deg) saturate(1.15)`;   // placeholder region look, baked once
         x.drawImage(img, (c.width - dw) / 2, y0, dw, dh);
+        x.filter = 'none';
         // scrim for legibility of numbers/HP bars on bright skies
         const g = x.createLinearGradient(0, 0, 0, c.height);
         g.addColorStop(0, 'rgba(16,13,24,0.35)'); g.addColorStop(0.35, 'rgba(16,13,24,0)'); g.addColorStop(1, 'rgba(16,13,24,0.25)');
@@ -177,6 +185,7 @@ export class BattleRenderer {
     // attacks use the branch figure + lunge only.
     let m = frames[pose];
     if (branch && frames.promo) m = frames.promo;
+    const hf = this.heroTint ? `hue-rotate(${this.heroTint}deg) saturate(1.1)` : '';
     const img = ready(m.file);
     const d = this.spriteDims(m);
     const breathe = motion && pose === 'idle' ? 1 + 0.012 * Math.sin(t / 420) : 1;
@@ -184,7 +193,7 @@ export class BattleRenderer {
     ctx.fillStyle = 'rgba(0,0,0,0.35)';
     ctx.beginPath(); ctx.ellipse(x + dx, gy + 2, 30 * this.fit * this.figScale, 6 * this.fit * this.figScale, 0, 0, Math.PI * 2); ctx.fill();
     if (img) {
-      const sc = scaledImage(img, d.w * this.dpr, d.h * this.dpr, m.file);
+      const sc = scaledImage(img, d.w * this.dpr, d.h * this.dpr, m.file, hf);
       ctx.save();
       ctx.globalAlpha = alpha;
       ctx.translate(x + dx, gy + dy);
@@ -237,8 +246,10 @@ export class BattleRenderer {
     ctx.beginPath(); ctx.ellipse(x, gy + 2, d.w * 0.32, 6 * this.fit, 0, 0, Math.PI * 2); ctx.fill();
     const img = ready(meta.file);
     if (img) {
-      let sc = scaledImage(img, d.w * this.dpr, d.h * this.dpr, meta.file);
-      if (e.elite) sc = outlined(sc, '#EDBD68', meta.file + d.w);
+      const ef = e.def.tint ? `hue-rotate(${e.def.tint}deg) saturate(1.15)` : '';
+      let sc = scaledImage(img, d.w * this.dpr, d.h * this.dpr, meta.file, ef);
+      if (e.enraged) sc = outlined(sc, '#F0506E', meta.file + d.w + ef + 'rage');
+      else if (e.elite) sc = outlined(sc, e.fieldBoss ? '#F2A04A' : '#EDBD68', meta.file + d.w + ef + (e.fieldBoss ? 'fb' : ''));
       ctx.save();
       ctx.globalAlpha = alpha;
       ctx.translate(x + dx, gy + dy);
@@ -251,6 +262,7 @@ export class BattleRenderer {
       if (t < e.flashUntil) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.45 * alpha; ctx.drawImage(sc, -d.px, -d.py, d.w, d.h); }
       ctx.restore();
     } else this.placeholder(x, gy, 40, d.h || 80, e.name);
+    if (e.boss && e.enraged && e.state !== 'dying') this.text('광폭화', x, Math.max(this.topInset + 44, gy + dy - d.py - 6), 13, '#FF9DB2', 'center', 800, true);
     if (e.state === 'dying' || e.boss) return;
     // HP bar above head; elite marker = diamond + "정예" text (not colour only)
     const bw = Math.max(40, d.w * 0.5), top = Math.max(16, gy + dy - d.py - 10);
@@ -258,7 +270,7 @@ export class BattleRenderer {
     if (e.elite) {
       ctx.fillStyle = '#EDBD68';
       ctx.beginPath(); ctx.moveTo(x - bw / 2 - 8, top + 2.5); ctx.lineTo(x - bw / 2 - 4, top - 1.5); ctx.lineTo(x - bw / 2, top + 2.5); ctx.lineTo(x - bw / 2 - 4, top + 6.5); ctx.fill();
-      this.text('정예', x, top - 6, 11, '#EDBD68', 'center', 700);
+      this.text(e.fieldBoss ? '필드 보스' : '정예', x, top - 6, 12, e.fieldBoss ? '#F2A04A' : '#EDBD68', 'center', 700, true);
     }
   }
 
@@ -319,6 +331,13 @@ export class BattleRenderer {
         ctx.beginPath();
         for (let i = 0; i < 8; i++) { const a = (i / 8) * Math.PI * 2; ctx.moveTo(x, gy - 60 * this.fit); ctx.lineTo(x + Math.cos(a) * r * (i % 2 ? 0.5 : 1), gy - 60 * this.fit + Math.sin(a) * r * (i % 2 ? 0.5 : 1)); }
         ctx.stroke();
+      } else if (f.kind === 'shot') {
+        // ranged hero: a streak from the hero to the target (no authored projectile art yet)
+        const hx = (HERO_X + 24) * sx, y = gy - 58 * this.fit * this.figScale;
+        const head = hx + (x - hx) * Math.min(1, p * 1.6);
+        ctx.globalAlpha = 1;
+        ctx.strokeStyle = f.crit ? '#EDBD68' : '#C9D8FF'; ctx.lineWidth = f.crit ? 3 : 2;
+        ctx.beginPath(); ctx.moveTo(Math.max(hx, head - 46), y); ctx.lineTo(head, y); ctx.stroke();
       } else if (f.kind === 'charge') {
         ctx.strokeStyle = '#B79AF2'; ctx.lineWidth = 2;
         ctx.beginPath(); ctx.arc(x, gy - 70 * this.fit, (50 - 30 * p) * this.fit, 0, Math.PI * 2); ctx.stroke();
@@ -340,9 +359,9 @@ export class BattleRenderer {
       const p = (now - n.born) / life;
       const y = H * n.y - (s.reduceMotion ? 0 : 26 * p);
       const size = n.crit ? 20 : n.enemy ? 15 : 16;
-      const col = n.enemy ? (n.guarded ? '#A9C8FF' : '#FF9DB2') : n.crit ? '#EDBD68' : '#F5EDF0';
+      const col = n.miss ? '#A9E8D0' : n.enemy ? (n.guarded ? '#A9C8FF' : '#FF9DB2') : n.crit ? '#EDBD68' : '#F5EDF0';
       this.ctx.globalAlpha = 1 - Math.max(0, p - 0.6) / 0.4;
-      this.text((n.enemy ? '-' : '') + n.text + (n.crit ? '!' : ''), n.x * sx + (n.enemy ? 0 : 6), y, size, col, 'center', 800, true);
+      this.text(n.miss ? n.text : (n.enemy ? '-' : '') + n.text + (n.crit ? '!' : ''), n.x * sx + (n.enemy ? 0 : 6), y, size, col, 'center', 800, true);
       this.ctx.globalAlpha = 1;
     }
   }

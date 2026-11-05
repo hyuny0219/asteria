@@ -3,7 +3,9 @@
 // save leaves the live state untouched (see game.js `transact`).
 import { BALANCE } from '../data/balance.js';
 import { playerStats } from './stats.js';
-import { dismantleValue, enhanceCost, mainScore } from './items.js';
+import { dismantleValue, enhanceChance, enhanceCost, mainScore, rarityOrder } from './items.js';
+import { CLASSES, STAT_KEYS, equipSlotFor } from '../data/content.js';
+import { killRewards } from './combat.js';
 
 const U = BALANCE.upgrade;
 const C = BALANCE.combat;
@@ -71,9 +73,21 @@ export function buyUpgrade(state, stat, want) {
 // ---------- inventory ----------
 export function freeSlots(state) { return EQ.inventoryCapacity - state.inventory.length; }
 
+const AUTO_DISMANTLE_MAX = { off: -1, common: 0, uncommon: 1, rare: 2 };
+
 export function addItems(state, items) {
-  const stored = [], overflowed = [], converted = [];
+  const stored = [], overflowed = [], converted = [], autoDismantled = [];
+  const autoMax = AUTO_DISMANTLE_MAX[state.settings.autoDismantle || 'off'] ?? -1;
   for (const it of items) {
+    if (autoMax >= 0 && rarityOrder(it.rarity) <= autoMax && it.source !== 'gacha') {
+      // auto-dismantle (setting): new drops only; never locked/equipped (they are new)
+      const ore = dismantleValue(it);
+      state.wallet.ore += ore;
+      state.progression.counters.dismantled += 1;
+      state.progression.counters.autoDismantledOre = (state.progression.counters.autoDismantledOre || 0) + ore;
+      autoDismantled.push(it);
+      continue;
+    }
     if (state.inventory.length < EQ.inventoryCapacity) { state.inventory.push(it); stored.push(it); }
     else if (state.overflow.length < EQ.overflowCapacity) { state.overflow.push(it); overflowed.push(it); }
     else {
@@ -85,7 +99,7 @@ export function addItems(state, items) {
       converted.push(it);
     }
   }
-  return { stored, overflowed, converted };
+  return { stored, overflowed, converted, autoDismantled };
 }
 
 export function moveOverflow(state) {
@@ -100,14 +114,19 @@ export function moveOverflow(state) {
 const findItem = (state, id) => state.inventory.find((i) => i.id === id);
 export const isEquipped = (state, id) => Object.values(state.equipped).includes(id);
 
-export function equip(state, id) {
+// Rings fill ring1 then ring2 (or the given slot); everything else uses its own slot.
+export function equip(state, id, toSlot = null) {
   const it = findItem(state, id);
   if (!it) return { ok: false, reason: 'missing' };
-  const prev = state.equipped[it.slot];
-  state.equipped[it.slot] = id;
+  const choices = equipSlotFor(it.slot);
+  if (toSlot && !choices.includes(toSlot)) return { ok: false, reason: 'slot' };
+  for (const k of choices) if (state.equipped[k] === id) state.equipped[k] = null;   // moving a ring
+  const slot = toSlot || choices.find((k) => !state.equipped[k]) || choices[0];
+  const prev = state.equipped[slot];
+  state.equipped[slot] = id;
   it.isNew = false;
   state.progression.firsts.firstEquip ||= Date.now();
-  return { ok: true, slot: it.slot, prev };
+  return { ok: true, slot, prev };
 }
 
 export function unequip(state, slot) {
@@ -126,20 +145,21 @@ export function setLock(state, id, locked) {
 // Recommended equip per slot by main stat (labelled as such in the UI).
 export function recommend(state) {
   const out = {};
-  for (const slot of EQ.slots) {
-    const cur = state.equipped[slot] ? findItem(state, state.equipped[slot]) : null;
-    let best = cur;
-    for (const it of state.inventory) {
-      if (it.slot !== slot) continue;
-      if (!best || mainScore(it) > mainScore(best)) best = it;
-    }
-    if (best && best !== cur) out[slot] = best.id;
+  for (const itemSlot of EQ.itemSlots) {
+    const slots = equipSlotFor(itemSlot);
+    const ranked = state.inventory.filter((i) => i.slot === itemSlot).sort((a, b) => mainScore(b) - mainScore(a)).slice(0, slots.length);
+    // keep items already worn when they are among the best (avoid ring1/ring2 swaps)
+    const worn = slots.map((k) => state.equipped[k]);
+    const want = ranked.map((i) => i.id);
+    const free = slots.filter((k) => !want.includes(state.equipped[k]));
+    const toPlace = want.filter((id) => !worn.includes(id));
+    toPlace.forEach((id, i) => { if (free[i]) out[free[i]] = id; });
   }
   return out;
 }
 export function autoEquip(state) {
   const rec = recommend(state);
-  for (const id of Object.values(rec)) equip(state, id);
+  for (const [slot, id] of Object.entries(rec)) equip(state, id, slot);
   return { ok: Object.keys(rec).length > 0, changed: rec, reason: Object.keys(rec).length ? null : 'already-best' };
 }
 
@@ -149,16 +169,22 @@ export function enhanceQuote(state, id) {
   if (!it) return { ok: false, reason: 'missing' };
   if (it.enhance >= EQ.enhanceMax) return { ok: false, reason: 'max', item: it };
   const cost = enhanceCost(it);
-  return { ok: state.wallet.ore >= cost, reason: state.wallet.ore >= cost ? null : 'ore', cost, shortfall: Math.max(0, cost - state.wallet.ore), item: it };
+  return { ok: state.wallet.ore >= cost, reason: state.wallet.ore >= cost ? null : 'ore', cost, chance: enhanceChance(it), dropOnFail: it.enhance >= EQ.enhanceFailDropFrom, shortfall: Math.max(0, cost - state.wallet.ore), item: it };
 }
-export function enhance(state, id) {
+// +1..+5 always succeed; later levels can fail. At +11 or more a failure drops one level.
+// Items are never destroyed. `rng` is the game RNG (deterministic per save).
+export function enhance(state, id, rng = Math.random) {
   const q = enhanceQuote(state, id);
   if (!q.ok) return q;
+  const chance = enhanceChance(q.item);
   state.wallet.ore -= q.cost;
-  q.item.enhance += 1;               // MVP: success is guaranteed up to +10
   q.item.oreInvested += q.cost;
   state.progression.counters.enhances += 1;
-  return { ok: true, cost: q.cost, item: q.item };
+  const before = q.item.enhance;
+  const success = chance >= 1 || rng() < chance;
+  if (success) q.item.enhance += 1;
+  else if (before >= EQ.enhanceFailDropFrom) q.item.enhance -= 1;
+  return { ok: true, success, chance, before, after: q.item.enhance, cost: q.cost, item: q.item };
 }
 
 // ---------- dismantle ----------
@@ -186,6 +212,53 @@ export function dismantle(state, ids) {
 
 // Bulk-select helper: everything at or below a rarity that is not equipped/locked.
 export function selectForDismantle(state, maxRarity, slot = null) {
-  const order = { common: 0, uncommon: 1, rare: 2 };
-  return state.inventory.filter((i) => order[i.rarity] <= order[maxRarity] && !i.locked && !isEquipped(state, i.id) && (!slot || i.slot === slot)).map((i) => i.id);
+  return state.inventory.filter((i) => rarityOrder(i.rarity) <= rarityOrder(maxRarity) && !i.locked && !isEquipped(state, i.id) && (!slot || i.slot === slot)).map((i) => i.id);
+}
+
+// ---------- stat points ----------
+export function statPointsTotal(state) { return (state.player.level - 1) * BALANCE.statPoints.perLevel; }
+export function statPointsFree(state) {
+  const used = STAT_KEYS.reduce((s, k) => s + (state.player.stats[k] || 0), 0);
+  return statPointsTotal(state) - used;
+}
+// Spread free points by the class recommendation (largest remainder, deterministic).
+export function applyAutoStats(state) {
+  if (!state.player.statAuto) return 0;
+  let free = statPointsFree(state);
+  if (free <= 0) return 0;
+  const w = CLASSES[state.player.cls || 'warrior'].autoStats;
+  const keys = Object.keys(w);
+  const total = keys.reduce((s, k) => s + w[k], 0);
+  const n = free;
+  let given = 0;
+  // whole cycles first
+  const cycles = Math.floor(n / total);
+  for (const k of keys) { state.player.stats[k] += w[k] * cycles; given += w[k] * cycles; }
+  let rest = n - given;
+  for (const k of keys) { const g = Math.min(rest, w[k]); state.player.stats[k] += g; rest -= g; if (rest <= 0) break; }
+  return n;
+}
+export function allocateStat(state, key, n = 1) {
+  if (!STAT_KEYS.includes(key)) return { ok: false, reason: 'stat' };
+  const free = statPointsFree(state);
+  if (free <= 0) return { ok: false, reason: 'points' };
+  const k = Math.min(free, Math.max(1, Math.floor(n)));
+  state.player.stats[key] += k;
+  state.player.statAuto = false;
+  return { ok: true, added: k, free: free - k };
+}
+export function statResetCost(state) {
+  return Math.floor(killRewards(state.player.level).gold * 20 * BALANCE.statPoints.resetCostGoldMinutes);
+}
+export function resetStats(state, { free = false } = {}) {
+  const cost = free ? 0 : statResetCost(state);
+  if (state.wallet.gold < cost) return { ok: false, reason: 'gold', cost };
+  state.wallet.gold -= cost;
+  for (const k of STAT_KEYS) state.player.stats[k] = 0;
+  return { ok: true, cost, free: statPointsFree(state) };
+}
+export function setAutoStats(state, on) {
+  state.player.statAuto = !!on;
+  const given = on ? applyAutoStats(state) : 0;
+  return { ok: true, given };
 }

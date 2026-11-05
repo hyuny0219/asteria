@@ -1,13 +1,16 @@
 // Screens. Each 22-screen reference id from docs/handoff (screens.json) is noted
 // as `data-screen` on its root so browser QA can open and check every one.
 import { BALANCE } from '../data/balance.js';
-import { BOSSES, BRANCHES, CURRENCY_ICONS, REGIONS, REGION_BY_ID, SKILLS, SLOT_NAMES, RARITY, waveLevel } from '../data/content.js';
+import { BOSSES, BRANCHES, CLASSES, CURRENCY_ICONS, OPTION_NAMES, REGIONS, REGION_BY_ID, SETS, SKILLS, SLOT_NAMES, RARITY, branchesOf, equipSlotFor, waveLevel } from '../data/content.js';
+import * as V4 from './v4.js';
+import { MONSTERS } from '../data/content.js';
+const MONSTERS_NAME = (id) => (MONSTERS[id] ? MONSTERS[id].name : id);
 import { itemIcon, portrait, skillIcon, spriteMeta } from '../render/assets.js';
 import { dismantleQuote, enhanceQuote, isEquipped, quoteUpgrade, recommend, selectForDismantle, upgradeRoom } from '../core/economy.js';
-import { itemStats, rarityLabel } from '../core/items.js';
+import { enhanceChance, itemOptions, itemStats, rarityLabel, rarityOrder } from '../core/items.js';
 import * as prog from '../core/progression.js';
 import { stageLevel, stageReward, nextRefillAt } from '../core/dungeon.js';
-import { playerStats, powerRating } from '../core/stats.js';
+import { activeSetBonuses, playerStats, powerRating, setCounts } from '../core/stats.js';
 import { RATE_METHOD } from '../core/offline.js';
 import { fmt, fmtDuration, fmtFull, fmtPct, kstDayIndex } from '../core/util.js';
 import { parseExport } from '../platform/save.js';
@@ -30,10 +33,10 @@ const reasonText = {
   pending: '진행 중인 도전이 있습니다', stage: '도전할 수 없는 단계입니다', locked: '아직 열리지 않았습니다', wave: '웨이브 10에 먼저 도달해야 합니다',
   region: '지역이 아직 열리지 않았습니다', mode: '지금은 할 수 없습니다 (다른 전투 진행 중)', save: '저장하지 못해 취소되었습니다', busy: '처리 중입니다',
   conditions: '조건이 충족되지 않았습니다', conflict: '다른 탭이 저장 권한을 가지고 있습니다', 'switch-dev-only': '분기 재전환은 개발 설정에서만 가능합니다',
-  'locked-slot': '승급 후 열리는 슬롯입니다', 'locked-skill': '아직 배우지 않은 스킬입니다', duplicate: '이미 처리되었습니다', full: '보관함에 빈 칸이 없습니다', 'already-best': '이미 주 스탯 기준 최고 장비를 착용 중입니다', missing: '장비를 찾을 수 없습니다', empty: '빈 슬롯입니다',
+  'locked-slot': '승급 후 열리는 슬롯입니다', books: '스킬북이 부족합니다', gem: '보석이 부족합니다', tries: '이번 주 레이드 횟수를 모두 사용했습니다', 'class-locked': '클래스는 처음에만 고를 수 있습니다', branch: '이 클래스의 갈래가 아닙니다', points: '남은 능력치 포인트가 없습니다', count: '뽑기 횟수가 올바르지 않습니다', 'locked-skill': '아직 배우지 않은 스킬입니다', duplicate: '이미 처리되었습니다', full: '보관함에 빈 칸이 없습니다', 'already-best': '이미 주 스탯 기준 최고 장비를 착용 중입니다', missing: '장비를 찾을 수 없습니다', empty: '빈 슬롯입니다',
 };
 export const why = (r) => (r && r.reason ? reasonText[r.reason] || r.reason : '');
-function fail(r) { if (r && !r.ok && r.reason !== 'save' && r.reason !== 'conflict') toast(why(r), 'error'); return r; }
+export function fail(r) { if (r && !r.ok && r.reason !== 'save' && r.reason !== 'conflict') toast(why(r), 'error'); return r; }
 const curIcon = (k) => img(itemIcon(CURRENCY_ICONS[k]), '');
 const reduce = (app) => app.state.settings.reduceMotion;
 
@@ -45,7 +48,10 @@ export function go(app, action) {
   if (action === 'world') return openWorld(app);
   if (action === 'quest') return openQuest(app);
   if (action === 'promotion') return openPromotion(app);
-  if (action === 'trial') return openQuest(app);
+  if (action === 'trial' || action.startsWith('trial:')) return openQuest(app);
+  if (action === 'tower' || action.startsWith('dungeon:')) return app.setTab('dungeon');
+  if (action === 'gacha') return V4.openGacha(app);
+  if (action === 'missions') return V4.openMissions(app);
   if (action === 'farm') return app.setTab('growth');
   if (action === 'mine') return openWorld(app, 'mine');
   if (action.startsWith('boss:')) return openBoss(app, action.slice(5));
@@ -106,6 +112,7 @@ export function growthPanel(app) {
     h('div', { class: 'kv' }, '전투력(표시용)', power),
     h('div', { class: 'kv' }, '치명 피해', h('b', null, fmtPct(playerStats(s0).critMul, 0))),
     h('div', { class: 'kv' }, '장비 보너스', eqb), capNote));
+  list.appendChild(V4.statPointsCard(app));
   root.appendChild(list);
   root._update = () => updaters.forEach((u) => u());
   return root;
@@ -134,14 +141,20 @@ export function equipmentPanel(app) {
     button('추천 장착', { cls: 'chip-btn', busy: true, ariaLabel: '추천 장착 (주 스탯 기준)', onClick: async () => { const r = fail(await app.game.autoEquip()); if (r.ok) toast('주 스탯 기준으로 장착했습니다. (DPS 최적 계산 아님)', 'good'); } })));
   const sc = h('div', { class: 'panel-scroll' });
   if (s.overflow.length) sc.appendChild(h('div', { class: 'banner', role: 'status' }, icon('warning', 20), h('span', { style: { flex: 1 } }, `임시 보관함 ${s.overflow.length}개`), button('확인', { cls: 'btn', onClick: () => openOverflow(app) })));
-  // equipped 4 slots
+  // equipped 8 slots (two ring slots)
   const eqGrid = h('div', { class: 'grid4', 'aria-label': '장착 장비' });
-  for (const slot of BALANCE.equipment.slots) {
+  for (const slot of Object.keys(s.equipped)) {
     const id = s.equipped[slot];
     const it = id && s.inventory.find((i) => i.id === id);
     eqGrid.appendChild(it ? itemTile(app, it, { onClick: () => openCompare(app, it.id) }) : h('div', { class: 'item empty' }, SLOT_NAMES[slot], h('br'), '비어 있음'));
   }
   sc.append(h('p', { class: 'muted', style: { margin: '0 0 6px' } }, '장착 중'), eqGrid);
+  const sets = activeSetBonuses(s);
+  const counts = setCounts(s);
+  const setRows = Object.entries(counts).filter(([, n]) => n >= 1).map(([k, n]) => h('div', { class: 'kv' }, `${SETS[k].name} 세트 ${n}/4`,
+    h('b', { class: n >= 2 ? '' : 'muted' }, [n >= 2 ? `2세트 ${optText(SETS[k].b2)}` : '2세트 미달성', n >= 4 ? `4세트 ${optText(SETS[k].b4)}` : null].filter(Boolean).join(' · '))));
+  if (setRows.length) sc.appendChild(h('div', { class: 'card', style: { marginTop: '8px' }, dataset: { screen: 'sets' } }, setRows));
+  void sets;
   if (!s.inventory.length) {
     // S19 empty state
     sc.appendChild(h('div', { class: 'card', style: { marginTop: '12px', textAlign: 'center' } }, img(itemIcon('I21'), '', ''),
@@ -150,22 +163,26 @@ export function equipmentPanel(app) {
     root.appendChild(sc);
     return root;
   }
-  const filters = [['all', '전체'], ['weapon', '무기'], ['helmet', '투구'], ['armor', '갑옷'], ['accessory', '장신구']];
+  const filters = [['all', '전체'], ['weapon', '무기'], ['helmet', '투구'], ['armor', '갑옷'], ['gloves', '장갑'], ['boots', '신발'], ['necklace', '목걸이'], ['ring', '반지']];
   sc.appendChild(h('div', { class: 'tabs', role: 'group', 'aria-label': '부위 필터', style: { margin: '12px 0 8px' } },
     filters.map(([k, l]) => h('button', { type: 'button', class: 'tab', 'aria-pressed': String(app.eqFilter === k), onClick: () => { app.eqFilter = k; app.renderPanel(); } }, l))));
-  const order = { rare: 0, uncommon: 1, common: 2 };
   const items = s.inventory.filter((i) => app.eqFilter === 'all' || i.slot === app.eqFilter)
-    .sort((a, b) => order[a.rarity] - order[b.rarity] || b.level - a.level || b.enhance - a.enhance);
+    .sort((a, b) => rarityOrder(b.rarity) - rarityOrder(a.rarity) || b.level - a.level || b.enhance - a.enhance);
   const grid = h('div', { class: 'grid4 inv' });
   for (const it of items.slice(0, 200)) grid.appendChild(itemTile(app, it, { onClick: () => openCompare(app, it.id) }));
   sc.appendChild(grid);
   sc.appendChild(h('div', { style: { marginTop: '10px' } }, button('일괄 분해', { cls: 'btn', onClick: () => openDismantle(app) })));
+  const AD = [['off', '끔'], ['common', '일반'], ['uncommon', '고급 이하'], ['rare', '희귀 이하']];
+  sc.appendChild(h('div', { class: 'setting-block' }, h('span', null, '자동 분해 (새로 얻은 장비 · 잠금·장착 제외)'), h('div', { class: 'seg', role: 'group', 'aria-label': '자동 분해' },
+    AD.map(([k, l]) => h('button', { type: 'button', 'aria-pressed': String((s.settings.autoDismantle || 'off') === k), onClick: async () => { fail(await app.game.setAutoDismantle(k)); } }, l)))));
   sc.appendChild(h('p', { class: 'muted' }, '잠금·장착 장비는 분해 대상에서 제외됩니다. 장비를 바꿔도 캐릭터 외형은 승급 외형만 바뀝니다.'));
   root.appendChild(sc);
   return root;
 }
 
 // ======================= S03 compare =======================
+const PCT_OPTS = new Set(['atkPct', 'critChance', 'critDmg', 'aspd', 'hpPct', 'defPct', 'cdr', 'ultCharge', 'goldPct']);
+export function optText(o) { return Object.entries(o).map(([k, v]) => `${OPTION_NAMES[k] || k} +${PCT_OPTS.has(k) ? fmtPct(v, 1) : v}`).join(' · '); }
 function statLines(it) {
   const s = itemStats(it);
   const out = [];
@@ -173,6 +190,8 @@ function statLines(it) {
   if (s.hp !== undefined) out.push(['체력', s.hp]);
   if (s.def !== undefined) out.push(['방어력', s.def]);
   if (s.crit !== undefined) out.push(['치명타', fmtPct(s.crit, 2)]);
+  for (const o of it.options || []) out.push([o.unique ? '고유' : OPTION_NAMES[o.k] || o.k, o.unique ? OPTION_NAMES[o.k] : PCT_OPTS.has(o.k) ? '+' + fmtPct(o.v, 1) : '+' + o.v, o.unique]);
+  if (it.set && SETS[it.set]) out.push(['세트', SETS[it.set].name]);
   return out;
 }
 export function openCompare(app, id) {
@@ -181,18 +200,22 @@ export function openCompare(app, id) {
     const it = s.inventory.find((i) => i.id === id);
     if (!it) { m.close(); return; }
     if (it.isNew) app.game.markSeen([it.id]);
-    const curId = s.equipped[it.slot];
+    const slots = equipSlotFor(it.slot);
+    const eqAt = slots.find((k) => s.equipped[k] === it.id) || null;
+    const target = eqAt || slots.find((k) => !s.equipped[k]) || slots[0];
+    const curId = s.equipped[target];
     const cur = curId && curId !== it.id ? s.inventory.find((i) => i.id === curId) : null;
-    const eq = isEquipped(s, it.id);
+    const eq = !!eqAt;
     const col = (x, title) => h('div', { class: 'card', style: { flex: 1, margin: 0 } }, h('p', { class: 'muted', style: { margin: 0 } }, title),
       x ? [img(itemIcon(x.look), '', ''), h('h3', null, (x.enhance ? '+' + x.enhance + ' ' : '') + x.name), h('div', { class: `rar r-${x.rarity}` }, rarityLabel(x.rarity) + ` · Lv ${x.level}`),
-        statLines(x).map(([k, v]) => h('div', { class: 'kv' }, k, h('b', null, typeof v === 'number' ? fmtFull(v) : v)))] : h('p', { class: 'muted' }, '비어 있음'));
+        statLines(x).map(([k, v, u]) => u ? h('p', { class: 'unique-line' }, `고유 · ${v}`) : h('div', { class: 'kv' }, k, h('b', null, typeof v === 'number' ? fmtFull(v) : v)))] : h('p', { class: 'muted' }, '비어 있음'));
     const body = h('div', { dataset: { screen: 'compare' } },
       h('div', { class: 'btn-row', style: { alignItems: 'stretch' } }, col(cur || (eq ? null : null), eq ? '장착 중' : '현재 장착'), h('div', { style: { alignSelf: 'center', flex: 'none' } }, icon('compare', 22)), col(it, eq ? '이 장비' : '선택')));
     m.setBody(body);
     const lockBtn = button(it.locked ? '잠금 해제' : '잠금', { cls: 'btn', busy: true, onClick: async () => { fail(await app.game.setLock(it.id, !it.locked)); render(); } });
     const actions = [
-      eq ? button('장착 해제', { cls: 'btn', busy: true, onClick: async () => { fail(await app.game.unequip(it.slot)); render(); } })
+      eq ? button('장착 해제', { cls: 'btn', busy: true, onClick: async () => { fail(await app.game.unequip(eqAt)); render(); } })
+        : slots.length > 1 ? h('div', { class: 'btn-row' }, slots.map((k) => button(`${SLOT_NAMES[k]}에 장착`, { cls: 'btn btn-primary', busy: true, onClick: async () => { const r = fail(await app.game.equip(it.id, k)); if (r.ok) { toast(`${it.name} 장착`, 'good'); render(); } } })))
         : button('장착', { cls: 'btn btn-primary', busy: true, onClick: async () => { const r = fail(await app.game.equip(it.id)); if (r.ok) { toast(`${it.name} 장착`, 'good'); render(); } } }),
       h('div', { class: 'btn-row' }, button(`강화 +${it.enhance}`, { cls: 'btn btn-gold', onClick: () => openEnhance(app, it.id) }), lockBtn),
     ];
@@ -211,23 +234,26 @@ export function openEnhance(app, id) {
     if (!it) { m.close(); return; }
     const q = enhanceQuote(s, id);
     const before = itemStats(it);
-    const nextIt = { ...it, enhance: Math.min(10, it.enhance + 1) };
+    const MAX = BALANCE.equipment.enhanceMax;
+    const nextIt = { ...it, enhance: Math.min(MAX, it.enhance + 1) };
+    const chance = enhanceChance(it);
     const after = itemStats(nextIt);
     const lines = Object.keys(before).map((k) => h('div', { class: 'kv' }, { atk: '공격력', hp: '체력', def: '방어력', crit: '치명타' }[k],
-      h('b', null, k === 'crit' ? `${fmtPct(before[k], 2)} → ${fmtPct(after[k], 2)}` : `${fmtFull(before[k])} → ${it.enhance >= 10 ? 'MAX' : fmtFull(after[k])}`)));
+      h('b', null, k === 'crit' ? `${fmtPct(before[k], 2)} → ${fmtPct(after[k], 2)}` : `${fmtFull(before[k])} → ${it.enhance >= MAX ? 'MAX' : fmtFull(after[k])}`)));
     const ring = h('div', { class: 'card' + (anim ? ' reveal' : ''), style: { textAlign: 'center' } },
       img(itemIcon(it.look), '', ''), h('h3', null, `+${it.enhance} ${it.name}`), h('div', { class: `rar r-${it.rarity}` }, rarityLabel(it.rarity)),
-      anim ? h('p', { class: 'okc', role: 'status' }, `강화 성공 · +${it.enhance}`) : null);
-    if (anim && !reduce(app)) ring.animate([{ boxShadow: '0 0 0 0 rgba(216,182,117,.9)' }, { boxShadow: '0 0 0 10px rgba(216,182,117,0)' }], { duration: 600 });
+      anim ? h('p', { class: anim.success ? 'okc' : 'warn', role: 'status' }, anim.success ? `강화 성공 · +${it.enhance}` : anim.dropped ? `강화 실패 · +${anim.before} → +${it.enhance} (1단계 하락)` : `강화 실패 · +${it.enhance} 유지`) : null);
+    if (anim && !reduce(app)) ring.animate(anim.success ? [{ boxShadow: '0 0 0 0 rgba(216,182,117,.9)' }, { boxShadow: '0 0 0 10px rgba(216,182,117,0)' }] : [{ transform: 'translateX(-4px)' }, { transform: 'translateX(4px)' }, { transform: 'none' }], { duration: anim.success ? 600 : 240 });
     m.setBody(h('div', { dataset: { screen: 'enhance' } }, ring, h('div', { class: 'card' }, lines,
-      h('div', { class: 'kv' }, '비용', h('b', null, it.enhance >= 10 ? '—' : `강화 광석 ${fmtFull(q.cost || 0)}`)),
+      h('div', { class: 'kv' }, '성공 확률', h('b', null, it.enhance >= MAX ? '—' : fmtPct(chance, 0))),
+      h('div', { class: 'kv' }, '비용', h('b', null, it.enhance >= MAX ? '—' : `강화 광석 ${fmtFull(q.cost || 0)}`)),
       h('div', { class: 'kv' }, '보유', h('b', null, `강화 광석 ${fmtFull(s.wallet.ore)}`))),
-      h('p', { class: 'muted' }, 'MVP 강화는 +10까지 100% 성공합니다. 실패·하락·파괴가 없습니다. 분해 시 투입한 광석의 80%를 돌려받습니다.')));
-    const disabled = it.enhance >= 10 || !q.ok;
-    const label = it.enhance >= 10 ? '최대 강화 +10' : q.ok ? `강화 · 광석 ${fmtFull(q.cost)}` : `광석 ${fmtFull(q.shortfall)} 부족`;
+      h('p', { class: 'muted' }, `+1~+5는 100%, +6~+10은 70%→30%, +11~+${MAX}는 20%→5%입니다. 실패하면 +10 이하는 그대로, +11 이상은 1단계 내려갑니다. 파괴는 없고, 실패해도 광석은 사용됩니다. 분해 시 투입 광석의 80%를 돌려받습니다.`)));
+    const disabled = it.enhance >= MAX || !q.ok;
+    const label = it.enhance >= MAX ? `최대 강화 +${MAX}` : q.ok ? `강화 (${fmtPct(chance, 0)}) · 광석 ${fmtFull(q.cost)}` : `광석 ${fmtFull(q.shortfall)} 부족`;
     m.setActions([button(label, { cls: 'btn btn-primary', disabled, busy: true, onClick: async () => {
       const r = fail(await app.game.enhance(id));
-      if (r.ok) { if (app.state.settings.sound) sfx('metal'); render(true); }
+      if (r.ok) { if (app.state.settings.sound) sfx(r.success ? 'metal' : 'warn'); render({ success: r.success, before: r.before, dropped: !r.success && r.after < r.before }); }
     } })]);
   };
   const m = openModal({ id: 'enhance', title: '장비 강화', body: h('div'), actions: [] });
@@ -242,7 +268,7 @@ export function openDismantle(app, preset = null) {
     const q = dismantleQuote(app.state, ids);
     const blocked = app.state.inventory.filter((i) => i.locked || isEquipped(app.state, i.id)).length;
     m.setBody(h('div', { dataset: { screen: 'dismantle' } },
-      preset ? null : h('div', { class: 'tabs', role: 'group', 'aria-label': '분해 등급' }, [['common', '일반 I 이하'], ['uncommon', '고급 II 이하'], ['rare', '희귀 III 이하']].map(([k, l]) =>
+      preset ? null : h('div', { class: 'tabs', role: 'group', 'aria-label': '분해 등급' }, [['common', '일반 I 이하'], ['uncommon', '고급 II 이하'], ['rare', '희귀 III 이하'], ['epic', '영웅 IV 이하']].map(([k, l]) =>
         h('button', { type: 'button', class: 'tab', 'aria-pressed': String(level === k), onClick: () => { level = k; render(); } }, l))),
       h('div', { class: 'card', style: { marginTop: '10px' } },
         h('div', { class: 'kv' }, '분해할 장비', h('b', null, `${q.count}개`)),
@@ -283,33 +309,64 @@ export function openOverflow(app) {
 export function skillsPanel(app) {
   const s = app.state;
   const root = h('div', { class: 'panel', dataset: { screen: 'skills' }, style: { height: '100%', margin: 0 } });
-  root.appendChild(h('div', { class: 'panel-head' }, h('h2', null, '스킬 편성'), h('span', { class: 'muted' }, `일반 ${prog.slotCount(s)}칸 + 궁극기`)));
+  const slots = prog.slotCount(s);
+  root.appendChild(h('div', { class: 'panel-head' }, h('h2', null, '스킬'), h('span', { class: 'muted' }, `일반 ${slots}/5칸 + 궁극기`)));
   const sc = h('div', { class: 'panel-scroll' });
   const unlocked = prog.unlockedSkills(s);
+  const ult = prog.ultId(s);
   const eq = s.skills.equipped;
-  for (let i = 0; i < 4; i++) {
+  const lvLine = (id) => {
+    const lv = prog.skillLevel(s, id);
+    const c = prog.skillLevelCost(s, id);
+    const have = s.skills.books[id] || 0;
+    return h('span', { class: 'sk-lv' }, `Lv ${lv}/${BALANCE.skills.maxLevel} · 스킬북 ${have}${c ? `/${c.books}` : ''}`);
+  };
+  sc.appendChild(h('div', { class: 'section-title' }, '편성'));
+  for (let i = 0; i < 5; i++) {
     const id = eq[i];
-    const locked = i >= prog.slotCount(s);
+    const locked = i >= slots;
+    const unlockText = i === 3 ? '1차 승급(Lv 30)에서 열려요.' : '2차 승급(Lv 60)에서 열려요.';
     sc.appendChild(h('div', { class: 'skill-line' },
-      locked ? h('span', { class: 'skill locked', style: { width: '52px', height: '52px' } }, icon('lock', 20)) : id ? img(skillIcon(SKILLS[id].icon), '') : h('span', { class: 'skill empty', style: { width: '52px', height: '52px' } }),
-      h('div', null, h('div', { class: 't' }, `${i + 1}번 · ${locked ? '승급 해금' : id ? SKILLS[id].name : '비어 있음'}`), h('div', { class: 'muted' }, locked ? 'Lv 30 서약 각성 후 분기 스킬이 들어갑니다.' : id ? SKILLS[id].desc : '')),
+      locked ? h('span', { class: 'skill locked', style: { width: '44px', height: '44px' } }, icon('lock', 18)) : id ? img(skillIcon(SKILLS[id].icon), '') : h('span', { class: 'skill empty', style: { width: '44px', height: '44px' } }),
+      h('div', null, h('div', { class: 't' }, `${i + 1}번 · ${locked ? '승급 해금' : id ? SKILLS[id].name : '비어 있음'}`), locked ? h('div', { class: 'muted' }, unlockText) : id ? lvLine(id) : null),
       locked ? button('조건', { cls: 'chip-btn', onClick: () => openQuest(app) }) : button('변경', { cls: 'chip-btn', onClick: () => openSkillPicker(app, i) })));
   }
-  sc.appendChild(h('div', { class: 'skill-line' }, img(skillIcon('S5'), ''), h('div', null, h('div', { class: 't' }, '궁극기 · 별빛 참격'), h('div', { class: 'muted' }, '게이지 100 소모 · 일반 공격 +2, 피격 +1(초당 최대 2), 처치 +5')),
-    button('상세', { cls: 'chip-btn', onClick: () => openSkillDetail(app, 'starSlash') })));
-  sc.appendChild(h('p', { class: 'small', style: { margin: '8px 0 4px' } }, '궁극기 자동 사용'));
-  const modes = [['OFF', '끔'], ['ELITE_BOSS', '정예·보스'], ['ALWAYS', '항상']];
-  sc.appendChild(h('div', { class: 'seg', role: 'group', 'aria-label': '궁극기 자동 사용' }, modes.map(([k, l]) => h('button', { type: 'button', 'aria-pressed': String(s.skills.ultAuto === k), onClick: async () => fail(await app.game.setUltAuto(k)) }, l))));
+  sc.appendChild(h('div', { class: 'skill-line' }, img(skillIcon(SKILLS[ult].icon), ''),
+    h('div', null, h('div', { class: 't' }, `궁극기 · ${SKILLS[ult].name}`), lvLine(ult)),
+    button('상세', { cls: 'chip-btn', onClick: () => openSkillDetail(app, ult) })));
+  sc.appendChild(h('div', { class: 'setting-block' }, h('span', null, '궁극기 자동 사용'), h('div', { class: 'seg', role: 'group', 'aria-label': '궁극기 자동 사용' },
+    [['OFF', '끔'], ['ELITE_BOSS', '정예·보스'], ['ALWAYS', '항상']].map(([k, l]) => h('button', { type: 'button', 'aria-pressed': String(s.skills.ultAuto === k), onClick: async () => fail(await app.game.setUltAuto(k)) }, l)))));
   sc.appendChild(h('label', { class: 'switch-row' }, h('span', null, '일반 스킬 자동 시전'), h('input', { type: 'checkbox', checked: s.skills.autoCast, onChange: async (e) => fail(await app.game.setAutoCast(e.target.checked)) })));
-  sc.appendChild(h('p', { class: 'muted' }, '스킬 레벨은 플레이어 레벨과 승급에 따라 자동으로 오릅니다 (스킬북 없음). 전투 중 스킬 아이콘을 누르면 조건이 맞을 때 우선 시전됩니다.'));
-  const notYet = Object.values(SKILLS).filter((k) => !unlocked.includes(k.id));
-  if (notYet.length) sc.appendChild(h('div', { class: 'card' }, h('h3', null, '잠긴 스킬'), notYet.map((k) => h('div', { class: 'kv' }, k.name, h('b', null, k.unlock.level ? `Lv ${k.unlock.level}` : BRANCHES[k.unlock.branch].name)))));
+  // levels
+  sc.appendChild(h('div', { class: 'section-title' }, '스킬 레벨 (스킬북 + 골드)'));
+  for (const id of unlocked) {
+    const c = prog.skillLevelCost(s, id);
+    const have = s.skills.books[id] || 0;
+    const ok = c && have >= c.books && s.wallet.gold >= c.gold;
+    sc.appendChild(h('div', { class: 'skill-line', dataset: { key: 'lv-' + id } }, img(skillIcon(SKILLS[id].icon), ''),
+      h('div', null, h('div', { class: 't' }, `${SKILLS[id].name} Lv ${prog.skillLevel(s, id)}`),
+        h('div', { class: 'muted' }, c ? `다음: 스킬북 ${have}/${c.books} · 골드 ${fmt(c.gold)}` : '최대 레벨')),
+      button(c ? '레벨업' : 'MAX', { cls: 'chip-btn' + (ok ? ' hot' : ''), disabled: !ok, busy: true, ariaLabel: `${SKILLS[id].name} 레벨업`, onClick: async () => {
+        const r = fail(await app.game.levelSkill(id));
+        if (r.ok) toast(`${SKILLS[id].name} Lv ${r.level}`, 'good');
+      } })));
+  }
+  sc.appendChild(h('p', { class: 'muted' }, `레벨당 피해 +${Math.round(BALANCE.skills.levelBonusPerLevel * 100)}%. 스킬북은 스킬북 서고 던전·스킬 뽑기·보스에서 얻어요.`));
+  sc.appendChild(V4.runesCard(app));
+  const cs = CLASSES[s.player.cls || 'warrior'];
+  const br = s.player.branch ? BRANCHES[s.player.branch] : null;
+  const future = br ? br.skills.filter((id) => !unlocked.includes(id)) : [];
+  if (future.length || !br) sc.appendChild(h('div', { class: 'card', style: { marginTop: '8px' } }, h('h3', null, '앞으로 배울 스킬'),
+    br ? future.map((id) => h('div', { class: 'kv' }, SKILLS[id].name, h('b', null, id === br.skills[0] ? '1차 승급' : '2차 승급')))
+      : branchesOf(s.player.cls || 'warrior').map((b) => h('div', { class: 'kv' }, BRANCHES[b].names[0], h('b', null, BRANCHES[b].skills.map((x) => SKILLS[x].name).join(' · ')))),
+    h('p', { class: 'muted', style: { margin: '4px 0 0' } }, `${cs.name}는 1차 승급(Lv 30)에서 갈래를 고릅니다.`)));
   root.appendChild(sc);
   return root;
 }
 function openSkillPicker(app, slotIdx) {
   const s = app.state;
   const options = prog.unlockedSkills(s).filter((id) => SKILLS[id].kind !== 'ultimate');
+  if (!options.length) return;
   const m = openModal({ id: 'skillpick', title: `${slotIdx + 1}번 슬롯`, body: h('div', null, options.map((id) => h('div', { class: 'skill-line' }, img(skillIcon(SKILLS[id].icon), ''),
     h('div', null, h('div', { class: 't' }, SKILLS[id].name + (s.skills.equipped[slotIdx] === id ? ' · 장착 중' : '')), h('div', { class: 'muted' }, SKILLS[id].desc)),
     h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px' } },
@@ -325,7 +382,7 @@ export function openSkillDetail(app, id) {
     img(skillIcon(sk.icon), '', 'boss-art'),
     h('p', null, sk.desc),
     h('div', { class: 'card' },
-      h('div', { class: 'kv' }, '스킬 레벨', h('b', null, `${lvl} / 10`)),
+      h('div', { class: 'kv' }, '스킬 레벨', h('b', null, `${lvl} / ${BALANCE.skills.maxLevel}`)),
       coef ? h('div', { class: 'kv' }, '피해 계수', h('b', null, `공격력 × ${coef.toFixed(2)}`)) : null,
       sk.cd ? h('div', { class: 'kv' }, '재사용 대기', h('b', null, `${sk.cd}초`)) : null,
       sk.internalCd ? h('div', { class: 'kv' }, '내부 대기', h('b', null, `${sk.internalCd}초`)) : null,
@@ -353,43 +410,16 @@ function adventureHeader(app) {
 // ======================= S14 dungeon panel =======================
 export function dungeonPanel(app) {
   const s = app.state;
-  const d = s.dungeon;
   const root = h('div', { class: 'panel', dataset: { screen: 'dungeon' }, style: { height: '100%', margin: 0 } });
-  root.appendChild(h('div', { class: 'panel-head' }, h('h2', null, '모험'), h('span', { class: 'spacer' }), h('span', { class: 'cur' }, curIcon('ticket'), `${d.tickets}/${BALANCE.dungeon.ticketCap}`)));
+  root.appendChild(h('div', { class: 'panel-head' }, h('h2', null, '모험'), h('span', { class: 'spacer' }), h('span', { class: 'muted small' }, '입장권 매일 00:00 +3')));
   const sc = h('div', { class: 'panel-scroll' });
   sc.appendChild(adventureHeader(app));
-  sc.appendChild(h('div', { class: 'section-title' }, '재료 던전 · 별의 채석장'));
-  if (!prog.dungeonOpen(s)) {
-    sc.appendChild(h('div', { class: 'card' }, h('h3', null, '아직 열리지 않았습니다'), h('p', { class: 'muted' }, `${BOSSES.B01.name}을(를) 처치하면 재료 던전이 열립니다.`), button('보스 도전 보기', { cls: 'btn', onClick: () => openBoss(app, 'B01') })));
-    root.appendChild(sc);
-    return root;
-  }
-  const next = Math.min(d.best + 1, 99);
-  const rw = stageReward(next);
-  const refill = new Date(nextRefillAt(Date.now()));
-  sc.appendChild(h('div', { class: 'card' },
-    h('div', { class: 'kv' }, '입장권', h('b', null, `${d.tickets} / ${BALANCE.dungeon.ticketCap}`)),
-    h('div', { class: 'kv' }, '다음 충전', h('b', null, `${refill.toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul', month: 'long', day: 'numeric' })} 00:00 KST · +${BALANCE.dungeon.dailyTickets}`)),
-    h('div', { class: 'kv' }, '최고 기록', h('b', null, d.best ? `${d.best}단계` : '없음')),
-    h('div', { class: 'kv' }, `${next}단계 보상`, h('b', null, `강화 광석 ${rw.ore} · 골드 ${fmt(rw.gold)}`)),
-    h('div', { class: 'kv' }, `${next}단계 적 레벨`, h('b', null, `Lv ${stageLevel(next)} · ${BALANCE.dungeon.stageTimeSec}초 안에 ${BALANCE.dungeon.killTarget}마리`))));
-  if (d.tickets <= 0) {
-    // S19 empty/ticket-zero state
-    sc.appendChild(h('div', { class: 'card', dataset: { screen: 'empty' } }, h('h3', null, '입장권이 없습니다'), h('p', { class: 'muted' }, `매일 00:00(KST)에 ${BALANCE.dungeon.dailyTickets}장 충전, 최대 ${BALANCE.dungeon.ticketCap}장까지 쌓입니다. 방치 보상으로는 지급되지 않습니다.`)));
-  }
-  const best = stageReward(Math.max(1, d.best));
-  sc.appendChild(h('div', { style: { display: 'flex', flexDirection: 'column', gap: '8px' } },
-    button(d.best ? `${d.best}단계 소탕 · 입장권 1` : '소탕 불가 · 기록 없음', { cls: 'btn btn-primary', disabled: !d.best || d.tickets <= 0, busy: true, onClick: async () => {
-      const r = fail(await app.game.sweepDungeon());
-      if (r.ok) toast(`${r.stage}단계 소탕 · 광석 +${r.ore} · 골드 +${fmt(r.gold)}`, 'good');
-    } }),
-    d.best ? null : h('p', { class: 'muted' }, '한 번 클리어한 단계부터 소탕할 수 있습니다.'),
-    button(`${next}단계 도전 · 입장권 1`, { cls: 'btn', disabled: d.tickets <= 0 || app.game.mode !== 'FARM', busy: true, onClick: async () => {
-      const r = fail(await app.game.enterDungeon(next));
-      if (r.ok) toast(`${next}단계 시작`, 'info');
-    } }),
-    d.best > 1 ? button(`${d.best}단계 다시 도전`, { cls: 'btn', disabled: d.tickets <= 0 || app.game.mode !== 'FARM', busy: true, onClick: async () => fail(await app.game.enterDungeon(d.best)) }) : null));
-  sc.appendChild(h('p', { class: 'muted' }, `입장 시 입장권 1장을 먼저 사용합니다. 시간 안에 실패하면 광석 30%만 받습니다. 전투 중 앱이 종료되면 다음 실행 때 입장권 1장을 돌려드립니다. 소탕 보상: 광석 ${best.ore}.`));
+  sc.appendChild(h('div', { class: 'section-title' }, '던전'));
+  for (const t of ['quarry', 'gold', 'books']) sc.appendChild(V4.dungeonCard(app, t));
+  sc.appendChild(h('div', { class: 'section-title' }, '도전'));
+  sc.appendChild(V4.towerCard(app));
+  sc.appendChild(V4.raidCard(app));
+  sc.appendChild(h('p', { class: 'muted' }, `던전은 입장할 때 입장권 1장을 먼저 사용합니다. 시간 안에 실패하면 보상 30%만 받고, 전투 중 앱이 꺼지면 다음 실행 때 입장권을 돌려드립니다.`));
   root.appendChild(sc);
   return root;
 }
@@ -398,17 +428,17 @@ export function dungeonPanel(app) {
 // Things the player can act on now get a red dot; everything is one tap from here.
 export function menuTiles(app) {
   const s = app.state;
-  const cl = prog.promotionChecklist(s);
-  const promoHot = cl.canChoose || cl.canTrial;
-  const extra = (globalThis.__menuExtras || []).map((f) => f(app)).filter(Boolean);
+  const tier = prog.tierOf(s);
+  const cl = tier < 3 ? prog.promotionChecklist(s) : null;
+  const promoHot = !!cl && (cl.canChoose || cl.canTrial || cl.canPromote);
+  const extra = V4.v4Tiles(app);
   const att = attendanceStatus(s, Date.now());
   return [
     ...extra,
     { id: 'attendance', ic: 'check', t: '출석', s: att.claimedToday ? `오늘 완료 · ${att.count}일` : `${att.index + 1}일차 받기`, dot: att.canClaim, on: () => openAttendance(app) },
-    { id: 'promotion', ic: 'star', t: '서약 각성', s: s.player.branch ? BRANCHES[s.player.branch].name : cl.canChoose ? '분기 선택 가능' : cl.canTrial ? '시련 도전 가능' : `Lv ${BALANCE.promotionLevel} 승급`, dot: promoHot,
-      on: () => (cl.canChoose || s.player.branch ? openPromotion(app) : openQuest(app)) },
+    { id: 'promotion', ic: 'star', t: '승급', s: tier >= 3 ? `${prog.tierName(s)} · 최종` : cl.canChoose || cl.canPromote ? `${cl.tier}차 승급 가능` : cl.canTrial ? '시련 도전 가능' : `${cl.tier}차 · Lv ${[0, 30, 60, 90][cl.tier]}`, dot: promoHot,
+      on: () => (cl && cl.canChoose ? openPromotion(app) : cl && cl.canPromote && tier >= 1 ? V4.openPromotionTier(app, cl.tier) : openQuest(app)) },
     { id: 'world', ic: 'dungeon', t: '지역 선택', s: REGION_BY_ID[s.progression.region].name, on: () => openWorld(app) },
-    { id: 'summon', ic: 'equipment', t: '별의 유산', s: '장비 소환', on: () => openSummon(app) },
     { id: 'settings', ic: 'menu', t: '환경 설정', s: '저장 · 소리 · 접근성', on: () => openSettings(app) },
     { id: 'help', ic: 'info', t: '도움말', s: '처음 하는 분', on: () => openHelp(app) },
   ];
@@ -431,28 +461,35 @@ export function menuPanel(app) {
 // ======================= S07 world =======================
 export function openWorld(app, focus = null) {
   const s = app.state;
-  const body = h('div', { dataset: { screen: 'world' } });
-  for (const r of REGIONS) {
-    const open = prog.regionUnlocked(s, r.id);
-    const max = s.progression.maxWave[r.id] || 0;
-    const cleared = s.progression.bossCleared[r.boss];
-    const card = h('div', { class: 'card', style: focus === r.id ? { borderColor: 'var(--gold)' } : null },
-      h('h3', null, r.name, h('span', { class: 'muted' }, `  ${r.label}`)),
-      h('div', { class: 'kv' }, '상태', h('b', null, !open ? '잠김' : cleared ? '보스 처치 완료' : max >= 10 ? '보스 도전 가능' : `웨이브 ${max}/10`)),
-      open ? h('div', { class: 'kv' }, '적 레벨', h('b', null, `Lv ${waveLevel(r, 1)}–${waveLevel(r, 10)}`)) : h('p', { class: 'muted' }, `${BOSSES[REGIONS[r.order - 1].boss].name} 처치 시 열림`));
-    if (open) {
-      const waves = h('div', { class: 'tabs', role: 'group', 'aria-label': `${r.name} 웨이브 선택` });
-      for (let w = 1; w <= Math.max(1, max); w++) waves.appendChild(h('button', { type: 'button', class: 'tab', 'aria-pressed': String(s.progression.region === r.id && s.progression.wave === w), onClick: async () => {
-        const res = fail(await app.game.setFarm(r.id, w, w === max));
-        if (res.ok) { toast(`${r.name} 웨이브 ${w}에서 사냥합니다.${w < max ? ' (자동 진행 멈춤)' : ''}`, 'info'); m.close(); }
-      } }, `W${w}`));
-      card.append(h('p', { class: 'small', style: { margin: '8px 0 4px' } }, '파밍 위치'), waves,
-        button(cleared ? '보스 재도전' : '보스 정보', { cls: 'btn', onClick: () => openBoss(app, r.boss) }));
+  let expanded = focus || s.progression.region;
+  const render = () => {
+    const body = h('div', { dataset: { screen: 'world' } });
+    for (const r of REGIONS) {
+      const open = prog.regionUnlocked(s, r.id);
+      const max = s.progression.maxWave[r.id] || 0;
+      const cleared = s.progression.bossCleared[r.boss];
+      const here = s.progression.region === r.id;
+      const status = !open ? `${BOSSES[REGIONS[r.order - 1].boss].name} 처치 시 열림` : cleared ? '보스 처치 완료' : max >= 10 ? '보스 도전 가능' : `웨이브 ${max}/10`;
+      const head = h('button', { type: 'button', class: 'world-row' + (here ? ' here' : '') + (open ? '' : ' locked'), disabled: !open, 'aria-expanded': String(expanded === r.id), onClick: () => { expanded = expanded === r.id ? null : r.id; render(); } },
+        h('span', { class: 'wn' }, h('b', null, r.name), h('span', { class: 'muted' }, ` ${r.label}`)), h('span', { class: 'ws' + (cleared ? ' ok' : '') }, here ? '사냥 중' : status));
+      const card = h('div', { class: 'world-card' }, head);
+      if (open && expanded === r.id) {
+        const waves = h('div', { class: 'tabs', role: 'group', 'aria-label': `${r.name} 웨이브 선택` });
+        for (let w = 1; w <= Math.max(1, max); w++) waves.appendChild(h('button', { type: 'button', class: 'tab', 'aria-pressed': String(here && s.progression.wave === w), onClick: async () => {
+          const res = fail(await app.game.setFarm(r.id, w, w === max));
+          if (res.ok) { toast(`${r.name} 웨이브 ${w}에서 사냥합니다.${w < max ? ' (자동 진행 멈춤)' : ''}`, 'info'); m.close(); }
+        } }, `W${w}`));
+        card.append(h('div', { class: 'world-body' }, h('div', { class: 'kv' }, '적 레벨', h('b', null, `Lv ${waveLevel(r, 1)}–${waveLevel(r, 10)} · ${r.monsters.map((id) => MONSTERS_NAME(id)).join(' · ')}`)),
+          h('p', { class: 'small', style: { margin: '6px 0 4px' } }, '파밍 위치'), waves,
+          button(cleared ? `${BOSSES[r.boss].name} 재도전` : `${BOSSES[r.boss].name} 정보`, { cls: 'btn', onClick: () => openBoss(app, r.boss) })));
+      }
+      body.appendChild(card);
     }
-    body.appendChild(card);
-  }
-  body.appendChild(h('p', { class: 'muted' }, '권장 레벨은 잠금 조건이 아닙니다. 낮은 웨이브를 고르면 자동 진행이 멈추고 그 웨이브에서 계속 사냥합니다.'));
-  const m = openModal({ id: 'world', title: '지역 선택', body });
+    body.appendChild(h('p', { class: 'muted' }, '권장 레벨은 잠금 조건이 아닙니다. 낮은 웨이브를 고르면 자동 진행이 멈추고 그 웨이브에서 계속 사냥합니다.'));
+    m.setBody(body);
+  };
+  const m = openModal({ id: 'world', title: '지역 선택', body: h('div') });
+  render();
 }
 
 // ======================= S08 boss =======================
@@ -485,13 +522,13 @@ export function openBoss(app, bossId = null) {
 }
 
 // ======================= S09 victory / S10 defeat / dungeon & trial results =======================
-function rewardTiles(list) {
+export function rewardTiles(list) {
   return h('div', { class: 'rewards reveal' }, list.map((r, i) => {
     const el = h('div', { class: 'reward', style: { animationDelay: `${350 + i * 60}ms` } }, img(r.icon, ''), h('b', null, r.value), r.label);
     return el;
   }));
 }
-function itemRewards(items) { return items.map((it) => ({ icon: itemIcon(it.look), value: rarityLabel(it.rarity), label: it.name })); }
+export function itemRewards(items) { return items.map((it) => ({ icon: itemIcon(it.look), value: rarityLabel(it.rarity), label: it.name })); }
 
 export function openResult(app, r) {
   if (r.saveFailed) {
@@ -507,6 +544,8 @@ export function openResult(app, r) {
     const b = BOSSES[r.bossId];
     const tiles = [{ icon: itemIcon(CURRENCY_ICONS.gold), value: '+' + fmt(r.gold), label: '골드' }, { icon: itemIcon(CURRENCY_ICONS.exp), value: '+' + fmt(r.exp), label: r.expRes && r.expRes.toPending ? '경험치(보관)' : '경험치' }];
     if (r.ore) tiles.push({ icon: itemIcon(CURRENCY_ICONS.ore), value: '+' + r.ore, label: '강화 광석' });
+    if (r.gem) tiles.push({ icon: itemIcon(CURRENCY_ICONS.gem), value: '+' + r.gem, label: '보석' });
+    if (r.starShard) tiles.push({ icon: itemIcon(CURRENCY_ICONS.exp), value: '+' + r.starShard, label: '별의 파편' });
     tiles.push(...itemRewards(r.items || []));
     if (app.state.settings.sound) sfx('bell');
     const actions = [];
@@ -522,27 +561,33 @@ export function openResult(app, r) {
   if (r.kind === 'boss' && !r.win) {
     const st = playerStats(app.state);
     const m = openModal({ id: 'defeat', title: '다시 준비하기', dismissible: false, body: h('div', { dataset: { screen: 'defeat' } },
-      h('p', null, r.reason === 'timeout' ? `제한 시간 ${BALANCE.combat.bossTimeoutSec}초가 지났습니다.` : r.reason === 'forfeit' ? '도전을 중단했습니다.' : '세린이 쓰러졌습니다.'),
+      h('p', null, r.reason === 'timeout' ? `제한 시간 ${BALANCE.combat.bossTimeoutSec}초가 지났습니다.` : r.reason === 'forfeit' ? '도전을 중단했습니다.' : `${CLASSES[app.state.player.cls || 'warrior'].hero}이(가) 쓰러졌습니다.`),
       h('p', { class: 'okc' }, '골드·장비 손실은 없습니다. 직전 사냥 위치로 돌아갑니다.'),
       h('div', { class: 'card' }, h('h3', null, '이렇게 강해질 수 있어요'),
         h('div', { class: 'kv' }, '공격력 강화', h('b', null, `현재 ${fmtFull(st.atk)}`)),
         h('div', { class: 'kv' }, '장비 강화', h('b', null, `광석 ${fmtFull(app.state.wallet.ore)}`)),
-        h('div', { class: 'kv' }, '방패 돌진', h('b', null, '강공 예고 중 사용하면 피해 40% 감소')))),
+        h('div', { class: 'kv' }, '스킬 레벨업', h('b', null, '스킬 탭 · 스킬북')),
+        h('div', { class: 'kv' }, '뽑기', h('b', null, `보석 ${fmtFull(app.state.wallet.gem)}`)))),
       actions: [button('성장하러 가기', { cls: 'btn btn-primary', onClick: () => { m.close(); back(); app.setTab('growth'); } }), button('장비 확인', { cls: 'btn', onClick: () => { m.close(); back(); app.setTab('equipment'); } })] });
     return m;
   }
+  if (r.kind === 'tower') return V4.openTowerResult(app, r, back);
+  if (r.kind === 'raid') return V4.openRaidResult(app, r, back, itemRewards);
   if (r.kind === 'dungeon') {
-    const tiles = [{ icon: itemIcon(CURRENCY_ICONS.ore), value: '+' + r.ore, label: '강화 광석' }];
+    const tiles = [];
+    if (r.ore) tiles.push({ icon: itemIcon(CURRENCY_ICONS.ore), value: '+' + r.ore, label: '강화 광석' });
     if (r.gold) tiles.push({ icon: itemIcon(CURRENCY_ICONS.gold), value: '+' + fmt(r.gold), label: '골드' });
+    if (r.books) tiles.push({ icon: itemIcon(CURRENCY_ICONS.goldChest), value: '+' + r.books, label: '스킬북' });
     const m = openModal({ id: 'dungeonResult', title: r.cleared ? `${r.stage}단계 클리어` : `${r.stage}단계 실패`, dismissible: false, body: h('div', { dataset: { screen: 'dungeon' } },
-      h('p', null, r.cleared ? `${r.timeSec}초 · ${r.kills}마리 처치${r.record ? ' · 최고 기록 갱신' : ''}` : `${r.reason === 'timeout' ? '시간 초과' : r.reason === 'forfeit' ? '중단' : '패배'} · ${r.kills}/${BALANCE.dungeon.killTarget}마리. 입장권은 사용되었고 광석 30%를 받았습니다.`),
+      h('p', null, r.cleared ? `${r.timeSec}초 · ${r.kills}마리 처치${r.record ? ' · 최고 기록 갱신' : ''}` : `${r.reason === 'timeout' ? '시간 초과' : r.reason === 'forfeit' ? '중단' : '패배'} · ${r.kills}마리. 입장권은 사용되었고 보상 30%를 받았습니다.`),
       rewardTiles(tiles)), actions: [button('확인', { cls: 'btn btn-primary', onClick: () => { m.close(); back(); app.setTab('dungeon'); } })] });
     return m;
   }
   if (r.kind === 'trial') {
-    const m = openModal({ id: 'trialResult', title: r.win ? '교관 시련 통과' : '교관 시련 실패', dismissible: false, body: h('div', { dataset: { screen: 'quest' } },
-      h('p', null, r.win ? '교관 분신을 꺾었습니다. 이제 서약의 길을 고를 수 있습니다.' : '증표와 재료는 소모되지 않았습니다. 언제든 다시 도전할 수 있습니다.')),
-      actions: [button(r.win ? '분기 선택하기' : '확인', { cls: 'btn btn-primary', onClick: () => { m.close(); back(); if (r.win) openPromotion(app); } })] });
+    const t3 = r.tier === 3;
+    const m = openModal({ id: 'trialResult', title: `${t3 ? '영웅의 시련' : '교관 시련'} ${r.win ? '통과' : '실패'}`, dismissible: false, body: h('div', { dataset: { screen: 'quest' } },
+      h('p', null, r.win ? (t3 ? '과거의 자신을 넘어섰습니다. 3차 승급을 확정할 수 있습니다.' : '교관 분신을 꺾었습니다. 이제 갈래를 고를 수 있습니다.') : '재료는 소모되지 않았습니다. 언제든 다시 도전할 수 있습니다.')),
+      actions: [button(r.win ? (t3 ? '3차 승급하기' : '갈래 선택하기') : '확인', { cls: 'btn btn-primary', onClick: () => { m.close(); back(); if (r.win) { if (t3) V4.openPromotionTier(app, 3); else openPromotion(app); } } })] });
     return m;
   }
 }
@@ -599,22 +644,26 @@ export function openOffline(app) {
 export function openQuest(app) {
   const render = () => {
     const s = app.state;
+    const tier = prog.tierOf(s);
+    if (tier >= 3) { m.setBody(h('div', { dataset: { screen: 'quest' } }, h('p', null, `최종 승급 ${prog.tierName(s)}에 도달했습니다.`))); m.setActions([button('닫기', { cls: 'btn', onClick: () => m.close() })]); return; }
     const cl = prog.promotionChecklist(s);
+    const nextName = s.player.branch ? BRANCHES[s.player.branch].names[cl.tier - 1] : branchesOf(s.player.cls || 'warrior').map((b) => BRANCHES[b].names[0]).join(' / ');
     const body = h('div', { dataset: { screen: 'quest' } },
-      h('h3', { style: { fontSize: '18px', margin: '0 0 4px' } }, '별의 시험'),
+      h('h3', { style: { fontSize: '16px', margin: '0 0 4px' } }, `${cl.tier}차 승급 · ${nextName}`),
       cl.items.map((it) => h('div', { class: 'check' + (it.ok ? ' ok' : '') },
         h('span', { class: 'mark', 'aria-hidden': 'true' }, it.ok ? icon('check', 18) : ''),
         h('div', { class: 'c' }, h('b', null, it.label + (it.ok ? ' · 완료' : '')), it.hint ? h('span', { class: 'muted' }, it.hint) : null),
         h('span', { class: 'p' }, it.progress),
-        !it.ok && it.go && it.id !== 'trial' ? button('바로 가기', { cls: 'btn go', onClick: () => go(app, it.go) }) : null)),
+        !it.ok && it.go && it.id !== 'trial' && it.id !== 'level' ? button('바로 가기', { cls: 'btn go', onClick: () => go(app, it.go) }) : null)),
       h('div', { class: 'card', style: { marginTop: '10px' } },
         h('div', { class: 'kv' }, '보관 경험치', h('b', null, fmtFull(s.player.pendingExp))),
-        h('p', { class: 'muted', style: { margin: '4px 0 0' } }, `Lv ${BALANCE.promotionLevel}부터 새 경험치는 보관되고, 승급 완료 후 순서대로 적용됩니다 (최대 Lv ${BALANCE.levelCap}). 시련에 실패해도 증표는 소모되지 않습니다.`)),
-      h('p', { class: 'muted' }, '교관 분신은 세린의 훈련 동작을 은색으로 투영한 연습 상대입니다. 자동 전투만으로도 통과할 수 있고, 스킬을 직접 눌러 개입할 수도 있습니다.'));
+        h('p', { class: 'muted', style: { margin: '4px 0 0' } }, `Lv 30 · 60 · 90에서 승급 전까지 새 경험치는 보관되고, 승급 후 순서대로 적용됩니다 (최대 Lv ${BALANCE.levelCap}). 시련에 실패해도 재료는 소모되지 않습니다.`)),
+      h('p', { class: 'muted' }, '시련 상대는 자신의 모습을 은색으로 투영한 연습 상대입니다. 자동 전투만으로도 통과할 수 있습니다.'));
     m.setBody(body);
     m.setActions([
-      cl.canChoose ? button('분기 선택하기', { cls: 'btn btn-primary', onClick: () => { m.close(); openPromotion(app); } })
-        : button(cl.canTrial ? '교관 시련 시작 (자동 전투)' : s.player.branch ? '승급 완료' : '조건을 먼저 채우세요', { cls: 'btn btn-primary', disabled: !cl.canTrial || app.game.mode !== 'FARM', onClick: () => { const r = app.game.startTrial(); if (!r.ok) return fail(r); m.close(); } })]);
+      cl.canChoose ? button('갈래 선택하기', { cls: 'btn btn-primary', onClick: () => { m.close(); openPromotion(app); } })
+        : cl.canPromote ? button(`${cl.tier}차 승급하기`, { cls: 'btn btn-primary', onClick: () => { m.close(); V4.openPromotionTier(app, cl.tier); } })
+        : button(cl.canTrial ? `${cl.tier === 3 ? '영웅의 시련' : '교관 시련'} 시작 (자동 전투)` : '조건을 먼저 채우세요', { cls: 'btn btn-primary', disabled: !cl.canTrial || app.game.mode !== 'FARM', onClick: () => { const r = app.game.startTrial(cl.tier); if (!r.ok) return fail(r); m.close(); } })]);
   };
   const m = openModal({ id: 'quest', title: '승급 준비', body: h('div'), actions: [] });
   render();
@@ -623,40 +672,44 @@ export function openQuest(app) {
 // ======================= S12 promotion select =======================
 export function openPromotion(app) {
   const s = app.state;
-  const switching = !!s.player.branch;
-  let pick = s.player.branch || null;
+  const tier = prog.tierOf(s);
+  if (tier >= 1) { const cl = prog.promotionChecklist(s); return tier < 3 && cl.canPromote ? V4.openPromotionTier(app, cl.tier) : openQuest(app); }
+  const cls = s.player.cls || 'warrior';
+  const ids = branchesOf(cls);
+  let pick = null;
   const meta = spriteMeta().portraits;
   const render = () => {
     const fig = (id) => {
       const b = BRANCHES[id];
-      const f = h('figure', { class: pick === id ? 'pick' : '' }, img(meta['promo_' + id].file, b.name), h('figcaption', null, h('b', null, b.name), h('span', { class: 'muted' }, b.role)));
+      const art = meta['promo_' + id] ? img(meta['promo_' + id].file, b.name) : V4.classArt(cls);
+      const f = h('figure', { class: pick === id ? 'pick' : '' }, art, h('figcaption', null, h('b', null, b.name), h('span', { class: 'muted' }, b.role)));
       f.addEventListener('click', () => { pick = id; render(); });
       return f;
     };
-    const sk = pick ? SKILLS[pick === 'knight' ? 'guardCounter' : 'berserkStrike'] : null;
+    const b = pick ? BRANCHES[pick] : null;
     m.setBody(h('div', { dataset: { screen: 'promotion' } },
-      h('div', { class: 'hero-art' }, fig('knight'), fig('berserker')),
-      h('div', { class: 'btn-row', style: { margin: '8px 0' } }, ['knight', 'berserker'].map((id) => button(BRANCHES[id].name, { cls: 'btn' + (pick === id ? ' btn-gold' : ''), onClick: () => { pick = id; render(); } }))),
-      pick ? h('div', { class: 'card' }, h('h3', null, BRANCHES[pick].name), h('p', { class: 'small', style: { margin: '0 0 6px' } }, BRANCHES[pick].desc),
-        h('div', { class: 'kv' }, '무기', h('b', null, BRANCHES[pick].weapon)),
-        h('div', { class: 'kv' }, '분기 능력', h('b', null, pick === 'knight' ? '체력 +15% · 방어력 +15%' : '공격력 +12%')),
-        h('div', { class: 'kv' }, '신규 스킬', h('b', null, sk.name)), h('p', { class: 'muted', style: { margin: '4px 0 0' } }, sk.desc)) : h('p', { class: 'muted' }, '두 갈래 중 하나를 고르세요. 얼굴·나이·머리색은 같고 무기·갑옷·자세가 바뀝니다.'),
-      h('p', { class: 'muted' }, switching ? '분기 재전환은 MVP 개발 설정에서만 허용됩니다.' : '최초 1회 선택은 무료입니다. 레벨·장비·퀘스트는 유지되고 분기 스킬만 바뀝니다. 증표 20개는 확정 시에만 소모됩니다.'),
-      h('p', { class: 'muted' }, '현재 전투 그림은 분기별 전신 원화 1장에 움직임 효과를 준 상태이며, 분기 전용 연속 전투 프레임은 후속 제작 대상입니다.')));
-    const dev = app.state.settings.devTools;
-    m.setActions([button(pick ? (switching ? `${BRANCHES[pick].name}로 재전환 (개발)` : `${BRANCHES[pick].name}로 각성`) : '분기를 선택하세요', { cls: 'btn btn-primary', disabled: !pick || (switching && (!dev || pick === s.player.branch)), onClick: () => confirmPromotion(app, pick, switching, m) })]);
+      h('div', { class: 'hero-art' }, ids.map(fig)),
+      h('div', { class: 'btn-row', style: { margin: '8px 0' } }, ids.map((id) => button(BRANCHES[id].name, { cls: 'btn' + (pick === id ? ' btn-gold' : ''), onClick: () => { pick = id; render(); } }))),
+      b ? h('div', { class: 'card' }, h('h3', null, b.names.join(' → ')), h('p', { class: 'small', style: { margin: '0 0 6px' } }, b.desc),
+        h('div', { class: 'kv' }, '무기', h('b', null, b.weapon)),
+        h('div', { class: 'kv' }, '1차 능력', h('b', null, V4.passiveText(b.tiers[0]))),
+        h('div', { class: 'kv' }, '신규 스킬', h('b', null, `${SKILLS[b.skills[0]].name} · 2차 ${SKILLS[b.skills[1]].name}`)),
+        h('div', { class: 'kv' }, '최종 궁극기', h('b', null, b.finalUlt)),
+        h('p', { class: 'muted', style: { margin: '4px 0 0' } }, SKILLS[b.skills[0]].desc)) : h('p', { class: 'muted' }, '두 갈래 중 하나를 고르세요. 2차·3차 승급은 고른 갈래를 따라갑니다.'),
+      h('p', { class: 'muted' }, '선택은 한 번뿐입니다. 레벨·장비는 유지되고 갈래 스킬이 4번 슬롯에 들어갑니다. 시련의 증표 20개는 확정할 때만 사용됩니다.')));
+    m.setActions([button(b ? `${b.name}(으)로 승급` : '갈래를 선택하세요', { cls: 'btn btn-primary', disabled: !b, onClick: () => confirmPromotion(app, pick, m) })]);
   };
-  const m = openModal({ id: 'promotion', title: switching ? '서약 분기' : '승급 선택', body: h('div'), actions: [] });
+  const m = openModal({ id: 'promotion', title: '1차 승급 · 갈래 선택', body: h('div'), actions: [] });
   render();
 }
-function confirmPromotion(app, branch, switching, parent) {
+function confirmPromotion(app, branch, parent) {
   const b = BRANCHES[branch];
-  const c = openModal({ id: 'promoConfirm', title: '최종 확인', kind: 'center', body: h('p', null, `${b.name}(으)로 ${switching ? '재전환' : '각성'}합니다. ${switching ? '' : '시련의 증표 20개를 사용하고, 보관 경험치가 순서대로 적용됩니다.'}`),
+  const c = openModal({ id: 'promoConfirm', title: '최종 확인', kind: 'center', body: h('p', null, `${b.name}(으)로 승급합니다. 시련의 증표 20개를 사용하고, 보관 경험치가 순서대로 적용됩니다. 갈래는 다시 바꿀 수 없습니다.`),
     actions: [button('확정', { cls: 'btn btn-primary', busy: true, onClick: async () => {
-      const r = fail(await app.game.choosePromotion(branch, { dev: switching }));
+      const r = fail(await app.game.promote(1, branch));
       if (!r.ok) return;
       c.close(); parent.close();
-      playPromotion(app, branch, r);
+      V4.celebratePromotion(app, r);
     } }), button('취소', { cls: 'btn', onClick: () => c.close() })] });
 }
 // spec 08: 0–400 current, 400–900 crest, 900–1400 new silhouette, 1400–2200 name/skill/rewards
@@ -778,16 +831,7 @@ export function openSaveError(app, e) {
 }
 
 // ======================= S21 summon (expansion, disabled) =======================
-export function openSummon(app) {
-  openModal({ id: 'summon', title: '장비 소환 · 확장', body: h('div', { dataset: { screen: 'summon' } },
-    h('p', null, '별의 유산(장비 소환)은 확장 시안입니다. 이번 MVP에서는 동작하지 않으며 보석·결제·광고도 없습니다.'),
-    h('div', { class: 'card' }, h('h3', null, '확장 시 적용할 규칙'),
-      h('div', { class: 'kv' }, '11회 묶음', h('b', null, '결과 4열 · NEW · 중복 처리 내역')),
-      h('div', { class: 'kv' }, '천장', h('b', null, '테스트 예시 200 (확정 아님)')),
-      h('div', { class: 'kv' }, '자동 소환', h('b', null, '예산 상한 · 횟수 · 전설 이상 정지')),
-      h('p', { class: 'muted', style: { margin: '6px 0 0' } }, '확률표·가격은 서버 상품 정의 후 확정합니다. 캐릭터 소환이 아니라 장비 소환입니다.')),
-    button('MVP 비활성', { cls: 'btn', disabled: true })) });
-}
+export function openSummon(app) { return V4.openGacha(app); }
 
 // ======================= S22 conflict =======================
 export function openConflict(app) {

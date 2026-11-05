@@ -1,3 +1,4 @@
+import { MONSTERS, BOSSES } from '../data/content.js';
 // Runtime asset loader. Reads assets/runtime/sprites.json (written by
 // tools/extract_assets.py). Images load on demand; only the active region,
 // the hero and the current boss are preloaded (spec 02 §5: no full preload).
@@ -38,31 +39,44 @@ export const itemIcon = (iconId) => meta.items[iconId].file;
 export const skillIcon = (iconId) => meta.skills[iconId].file;
 export const portrait = (id) => meta.portraits[id].file;
 
-export async function preloadFor({ region, boss, branch }) {
+// New creatures reuse an existing sprite (content `sprite` field) until their art exists.
+export function spriteFile(def) {
+  const m = def && (meta.monsters[def.sprite] || meta.bosses[def.sprite] || meta.monsters[def.id] || meta.bosses[def.id]);
+  return m ? m.file : null;
+}
+export function promoFrame(branch) { return branch && meta.hero['promo_' + branch] ? meta.hero['promo_' + branch] : null; }
+
+export async function preloadFor({ region, boss, branch, monsters = MONSTERS, bosses = BOSSES }) {
   const list = Object.values(meta.hero).filter((f) => !f.id.startsWith('knight') && !f.id.startsWith('berserker')).map((f) => f.file);
-  if (branch) list.push(meta.hero['promo_' + branch].file);
+  const pf = promoFrame(branch);
+  if (pf) list.push(pf.file);
   if (region) {
-    list.push(meta.backgrounds[region.bg].file);
-    for (const m of region.monsters) list.push(meta.monsters[m].file);
-    list.push(meta.bosses[region.boss].file);
+    const bg = meta.backgrounds[region.bg];
+    if (bg) list.push(bg.file);
+    for (const m of region.monsters) list.push(spriteFile(monsters ? monsters[m] : { id: m }));
+    list.push(spriteFile(bosses ? bosses[region.boss] : { id: region.boss }));
   }
-  if (boss) list.push(meta.bosses[boss].file);
-  await Promise.all(list.map(loadImage));
+  if (boss) list.push(spriteFile(bosses ? bosses[boss] : { id: boss }));
+  await Promise.all(list.filter(Boolean).map(loadImage));
 }
 
 // Cache an image pre-scaled to its display size (avoids resampling big art every frame).
 const scaled = new Map();
-export function scaledImage(img, w, h, key) {
-  const k = key + ':' + w + 'x' + h;
+// `filter` (e.g. 'hue-rotate(90deg)') is baked into the cached bitmap once — placeholder
+// tints for creatures/classes without their own art never run a filter per frame.
+export function scaledImage(img, w, h, key, filter = '') {
+  const k = key + ':' + w + 'x' + h + (filter ? ':' + filter : '');
   let c = scaled.get(k);
   if (c) return c;
   c = document.createElement('canvas');
   c.width = Math.max(1, Math.round(w)); c.height = Math.max(1, Math.round(h));
   const x = c.getContext('2d');
   x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high';
+  if (filter) x.filter = filter;
   x.drawImage(img, 0, 0, c.width, c.height);
+  x.filter = 'none';
   scaled.set(k, c);
-  if (scaled.size > 120) scaled.delete(scaled.keys().next().value);
+  if (scaled.size > 200) scaled.delete(scaled.keys().next().value);
   return c;
 }
 // 2px outline version (elite marker), cached.

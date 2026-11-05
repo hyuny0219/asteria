@@ -1,12 +1,13 @@
 // App shell: layout (spec 08 table), per-frame updates, and mode → screen routing.
 import { BALANCE, expToNext } from '../data/balance.js';
-import { BOSSES, CURRENCY_ICONS, REGION_BY_ID, SKILLS } from '../data/content.js';
+import { BOSSES, CLASSES, CURRENCY_ICONS, RARITY, REGION_BY_ID, SKILLS } from '../data/content.js';
 import { BattleRenderer } from '../render/battle.js';
 import { itemIcon, portrait, preloadFor, skillIcon } from '../render/assets.js';
 import * as prog from '../core/progression.js';
 import { fmt } from '../core/util.js';
 import { button, clear, closeAllModals, h, icon, img, initModals, initToasts, modalOpen, toast } from './dom.js';
 import * as S from './screens.js';
+import * as V4 from './v4.js';
 import { sfx } from '../platform/audio.js';
 import * as FS from './fullscreen.js';
 
@@ -124,12 +125,13 @@ export class App {
     g.on('reward', (r) => {
       this.panelDirty = true;
       // common drops only light the 장비 tab dot; uncommon+ get a short toast
-      const notable = r.loot ? r.loot.items.filter((i) => i.rarity !== 'common') : [];
-      if (notable.length) toast(`장비 획득 · ${notable.map((i) => `${i.rarity === 'rare' ? '희귀 III' : '고급 II'} ${i.name}`).join(', ')}`, 'good', 1800);
+      const notable = r.loot ? r.loot.items.filter((i) => i.rarity !== 'common' && i.rarity !== 'uncommon') : [];
+      if (notable.length) toast(`장비 획득 · ${notable.map((i) => `${RARITY[i.rarity].name} ${RARITY[i.rarity].mark} ${i.name}`).join(', ')}`, 'good', 1800);
       if (r.token) toast(`시련의 증표 +1 (${this.state.wallet.token}/${BALANCE.promotion.tokensRequired})`, 'good', 1800);
-      if (r.expRes && r.expRes.toPending && !this._pendingToast) { this._pendingToast = true; toast('Lv 30: 서약 각성 전까지 경험치는 보관됩니다.', 'info', 3500); }
+      if (r.expRes && r.expRes.toPending && !this._pendingToast) { this._pendingToast = true; toast(`Lv ${this.state.player.level}: 승급 전까지 경험치는 보관됩니다.`, 'info', 3500); }
     });
-    g.on('levelUp', ({ level }) => { toast(`레벨 업! Lv ${level}`, 'good'); this.panelDirty = true; this.buildSkills(); });
+    g.on('levelUp', ({ level }) => { toast(`레벨 업! Lv ${level}`, 'good'); this.panelDirty = true; this.structural = true; this.buildSkills(); });
+    g.on('combat', (ev) => { if (ev.type === 'fieldBoss') toast(`${ev.name} 출현! 처치하면 보석과 상위 장비`, 'good', 3000); if (ev.type === 'enrage') this.el.liveText.textContent = '보스 광폭화'; });
     g.on('retreat', ({ wave }) => toast(`연속 패배로 웨이브 ${wave}에서 잠시 사냥합니다.`, 'info', 3000));
     g.on('overflow', ({ count }) => { if (!this._ovToast) { this._ovToast = true; toast(`보관함이 가득 차 ${count}개를 임시 보관함에 보관했습니다.`, 'error', 3500); } });
     g.on('farmVerified', (vf) => { this.panelDirty = true; });
@@ -148,6 +150,7 @@ export class App {
   showDailyPopups() {
     if (this.game.mode === 'OFFLINE' || this.game.mode === 'CONFLICT') return;
     if (new URLSearchParams(location.search).has('nodaily')) return;   // QA screenshots
+    if (V4.needsClassPick(this.state)) { if (!modalOpen('classpick')) V4.openClassPicker(this, { onDone: () => this.showDailyPopups() }); return; }
     if (modalOpen()) return;
     if (this.state.returnBonus.pending) { S.openReturnBonus(this); return; }
     if (!this._attShown) { this._attShown = true; S.openAttendance(this, { auto: true }); }
@@ -268,7 +271,7 @@ export class App {
     const s = this.state;
     const slots = prog.slotCount(s);
     this.skillEls = [];
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 5; i++) {
       const id = s.skills.equipped[i];
       if (i >= slots) { bar.appendChild(h('button', { type: 'button', class: 'skill locked', 'aria-label': '승급 해금 슬롯', onClick: () => S.go(this, 'quest') }, '승급', h('br'), '해금')); continue; }
       if (!id) { bar.appendChild(h('button', { type: 'button', class: 'skill empty', 'aria-label': '빈 슬롯 - 스킬 편성', onClick: () => this.setTab('skills') }, '+')); continue; }
@@ -281,7 +284,10 @@ export class App {
     }
     bar.appendChild(h('span', { class: 'skill-divider', 'aria-hidden': 'true' }));
     const gauge = h('i', { style: { width: '0%' } });
-    const ult = h('button', { type: 'button', class: 'skill ult', 'aria-label': '궁극기 별빛 참격', onClick: () => this.castSkill('starSlash') }, img(skillIcon('S5'), ''), h('span', { class: 'gauge' }, gauge));
+    const ultId = prog.ultId(s);
+    const ultSk = SKILLS[ultId];
+    const ult = h('button', { type: 'button', class: 'skill ult', 'aria-label': `궁극기 ${ultSk.name}`, onClick: () => this.castSkill(ultId) }, img(skillIcon(ultSk.icon), ''), h('span', { class: 'gauge' }, gauge));
+    this.ultName = ultSk.name;
     bar.appendChild(ult);
     this.ultEl = { b: ult, gauge };
   }
@@ -291,8 +297,9 @@ export class App {
     if (sk.kind === 'passive-counter') { toast('수호 반격은 방패 돌진의 방어 시간 중 피해를 받으면 자동으로 발동합니다.', 'info', 3200); return; }
     if (!['FARM', 'BOSS', 'DUNGEON', 'PROMOTION_TRIAL'].includes(g.mode)) return;
     const b = g.active;
-    if (id === 'starSlash' && b.hero.gauge < 100) { toast(`궁극기 게이지 부족 (${Math.floor(b.hero.gauge)}/100)`, 'info'); return; }
-    if (id !== 'starSlash' && (b.hero.cds[id] || 0) > b.t) { toast(`${sk.name} 대기 중 · ${((b.hero.cds[id] - b.t) / 1000).toFixed(1)}초`, 'info'); return; }
+    const isUlt = sk.kind === 'ultimate';
+    if (isUlt && b.hero.gauge < 100) { toast(`궁극기 게이지 부족 (${Math.floor(b.hero.gauge)}/100)`, 'info'); return; }
+    if (!isUlt && (b.hero.cds[id] || 0) > b.t) { toast(`${sk.name} 대기 중 · ${((b.hero.cds[id] - b.t) / 1000).toFixed(1)}초`, 'info'); return; }
     g.castManual(id);
   }
 
@@ -305,9 +312,18 @@ export class App {
     const view = this.forcedBattleView ? 'battle' : s.settings.battleView;
     if (view === 'battle') {
       const region = REGION_BY_ID[s.progression.region];
-      const bg = g.mode === 'PROMOTION_TRIAL' ? 'cathedral' : g.mode === 'DUNGEON' ? 'mine' : region.bg;
-      const label = g.mode === 'DUNGEON' ? `채석장 ${g.session?.stage}단계 · 처치 ${b.kills}/${BALANCE.dungeon.killTarget} · ${Math.ceil(b.timeLeftMs() / 1000)}초` : g.mode === 'DEFEAT' ? '쓰러졌습니다 · 3초 뒤 재개 (손실 없음)' : null;
-      this.renderer.draw(b, { alpha, region, bgId: bg, branch: s.player.branch, label, victory: g.mode === 'RESULT' && g.result && g.result.win });
+      const sess = g.session;
+      const SB = { quarry: ['mine', null], gold: ['desert', 40], books: ['cathedral', null], tower: ['cathedral', 200], raid: ['mine', 260] };
+      const sk = sess ? (sess.kind === 'dungeon' ? sess.type || 'quarry' : sess.kind) : null;
+      const [bg, bgTint] = g.mode === 'PROMOTION_TRIAL' ? ['cathedral', null] : SB[sk] || [region.bg, region.bgTint || null];
+      const left = b.timeLeftMs ? b.timeLeftMs() : null;
+      const DN = { quarry: '채석장', gold: '황금 금고', books: '스킬북 서고' };
+      const label = sk === 'tower' ? `시련의 탑 ${sess.floor}층 · 처치 ${b.kills}/${BALANCE.tower.killTarget} · ${Math.ceil((left || 0) / 1000)}초`
+        : g.mode === 'DUNGEON' && sess ? `${DN[sk] || '던전'} ${sess.stage}단계 · 처치 ${b.kills} · ${Math.ceil((left || 0) / 1000)}초`
+        : sk === 'raid' ? `레이드 · 누적 피해 ${fmt(b.raidDamage || b.damageDealt || 0)} · ${Math.ceil((left || 0) / 1000)}초`
+        : g.mode === 'DEFEAT' ? '쓰러졌습니다 · 3초 뒤 재개 (손실 없음)' : null;
+      const cls = CLASSES[s.player.cls || 'warrior'];
+      this.renderer.draw(b, { alpha, region, bgId: bg, bgTint, branch: s.player.branch, heroTint: cls.tint || 0, label, victory: g.mode === 'RESULT' && g.result && g.result.win });
     }
     // cooldowns
     if (b && this.skillEls) {
@@ -320,7 +336,7 @@ export class App {
       const gv = Math.floor(b.hero.gauge);
       this.ultEl.gauge.style.width = gv + '%';
       this.ultEl.b.classList.toggle('ready', gv >= 100);
-      this.ultEl.b.setAttribute('aria-label', `궁극기 별빛 참격 · 게이지 ${gv}/100`);
+      this.ultEl.b.setAttribute('aria-label', `궁극기 ${this.ultName} · 게이지 ${gv}/100`);
     }
     const now = performance.now();
     if (now - this.lastHud > 250) { this.lastHud = now; this.updateHud(); }
@@ -333,14 +349,18 @@ export class App {
     const p = s.player;
     const region = REGION_BY_ID[s.progression.region];
     E.name.textContent = s.profile.nickname || '모험가';
-    E.sub.textContent = `Lv ${p.level}${p.branch ? ' · ' + (p.branch === 'knight' ? '흑장미 기사' : '진홍의 집행자') : ''}${p.pendingExp ? ' · 보관 EXP ' + fmt(p.pendingExp) : ''}`;
+    const ct = CLASSES[p.cls || 'warrior'].tint;
+    const ff = ct ? `hue-rotate(${ct}deg) saturate(1.1)` : '';
+    if (E.face.style.filter !== ff) E.face.style.filter = ff;
+    E.sub.textContent = `Lv ${p.level} · ${prog.tierName(s) || CLASSES[p.cls || 'warrior'].name}${p.pendingExp ? ' · 보관 EXP ' + fmt(p.pendingExp) : ''}`;
     E.gold.querySelector('.v').textContent = fmt(s.wallet.gold);
     E.ore.querySelector('.v').textContent = fmt(s.wallet.ore);
     const m = this.game.mode;
     let pv = 0;
     if (m === 'BOSS') { E.where.textContent = BOSSES[this.game.session.bossId].name; E.prog.textContent = '보스전'; }
-    else if (m === 'DUNGEON') { E.where.textContent = '별의 채석장'; E.prog.textContent = `${this.game.session.stage}단계`; }
-    else if (m === 'PROMOTION_TRIAL') { E.where.textContent = '교관 시련'; E.prog.textContent = '서약 각성'; }
+    else if (m === 'DUNGEON' && this.game.session && this.game.session.kind === 'tower') { E.where.textContent = '시련의 탑'; E.prog.textContent = `${this.game.session.floor}층`; }
+    else if (m === 'DUNGEON') { E.where.textContent = BALANCE.dungeons[this.game.session.type || 'quarry'].name; E.prog.textContent = `${this.game.session.stage}단계`; }
+    else if (m === 'PROMOTION_TRIAL') { E.where.textContent = (this.game.session && this.game.session.tier === 3) ? '영웅의 시련' : '교관 시련'; E.prog.textContent = '승급 시련'; }
     else { E.where.textContent = region.name; E.prog.textContent = `W${s.progression.wave}/10`; pv = s.progression.waveKills / BALANCE.combat.waveKillTarget; }
     E.progBar.style.width = Math.round(Math.min(1, pv) * 100) + '%';
     E.worldBtn.disabled = m !== 'FARM' && m !== 'DEFEAT';
@@ -359,7 +379,9 @@ export class App {
     // nav badges
     const newItems = s.inventory.some((i) => i.isNew) || s.overflow.length > 0;
     this.navDot('equipment', newItems);
-    this.navDot('dungeon', prog.dungeonOpen(s) && s.dungeon.tickets > 0);
+    const dunHot = ['quarry', 'gold', 'books'].some((t) => prog.dungeonOpen(s, t) && (t === 'quarry' ? s.dungeon : s.dungeons[t]).tickets > 0);
+    this.navDot('dungeon', dunHot);
+    this.navDot('skills', prog.unlockedSkills(s).some((id) => { const c = prog.skillLevelCost(s, id); return c && (s.skills.books[id] || 0) >= c.books && s.wallet.gold >= c.gold; }));
     this.navDot('menu', S.todoCount(this) > 0);
     // growth: patch values in place. Other tabs: rebuild when data changed, at most once
     // a second and never while a finger/mouse is down on the panel (no lost taps).

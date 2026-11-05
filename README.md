@@ -3,7 +3,11 @@
 모바일 세로형(390×844 기준, 360×700 대응) 자동전투 방치 RPG의 **실행 가능한 MVP**입니다.
 `docs/handoff/`의 NOCTURNE v3 인계(CLAUDE_START.md, spec 01–08)를 기준으로 구현했습니다.
 
-- 주인공 세린(28세) 1인 · Lv 1–35 · 지역 3(별빛 초원 / 고대 사막 / 잊힌 폐광) · 보스 3 · 재료 던전 1(별의 채석장) · 첫 승급 2갈래(흑장미 기사 / 진홍의 집행자)
+- 4클래스(전사 세린 · 마법사 엘레나 · 궁수 리라 · 도적 녹스) · 승급 3차(Lv 30/60/90) × 갈래 8 · Lv 1–100
+- 지역 10 · 보스 10(+필드 보스, 광폭화) · 던전 3종(채석장·금고·서고) · 시련의 탑 · 주간 레이드(심연의 문)
+- 장비 6등급 · 8부위 · 랜덤 옵션 · 세트 · +15 강화 · 자동 분해 / 스킬 레벨(스킬북) · 각인 2칸 · 능력치 포인트
+- 장비 뽑기 · 스킬 뽑기(게임 내 보석·뽑기권만, 확률 공개, 천장 200/100) · 일일 미션 · 출석 28일 · 복귀 보상 · 게스트 프로필 3개
+- 새 클래스·지역·몬스터 그림은 준비 중이라 기존 그림 색조 변경으로 임시 표시(`docs/KNOWN_ISSUES.md`)
 - 전투 Canvas2D, UI DOM/SVG, Vanilla JS(ES 모듈, 빌드 도구·외부 의존성 없음), 폰트 Noto Sans KR(WOFF2 서브셋, OFL)
 - 비도트 성인 여성 다크 판타지 일러스트. 도트·치비·픽셀 폰트·정수 확대는 사용하지 않습니다.
 - 실제 광고·결제·장비 소환·캐릭터 가챠·호감도는 없습니다(소환은 "확장" 비활성 화면만).
@@ -27,10 +31,11 @@ PC와 휴대폰을 같은 Wi-Fi에 두고 출력된 `http://<PC IP>:8000/`을 �
 ## 테스트와 검수
 
 ```bash
-npm test                                        # node --test: 로직 23개 (03_QA 체크리스트 대응)
+npm test                                        # node --test: 로직 48개
 node tools/balance_sim.mjs --seeds 4 --hours 34 # 몬테카를로 밸런스 시뮬레이션 (스크립트 플레이어)
 node tools/branch_parity.mjs 30                 # 두 갈래로 같은 보스 비교
-node tools/serve.mjs 8123 & NODE_PATH=$(npm root -g) node tools/browser_qa.cjs   # Playwright: 22화면 × 3해상도 + 흐름 13개
+node tools/serve.mjs 8123 & NODE_PATH=$(npm root -g) node tools/browser_qa.cjs   # Playwright: 32화면 × 3해상도(114회) + 흐름 13개
+node tools/qa_login.cjs 8123                     # 게스트 로그인·클래스 선택·출석·복귀
 python3 tools/extract_assets.py                 # 원화 보드 → assets/runtime (원본 불변)
 python3 tools/contact_sheet.py                  # 추출 결과 검수 시트 (docs/qa/assets_*.png)
 ```

@@ -1,6 +1,6 @@
 {
- "startedAt": "2026-11-05T01:41:14.051Z",
- "base": "http://127.0.0.1:8123/",
+ "startedAt": "2026-11-05T02:35:14.194Z",
+ "base": "http://127.0.0.1:8140/",
  "viewports": [
   [
    390,
@@ -46,7 +46,8 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "main"
+    "main",
+    "statpoints"
    ],
    "tiny": [],
    "errors": []
@@ -77,7 +78,10 @@
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [],
+   "wide": [
+    "tab",
+    "tab"
+   ],
    "brokenImg": [],
    "screens": [
     "inventory"
@@ -94,7 +98,10 @@
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [],
+   "wide": [
+    "tab",
+    "tab"
+   ],
    "brokenImg": [],
    "screens": [
     "inventory",
@@ -113,7 +120,10 @@
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [],
+   "wide": [
+    "tab",
+    "tab"
+   ],
    "brokenImg": [],
    "screens": [
     "inventory",
@@ -132,7 +142,10 @@
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [],
+   "wide": [
+    "tab",
+    "tab"
+   ],
    "brokenImg": [],
    "screens": [
     "inventory",
@@ -151,7 +164,11 @@
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [],
+   "wide": [
+    "tab",
+    "tab",
+    "tab"
+   ],
    "brokenImg": [],
    "screens": [
     "inventory",
@@ -170,7 +187,10 @@
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [],
+   "wide": [
+    "tab",
+    "tab"
+   ],
    "brokenImg": [],
    "screens": [
     "inventory",
@@ -192,7 +212,8 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "skills"
+    "skills",
+    "runes"
    ],
    "tiny": [],
    "errors": []
@@ -210,6 +231,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "runes",
     "skilldetail",
     "skilldetail"
    ],
@@ -229,6 +251,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "runes",
     "world",
     "world"
    ],
@@ -248,6 +271,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "runes",
     "boss",
     "boss"
    ],
@@ -266,7 +290,8 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "skills"
+    "skills",
+    "runes"
    ],
    "tiny": [],
    "errors": []
@@ -284,6 +309,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "runes",
     "victory",
     "victory"
    ],
@@ -303,6 +329,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "runes",
     "defeat",
     "defeat"
    ],
@@ -321,7 +348,12 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "dungeon"
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid"
    ],
    "tiny": [],
    "errors": []
@@ -339,6 +371,11 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
     "offline",
     "offline"
    ],
@@ -358,6 +395,11 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
     "quest",
     "quest"
    ],
@@ -377,6 +419,11 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
     "promotion",
     "promotion"
    ],
@@ -396,6 +443,11 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
     "settings",
     "settings"
    ],
@@ -403,11 +455,11 @@
    "errors": []
   },
   {
-   "id": "summon",
+   "id": "gacha",
    "viewport": "390x844",
    "pass": true,
-   "note": "",
-   "file": "summon_390x844.png",
+   "note": "장비 뽑기 · 확률 공개 · 천장",
+   "file": "gacha_390x844.png",
    "over": false,
    "modalOver": false,
    "small": [],
@@ -415,8 +467,335 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "summon",
-    "summon"
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "gacha",
+    "gacha"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "gachaResult",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "11회 결과 (저장 후 공개)",
+   "file": "gachaResult_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "gacha",
+    "gacha",
+    "gachaResult",
+    "gachaResult"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "gachaskill",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "스킬 뽑기",
+   "file": "gachaskill_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "gacha",
+    "gachaskill"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "gachaResult",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "스킬 11회 결과",
+   "file": "gachaResult_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "gacha",
+    "gachaskill",
+    "gachaResult",
+    "gachaResult"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "missions",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "",
+   "file": "missions_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "missions",
+    "missions"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "classpick",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "클래스 선택 4종",
+   "file": "classpick_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "classpick",
+    "classpick"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "statpoints",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "능력치 포인트",
+   "file": "statpoints_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "main",
+    "statpoints"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "runes",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "각인 2칸",
+   "file": "runes_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "skills",
+    "runes"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "inventory",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "8부위 · 6등급",
+   "file": "inventory_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [
+    "tab",
+    "tab"
+   ],
+   "brokenImg": [],
+   "screens": [
+    "inventory"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "tower",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "시련의 탑 · 레이드 카드",
+   "file": "tower_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "towerResult",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "탑 결과",
+   "file": "towerResult_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "towerResult",
+    "towerResult"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "raidResult",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "레이드 결과",
+   "file": "raidResult_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "raidResult",
+    "raidResult"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "promotion",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "2차 승급",
+   "file": "promotion_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "promotion",
+    "promotion"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "promoPlay",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "2차 승급 완료",
+   "file": "promoPlay_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "promoPlay",
+    "promoPlay"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "quest",
+   "viewport": "390x844",
+   "pass": true,
+   "note": "3차 승급 체크리스트",
+   "file": "quest_390x844.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "quest",
+    "quest"
    ],
    "tiny": [],
    "errors": []
@@ -434,6 +813,7 @@
    "brokenImg": [],
    "screens": [
     "main",
+    "statpoints",
     "saveerror",
     "saveerror"
    ],
@@ -487,7 +867,8 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "main"
+    "main",
+    "statpoints"
    ],
    "tiny": [],
    "errors": []
@@ -518,7 +899,10 @@
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [],
+   "wide": [
+    "tab",
+    "tab"
+   ],
    "brokenImg": [],
    "screens": [
     "inventory"
@@ -535,7 +919,10 @@
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [],
+   "wide": [
+    "tab",
+    "tab"
+   ],
    "brokenImg": [],
    "screens": [
     "inventory",
@@ -554,7 +941,10 @@
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [],
+   "wide": [
+    "tab",
+    "tab"
+   ],
    "brokenImg": [],
    "screens": [
     "inventory",
@@ -573,7 +963,10 @@
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [],
+   "wide": [
+    "tab",
+    "tab"
+   ],
    "brokenImg": [],
    "screens": [
     "inventory",
@@ -592,7 +985,11 @@
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [],
+   "wide": [
+    "tab",
+    "tab",
+    "tab"
+   ],
    "brokenImg": [],
    "screens": [
     "inventory",
@@ -611,7 +1008,10 @@
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [],
+   "wide": [
+    "tab",
+    "tab"
+   ],
    "brokenImg": [],
    "screens": [
     "inventory",
@@ -633,7 +1033,8 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "skills"
+    "skills",
+    "runes"
    ],
    "tiny": [],
    "errors": []
@@ -651,6 +1052,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "runes",
     "skilldetail",
     "skilldetail"
    ],
@@ -670,6 +1072,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "runes",
     "world",
     "world"
    ],
@@ -689,6 +1092,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "runes",
     "boss",
     "boss"
    ],
@@ -707,7 +1111,8 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "skills"
+    "skills",
+    "runes"
    ],
    "tiny": [],
    "errors": []
@@ -725,6 +1130,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "runes",
     "victory",
     "victory"
    ],
@@ -744,6 +1150,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "runes",
     "defeat",
     "defeat"
    ],
@@ -762,7 +1169,12 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "dungeon"
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid"
    ],
    "tiny": [],
    "errors": []
@@ -780,6 +1192,11 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
     "offline",
     "offline"
    ],
@@ -799,6 +1216,11 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
     "quest",
     "quest"
    ],
@@ -818,6 +1240,11 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
     "promotion",
     "promotion"
    ],
@@ -837,6 +1264,11 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
     "settings",
     "settings"
    ],
@@ -844,11 +1276,11 @@
    "errors": []
   },
   {
-   "id": "summon",
+   "id": "gacha",
    "viewport": "360x700",
    "pass": true,
-   "note": "",
-   "file": "summon_360x700.png",
+   "note": "장비 뽑기 · 확률 공개 · 천장",
+   "file": "gacha_360x700.png",
    "over": false,
    "modalOver": false,
    "small": [],
@@ -856,8 +1288,335 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "summon",
-    "summon"
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "gacha",
+    "gacha"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "gachaResult",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "11회 결과 (저장 후 공개)",
+   "file": "gachaResult_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "gacha",
+    "gacha",
+    "gachaResult",
+    "gachaResult"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "gachaskill",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "스킬 뽑기",
+   "file": "gachaskill_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "gacha",
+    "gachaskill"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "gachaResult",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "스킬 11회 결과",
+   "file": "gachaResult_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "gacha",
+    "gachaskill",
+    "gachaResult",
+    "gachaResult"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "missions",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "",
+   "file": "missions_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "missions",
+    "missions"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "classpick",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "클래스 선택 4종",
+   "file": "classpick_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "classpick",
+    "classpick"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "statpoints",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "능력치 포인트",
+   "file": "statpoints_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "main",
+    "statpoints"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "runes",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "각인 2칸",
+   "file": "runes_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "skills",
+    "runes"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "inventory",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "8부위 · 6등급",
+   "file": "inventory_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [
+    "tab",
+    "tab"
+   ],
+   "brokenImg": [],
+   "screens": [
+    "inventory"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "tower",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "시련의 탑 · 레이드 카드",
+   "file": "tower_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "towerResult",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "탑 결과",
+   "file": "towerResult_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "towerResult",
+    "towerResult"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "raidResult",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "레이드 결과",
+   "file": "raidResult_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "raidResult",
+    "raidResult"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "promotion",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "2차 승급",
+   "file": "promotion_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "promotion",
+    "promotion"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "promoPlay",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "2차 승급 완료",
+   "file": "promoPlay_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "promoPlay",
+    "promoPlay"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "quest",
+   "viewport": "360x700",
+   "pass": true,
+   "note": "3차 승급 체크리스트",
+   "file": "quest_360x700.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "quest",
+    "quest"
    ],
    "tiny": [],
    "errors": []
@@ -875,6 +1634,7 @@
    "brokenImg": [],
    "screens": [
     "main",
+    "statpoints",
     "saveerror",
     "saveerror"
    ],
@@ -928,7 +1688,8 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "main"
+    "main",
+    "statpoints"
    ],
    "tiny": [],
    "errors": []
@@ -959,7 +1720,9 @@
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [],
+   "wide": [
+    "tab"
+   ],
    "brokenImg": [],
    "screens": [
     "inventory"
@@ -976,7 +1739,9 @@
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [],
+   "wide": [
+    "tab"
+   ],
    "brokenImg": [],
    "screens": [
     "inventory",
@@ -995,7 +1760,9 @@
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [],
+   "wide": [
+    "tab"
+   ],
    "brokenImg": [],
    "screens": [
     "inventory",
@@ -1014,7 +1781,9 @@
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [],
+   "wide": [
+    "tab"
+   ],
    "brokenImg": [],
    "screens": [
     "inventory",
@@ -1033,7 +1802,9 @@
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [],
+   "wide": [
+    "tab"
+   ],
    "brokenImg": [],
    "screens": [
     "inventory",
@@ -1052,7 +1823,9 @@
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [],
+   "wide": [
+    "tab"
+   ],
    "brokenImg": [],
    "screens": [
     "inventory",
@@ -1074,7 +1847,8 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "skills"
+    "skills",
+    "runes"
    ],
    "tiny": [],
    "errors": []
@@ -1092,6 +1866,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "runes",
     "skilldetail",
     "skilldetail"
    ],
@@ -1111,6 +1886,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "runes",
     "world",
     "world"
    ],
@@ -1130,6 +1906,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "runes",
     "boss",
     "boss"
    ],
@@ -1148,7 +1925,8 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "skills"
+    "skills",
+    "runes"
    ],
    "tiny": [],
    "errors": []
@@ -1166,6 +1944,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "runes",
     "victory",
     "victory"
    ],
@@ -1185,6 +1964,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "runes",
     "defeat",
     "defeat"
    ],
@@ -1203,7 +1983,12 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "dungeon"
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid"
    ],
    "tiny": [],
    "errors": []
@@ -1221,6 +2006,11 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
     "offline",
     "offline"
    ],
@@ -1240,6 +2030,11 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
     "quest",
     "quest"
    ],
@@ -1259,6 +2054,11 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
     "promotion",
     "promotion"
    ],
@@ -1278,6 +2078,11 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
     "settings",
     "settings"
    ],
@@ -1285,11 +2090,11 @@
    "errors": []
   },
   {
-   "id": "summon",
+   "id": "gacha",
    "viewport": "412x915",
    "pass": true,
-   "note": "",
-   "file": "summon_412x915.png",
+   "note": "장비 뽑기 · 확률 공개 · 천장",
+   "file": "gacha_412x915.png",
    "over": false,
    "modalOver": false,
    "small": [],
@@ -1297,8 +2102,334 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "summon",
-    "summon"
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "gacha",
+    "gacha"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "gachaResult",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "11회 결과 (저장 후 공개)",
+   "file": "gachaResult_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "gacha",
+    "gacha",
+    "gachaResult",
+    "gachaResult"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "gachaskill",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "스킬 뽑기",
+   "file": "gachaskill_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "gacha",
+    "gachaskill"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "gachaResult",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "스킬 11회 결과",
+   "file": "gachaResult_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "gacha",
+    "gachaskill",
+    "gachaResult",
+    "gachaResult"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "missions",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "",
+   "file": "missions_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "missions",
+    "missions"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "classpick",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "클래스 선택 4종",
+   "file": "classpick_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "classpick",
+    "classpick"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "statpoints",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "능력치 포인트",
+   "file": "statpoints_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "main",
+    "statpoints"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "runes",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "각인 2칸",
+   "file": "runes_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "skills",
+    "runes"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "inventory",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "8부위 · 6등급",
+   "file": "inventory_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [
+    "tab"
+   ],
+   "brokenImg": [],
+   "screens": [
+    "inventory"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "tower",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "시련의 탑 · 레이드 카드",
+   "file": "tower_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "towerResult",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "탑 결과",
+   "file": "towerResult_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "towerResult",
+    "towerResult"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "raidResult",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "레이드 결과",
+   "file": "raidResult_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "raidResult",
+    "raidResult"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "promotion",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "2차 승급",
+   "file": "promotion_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "promotion",
+    "promotion"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "promoPlay",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "2차 승급 완료",
+   "file": "promoPlay_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "promoPlay",
+    "promoPlay"
+   ],
+   "tiny": [],
+   "errors": []
+  },
+  {
+   "id": "quest",
+   "viewport": "412x915",
+   "pass": true,
+   "note": "3차 승급 체크리스트",
+   "file": "quest_412x915.png",
+   "over": false,
+   "modalOver": false,
+   "small": [],
+   "wide": [],
+   "brokenImg": [],
+   "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "raid",
+    "quest",
+    "quest"
    ],
    "tiny": [],
    "errors": []
@@ -1316,6 +2447,7 @@
    "brokenImg": [],
    "screens": [
     "main",
+    "statpoints",
     "saveerror",
     "saveerror"
    ],
@@ -1345,8 +2477,8 @@
    "name": "reload keeps the same pending claim",
    "pass": true,
    "detail": {
-    "first": "claim_mw2vrg24_1j4txi1",
-    "after": "claim_mw2vrg24_1j4txi1"
+    "first": "claim_mw2xpkvc_1ljwgyc",
+    "after": "claim_mw2xpkvc_1ljwgyc"
    }
   },
   {
@@ -1418,7 +2550,7 @@
     "k0": 1,
     "k1": {
      "kills": 1,
-     "acc": 0.09999999999990905,
+     "acc": 0.10000000000002274,
      "mode": "FARM"
     }
    }
@@ -1457,11 +2589,11 @@
   }
  ],
  "errors": [],
- "finishedAt": "2026-11-05T01:42:19.284Z",
+ "finishedAt": "2026-11-05T02:36:51.305Z",
  "summary": {
-  "screenChecks": 72,
-  "screenPass": 72,
-  "distinctScreens": 22,
+  "screenChecks": 114,
+  "screenPass": 114,
+  "distinctScreens": 32,
   "ids": [
    "title",
    "main",
@@ -1482,7 +2614,17 @@
    "quest",
    "promotion",
    "settings",
-   "summon",
+   "gacha",
+   "gachaResult",
+   "gachaskill",
+   "missions",
+   "classpick",
+   "statpoints",
+   "runes",
+   "tower",
+   "towerResult",
+   "raidResult",
+   "promoPlay",
    "saveerror",
    "conflict"
   ],

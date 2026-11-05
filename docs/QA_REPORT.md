@@ -1,7 +1,7 @@
 # 검수 결과 (03_QA 체크리스트)
 
 환경: Linux 컨테이너, Node 22 `node --test`, Playwright Chromium(헤드리스). **실제 iOS Safari / Android Chrome은 미검증.**
-근거: `tests/core.test.mjs`(23/23 통과), `docs/qa/browser_results.json`(화면 72/72, 흐름 13/13), `docs/qa/balance_sim.txt`, `docs/qa/branch_parity.json`, `docs/qa/screens/*.png`(22화면 × 390×844·360×700·412×915).
+근거: `npm test`(48/48 통과: core·rewards·v4), `docs/qa/browser_results.json`(화면 114/114 · 32종, 흐름 13/13), `tools/qa_login.cjs`(9/9: 게스트 로그인·클래스 선택·출석·복귀), `docs/qa/balance_sim.txt`, `docs/qa/branch_parity.json`, `docs/qa/screens/*.png`(32화면 × 390×844·360×700·412×915).
 
 ## 기능
 | 항목 | 결과 | 근거 |
@@ -38,7 +38,7 @@
 | 항목 | 결과 | 근거 |
 |---|---|---|
 | 3해상도 가로 넘침 없음, 중요 버튼 접근 | PASS | 72/72 |
-| 버튼 48px, 본문 16px, 보조 14px | **부분** | 주 버튼·하단 탭 48px, 본문 16px, 보조 텍스트 최소 14px(12px 전부 상향). 상단 칩·배수 선택·필터 탭은 44px(08 높이표 40px 줄 안에 들어가야 해서) |
+| 버튼 48px, 본문 16px, 보조 14px | **의도적 미준수** | 선배 요청("큼직해서 불편")으로 축소: 본문 14px, 보조 13px(표 내부 일부 12px), 주 버튼 40px, 칩·탭 36px, 하단 탭 50px. 브라우저 검수의 작은 터치 대상 기준은 32px 미만으로 바꿔 0건 |
 | 200% 텍스트 접근(스크롤 허용) | PASS(CSS) | 브라우저 흐름. OS 글꼴 확대 미검증 |
 | 모달 포커스·키보드·음소거·감소된 모션 | PASS | 포커스 트랩/Escape/복귀, 설정 화면 |
 | 등급 흑백 구분(배지·이름) | PASS | I/II/III 표시 + 등급명 |
@@ -67,3 +67,16 @@
 5. 장비 타일의 장착·잠금 표시를 이름 위 오른쪽으로 이동.
 6. 소환 화면은 "확장 예정" 비활성.
 7. 승급 후 전투는 정적 원화 + 트윈(전용 시트 없음).
+
+## v4 (기획서 전체 시스템) 화면 검수
+| 화면 | 결과 | 근거 |
+|---|---|---|
+| 클래스 선택(4종, 승급 트리 미리보기) | PASS | classpick × 3해상도, qa_login(마법사 선택 → 궁극기 메테오 표시) |
+| 장비 뽑기 / 스킬 뽑기(확률 공개·천장·소환 레벨) | PASS | gacha, gachaskill, gachaResult(11회, 저장 후 공개) |
+| 일일 미션 | PASS | missions |
+| 능력치 포인트 | PASS | statpoints |
+| 각인 2칸 | PASS | runes |
+| 장비 8부위·6등급·세트·옵션·+15 | PASS | inventory, compare, enhance |
+| 던전 3종·시련의 탑·주간 레이드 | PASS | dungeon, tower, towerResult, raidResult |
+| 2·3차 승급 | PASS | promotion(2차), promoPlay, quest(3차 체크리스트) |
+| 새 지역 7곳 그림 | **임시** | 기존 그림 색조 변경(KNOWN_ISSUES) |
