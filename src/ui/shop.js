@@ -21,7 +21,8 @@ export function openShop(app, focus = null) {
     const wallet = h('div', { class: 'wallet-row' },
       h('span', { class: 'cur' }, img(itemIcon(CURRENCY_ICONS.gem), ''), fmtFull(s.wallet.gem)),
       h('span', { class: 'cur' }, img(itemIcon(CURRENCY_ICONS.gold), ''), fmt(s.wallet.gold)),
-      h('span', { class: 'muted' }, `전환권 ${s.wallet.classTicket || 0}장`));
+      h('span', { class: 'cur', title: '클래스 전환권' }, img(itemIcon(CURRENCY_ICONS.classTicket), '클래스 전환권'), `${s.wallet.classTicket || 0}`),
+      h('span', { class: 'cur', title: '각성석' }, img(itemIcon(CURRENCY_ICONS.awakenStone), '각성석'), `${s.wallet.awakenStone || 0}`));
     const list = h('div', { class: 'shop-list' }, SHOP.map((item) => {
       const st = shopStatus(s, item.id, now);
       const priceTxt = st.price.gem ? `보석 ${fmtFull(st.price.gem)}` : `골드 ${fmt(st.price.gold)}`;

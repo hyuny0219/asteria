@@ -111,7 +111,7 @@ function newProfileForm(first) {
   input.addEventListener('keydown', (e) => { if (e.key === 'Enter') go.click(); });
   input.addEventListener('input', () => { err.textContent = ''; });
   const back = first ? null : button('뒤로', { cls: 'btn', onClick: () => pickProfile() });
-  showButtons([input, err, h('p', { class: 'section-title', style: { margin: '4px 0 0' } }, '클래스 (나중에 바꿀 수 없어요)'), cards, info, go, back, h('p', { class: 'muted' }, '서버 계정이 아닌 이 기기 전용 게스트예요. 브라우저 데이터를 지우면 함께 지워집니다.')].filter(Boolean));
+  showButtons([input, err, h('p', { class: 'section-title', style: { margin: '4px 0 0' } }, '클래스 (나중에 1회 무료로 바꿀 수 있어요)'), cards, info, go, back, h('p', { class: 'muted' }, '서버 계정이 아닌 이 기기 전용 게스트예요. 브라우저 데이터를 지우면 함께 지워집니다.')].filter(Boolean));
   input.focus();
 }
 
@@ -161,7 +161,7 @@ function recovery(res) {
 async function afterLoad() {
   setProgress(0.7, '지역 그림을 불러오는 중…');
   const s = game.state;
-  await preloadFor({ region: REGION_BY_ID[s.progression.region], boss: null, branch: s.player.branch });
+  await preloadFor({ region: REGION_BY_ID[s.progression.region], boss: null, branch: s.player.branch, cls: s.player.cls });
   setProgress(1, '준비 완료');
   app = new App({ game, saver, lock, root: document.getElementById('app'), saverWarning });
   app.onTakeover = takeover;

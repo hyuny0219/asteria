@@ -84,11 +84,11 @@ export const CLASSES = Object.freeze({
   warrior: { id: 'warrior', name: '전사', hero: '세린', age: 28, role: '근접 탱커/딜러', range: 'melee', mainStat: 'str',
     mods: { hp: 1.25, def: 1.3 }, autoStats: { str: 2, vit: 2, agi: 1 }, sprite: 'hero', desc: '흑장미의 서약을 지키는 기사. 단단하고 꾸준합니다.' },
   mage: { id: 'mage', name: '마법사', hero: '엘레나', age: 30, role: '원거리 광역 딜러', range: 'ranged', mainStat: 'int',
-    mods: { atk: 1.15, hp: 0.85 }, autoStats: { int: 3, wis: 1, vit: 1 }, sprite: 'hero', tint: 220, artPending: true, desc: '별의 서고를 지키던 마도사. 여러 적을 한 번에 태웁니다.' },
+    mods: { atk: 1.15, hp: 0.85 }, autoStats: { int: 3, wis: 1, vit: 1 }, sprite: 'hero', art: { base: 'cls_mage', face: 'face_mage', card: 'card_mage', kv: 'kv_mage' }, desc: '별의 서고를 지키던 마도사. 여러 적을 한 번에 태웁니다.' },
   archer: { id: 'archer', name: '궁수', hero: '리라', age: 26, role: '원거리 단일 딜러', range: 'ranged', mainStat: 'dex',
-    mods: { atk: 1.1 }, crit: 0.05, aspd: 0.1, autoStats: { dex: 3, agi: 1, vit: 1 }, sprite: 'hero', tint: 110, artPending: true, desc: '숲의 감시자. 빠르고 정확한 사격으로 하나씩 쓰러뜨립니다.' },
+    mods: { atk: 1.1 }, crit: 0.05, aspd: 0.1, autoStats: { dex: 3, agi: 1, vit: 1 }, sprite: 'hero', art: { base: 'cls_archer', face: 'face_archer', card: 'card_archer', kv: 'kv_archer' }, desc: '숲의 감시자. 빠르고 정확한 사격으로 하나씩 쓰러뜨립니다.' },
   rogue: { id: 'rogue', name: '도적', hero: '녹스', age: 29, role: '근접 치명·회피', range: 'melee', mainStat: 'agi',
-    mods: { hp: 0.95 }, crit: 0.10, evade: 0.08, autoStats: { agi: 3, dex: 1, vit: 1 }, sprite: 'hero', tint: 280, artPending: true, desc: '그림자 길드의 칼날. 치명타와 회피로 싸웁니다.' },
+    mods: { hp: 0.95 }, crit: 0.10, evade: 0.08, autoStats: { agi: 3, dex: 1, vit: 1 }, sprite: 'hero', art: { base: 'cls_rogue', face: 'face_rogue', card: 'card_rogue', kv: 'kv_rogue' }, desc: '그림자 길드의 칼날. 치명타와 회피로 싸웁니다.' },
 });
 export const CLASS_IDS = Object.keys(CLASSES);
 export const STAT_KEYS = ['str', 'int', 'dex', 'agi', 'vit', 'wis'];
@@ -194,10 +194,11 @@ export const ITEM_LOOKS = Object.freeze({
   weapon: [{ icon: 'I00', name: '철검' }, { icon: 'I01', name: '금장 장검' }, { icon: 'I02', name: '흑장미 검' }],
   helmet: [{ icon: 'I03', name: '철 투구' }, { icon: 'I04', name: '금장 투구' }, { icon: 'I05', name: '흑장미 투구' }],
   armor: [{ icon: 'I06', name: '가죽 갑옷' }, { icon: 'I07', name: '금장 갑옷' }, { icon: 'I08', name: '흑장미 갑옷' }],
-  gloves: [{ icon: 'I06', name: '가죽 장갑', iconPending: true }, { icon: 'I07', name: '금장 건틀릿', iconPending: true }, { icon: 'I08', name: '흑장미 건틀릿', iconPending: true }],
-  boots: [{ icon: 'I03', name: '가죽 장화', iconPending: true }, { icon: 'I04', name: '금장 각반', iconPending: true }, { icon: 'I05', name: '흑장미 각반', iconPending: true }],
+  // gloves / boots / ring have 4 generated looks: common, uncommon, rare, epic+ (see RARITY_LOOK4)
+  gloves: [{ icon: 'I24', name: '철 건틀릿' }, { icon: 'I25', name: '금장 건틀릿' }, { icon: 'I26', name: '흑장미 건틀릿' }, { icon: 'I27', name: '진홍 룬 건틀릿' }],
+  boots: [{ icon: 'I28', name: '가죽 장화' }, { icon: 'I29', name: '금장 각반' }, { icon: 'I30', name: '흑장미 각반' }, { icon: 'I31', name: '진홍 룬 장화' }],
   necklace: NECKLACE_LOOKS,
-  ring: [{ icon: 'I09', name: '은 반지', iconPending: true }, { icon: 'I10', name: '자수정 반지', iconPending: true }, { icon: 'I11', name: '장미별 반지', iconPending: true }],
+  ring: [{ icon: 'I32', name: '은 반지' }, { icon: 'I33', name: '자수정 반지' }, { icon: 'I34', name: '장미별 반지' }, { icon: 'I35', name: '진홍 룬 반지' }],
 });
 export const SLOT_NAMES = Object.freeze({ weapon: '무기', helmet: '투구', armor: '갑옷', gloves: '장갑', boots: '신발', necklace: '목걸이', ring: '반지', ring1: '반지 1', ring2: '반지 2', accessory: '목걸이' });
 export const equipSlotFor = (itemSlot) => (itemSlot === 'ring' ? ['ring1', 'ring2'] : [itemSlot]);
@@ -231,7 +232,9 @@ export const SETS = Object.freeze({
 export const SET_SLOTS = ['helmet', 'armor', 'gloves', 'boots'];
 
 export const CURRENCY_ICONS = Object.freeze({ gold: 'I12', gem: 'I13', ore: 'I14', exp: 'I15', ticket: 'I16', token: 'I17', chest: 'I18', goldChest: 'I19', bag: 'I21', mail: 'I23',
-  awakenStone: 'I20', starShard: 'I22', skillBook: 'I21', eqTicket: 'I18', skTicket: 'I19' });
+  awakenStone: 'I36', starShard: 'I37', classTicket: 'I38', skillBook: 'I39', eqTicket: 'I18', skTicket: 'I19' });
+export const RARITY_LOOK4 = Object.freeze({ common: 0, uncommon: 1, rare: 2, epic: 3, legendary: 3, mythic: 3 });
+export const LOOK4_SLOTS = Object.freeze(['gloves', 'boots', 'ring']);
 
 export const TRIAL = Object.freeze({ id: 'T01', name: '교관 분신', sprite: 'hero', level: 30, telegraphMs: 500,
   heavy: { name: '서약의 일격', everySec: 7, telegraphMs: 900, mult: 2.2, shape: 'line' } });

@@ -2,7 +2,7 @@
 // 3차 승급. Every grant goes through game.transact; reveals start only after r.ok.
 import { BALANCE } from '../data/balance.js';
 import { BOSSES, BRANCHES, CLASSES, CLASS_IDS, CLASS_SKILLS, CURRENCY_ICONS, RARITY, RUNES, SKILLS, STAT_KEYS, STAT_NAMES, branchesOf } from '../data/content.js';
-import { itemIcon, portrait, skillIcon, spriteMeta } from '../render/assets.js';
+import { classPortrait, itemIcon, portrait, skillIcon, spriteMeta } from '../render/assets.js';
 import * as prog from '../core/progression.js';
 import { nextLevelAt, quoteDraw, rateTable, skillRateTable, summonLevel } from '../core/gacha.js';
 import { missionStatus } from '../core/missions.js';
@@ -25,9 +25,13 @@ const RANGE = { melee: '근접', ranged: '원거리' };
 // Characters without their own art yet: Serin's art with a hue shift + an honest tag.
 export function classArt(cls, cssClass = '') {
   const c = CLASSES[cls];
-  const el = img(portrait('serin_key'), `${c.hero} (${c.name})`, cssClass);
-  if (c.tint) el.style.filter = `hue-rotate(${c.tint}deg) saturate(1.1)`;
-  return el;
+  return img(c.art ? classPortrait(cls, 'card') : portrait('serin_key'), `${c.hero} (${c.name})`, cssClass);
+}
+// The costume the player wears now: tier-1+ branch figure if it exists, else class art.
+export function currentArt(state, cssClass = '') {
+  const meta = spriteMeta().portraits['promo_' + state.player.branch];
+  if (state.player.branch && meta) return img(meta.file, BRANCHES[state.player.branch].names[0], cssClass);
+  return classArt(state.player.cls || 'warrior', cssClass);
 }
 const pendingTag = (cls) => (CLASSES[cls].artPending ? h('span', { class: 'pending-tag' }, '그림 준비 중') : null);
 
@@ -47,7 +51,7 @@ export function openClassPicker(app, { onDone } = {}) {
     }));
     const tree = branchesOf(pick).map((b) => h('div', { class: 'kv' }, BRANCHES[b].role, h('b', null, BRANCHES[b].names.join(' → '))));
     m.setBody(h('div', { dataset: { screen: 'classpick' } },
-      h('p', { class: 'modal-desc' }, '처음 한 번만 고를 수 있어요. 다른 클래스는 새 게스트 프로필로 시작하면 됩니다.'),
+      h('p', { class: 'modal-desc' }, '나중에 메뉴 → 클래스 전환에서 1회 무료로 바꿀 수 있어요.'),
       cards,
       h('div', { class: 'card' },
         h('h3', null, `${c.name} · ${c.hero}`), h('p', { class: 'small', style: { margin: '0 0 6px' } }, c.desc),
@@ -56,7 +60,7 @@ export function openClassPicker(app, { onDone } = {}) {
         h('div', { class: 'kv' }, '스킬', h('b', null, cs.base.map((id) => SKILLS[id].name).join(' · '))),
         h('div', { class: 'kv' }, '궁극기', h('b', null, SKILLS[cs.ult].name))),
       h('div', { class: 'card' }, h('h3', null, '승급 (Lv 30 · 60 · 90)'), tree),
-      c.artPending ? h('p', { class: 'muted' }, `${c.hero}의 전용 그림은 준비 중이라 지금은 세린 그림을 색만 바꿔 보여줍니다.`) : null));
+      null));
     m.setActions([button(`${c.name}(으)로 시작`, { cls: 'btn btn-primary', busy: true, onClick: async () => {
       const r = fail(await app.game.chooseClass(pick));
       if (!r.ok) return;
@@ -290,8 +294,8 @@ export function openTowerResult(app, r, back) {
   const tiles = [];
   if (r.reward) {
     tiles.push({ icon: itemIcon(CURRENCY_ICONS.gem), value: '+' + r.reward.gem, label: '보석' });
-    if (r.reward.awakenStone) tiles.push({ icon: itemIcon(CURRENCY_ICONS.token), value: '+' + r.reward.awakenStone, label: '각성석' });
-    if (r.reward.starShard) tiles.push({ icon: itemIcon(CURRENCY_ICONS.exp), value: '+' + r.reward.starShard, label: '별의 파편' });
+    if (r.reward.awakenStone) tiles.push({ icon: itemIcon(CURRENCY_ICONS.awakenStone), value: '+' + r.reward.awakenStone, label: '각성석' });
+    if (r.reward.starShard) tiles.push({ icon: itemIcon(CURRENCY_ICONS.starShard), value: '+' + r.reward.starShard, label: '별의 파편' });
   }
   const m = openModal({ id: 'towerResult', title: r.cleared ? `시련의 탑 ${r.floor}층 돌파` : `시련의 탑 ${r.floor}층 실패`, dismissible: false,
     body: h('div', { dataset: { screen: 'towerResult' } },
@@ -303,7 +307,7 @@ export function openTowerResult(app, r, back) {
 }
 export function openRaidResult(app, r, back, itemRewards) {
   const tiles = [{ icon: itemIcon(CURRENCY_ICONS.gem), value: '+' + (r.reward.gem || 0), label: '보석' }];
-  if (r.reward.starShard) tiles.push({ icon: itemIcon(CURRENCY_ICONS.exp), value: '+' + r.reward.starShard, label: '별의 파편' });
+  if (r.reward.starShard) tiles.push({ icon: itemIcon(CURRENCY_ICONS.starShard), value: '+' + r.reward.starShard, label: '별의 파편' });
   tiles.push(...itemRewards(r.items || []));
   const m = openModal({ id: 'raidResult', title: `레이드 결과 · ${r.grade} 등급`, dismissible: false,
     body: h('div', { dataset: { screen: 'raidResult' } },
@@ -322,7 +326,7 @@ export function openPromotionTier(app, tier) {
   const cl = prog.promotionChecklist(s, tier);
   const name = br.names[tier - 1];
   const m = openModal({ id: 'promotion', title: `${tier}차 승급 · ${name}`, body: h('div', { dataset: { screen: 'promotion' } },
-    h('div', { class: 'hero-art' }, h('figure', { class: 'pick' }, classArt(s.player.cls || 'warrior'), h('figcaption', null, h('b', null, name), h('span', { class: 'muted' }, br.role)))),
+    h('div', { class: 'hero-art' }, h('figure', { class: 'pick' }, currentArt(s), h('figcaption', null, h('b', null, name), h('span', { class: 'muted' }, br.role)))),
     h('div', { class: 'card' },
       h('div', { class: 'kv' }, '승급 능력', h('b', null, passiveText(br.tiers[tier - 1]))),
       tier === 2 ? h('div', { class: 'kv' }, '신규 스킬', h('b', null, `${SKILLS[br.skills[1]].name} · 5번 슬롯`)) : null,
@@ -345,9 +349,7 @@ export function celebratePromotion(app, r) {
   const s = app.state;
   const br = BRANCHES[r.branch];
   const fast = reduce(app);
-  const art = classArt(s.player.cls || 'warrior', 'promo-art');
-  const meta = spriteMeta().portraits['promo_' + r.branch];
-  const fig = meta && r.tier === 1 ? img(meta.file, br.names[0], 'promo-art') : art;
+  const fig = currentArt(s, 'promo-art');
   const info = h('div', { class: 'promo-info', style: fast ? null : { opacity: 0, transition: 'opacity 300ms' } },
     h('h3', null, `${r.tier}차 승급 · ${r.name}`),
     h('p', null, r.tier === 1 ? `${SKILLS[br.skills[0]].name} 획득 · 4번 슬롯 해금` : r.tier === 2 ? `${SKILLS[br.skills[1]].name} 획득 · 5번 슬롯 해금 · 궁극기 강화` : `최종 궁극기 ${br.finalUlt}`),

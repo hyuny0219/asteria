@@ -76,7 +76,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .portrait .cap { position: absolute; left: 14px; bottom: 12px; }
 .portrait .cap b { display: block; font-size: 20px; line-height: 1.2; }
 .portrait .cap span { color: var(--gold); font-size: 13px; }
-.portrait .live { position: absolute; left: 14px; top: 12px; display: flex; flex-direction: column; gap: 2px; font-size: 13px; }
+.portrait .live { position: absolute; left: 14px; top: 56px; display: flex; flex-direction: column; gap: 2px; font-size: 13px; }
 .battle.view-portrait canvas { visibility: hidden; }
 .battle.view-portrait .portrait { display: block; }
 .session-bar { position: absolute; left: 0; right: 0; bottom: 52px; display: flex; justify-content: flex-end; padding: 0 8px; pointer-events: none; z-index: 2; }

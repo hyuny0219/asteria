@@ -5,7 +5,7 @@ import { BOSSES, BRANCHES, CLASSES, CURRENCY_ICONS, OPTION_NAMES, REGIONS, REGIO
 import * as V4 from './v4.js';
 import { MONSTERS } from '../data/content.js';
 const MONSTERS_NAME = (id) => (MONSTERS[id] ? MONSTERS[id].name : id);
-import { itemIcon, portrait, skillIcon, spriteMeta } from '../render/assets.js';
+import { classPortrait, itemIcon, portrait, skillIcon, spriteMeta } from '../render/assets.js';
 import { dismantleQuote, enhanceQuote, isEquipped, quoteUpgrade, recommend, selectForDismantle, upgradeRoom } from '../core/economy.js';
 import { enhanceChance, itemOptions, itemStats, rarityLabel, rarityOrder } from '../core/items.js';
 import * as prog from '../core/progression.js';
@@ -548,7 +548,7 @@ export function openResult(app, r) {
     const tiles = [{ icon: itemIcon(CURRENCY_ICONS.gold), value: '+' + fmt(r.gold), label: '골드' }, { icon: itemIcon(CURRENCY_ICONS.exp), value: '+' + fmt(r.exp), label: r.expRes && r.expRes.toPending ? '경험치(보관)' : '경험치' }];
     if (r.ore) tiles.push({ icon: itemIcon(CURRENCY_ICONS.ore), value: '+' + r.ore, label: '강화 광석' });
     if (r.gem) tiles.push({ icon: itemIcon(CURRENCY_ICONS.gem), value: '+' + r.gem, label: '보석' });
-    if (r.starShard) tiles.push({ icon: itemIcon(CURRENCY_ICONS.exp), value: '+' + r.starShard, label: '별의 파편' });
+    if (r.starShard) tiles.push({ icon: itemIcon(CURRENCY_ICONS.starShard), value: '+' + r.starShard, label: '별의 파편' });
     tiles.push(...itemRewards(r.items || []));
     if (app.state.settings.sound) sfx('bell');
     const actions = [];
@@ -610,7 +610,7 @@ export function openOffline(app) {
   }
   const farm = c.farm ? `${REGION_BY_ID[c.farm.region].name} 웨이브 ${c.farm.wave} · 분당 ${fmt(c.farm.killsPerSec * 60)}마리` : '—';
   const body = h('div', { dataset: { screen: 'offline' } },
-    h('div', { style: { display: 'flex', gap: '12px', alignItems: 'center' } }, img(portrait('serin_face'), '', 'face'), h('p', { style: { margin: 0 } }, nothing ? '기다리고 있었어요.' : '돌아오셨군요. 그동안 길을 지켜두었어요.')),
+    h('div', { style: { display: 'flex', gap: '12px', alignItems: 'center' } }, img(classPortrait(app.state.player.cls || 'warrior', 'face'), '', 'face'), h('p', { style: { margin: 0 } }, nothing ? '기다리고 있었어요.' : '돌아오셨군요. 그동안 길을 지켜두었어요.')),
     h('h3', { style: { fontSize: '18px', margin: '8px 0 0' } }, `${fmtDuration(c.elapsedSec)}의 여정`),
     nothing ? h('p', { class: 'muted' }, c.reason === 'unverified' ? '아직 검증된 사냥터가 없어 방치 보상이 없습니다. 같은 웨이브에서 10마리씩 3번 쓰러지지 않고 사냥하면 그 사냥터가 방치 기준이 됩니다.' : `${BALANCE.offline.minSeconds}초 미만은 정산하지 않습니다.`)
       : rewardTiles(tiles),
@@ -893,6 +893,7 @@ async function devOffline(app, sec) {
 const REWARD_INFO = {
   gold: { icon: CURRENCY_ICONS.gold, name: '골드' }, gem: { icon: CURRENCY_ICONS.gem, name: '보석' }, ore: { icon: CURRENCY_ICONS.ore, name: '강화 광석' },
   ticket: { icon: CURRENCY_ICONS.ticket, name: '입장권' }, eqTicket: { icon: CURRENCY_ICONS.chest, name: '장비 뽑기권' }, skTicket: { icon: CURRENCY_ICONS.goldChest, name: '스킬 뽑기권' },
+  awakenStone: { icon: CURRENCY_ICONS.awakenStone, name: '각성석' }, starShard: { icon: CURRENCY_ICONS.starShard, name: '별의 파편' }, classTicket: { icon: CURRENCY_ICONS.classTicket, name: '클래스 전환권' },
 };
 export const rewardName = (k) => (REWARD_INFO[k] ? REWARD_INFO[k].name : k);
 function rewardList(rw) { return Object.entries(rw).filter(([, v]) => v).map(([k, v]) => ({ icon: itemIcon(REWARD_INFO[k].icon), value: '+' + fmt(v), label: REWARD_INFO[k].name })); }
@@ -935,7 +936,7 @@ export function openReturnBonus(app) {
   const p = g.state.returnBonus.pending;
   if (!p || modalOpen('return')) return null;
   const body = h('div', { dataset: { screen: 'return' } },
-    h('div', { style: { display: 'flex', gap: '12px', alignItems: 'center' } }, img(portrait('serin_face'), '', 'face'),
+    h('div', { style: { display: 'flex', gap: '12px', alignItems: 'center' } }, img(classPortrait(app.state.player.cls || 'warrior', 'face'), '', 'face'),
       h('p', { style: { margin: 0 } }, `${p.days}일 만이에요. 다시 와 줘서 고마워요. 준비해 둔 게 있어요.`)),
     rewardTiles(rewardList(p.reward)),
     h('div', { class: 'card' },
@@ -969,7 +970,7 @@ export function openProfile(app) {
   const err = h('p', { class: 'warn', 'aria-live': 'polite' });
   const st = playerStats(g.state);
   const body = h('div', { dataset: { screen: 'profile' } },
-    h('div', { style: { display: 'flex', gap: '12px', alignItems: 'center', marginBottom: '8px' } }, img(portrait('serin_face'), '', 'face'),
+    h('div', { style: { display: 'flex', gap: '12px', alignItems: 'center', marginBottom: '8px' } }, img(classPortrait(app.state.player.cls || 'warrior', 'face'), '', 'face'),
       h('div', null, h('b', { style: { fontSize: '20px' } }, g.state.profile.nickname || '모험가'), h('div', { class: 'muted' }, `게스트 · Lv ${g.state.player.level} · 전투력 ${fmt(powerRating(st))}`))),
     h('div', { class: 'card' },
       h('div', { class: 'kv' }, '보석', h('b', null, fmt(g.state.wallet.gem))),

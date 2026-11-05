@@ -48,12 +48,12 @@ export function changeClass(state, cls, branch = null) {
 // ---------- shop ----------
 // limit: per 'day' | 'week' | null. price: { gem } or { goldMin } (minutes of farming gold).
 export const SHOP = Object.freeze([
-  { id: 'classTicket', name: '클래스 전환권', desc: '다른 클래스로 바꿀 수 있는 전환권 1장. 레벨·장비·승급 단계는 그대로입니다.', give: { classTicket: 1 }, price: { gem: 5000 }, limit: null, icon: 'I18' },
+  { id: 'classTicket', name: '클래스 전환권', desc: '다른 클래스로 바꿀 수 있는 전환권 1장. 레벨·장비·승급 단계는 그대로입니다.', give: { classTicket: 1 }, price: { gem: 5000 }, limit: null, icon: 'I38' },
   { id: 'eqTicket10', name: '장비 뽑기권 ×10', desc: '장비 뽑기 10회분.', give: { eqTicket: 10 }, price: { gem: 450 }, limit: 'week', max: 2, icon: 'I18' },
   { id: 'skTicket5', name: '스킬 뽑기권 ×5', desc: '스킬 뽑기 5회분.', give: { skTicket: 5 }, price: { gem: 380 }, limit: 'week', max: 2, icon: 'I19' },
   { id: 'tickets3', name: '던전 입장권 ×3', desc: '별의 채석장 입장권 3장.', give: { ticket: 3 }, price: { goldMin: 90 }, limit: 'day', max: 1, icon: 'I16' },
   { id: 'ore100', name: '강화 광석 ×100', desc: '장비 강화 재료.', give: { ore: 100 }, price: { goldMin: 60 }, limit: 'day', max: 3, icon: 'I14' },
-  { id: 'awaken2', name: '각성석 ×2', desc: '2차 승급 재료.', give: { awakenStone: 2 }, price: { gem: 300 }, limit: 'week', max: 3, icon: 'I17' },
+  { id: 'awaken2', name: '각성석 ×2', desc: '2차 승급 재료.', give: { awakenStone: 2 }, price: { gem: 300 }, limit: 'week', max: 3, icon: 'I36' },
 ]);
 export const SHOP_BY_ID = Object.freeze(Object.fromEntries(SHOP.map((x) => [x.id, x])));
 

@@ -2,6 +2,7 @@
 import { BALANCE } from '../data/balance.js';
 import { CLASS_SKILLS } from '../data/content.js';
 import { kstDayIndex } from './util.js';
+import { refreshLook } from './items.js';
 
 export const SCHEMA_VERSION = 3;
 
@@ -141,6 +142,7 @@ export function migrate(s) {
   for (const k of Object.keys(d.progression)) if (cur.progression[k] === undefined) cur.progression[k] = d.progression[k];
   for (const k of Object.keys(d.wallet)) if (cur.wallet[k] === undefined) cur.wallet[k] = d.wallet[k];
   if (cur.player.classChanges === undefined) cur.player.classChanges = 0;
+  for (const it of [...(cur.inventory || []), ...(cur.overflow || [])]) refreshLook(it);
   for (const k of Object.keys(d.skills)) if (cur.skills[k] === undefined) cur.skills[k] = d.skills[k];
   for (const k of Object.keys(d.dungeons)) if (!cur.dungeons[k]) cur.dungeons[k] = d.dungeons[k];
   for (const k of Object.keys(d.player)) if (cur.player[k] === undefined) cur.player[k] = d.player[k];

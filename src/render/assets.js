@@ -1,4 +1,4 @@
-import { MONSTERS, BOSSES } from '../data/content.js';
+import { MONSTERS, BOSSES, CLASSES } from '../data/content.js';
 // Runtime asset loader. Reads assets/runtime/sprites.json (written by
 // tools/extract_assets.py). Images load on demand; only the active region,
 // the hero and the current boss are preloaded (spec 02 §5: no full preload).
@@ -29,9 +29,24 @@ export function loadImage(src) {
 export function ready(src) { const e = cache.get(src); return e && e.ok ? e.img : null; }
 export function failed(src) { const e = cache.get(src); return !!(e && e.failed); }
 
-export function heroFrames(branch) {
+// Serin (warrior) has 8 key poses. Elena / Lira / Nox have one authored figure per
+// costume (base, tier-1 branch), drawn static with the lunge/trail tweens.
+export function heroFrames(branch, cls = 'warrior') {
   const H = meta.hero;
+  const art = CLASSES[cls] && CLASSES[cls].art;
+  if (art && H[art.base]) {
+    const base = H[art.base];
+    const promo = branch && H['promo_' + branch] ? H['promo_' + branch] : null;
+    const f = promo || base;
+    return { idle: f, step: f, anticipation: f, thrust: f, recovery: f, hit: f, cast: f, victory: f, promo, static: true };
+  }
   return { idle: H.idle, step: H.step, anticipation: H.anticipation, thrust: H.thrust, recovery: H.recovery, hit: H.hit, cast: H.cast, victory: H.victory, promo: branch ? H['promo_' + branch] : null };
+}
+// Class portraits: face (192), card (3:4), illustration (2:3). Warrior = Serin's key art.
+export function classPortrait(cls, kind) {
+  const art = CLASSES[cls] && CLASSES[cls].art;
+  if (art && meta.portraits[art[kind]]) return meta.portraits[art[kind]].file;
+  return meta.portraits[kind === 'face' ? 'serin_face' : 'serin_key'].file;
 }
 export function enemyMeta(id) { return meta.monsters[id] || meta.bosses[id] || null; }
 export function bgMeta(id) { return meta.backgrounds[id]; }
@@ -46,8 +61,11 @@ export function spriteFile(def) {
 }
 export function promoFrame(branch) { return branch && meta.hero['promo_' + branch] ? meta.hero['promo_' + branch] : null; }
 
-export async function preloadFor({ region, boss, branch, monsters = MONSTERS, bosses = BOSSES }) {
-  const list = Object.values(meta.hero).filter((f) => !f.id.startsWith('knight') && !f.id.startsWith('berserker')).map((f) => f.file);
+export async function preloadFor({ region, boss, branch, cls = 'warrior', monsters = MONSTERS, bosses = BOSSES }) {
+  const art = CLASSES[cls] && CLASSES[cls].art;
+  // Serin's 8 poses (also used by the instructor projection) + this class's figure
+  const list = Object.entries(meta.hero).filter(([k]) => !k.startsWith('promo_') && !k.startsWith('cls_')).map(([, f]) => f.file);
+  if (art && meta.hero[art.base]) list.push(meta.hero[art.base].file);
   const pf = promoFrame(branch);
   if (pf) list.push(pf.file);
   if (region) {

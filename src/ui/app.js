@@ -2,7 +2,7 @@
 import { BALANCE, expToNext } from '../data/balance.js';
 import { BOSSES, CLASSES, CURRENCY_ICONS, RARITY, REGION_BY_ID, SKILLS } from '../data/content.js';
 import { BattleRenderer } from '../render/battle.js';
-import { itemIcon, portrait, preloadFor, skillIcon } from '../render/assets.js';
+import { itemIcon, portrait, classPortrait, preloadFor, skillIcon } from '../render/assets.js';
 import * as prog from '../core/progression.js';
 import { fmt } from '../core/util.js';
 import { button, clear, closeAllModals, h, icon, img, initModals, initToasts, modalOpen, toast } from './dom.js';
@@ -70,8 +70,9 @@ export class App {
     E.canvas = h('canvas', { role: 'img', 'aria-label': '자동 전투 화면' });
     E.liveText = h('div', { class: 'sr-only', 'aria-live': 'polite' });
     E.portraitLive = h('div', { class: 'live' });
-    E.portrait = h('div', { class: 'portrait' }, img(portrait('serin_key'), '세린 일러스트'), h('div', { class: 'scrim' }), E.portraitLive,
-      h('div', { class: 'cap' }, h('b', null, '세린'), h('span', null, '흑장미의 서약')));
+    E.portraitImg = img(portrait('serin_key'), '세린 일러스트');
+    E.portrait = h('div', { class: 'portrait' }, E.portraitImg, h('div', { class: 'scrim' }), E.portraitLive,
+      (E.cap = h('div', { class: 'cap' }, (E.capB = h('b', null, '세린')), (E.capS = h('span', null, '흑장미의 서약')))));
     E.viewBtn = button('일러스트', { cls: 'mini-btn', ariaLabel: '보기 전환', onClick: () => this.toggleView() });
     E.speedBtn = button('×1', { cls: 'mini-btn', ariaLabel: '전투 배속', onClick: () => this.toggleSpeed() });
     E.autoBadge = h('span', { class: 'badge' }, '자동 전투');
@@ -169,7 +170,7 @@ export class App {
       // boss/dungeon/trial always shows the real battle; restore the user's view after
       this.forcedBattleView = true;
       this.applyView();
-      preloadFor({ region: REGION_BY_ID[this.state.progression.region], boss: sess.bossId || null, branch: this.state.player.branch });
+      preloadFor({ region: REGION_BY_ID[this.state.progression.region], boss: sess.bossId || null, branch: this.state.player.branch, cls: this.state.player.cls });
     } else {
       this.forcedBattleView = false;
       this.applyView();
@@ -187,7 +188,7 @@ export class App {
 
   preload() {
     const s = this.state;
-    return preloadFor({ region: REGION_BY_ID[s.progression.region], boss: null, branch: s.player.branch });
+    return preloadFor({ region: REGION_BY_ID[s.progression.region], boss: null, branch: s.player.branch, cls: s.player.cls });
   }
 
   // ---------- fullscreen ----------
@@ -323,7 +324,7 @@ export class App {
         : sk === 'raid' ? `레이드 · 누적 피해 ${fmt(b.raidDamage || b.damageDealt || 0)} · ${Math.ceil((left || 0) / 1000)}초`
         : g.mode === 'DEFEAT' ? '쓰러졌습니다 · 3초 뒤 재개 (손실 없음)' : null;
       const cls = CLASSES[s.player.cls || 'warrior'];
-      this.renderer.draw(b, { alpha, region, bgId: bg, bgTint, branch: s.player.branch, heroTint: cls.tint || 0, label, victory: g.mode === 'RESULT' && g.result && g.result.win });
+      this.renderer.draw(b, { alpha, region, bgId: bg, bgTint, branch: s.player.branch, cls: s.player.cls || 'warrior', heroTint: cls.tint || 0, label, victory: g.mode === 'RESULT' && g.result && g.result.win });
     }
     // cooldowns
     if (b && this.skillEls) {
@@ -349,9 +350,16 @@ export class App {
     const p = s.player;
     const region = REGION_BY_ID[s.progression.region];
     E.name.textContent = s.profile.nickname || '모험가';
-    const ct = CLASSES[p.cls || 'warrior'].tint;
-    const ff = ct ? `hue-rotate(${ct}deg) saturate(1.1)` : '';
-    if (E.face.style.filter !== ff) E.face.style.filter = ff;
+    const faceSrc = classPortrait(p.cls || 'warrior', 'face');
+    if (E.face.getAttribute('src') !== faceSrc) E.face.setAttribute('src', faceSrc);
+    const kvSrc = classPortrait(p.cls || 'warrior', 'kv');
+    if (E.portraitImg && E.portraitImg.getAttribute('src') !== kvSrc) {
+      const C = CLASSES[p.cls || 'warrior'];
+      E.portraitImg.setAttribute('src', kvSrc); E.portraitImg.alt = `${C.hero} 일러스트`;
+      E.portraitImg.style.objectPosition = C.art ? '50% 2%' : '';   // generated figures start near the top edge
+    }
+    const capName = CLASSES[p.cls || 'warrior'].hero, capSub = prog.tierName(s) || (p.cls && p.cls !== 'warrior' ? CLASSES[p.cls].name : '흑장미의 서약');
+    if (E.capB && E.capB.textContent !== capName) { E.capB.textContent = capName; E.capS.textContent = capSub; } else if (E.capS && E.capS.textContent !== capSub) E.capS.textContent = capSub;
     E.sub.textContent = `Lv ${p.level} · ${prog.tierName(s) || CLASSES[p.cls || 'warrior'].name}${p.pendingExp ? ' · 보관 EXP ' + fmt(p.pendingExp) : ''}`;
     E.gold.querySelector('.v').textContent = fmt(s.wallet.gold);
     E.ore.querySelector('.v').textContent = fmt(s.wallet.ore);

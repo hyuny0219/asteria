@@ -59,3 +59,17 @@ test('game: class change is a transaction (failed save changes nothing)', async 
   assert.equal(ok.ok, true);
   assert.equal(g.state.player.cls, 'rogue');
 });
+
+test('old boots/gloves/ring items get their own icons on load (boots showed a helmet)', async () => {
+  const { migrate } = await import('../src/core/state.js');
+  const { lookFor } = await import('../src/core/items.js');
+  const s = newGame(T0);
+  s.inventory.push({ id: 'b1', slot: 'boots', rarity: 'rare', look: 'I05', name: '흑장미 각반', iconPending: true, level: 5, enhance: 0, options: [] });
+  s.inventory.push({ id: 'h1', slot: 'helmet', rarity: 'rare', look: 'I05', name: '흑장미 투구', level: 5, enhance: 0, options: [] });
+  migrate(s);
+  assert.equal(s.inventory[0].look, 'I30');
+  assert.equal(s.inventory[0].iconPending, undefined);
+  assert.equal(s.inventory[1].look, 'I05');
+  assert.equal(lookFor('ring', 'mythic').icon, 'I35');
+  assert.equal(lookFor('gloves', 'common').icon, 'I24');
+});

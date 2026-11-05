@@ -8,7 +8,7 @@
 // images animated by transforms (squash, lean, lunge, flash, fade). These are not
 // frame-by-frame animations; see KNOWN_ISSUES.md.
 import { HERO_X } from '../core/combat.js';
-import { bgMeta, enemyMeta, heroFrames, outlined, ready, scaledImage, spriteMeta } from './assets.js';
+import { bgMeta, enemyMeta, heroFrames, loadImage, outlined, ready, scaledImage, spriteMeta } from './assets.js';
 import { fmt } from '../core/util.js';
 
 const LOGICAL_W = 390;
@@ -82,8 +82,9 @@ export class BattleRenderer {
   }
 
   // ---------- frame ----------
-  draw(battle, { alpha = 0, region = null, bgId = null, bgTint = null, branch = null, heroTint = 0, label = null, victory = false }) {
+  draw(battle, { alpha = 0, region = null, bgId = null, bgTint = null, branch = null, cls = 'warrior', heroTint = 0, label = null, victory = false }) {
     this.heroTint = heroTint;
+    this.heroCls = cls;
     const ctx = this.ctx;
     const W = this.cssW, H = this.cssH;
     const now = performance.now();
@@ -161,7 +162,7 @@ export class BattleRenderer {
   drawHero(battle, x, gy, branch, s, victory) {
     const ctx = this.ctx;
     const h = battle.hero;
-    const frames = heroFrames(branch);
+    const frames = heroFrames(branch, this.heroCls || 'warrior');
     const t = battle.t;
     let pose = 'idle', dx = 0, dy = 0, alpha = 1, rot = 0;
     const ac = h.action;
@@ -187,6 +188,7 @@ export class BattleRenderer {
     if (branch && frames.promo) m = frames.promo;
     const hf = this.heroTint ? `hue-rotate(${this.heroTint}deg) saturate(1.1)` : '';
     const img = ready(m.file);
+    if (!img) loadImage(m.file);   // class change / promotion: load the new figure on first use
     const d = this.spriteDims(m);
     const breathe = motion && pose === 'idle' ? 1 + 0.012 * Math.sin(t / 420) : 1;
     // shadow
@@ -200,7 +202,7 @@ export class BattleRenderer {
       ctx.rotate(rot);
       ctx.scale(1, breathe);
       ctx.drawImage(sc, -d.px, -d.py, d.w, d.h);
-      if (branch && ac && motion) {
+      if ((branch || frames.static) && ac && motion && this.heroCls !== 'mage' && this.heroCls !== 'archer') {
         // weapon trail for promoted attacks (no authored swing frames yet)
         const rel = t - ac.start, imp = ac.impactAt - ac.start;
         if (rel >= imp && rel < imp + 140) {

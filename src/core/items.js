@@ -1,10 +1,24 @@
 // Equipment generation and per-item stat calculation (6 rarities, options, sets, +15).
 import { BALANCE } from '../data/balance.js';
-import { ITEM_LOOKS, RARITY, SLOT_NAMES, SETS } from '../data/content.js';
+import { ITEM_LOOKS, LOOK4_SLOTS, RARITY, RARITY_LOOK4, SLOT_NAMES, SETS } from '../data/content.js';
 
 const EQ = BALANCE.equipment;
 const LOOK_INDEX = { common: 0, uncommon: 0, rare: 1, epic: 1, legendary: 2, mythic: 2 };
 const OPTION_KEYS = Object.keys(EQ.options);
+
+export function lookFor(slot, rarity) {
+  return LOOK4_SLOTS.includes(slot) ? ITEM_LOOKS[slot][RARITY_LOOK4[rarity] ?? 0] : ITEM_LOOKS[slot][LOOK_INDEX[rarity] ?? 0];
+}
+// Items saved before the gloves/boots/ring art existed carried borrowed icons (boots showed a helmet).
+export function refreshLook(it) {
+  if (!LOOK4_SLOTS.includes(it.slot)) return false;
+  const look = lookFor(it.slot, it.rarity);
+  if (it.look === look.icon && !it.iconPending) return false;
+  it.look = look.icon;
+  if (!it.set) it.name = look.name;
+  delete it.iconPending;
+  return true;
+}
 
 export function normalizeSlot(slot) { return slot === 'accessory' ? 'necklace' : slot; }
 
@@ -23,7 +37,7 @@ function rollOptions(rarity, rng) {
 
 export function makeItem(state, { slot, rarity, level, rng, source = 'drop', set = null }) {
   slot = normalizeSlot(slot);
-  const look = ITEM_LOOKS[slot][LOOK_INDEX[rarity] ?? 0];
+  const look = lookFor(slot, rarity);
   const main = slot === 'weapon' || slot === 'gloves' ? 'atk' : slot === 'necklace' || slot === 'ring' ? (rng() < 0.5 ? 'atk' : 'crit') : 'hp';
   const id = `it${state.nextItemSeq++}`;
   const it = { id, slot, rarity, level, main, look: look.icon, name: look.name, enhance: 0, oreInvested: 0, locked: false, source, isNew: true, options: rollOptions(rarity, rng) };
