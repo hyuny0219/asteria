@@ -132,3 +132,19 @@
 화면을 보고 고친 것:
 - 동료가 영웅 왼쪽 위 화면 끝에 잘려 보였습니다. 영웅 앞 땅 위로 옮겼습니다(나는 동료는 위에 뜹니다).
 - 신화 제작의 부위 칩 7개가 가로 스크롤에 숨어 반지가 안 보였습니다. 칩을 줄바꿈하게 바꿨습니다.
+
+## v5 3부 (남은 코드 과제) 검수
+| 항목 | 결과 | 근거 |
+|---|---|---|
+| 핵심 특성 나머지 6종 + 그림자 일격 전투 효과(반격 강화·광폭·저주 강화·화살비 강화·야수 강화·환영) | PASS | tests/capstones.test.mjs (7) |
+| 투사체(마법사 별빛 탄·궁수 화살·도적 스킬 단검) 150ms 비행, 착탄 시 숫자·불꽃 | PASS(정적 확인) | `proj_mage_390x844.png`, `proj_archer_390x844.png`, `proj_rogue_390x844.png` |
+| 교관 분신 흑백을 캐시 비트맵으로 (프레임마다 filter 없음) | PASS | `trial_cached_390x844.png` |
+| 균열 축복·저주 HUD 칩 | PASS | app.js `renderRiftChips`, qa_v5 균열 화면 |
+| 특성 트리 탭 아이콘(트리별) | PASS | qa_v5 `talents_*.png` |
+| Web Locks 없는 브라우저: localStorage 하트비트로 두 번째 탭 대기 → 가져오기 → 첫 탭 정지 | PASS | browser_qa 흐름 4b |
+| aria-live: 보스 처치·영웅 쓰러짐·레벨 업·희귀 이상 획득(1.5초 제한) | PASS(코드) | app.js `announce`. 스크린 리더 실청취 미검증 |
+| 불씨 새끼용 날개 보존 재추출 | PASS(육안) | `assets/runtime/pet_P02.webp`, 매트 `pets_6_alpha.png` |
+| 단위 테스트 / 브라우저 / 로그인 / v5 / v6 | 86/86 · 141/141 화면(41종), 14/14 흐름 · 10/10 · 14/14 · 32/32 | `npm test`, `tools/browser_qa.cjs`, `tools/qa_login.cjs`, `tools/qa_v5.cjs`, `tools/qa_v6.cjs` |
+| 실기기 | 미검증 | — |
+
+그림이 필요한 항목(승급·몬스터·동료 포즈, 엘레나 빛, 영웅+ 아이콘, 금고·서고 배경, 트리 문장)은 `docs/GPT_REQUEST.md`로 요청 대기입니다.

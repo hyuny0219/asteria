@@ -15,6 +15,8 @@ import { enhanceCost } from '../src/core/items.js';
 import { promotionChecklist, tierOf, lockTierAt, unlockedSkills, skillLevelCost, ultId, raidOpen, towerOpen, dungeonOpen, branchesOf } from '../src/core/progression.js';
 import { missionStatus } from '../src/core/missions.js';
 import { attendanceStatus } from '../src/core/rewards.js';
+import { petPower, achievementStatus } from '../src/core/meta.js';
+import { TITLES } from '../src/data/meta.js';
 import { REGIONS, BOSSES, RUNES } from '../src/data/content.js';
 import { BALANCE } from '../src/data/balance.js';
 import { writeFileSync } from 'node:fs';
@@ -77,6 +79,23 @@ async function runOne(seed, cls) {
     if (s.returnBonus.pending) await g.claimReturn();
     for (const x of missionStatus(g.state, clock).list) if (x.done && !x.claimed) await g.claimMission(x.id);
     if (missionStatus(g.state, clock).canBonus) await g.claimMissionBonus();
+    // meta like a real player (unless --nometa): achievements, free pass, eggs, pet food, best pet & title
+    if (!args.nometa) {
+      if (achievementStatus(g.state).some((x) => x.done && !x.claimed)) await g.claimAllAchievements();
+      await g.claimAllPass();
+      while (g.state.pets.eggs > 0) { const r = await g.hatchEgg(); if (!r.ok) break; }
+      const ids = Object.keys(g.state.pets.owned);
+      for (const id of ids) await g.starUpPet(id);
+      if (ids.length) {
+        const score = (id) => { const p = petPower(g.state, id); return p ? p.coef + Object.values(p.aura)[0] * 10 : 0; };
+        const best = ids.sort((a, b) => score(b) - score(a))[0];
+        if (g.state.pets.active !== best) await g.setActivePet(best);
+        for (let k = 0; k < 5; k++) { const r = await g.feedPet(best); if (!r.ok) break; }
+      }
+      const tsum = (id) => Object.values((TITLES[id] && TITLES[id].bonus) || {}).reduce((a, v) => a + v, 0);
+      const bt = [...(g.state.titles.owned || [])].sort((a, b) => tsum(b) - tsum(a))[0];
+      if (bt && g.state.titles.equipped !== bt) await g.equipTitle(bt);
+    }
     // gold upgrades: automatic in the game (autogrow.js, runs every 2 s of farming); run once more here
     g.runAutoGrow();
     // skill levels

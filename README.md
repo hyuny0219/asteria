@@ -34,10 +34,10 @@ PC와 휴대폰을 같은 Wi-Fi에 두고 출력된 `http://<PC IP>:8000/`을 �
 ## 테스트와 검수
 
 ```bash
-npm test                                        # node --test: 로직 79개
+npm test                                        # node --test: 로직 86개
 node tools/balance_sim.mjs --seeds 4 --hours 34 # 몬테카를로 밸런스 시뮬레이션 (스크립트 플레이어)
 node tools/branch_parity.mjs 30                 # 두 갈래로 같은 보스 비교
-node tools/serve.mjs 8123 & NODE_PATH=$(npm root -g) node tools/browser_qa.cjs   # Playwright: 41화면 × 해상도별(141회) + 흐름 13개
+node tools/serve.mjs 8123 & NODE_PATH=$(npm root -g) node tools/browser_qa.cjs   # Playwright: 41화면 × 해상도별(141회) + 흐름 14개
 node tools/qa_login.cjs 8123                     # 게스트 로그인·클래스 선택·출석·복귀
 node tools/qa_v5.cjs 8123                        # 특성·환생·균열
 node tools/qa_v6.cjs 8123                        # 도감·업적·칭호·시즌 패스·동료·신화 제작

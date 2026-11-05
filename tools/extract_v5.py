@@ -20,6 +20,8 @@ ICONS = ['talents', 'rebirth', 'rift', 'blessing', 'codexMonster', 'codexItem', 
 
 
 def main():
+    import extract_v4b
+    extract_v4b.HOLE_FILL_NEEDS_MATTE = True
     sprites = json.load(open(META))
     sprites.setdefault('pets', {})
     rgb, matte = load('pets_6')

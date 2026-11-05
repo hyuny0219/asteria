@@ -14,6 +14,7 @@ import { fmt } from '../core/util.js';
 const LOGICAL_W = 390;
 const LOGICAL_H = 220;
 const GROUND = 0.8;
+const FLIGHT = 150;   // ms a ranged projectile is shown travelling
 
 export class BattleRenderer {
   constructor(canvas, { getSettings, topInset = 0 }) {
@@ -56,9 +57,13 @@ export class BattleRenderer {
     if (ev.type === 'hit') {
       const show = s.damageNumbers === 'all' || (s.damageNumbers === 'crit' && ev.crit) || (s.damageNumbers === 'crit' && ev.by === 'enemy');
       const x = ev.by === 'hero' ? (ev.x ?? 220) : HERO_X;
-      if (show) this.pushNumber({ x, y: ev.by === 'hero' ? 0.42 : 0.38, text: fmt(ev.dmg), crit: ev.crit, enemy: ev.by === 'enemy', heavy: ev.heavy, guarded: ev.guarded, born: now });
+      // ranged hero: a projectile flies for FLIGHT ms (visual only; damage already applied at
+      // the impact event), the number and spark appear when it lands
+      const proj = ev.by === 'hero' && ev.action !== 'dot' && ev.action !== 'pet' && ev.action !== 'combo' && this.projKind(ev);
+      const land = proj ? now + FLIGHT : now;
+      if (show) this.pushNumber({ x, y: ev.by === 'hero' ? 0.42 : 0.38, text: fmt(ev.dmg), crit: ev.crit, enemy: ev.by === 'enemy', heavy: ev.heavy, guarded: ev.guarded, born: land });
       if (ev.by === 'hero' && ev.action === 'pet') { this.pushFx({ kind: 'petshot', x, born: now, dur: 260 }); this.petHitAt = now; }
-      else if (ev.by === 'hero' && ev.ranged && ev.action !== 'dot') this.pushFx({ kind: 'shot', x, born: now, dur: 180, crit: ev.crit });
+      else if (proj) { this.pushFx({ kind: 'proj', proj, x, born: now, dur: FLIGHT, crit: ev.crit }); this.pushFx({ kind: 'spark', proj, x, born: land, dur: 220, crit: ev.crit }); }
       // ranged basic attacks hit with the streak only (no sword arc on the target)
       if (ev.by === 'hero' && ev.action !== 'dot' && ev.action !== 'pet' && !(ev.ranged && ev.action === 'attack')) this.pushFx({ kind: ev.action === 'ult' ? 'star' : ev.action === 'skill' ? 'arc2' : ev.action === 'counter' ? 'rose' : 'arc', x, born: now, dur: ev.action === 'ult' ? 520 : 200 });
       if (ev.by === 'enemy' && ev.heavy) this.kick(3, 100);
@@ -74,6 +79,14 @@ export class BattleRenderer {
     } else if (ev.type === 'buff') {
       this.pushFx({ kind: 'aura', x: HERO_X, born: now, dur: 600 });
     }
+  }
+  // which projectile a hero hit uses: mage star bolt, archer arrow; rogue throws daggers on skills only
+  projKind(ev) {
+    const c = this.heroCls;
+    if (c === 'mage' && (ev.ranged || ev.action === 'attack' || ev.action === 'skill')) return 'bolt';
+    if (c === 'archer' && ev.action !== 'ult') return 'arrow';
+    if (c === 'rogue' && ev.action === 'skill') return 'dagger';
+    return null;
   }
   pushNumber(n) { this.numbers.push(n); if (this.numbers.length > 24) this.numbers.shift(); }
   pushFx(f) { this.fx.push(f); if (this.fx.length > 30) this.fx.shift(); }
@@ -276,7 +289,8 @@ export class BattleRenderer {
     ctx.beginPath(); ctx.ellipse(x, gy + 2, d.w * 0.32, 6 * this.fit, 0, 0, Math.PI * 2); ctx.fill();
     const img = ready(meta.file);
     if (img) {
-      const ef = e.def.tint ? `hue-rotate(${e.def.tint}deg) saturate(1.15)` : '';
+      // instructor projection: grey/bright look baked into the cached bitmap (no per-frame filter)
+      const ef = isTrial ? 'grayscale(1) brightness(1.35)' : e.def.tint ? `hue-rotate(${e.def.tint}deg) saturate(1.15)` : '';
       let sc = scaledImage(img, d.w * this.dpr, d.h * this.dpr, meta.file, ef);
       if (e.enraged) sc = outlined(sc, '#F0506E', meta.file + d.w + ef + 'rage');
       else if (e.elite) sc = outlined(sc, e.fieldBoss ? '#F2A04A' : '#EDBD68', meta.file + d.w + ef + (e.fieldBoss ? 'fb' : ''));
@@ -285,10 +299,8 @@ export class BattleRenderer {
       ctx.translate(x + dx, gy + dy);
       ctx.rotate(rot);
       ctx.scale(isTrial ? -sxx : sxx, sy);     // instructor projection faces the hero
-      if (isTrial) ctx.filter = 'grayscale(1) brightness(1.35)';
       ctx.globalAlpha = alpha * (isTrial ? 0.72 : 1);
       ctx.drawImage(sc, -d.px, -d.py, d.w, d.h);
-      ctx.filter = 'none';
       if (t < e.flashUntil) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.45 * alpha; ctx.drawImage(sc, -d.px, -d.py, d.w, d.h); }
       ctx.restore();
     } else this.placeholder(x, gy, 40, d.h || 80, e.name);
@@ -346,6 +358,7 @@ export class BattleRenderer {
     const motion = !s.reduceMotion;
     this.fx = this.fx.filter((f) => now - f.born < f.dur);
     for (const f of this.fx) {
+      if (now < f.born) continue;
       const p = (now - f.born) / f.dur;
       const x = f.x * sx;
       ctx.save();
@@ -368,6 +381,43 @@ export class BattleRenderer {
         ctx.globalAlpha = 1;
         ctx.strokeStyle = f.crit ? '#EDBD68' : '#C9D8FF'; ctx.lineWidth = f.crit ? 3 : 2;
         ctx.beginPath(); ctx.moveTo(Math.max(hx, head - 46), y); ctx.lineTo(head, y); ctx.stroke();
+      } else if (f.kind === 'proj') {
+        const hx = (HERO_X + 26) * sx, y0 = gy - 62 * this.fit * this.figScale, y1 = gy - 50 * this.fit * this.figScale;
+        const q = motion ? p : 1;
+        const px = hx + (x - hx) * q, py = y0 + (y1 - y0) * q;
+        const ang = Math.atan2(y1 - y0, x - hx);
+        ctx.globalAlpha = 1;
+        ctx.translate(px, py); ctx.rotate(ang);
+        if (f.proj === 'bolt') {
+          const g = ctx.createLinearGradient(-40, 0, 0, 0);
+          g.addColorStop(0, 'rgba(188,154,243,0)'); g.addColorStop(1, f.crit ? 'rgba(237,189,104,0.9)' : 'rgba(188,154,243,0.9)');
+          ctx.strokeStyle = g; ctx.lineWidth = 5; ctx.lineCap = 'round';
+          ctx.beginPath(); ctx.moveTo(-40, 0); ctx.lineTo(0, 0); ctx.stroke();
+          ctx.fillStyle = f.crit ? '#FFE6A8' : '#EDE3FF';
+          ctx.beginPath();
+          for (let i = 0; i < 8; i++) { const a = (i / 8) * Math.PI * 2, r = i % 2 ? 2.5 : 7; ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r); }
+          ctx.closePath(); ctx.fill();
+        } else if (f.proj === 'arrow') {
+          ctx.strokeStyle = 'rgba(201,216,255,0.45)'; ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.moveTo(-46, 0); ctx.lineTo(-18, 0); ctx.stroke();
+          ctx.strokeStyle = '#D9C7A3'; ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.moveTo(-18, 0); ctx.lineTo(4, 0); ctx.stroke();
+          ctx.fillStyle = f.crit ? '#EDBD68' : '#E6ECF5';
+          ctx.beginPath(); ctx.moveTo(8, 0); ctx.lineTo(1, -3); ctx.lineTo(1, 3); ctx.closePath(); ctx.fill();
+          ctx.fillStyle = '#7AC9A8';
+          ctx.beginPath(); ctx.moveTo(-18, 0); ctx.lineTo(-23, -4); ctx.lineTo(-15, 0); ctx.lineTo(-23, 4); ctx.closePath(); ctx.fill();
+        } else {
+          ctx.rotate(motion ? p * Math.PI * 4 : 0);
+          ctx.fillStyle = '#D8DDE6'; ctx.beginPath(); ctx.moveTo(9, 0); ctx.lineTo(-3, -2.5); ctx.lineTo(-3, 2.5); ctx.closePath(); ctx.fill();
+          ctx.fillStyle = '#8E294C'; ctx.fillRect(-8, -1.5, 5, 3);
+        }
+      } else if (f.kind === 'spark') {
+        const y = gy - 50 * this.fit * this.figScale;
+        ctx.strokeStyle = f.proj === 'bolt' ? '#CDB6FF' : f.crit ? '#EDBD68' : '#F5EDF0'; ctx.lineWidth = 2;
+        const r = (6 + (motion ? 16 * p : 8)) * this.fit;
+        ctx.beginPath();
+        for (let i = 0; i < 6; i++) { const a = (i / 6) * Math.PI * 2 + 0.3; ctx.moveTo(x + Math.cos(a) * r * 0.4, y + Math.sin(a) * r * 0.4); ctx.lineTo(x + Math.cos(a) * r, y + Math.sin(a) * r); }
+        ctx.stroke();
       } else if (f.kind === 'petshot') {
         // companion: a small glowing mote from the pet to the target
         const pp = this.petPos || { x: (HERO_X - 30) * sx, y: gy - 90 * this.fit * this.figScale };
@@ -396,6 +446,7 @@ export class BattleRenderer {
     const life = 760;
     this.numbers = this.numbers.filter((n) => now - n.born < life);
     for (const n of this.numbers) {
+      if (now < n.born) continue;
       const p = (now - n.born) / life;
       const y = H * n.y - (s.reduceMotion ? 0 : 26 * p);
       const size = n.crit ? 20 : n.enemy ? 15 : 16;

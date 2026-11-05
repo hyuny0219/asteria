@@ -13,6 +13,9 @@ import { button, h, img, openModal, toast } from './dom.js';
 import { fail, rewardTiles } from './screens.js';
 
 // placeholder icon ids (swap when the v5 emblem board lands)
+// Interim per-tree icons (existing skill/rune icons) until tree emblems are drawn.
+const TREE_ICON = { knight: SKILLS.shieldCharge.icon, berserker: SKILLS.berserkStrike.icon, wizard: SKILLS.m_meteor.icon, warlock: SKILLS.m_curse.icon,
+  ranger: SKILLS.a_aim.icon, hunter: SKILLS.a_beast.icon, assassin: SKILLS.r_stab.icon, trickster: SKILLS.r_illusion.icon, common: 'K30' };
 export const V5_ICONS = Object.freeze({ talents: 'V00', rebirth: 'V01', rift: 'V02', blessing: 'V03', curse: 'V12', essence: 'V14' });
 const ico = (id) => { try { return img(skillIcon(id), '', 'emblem'); } catch { return null; } };
 const curIcon = (k) => img(itemIcon(CURRENCY_ICONS[k]), '');
@@ -35,8 +38,8 @@ export function openTalents(app, treeId = null) {
     const t = s.talents;
     const free = T.pointsFree(s);
     const cost = T.respecCost(s, Date.now());
-    const tabs = h('div', { class: 'seg', role: 'tablist', 'aria-label': '특성 트리' }, trees.map((id) => h('button', { type: 'button', role: 'tab', 'aria-selected': String(id === tree), 'aria-pressed': String(id === tree), onClick: () => { tree = id; render(); } },
-      `${TALENT_TREES[id].name} ${T.treeSpent(s, id)}`)));
+    const tabs = h('div', { class: 'seg tal-tabs', role: 'tablist', 'aria-label': '특성 트리' }, trees.map((id) => h('button', { type: 'button', role: 'tab', 'aria-selected': String(id === tree), 'aria-pressed': String(id === tree), onClick: () => { tree = id; render(); } },
+      img(skillIcon(TREE_ICON[id] || 'V00'), ''), `${TALENT_TREES[id].name} ${T.treeSpent(s, id)}`)));
     const presets = h('div', { class: 'seg', role: 'group', 'aria-label': '프리셋' }, [0, 1].map((i) => h('button', { type: 'button', 'aria-pressed': String(t.active === i), onClick: async () => { if (t.active !== i) { const r = fail(await g.talentPreset(i)); if (r.ok) render(); } } },
       i === 0 ? '사냥용' : '보스용')));
     const td = TALENT_TREES[tree];

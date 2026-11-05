@@ -61,6 +61,9 @@ def alpha_for(rgb, matte, bg):
     return np.maximum(a, matte) if matte is not None else a
 
 
+HOLE_FILL_NEEDS_MATTE = False   # extract_v5 turns this on
+
+
 def creature_alpha(crop, matte_crop):
     """The boards are very flat (corner std < 1), so a tight key against the cell's own
     corner colour keeps dark bodies (shadow beast, wraith) and soft smoke; interior
@@ -70,6 +73,10 @@ def creature_alpha(crop, matte_crop):
     if matte_crop is not None:
         a = np.maximum(a, matte_crop)
     solid = ndimage.binary_fill_holes(a > 0.5)
+    if HOLE_FILL_NEEDS_MATTE and matte_crop is not None:
+        # only fill interior holes that the background-removal matte also calls subject
+        # (keeps real gaps such as the space between a wing and a tail see-through)
+        solid = solid & ((a > 0.5) | (matte_crop > 0.25))
     return np.where(solid, np.maximum(a, 0.98), a)
 
 

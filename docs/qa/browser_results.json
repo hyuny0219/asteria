@@ -1,5 +1,5 @@
 {
- "startedAt": "2026-11-05T11:33:07.489Z",
+ "startedAt": "2026-11-05T12:13:22.366Z",
  "base": "http://127.0.0.1:8140/",
  "viewports": [
   [
@@ -3203,8 +3203,8 @@
    "name": "reload keeps the same pending claim",
    "pass": true,
    "detail": {
-    "first": "claim_mw3gxno5_2fve11",
-    "after": "claim_mw3gxno5_2fve11"
+    "first": "claim_mw3idfoi_4hbn7w",
+    "after": "claim_mw3idfoi_4hbn7w"
    }
   },
   {
@@ -3270,13 +3270,23 @@
    }
   },
   {
+   "name": "no Web Locks: heartbeat blocks the second tab and takeover stops the first",
+   "pass": true,
+   "detail": {
+    "noLocks": true,
+    "waiting": "conflict",
+    "first": "CONFLICT",
+    "second": "FARM"
+   }
+  },
+  {
    "name": "hidden → visible does not replay ticks",
    "pass": true,
    "detail": {
     "k0": 1,
     "k1": {
      "kills": 1,
-     "acc": 16.699999999999932,
+     "acc": 16.700000000000045,
      "mode": "FARM"
     }
    }
@@ -3315,7 +3325,7 @@
   }
  ],
  "errors": [],
- "finishedAt": "2026-11-05T11:35:03.541Z",
+ "finishedAt": "2026-11-05T12:15:24.722Z",
  "summary": {
   "screenChecks": 141,
   "screenPass": 141,
@@ -3363,7 +3373,7 @@
    "saveerror",
    "conflict"
   ],
-  "flows": 13,
-  "flowPass": 13
+  "flows": 14,
+  "flowPass": 14
  }
 }

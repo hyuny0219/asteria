@@ -446,3 +446,10 @@ input.text { width: 100%; min-height: 36px; background: var(--panel); border: 1p
 .hatch-img { width: 140px; height: 120px; object-fit: contain; display: block; margin: 0 auto 6px; }
 .kv.short b { color: #FFB7C6; }
 .tabs.tabs-wrap { flex-wrap: wrap; overflow-x: visible; row-gap: 6px; }
+/* rift: active curse / blessings over the battle */
+.rift-chips { position: absolute; left: 8px; top: 54px; right: 120px; z-index: 2; display: flex; flex-wrap: wrap; gap: 4px; pointer-events: none; }
+.rchip { font-size: 12px; line-height: 1; padding: 4px 6px; border-radius: 10px; background: rgba(16,13,24,.78); border: 1px solid var(--ibord); color: var(--text); white-space: nowrap; }
+.rchip.curse { border-color: var(--danger); color: #FFB7C6; }
+.rchip.rare { border-color: var(--r-rare, #74B8FF); }
+.rchip.epic, .rchip.legendary { border-color: var(--gold); color: var(--gold); }
+.tal-tabs button { display: inline-flex; align-items: center; justify-content: center; gap: 4px; } .tal-tabs button img { width: 20px; height: 20px; border-radius: 4px; flex: none; }

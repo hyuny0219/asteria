@@ -20,7 +20,7 @@
   "pass": true,
   "info": {
    "owned": 5,
-   "active": "P02",
+   "active": "P04",
    "eggs": 0
   }
  },
@@ -61,7 +61,7 @@
   "pass": true,
   "info": {
    "equipped": "t_pioneer",
-   "status": "QA2204 「초원의 개척자」"
+   "status": "QA1208 「초원의 개척자」"
   }
  },
  {
@@ -143,8 +143,8 @@
   "name": "pets hatched & active 360x700",
   "pass": true,
   "info": {
-   "owned": 5,
-   "active": "P04",
+   "owned": 4,
+   "active": "P01",
    "eggs": 0
   }
  },
@@ -185,7 +185,7 @@
   "pass": true,
   "info": {
    "equipped": "t_pioneer",
-   "status": "QA6153 「초원의 개척자」"
+   "status": "QA4829 「초원의 개척자」"
   }
  },
  {

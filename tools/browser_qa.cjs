@@ -402,6 +402,28 @@ async function flows(browser) {
     rec('stopped tab cannot commit', r2 === 'CONFLICT', { rev1 });
     await context.close();
   }
+  // 4b. same, without Web Locks: the localStorage heartbeat path must block and hand over too
+  {
+    const context = await browser.newContext({ viewport: { width: vp[0], height: vp[1] } });
+    await context.addInitScript(() => {
+      try { Object.defineProperty(Navigator.prototype, 'locks', { get: () => undefined, configurable: true }); } catch (e) { /* ignore */ }
+      if (!localStorage.getItem('asteria-profiles')) localStorage.setItem('asteria-profiles', JSON.stringify({ list: [{ id: 'qa', nickname: 'QA선배', createdAt: Date.now(), lastPlayedAt: Date.now(), level: 1, job: '' }], last: 'qa' }));
+    });
+    const page = await context.newPage();
+    page.qaErrors = [];
+    await boot(page);
+    const noLocks = await page.evaluate(() => !navigator.locks);
+    const p2 = await context.newPage();
+    await p2.goto(BASE + '?nodaily', { waitUntil: 'load' });
+    await p2.waitForFunction(() => document.getElementById('title').dataset.screen === 'conflict', null, { timeout: 15000 }).catch(() => {});
+    const waiting = await p2.evaluate(() => document.getElementById('title').dataset.screen);
+    await p2.click('#title .btns button');
+    await page.waitForTimeout(5000);   // heartbeat interval 2 s: the first tab notices on its next beat
+    const first = await page.evaluate(() => window.__asteria.game.mode);
+    const second = await p2.evaluate(() => window.__asteria && window.__asteria.game && window.__asteria.game.mode);
+    rec('no Web Locks: heartbeat blocks the second tab and takeover stops the first', noLocks && waiting === 'conflict' && first === 'CONFLICT' && ['FARM', 'LOAD', 'OFFLINE'].includes(second), { noLocks, waiting, first, second });
+    await context.close();
+  }
   // 5. hidden tab: no replay of hidden time as foreground ticks
   {
     const { context, page } = await freshPage(browser, vp);

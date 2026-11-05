@@ -30,9 +30,9 @@
   "pass": true,
   "info": {
    "choices": [
-    "b_regen",
-    "b_echo",
-    "b_def"
+    "b_atk",
+    "b_hp",
+    "b_regen"
    ]
   }
  },
@@ -82,9 +82,9 @@
   "pass": true,
   "info": {
    "choices": [
-    "b_glass",
-    "b_greed",
-    "b_crit"
+    "b_def",
+    "b_ult",
+    "b_combo"
    ]
   }
  },

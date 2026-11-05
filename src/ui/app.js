@@ -12,6 +12,7 @@ import { sfx } from '../platform/audio.js';
 import * as FS from './fullscreen.js';
 import { titleName } from '../core/meta.js';
 import * as V5 from './v5.js';
+import { BLESSINGS, CURSES } from '../core/rift.js';
 
 export const TABS = [
   { id: 'growth', label: '능력치', icon: 'growth' },
@@ -79,9 +80,10 @@ export class App {
     E.speedBtn = button('×1', { cls: 'mini-btn', ariaLabel: '전투 배속', onClick: () => this.toggleSpeed() });
     E.autoBadge = h('span', { class: 'badge' }, '자동 전투');
     E.sessionBar = h('div', { class: 'session-bar' });
+    E.riftChips = h('div', { class: 'rift-chips', 'aria-label': '균열 효과' });
     E.battle = h('section', { class: 'battle', 'aria-label': '전투' }, E.canvas, E.portrait,
       h('div', { class: 'topstrip' }, h('span', { class: 'spacer' }), E.worldBtn, E.bossBtn),
-      h('div', { class: 'overlay-tl' }, E.autoBadge), h('div', { class: 'overlay-tr' }, E.speedBtn, E.viewBtn), E.sessionBar, E.liveText);
+      h('div', { class: 'overlay-tl' }, E.autoBadge), h('div', { class: 'overlay-tr' }, E.speedBtn, E.viewBtn), E.sessionBar, E.riftChips, E.liveText);
     app.appendChild(E.battle);
     // skills 64
     E.skills = h('div', { class: 'skills', role: 'toolbar', 'aria-label': '스킬' });
@@ -120,8 +122,9 @@ export class App {
     g.on('combat', (ev) => {
       if (this.renderer) this.renderer.onCombat(ev, g.active);
       if (ev.type === 'hit' && ev.by === 'hero' && this.state.settings.sound) sfx(ev.crit ? 'crit' : 'hit');
+      if (ev.type === 'kill' && ev.enemy && ev.enemy.boss && !ev.enemy.trial) this.announce('보스를 쓰러뜨렸습니다', true);
       if (ev.type === 'telegraph' && ev.heavy) {
-        this.el.liveText.textContent = `경고: ${ev.name}`;
+        this.announce(`경고: ${ev.name}`, true);
         if (this.state.settings.sound) sfx('warn');
       }
     });
@@ -129,12 +132,13 @@ export class App {
       this.panelDirty = true;
       // common drops only light the 장비 tab dot; uncommon+ get a short toast
       const notable = r.loot ? r.loot.items.filter((i) => i.rarity !== 'common' && i.rarity !== 'uncommon') : [];
+      if (notable.length) this.announce(`${RARITY[notable[0].rarity].name} 장비 획득: ${notable[0].name}`);
       if (notable.length) toast(`장비 획득 · ${notable.map((i) => `${RARITY[i.rarity].name} ${RARITY[i.rarity].mark} ${i.name}`).join(', ')}`, 'good', 1800);
       if (r.token) toast(`시련의 증표 +1 (${this.state.wallet.token}/${BALANCE.promotion.tokensRequired})`, 'good', 1800);
       if (r.expRes && r.expRes.toPending && !this._pendingToast) { this._pendingToast = true; toast(`Lv ${this.state.player.level}: 승급 전까지 경험치는 보관됩니다.`, 'info', 3500); }
     });
-    g.on('levelUp', ({ level }) => { toast(`레벨 업! Lv ${level}`, 'good'); this.panelDirty = true; this.structural = true; this.buildSkills(); });
-    g.on('combat', (ev) => { if (ev.type === 'fieldBoss') toast(`${ev.name} 출현! 처치하면 보석과 상위 장비`, 'good', 3000); if (ev.type === 'enrage') this.el.liveText.textContent = '보스 광폭화'; });
+    g.on('levelUp', ({ level }) => { toast(`레벨 업! Lv ${level}`, 'good'); this.announce(`레벨 ${level} 달성`); this.panelDirty = true; this.structural = true; this.buildSkills(); });
+    g.on('combat', (ev) => { if (ev.type === 'fieldBoss') toast(`${ev.name} 출현! 처치하면 보석과 상위 장비`, 'good', 3000); if (ev.type === 'enrage') this.announce('보스 광폭화', true); });
     g.on('retreat', ({ wave }) => toast(`연속 패배로 웨이브 ${wave}에서 잠시 사냥합니다.`, 'info', 3000));
     g.on('overflow', ({ count }) => { if (!this._ovToast) { this._ovToast = true; toast(`보관함이 가득 차 ${count}개를 임시 보관함에 보관했습니다.`, 'error', 3500); } });
     g.on('farmVerified', (vf) => { this.panelDirty = true; });
@@ -162,7 +166,7 @@ export class App {
   onMode(mode, prev) {
     if (mode === 'OFFLINE') S.openOffline(this);
     if (mode === 'CONFLICT') S.openConflict(this);
-    if (mode === 'DEFEAT') { this.el.liveText.textContent = `${CLASSES[this.state.player.cls || 'warrior'].hero}이(가) 쓰러졌습니다. 3초 뒤 다시 싸웁니다.`; }
+    if (mode === 'DEFEAT') this.announce(`${CLASSES[this.state.player.cls || 'warrior'].hero}이(가) 쓰러졌습니다. 3초 뒤 다시 싸웁니다.`, true);
     this.updateHud(true);
     this.renderSession();
   }
@@ -172,7 +176,7 @@ export class App {
       // boss/dungeon/trial always shows the real battle; restore the user's view after
       this.forcedBattleView = true;
       this.applyView();
-      preloadFor({ region: REGION_BY_ID[this.state.progression.region], boss: sess.bossId || null, branch: this.state.player.branch, cls: this.state.player.cls, tier: prog.tierOf(this.state), bg: sess.kind === 'tower' ? 'tower' : sess.kind === 'raid' ? 'void' : sess.kind === 'rift' ? sess.bg : null });
+      preloadFor({ region: REGION_BY_ID[this.state.progression.region], boss: sess.bossId || null, branch: this.state.player.branch, cls: this.state.player.cls, tier: prog.tierOf(this.state), bg: sess.kind === 'tower' ? 'tower' : sess.kind === 'raid' ? 'void' : sess.kind === 'rift' ? sess.bg : sess.kind === 'trial' ? 'cathedral' : sess.kind === 'dungeon' ? ({ quarry: 'mine', gold: 'desert', books: 'cathedral' }[sess.type] || 'mine') : null });
     } else {
       this.forcedBattleView = false;
       this.applyView();
@@ -180,7 +184,28 @@ export class App {
     this.renderSession();
   }
 
+  // Screen-reader announcements for key moments, at most one per 1.5 s (warnings excepted).
+  announce(text, urgent = false) {
+    const now = performance.now();
+    if (!urgent && now - (this._lastAnnounce || 0) < 1500) return;
+    this._lastAnnounce = now;
+    this.el.liveText.textContent = '';
+    requestAnimationFrame(() => { this.el.liveText.textContent = text; });
+  }
+  renderRiftChips() {
+    const box = clear(this.el.riftChips);
+    const sess = this.game.session;
+    const run = sess && sess.kind === 'rift' && this.state.rift && this.state.rift.run;
+    box.hidden = !run;
+    if (!run) return;
+    const cu = CURSES.find((c) => c.id === run.curse);
+    if (cu) box.appendChild(h('span', { class: 'rchip curse', title: cu.desc }, '☠ ' + cu.name));
+    const counts = {};
+    for (const id of run.blessings) counts[id] = (counts[id] || 0) + 1;
+    for (const [id, n] of Object.entries(counts)) { const b = BLESSINGS[id]; if (b) box.appendChild(h('span', { class: 'rchip ' + (b.r || 'common'), title: b.desc }, b.name + (n > 1 ? ' ×' + n : ''))); }
+  }
   renderSession() {
+    this.renderRiftChips();
     const bar = clear(this.el.sessionBar);
     const m = this.game.mode;
     if (m === 'BOSS' || m === 'DUNGEON' || m === 'PROMOTION_TRIAL') {

@@ -14,7 +14,7 @@ export const REBIRTH = Object.freeze({
   essenceBase: 30,
   essencePerTowerFloor: 0.5,     // floor(tower.best × 0.5)
   essencePerRebirth: 5,          // later rebirths give a bit more
-  catchUpExp: 8,                 // 기억의 가속: EXP ×8 while below the peak level reached before
+  catchUpExp: 12,                // 기억의 가속: EXP ×12 while below the peak level reached before
   upgrades: {
     atk: { name: '영혼의 칼날', desc: '공격력', per: 0.08, base: 10, growth: 1.35, max: 50 },
     hp: { name: '영혼의 갑주', desc: '최대 HP', per: 0.08, base: 10, growth: 1.35, max: 50 },

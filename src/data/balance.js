@@ -18,7 +18,7 @@ export const BALANCE = Object.freeze({
   levelCap: 100,
   promotionLevel: 30,                 // first tier (kept for v3 UI)
   promotionLevels: [30, 60, 90],      // tier 1 / 2 / 3: EXP is stored at these levels until promoted
-  expCurve: { base: 100, exponent: 1.8 },          // EXP to next = floor(100 * Lv^1.8)  (seed, unchanged)
+  expCurve: { base: 100, exponent: 1.8, bandMul: [[30, 1], [60, 1.35], [90, 1.9], [101, 2.85]] },   // floor(100 · Lv^1.8 · band) — band ×1 / ×1.35 / ×1.9 / ×2.85 (v5 retune)
   combat: {
     tickMs: 50,
     bossTimeoutSec: 90,
@@ -163,8 +163,13 @@ export const BALANCE = Object.freeze({
   summon: { enabled: true, paidEnabled: false, adEnabled: false },
 });
 
+// v5 retune: levels past each promotion take longer (×1.35 / ×1.8 / ×2.7 for 30–59 / 60–89 / 90–99),
+// so the first Lv 100 lands near the 20-day target. The step sits on the promotion locks.
 export function expToNext(level) {
-  return Math.floor(BALANCE.expCurve.base * Math.pow(level, BALANCE.expCurve.exponent));
+  const E = BALANCE.expCurve;
+  let mul = 1;
+  for (const [until, m] of E.bandMul || []) if (level < until) { mul = m; break; }
+  return Math.floor(E.base * Math.pow(level, E.exponent) * mul);
 }
 // Tier gate for a level: the tier that must be done to pass `level` (0 = none).
 export function tierLockAt(level) { return BALANCE.promotionLevels.indexOf(level) + 1; }
