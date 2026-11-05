@@ -3,7 +3,7 @@ const { chromium } = require('playwright');
 const port = process.argv[2] || '8124';
 const out = 'docs/qa/screens/';
 const base = `http://127.0.0.1:${port}/`;
-const FORMS = [['warrior', 'knight', 'meadow'], ['warrior', 'berserker', 'desert'], ['mage', 'warlock', 'volcano'], ['archer', 'ranger', 'forest'], ['archer', 'hunter', 'glacier'], ['rogue', 'assassin', 'castle'], ['rogue', 'trickster', 'void']];
+const FORMS = [['warrior', 'knight', 'meadow'], ['warrior', 'berserker', 'desert'], ['mage', 'wizard', 'sky'], ['mage', 'warlock', 'volcano'], ['archer', 'ranger', 'forest'], ['archer', 'hunter', 'glacier'], ['rogue', 'assassin', 'castle'], ['rogue', 'trickster', 'void']];
 (async () => {
   const b = await chromium.launch();
   const errs = []; const shots = []; const res = [];

@@ -153,6 +153,10 @@
   "gpt_a01/poses_trickster1.png": {
    "status": "GPT_A01_POSE_SHEET",
    "note": "8 key poses, real alpha (no colour key)"
+  },
+  "gpt_a01/poses_wizard1.png": {
+   "status": "GPT_A01_POSE_SHEET",
+   "note": "8 key poses, real alpha (no colour key)"
   }
  },
  "monsters": {
@@ -9164,6 +9168,334 @@
     21.2,
     142.6,
     248.3
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_promo_wizard_idle": {
+   "id": "pose_promo_wizard_idle",
+   "branch": "wizard",
+   "tier": 1,
+   "pose": "idle",
+   "file": "assets/runtime/hero_pose_promo_wizard_idle.webp",
+   "source": "gpt_a01/poses_wizard1.png",
+   "sourceRect": [
+    0,
+    0,
+    384,
+    512
+   ],
+   "trimOffset": [
+    113,
+    117
+   ],
+   "size": [
+    160,
+    293
+   ],
+   "scale": 1.0036,
+   "bodyHeightPx": 280.0,
+   "pivot": [
+    76.3,
+    288.0
+   ],
+   "suggestedPivot": [
+    192,
+    405
+   ],
+   "hitbox": [
+    16.8,
+    22.0,
+    128.9,
+    249.0
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_promo_wizard_step": {
+   "id": "pose_promo_wizard_step",
+   "branch": "wizard",
+   "tier": 1,
+   "pose": "step",
+   "file": "assets/runtime/hero_pose_promo_wizard_step.webp",
+   "source": "gpt_a01/poses_wizard1.png",
+   "sourceRect": [
+    384,
+    0,
+    384,
+    512
+   ],
+   "trimOffset": [
+    468,
+    116
+   ],
+   "size": [
+    185,
+    294
+   ],
+   "scale": 1.0036,
+   "bodyHeightPx": 280.0,
+   "pivot": [
+    82.3,
+    288.0
+   ],
+   "suggestedPivot": [
+    192,
+    405
+   ],
+   "hitbox": [
+    15.4,
+    22.0,
+    152.8,
+    249.0
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_promo_wizard_anticipation": {
+   "id": "pose_promo_wizard_anticipation",
+   "branch": "wizard",
+   "tier": 1,
+   "pose": "anticipation",
+   "file": "assets/runtime/hero_pose_promo_wizard_anticipation.webp",
+   "source": "gpt_a01/poses_wizard1.png",
+   "sourceRect": [
+    768,
+    0,
+    384,
+    512
+   ],
+   "trimOffset": [
+    849,
+    116
+   ],
+   "size": [
+    192,
+    295
+   ],
+   "scale": 1.0036,
+   "bodyHeightPx": 279.0,
+   "pivot": [
+    84.3,
+    289.0
+   ],
+   "suggestedPivot": [
+    192,
+    406
+   ],
+   "hitbox": [
+    15.9,
+    22.1,
+    159.0,
+    249.9
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_promo_wizard_thrust": {
+   "id": "pose_promo_wizard_thrust",
+   "branch": "wizard",
+   "tier": 1,
+   "pose": "thrust",
+   "file": "assets/runtime/hero_pose_promo_wizard_thrust.webp",
+   "source": "gpt_a01/poses_wizard1.png",
+   "sourceRect": [
+    1152,
+    0,
+    384,
+    512
+   ],
+   "trimOffset": [
+    1225,
+    120
+   ],
+   "size": [
+    242,
+    291
+   ],
+   "scale": 1.0036,
+   "bodyHeightPx": 275.0,
+   "pivot": [
+    88.3,
+    285.0
+   ],
+   "suggestedPivot": [
+    192,
+    406
+   ],
+   "hitbox": [
+    17.7,
+    20.9,
+    201.4,
+    247.3
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_promo_wizard_recovery": {
+   "id": "pose_promo_wizard_recovery",
+   "branch": "wizard",
+   "tier": 1,
+   "pose": "recovery",
+   "file": "assets/runtime/hero_pose_promo_wizard_recovery.webp",
+   "source": "gpt_a01/poses_wizard1.png",
+   "sourceRect": [
+    0,
+    512,
+    384,
+    512
+   ],
+   "trimOffset": [
+    96,
+    631
+   ],
+   "size": [
+    192,
+    281
+   ],
+   "scale": 1.0036,
+   "bodyHeightPx": 267.0,
+   "pivot": [
+    85.3,
+    276.0
+   ],
+   "suggestedPivot": [
+    192,
+    395
+   ],
+   "hitbox": [
+    15.9,
+    20.3,
+    159.0,
+    239.3
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_promo_wizard_hit": {
+   "id": "pose_promo_wizard_hit",
+   "branch": "wizard",
+   "tier": 1,
+   "pose": "hit",
+   "file": "assets/runtime/hero_pose_promo_wizard_hit.webp",
+   "source": "gpt_a01/poses_wizard1.png",
+   "sourceRect": [
+    384,
+    512,
+    384,
+    512
+   ],
+   "trimOffset": [
+    480,
+    634
+   ],
+   "size": [
+    210,
+    279
+   ],
+   "scale": 1.0036,
+   "bodyHeightPx": 263.9,
+   "pivot": [
+    120.4,
+    273.0
+   ],
+   "suggestedPivot": [
+    192,
+    396
+   ],
+   "hitbox": [
+    19.8,
+    21.1,
+    173.1,
+    235.8
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_promo_wizard_cast": {
+   "id": "pose_promo_wizard_cast",
+   "branch": "wizard",
+   "tier": 1,
+   "pose": "cast",
+   "file": "assets/runtime/hero_pose_promo_wizard_cast.webp",
+   "source": "gpt_a01/poses_wizard1.png",
+   "sourceRect": [
+    768,
+    512,
+    384,
+    512
+   ],
+   "trimOffset": [
+    841,
+    632
+   ],
+   "size": [
+    234,
+    279
+   ],
+   "scale": 1.0036,
+   "bodyHeightPx": 262.9,
+   "pivot": [
+    83.3,
+    274.0
+   ],
+   "suggestedPivot": [
+    192,
+    394
+   ],
+   "hitbox": [
+    17.1,
+    20.2,
+    192.5,
+    237.6
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_KEY_POSE"
+  },
+  "pose_promo_wizard_victory": {
+   "id": "pose_promo_wizard_victory",
+   "branch": "wizard",
+   "tier": 1,
+   "pose": "victory",
+   "file": "assets/runtime/hero_pose_promo_wizard_victory.webp",
+   "source": "gpt_a01/poses_wizard1.png",
+   "sourceRect": [
+    1152,
+    512,
+    384,
+    512
+   ],
+   "trimOffset": [
+    1255,
+    630
+   ],
+   "size": [
+    178,
+    282
+   ],
+   "scale": 1.0036,
+   "bodyHeightPx": 267.0,
+   "pivot": [
+    78.3,
+    277.0
+   ],
+   "suggestedPivot": [
+    192,
+    395
+   ],
+   "hitbox": [
+    16.9,
+    21.3,
+    144.8,
+    239.3
    ],
    "flying": false,
    "mirrored": false,
