@@ -81,6 +81,42 @@
   "generated/poses/rogue_poses.png": {
    "status": "GENERATED_BOARD",
    "note": "Higgsfield gpt_image_2_5, 8 key poses 4x2; matte = Higgsfield background removal"
+  },
+  "handoff_v4/classes/elena_forms.png": {
+   "status": "HANDOFF_V4_BOARD",
+   "note": "GPT: base / branch A / branch B, alpha with glow haze"
+  },
+  "handoff_v4/classes/elena_poses.png": {
+   "status": "HANDOFF_V4_BOARD",
+   "note": "GPT: 8 key poses 4x2 (pose_regions.js)"
+  },
+  "generated/tier23_mage_gpt.png": {
+   "status": "GENERATED_BOARD",
+   "note": "GPT-based tier-2/3: A t2, A t3, B t2, B t3; matte = Higgsfield background removal"
+  },
+  "handoff_v4/classes/lyra_forms.png": {
+   "status": "HANDOFF_V4_BOARD",
+   "note": "GPT: base / branch A / branch B, alpha with glow haze"
+  },
+  "handoff_v4/classes/lyra_poses.png": {
+   "status": "HANDOFF_V4_BOARD",
+   "note": "GPT: 8 key poses 4x2 (pose_regions.js)"
+  },
+  "generated/tier23_archer_gpt.png": {
+   "status": "GENERATED_BOARD",
+   "note": "GPT-based tier-2/3: A t2, A t3, B t2, B t3; matte = Higgsfield background removal"
+  },
+  "handoff_v4/classes/nox_forms.png": {
+   "status": "HANDOFF_V4_BOARD",
+   "note": "GPT: base / branch A / branch B, alpha with glow haze"
+  },
+  "handoff_v4/classes/nox_poses.png": {
+   "status": "HANDOFF_V4_BOARD",
+   "note": "GPT: 8 key poses 4x2 (pose_regions.js)"
+  },
+  "generated/tier23_rogue_gpt.png": {
+   "status": "GENERATED_BOARD",
+   "note": "GPT-based tier-2/3: A t2, A t3, B t2, B t3; matte = Higgsfield background removal"
   }
  },
  "monsters": {
@@ -3473,280 +3509,591 @@
   "cls_mage": {
    "id": "cls_mage",
    "cls": "mage",
+   "source": "handoff_v4/classes/elena_forms.png",
    "file": "assets/runtime/hero_cls_mage.webp",
    "sourceRect": [
     0,
     0,
-    606,
-    1360
+    491,
+    1024
    ],
    "trimOffset": [
-    13,
-    138
+    7,
+    74
    ],
    "size": [
-    143,
-    289
+    153,
+    288
    ],
-   "scale": 0.2414,
+   "scale": 0.3164,
    "bodyHeightPx": 280.0,
    "pivot": [
-    56.6,
-    286.8
+    75.2,
+    285.4
    ],
    "hitbox": [
-    10.1,
-    19.0,
-    123.4,
-    250.6
+    11.3,
+    18.9,
+    132.5,
+    249.5
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
     3,
+    14,
+    2,
+    2,
+    2,
+    3,
+    2,
+    2,
     1,
-    53,
+    2,
+    126,
+    2,
+    2,
+    2,
+    1,
+    2,
+    13,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    19,
+    2,
     7,
-    17,
     2,
     1,
-    2,
+    3,
+    1,
+    1,
     1,
     5,
-    58
+    2,
+    12,
+    3,
+    4,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1,
+    4,
+    13,
+    1,
+    6,
+    6,
+    1,
+    3,
+    1,
+    3,
+    1,
+    1,
+    3,
+    6,
+    1,
+    4,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    16,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    106,
+    4,
+    6,
+    1,
+    2,
+    5,
+    1,
+    1,
+    1,
+    1,
+    2,
+    25,
+    3,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
   "promo_wizard": {
    "id": "promo_wizard",
    "cls": "mage",
+   "source": "handoff_v4/classes/elena_forms.png",
    "file": "assets/runtime/hero_promo_wizard.webp",
    "sourceRect": [
-    606,
+    491,
     0,
-    710,
-    1360
+    494,
+    1024
    ],
    "trimOffset": [
-    665,
-    141
+    491,
+    0
    ],
    "size": [
-    170,
-    312
+    167,
+    333
    ],
-   "scale": 0.2611,
+   "scale": 0.3386,
    "bodyHeightPx": 302.4,
    "pivot": [
-    93.5,
-    309.5
+    81.8,
+    330.2
    ],
    "hitbox": [
-    11.8,
-    20.3,
-    146.8,
-    270.7
+    11.3,
+    21.7,
+    145.7,
+    288.8
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
-    101,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    27,
+    2,
+    1,
+    1,
+    1,
+    7,
+    1,
+    1,
+    1,
+    1,
+    2,
+    34,
+    3,
+    18,
+    2,
+    5,
+    3,
+    1,
+    1,
     1,
     2,
     1,
     1,
     1,
     1,
-    46,
-    1,
-    119,
-    30,
     1,
     1,
-    5,
-    3
+    2,
+    22,
+    1
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
   "promo_warlock": {
    "id": "promo_warlock",
    "cls": "mage",
+   "source": "handoff_v4/classes/elena_forms.png",
    "file": "assets/runtime/hero_promo_warlock.webp",
    "sourceRect": [
-    1316,
+    985,
     0,
-    732,
-    1360
+    551,
+    1024
    ],
    "trimOffset": [
-    1331,
-    140
+    985,
+    73
    ],
    "size": [
-    182,
+    186,
     312
    ],
-   "scale": 0.2611,
+   "scale": 0.3425,
    "bodyHeightPx": 302.4,
    "pivot": [
-    92.3,
-    310.0
+    91.0,
+    309.9
    ],
    "hitbox": [
-    12.7,
-    20.3,
-    156.3,
-    271.2
+    11.0,
+    20.8,
+    161.2,
+    270.6
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
+    242,
+    547,
+    82,
     2,
+    206,
     3,
+    2,
+    10,
+    1,
+    1,
+    2,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    125,
+    2,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    2,
+    2,
+    5,
+    4,
+    2,
+    4,
+    4,
+    47,
+    1,
+    1,
+    23,
+    1,
+    1,
+    1,
+    2,
+    7,
+    63,
+    1,
+    1,
+    1,
+    1,
+    1,
     6,
-    3,
-    9,
+    11,
+    2,
+    2,
+    1,
+    1,
+    4,
+    2,
+    1,
+    1,
+    1,
+    16,
+    2,
+    22,
+    1,
+    4,
+    1,
+    1,
+    4,
     1,
     2,
-    116,
     1,
-    13,
+    5,
     1,
-    1,
-    2,
-    1
+    2
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
   "cls_archer": {
    "id": "cls_archer",
    "cls": "archer",
+   "source": "handoff_v4/classes/lyra_forms.png",
    "file": "assets/runtime/hero_cls_archer.webp",
    "sourceRect": [
     0,
     0,
-    600,
-    1360
+    492,
+    1024
    ],
    "trimOffset": [
-    62,
-    44
+    4,
+    6
    ],
    "size": [
-    123,
+    141,
     288
    ],
-   "scale": 0.2288,
+   "scale": 0.289,
    "bodyHeightPx": 280.0,
    "pivot": [
-    47.7,
-    285.9
+    69.6,
+    285.8
    ],
    "hitbox": [
-    9.1,
-    18.7,
-    106.5,
-    250.2
+    10.3,
+    19.0,
+    121.3,
+    249.7
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
+    2,
+    5,
+    3,
+    2,
+    2,
+    2,
+    2,
+    1,
+    31,
+    1,
+    2,
+    17,
+    103,
+    11,
+    5,
+    3,
+    2,
+    33,
+    2,
+    2,
+    2,
+    1,
+    1,
     4,
     1,
     1,
     1,
     1,
     1,
-    6,
-    8,
     1,
-    13,
     1,
-    8,
-    18,
-    445
+    1,
+    2,
+    2,
+    1,
+    2,
+    2,
+    2,
+    2,
+    1,
+    2,
+    1,
+    1,
+    2,
+    2,
+    1,
+    4,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    3,
+    11,
+    10,
+    10,
+    10,
+    11,
+    59,
+    54,
+    11
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
   "promo_ranger": {
    "id": "promo_ranger",
    "cls": "archer",
+   "source": "handoff_v4/classes/lyra_forms.png",
    "file": "assets/runtime/hero_promo_ranger.webp",
    "sourceRect": [
-    600,
+    492,
     0,
-    699,
-    1360
+    504,
+    1024
    ],
    "trimOffset": [
-    600,
-    44
+    492,
+    5
    ],
    "size": [
-    173,
+    157,
     311
    ],
-   "scale": 0.2473,
+   "scale": 0.3118,
    "bodyHeightPx": 302.4,
    "pivot": [
-    88.7,
-    309.1
+    77.6,
+    308.6
    ],
    "hitbox": [
-    10.3,
-    20.4,
-    151.0,
-    270.2
+    10.2,
+    20.6,
+    136.1,
+    269.7
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    2,
+    1,
+    2,
     3,
-    154,
+    2,
+    2,
     1,
     1,
     1,
     1,
-    6,
-    8,
     1,
-    12,
+    1,
     1,
     3,
     1,
-    4
+    1,
+    1,
+    2,
+    2,
+    1,
+    2,
+    1,
+    1,
+    2,
+    2,
+    2,
+    4,
+    3,
+    1,
+    1,
+    1,
+    1,
+    30,
+    3,
+    4,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    20,
+    1,
+    2,
+    5,
+    2,
+    1,
+    1,
+    18,
+    2,
+    2,
+    1,
+    1,
+    2,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    2
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
   "promo_hunter": {
    "id": "promo_hunter",
    "cls": "archer",
+   "source": "handoff_v4/classes/lyra_forms.png",
    "file": "assets/runtime/hero_promo_hunter.webp",
    "sourceRect": [
-    1299,
+    996,
     0,
-    749,
-    1360
+    540,
+    1024
    ],
    "trimOffset": [
-    1424,
-    44
+    1002,
+    7
    ],
    "size": [
-    149,
-    311
+    168,
+    313
    ],
-   "scale": 0.2473,
+   "scale": 0.317,
    "bodyHeightPx": 302.4,
    "pivot": [
-    57.2,
-    309.1
+    91.8,
+    310.3
    ],
    "hitbox": [
-    10.7,
-    20.2,
-    127.3,
-    270.5
+    12.0,
+    20.4,
+    143.7,
+    271.4
    ],
    "flying": false,
    "mirrored": false,
@@ -3755,137 +4102,266 @@
     1,
     2,
     1,
-    2,
-    1,
-    1,
-    1,
     3,
+    3,
+    5,
     1,
-    12,
+    2,
+    2,
+    2,
     1,
     4,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    3,
+    1,
+    2,
+    1,
+    1,
+    6,
+    1,
+    2,
+    1,
+    2,
+    1,
+    3,
+    1,
+    1,
+    1,
+    4,
+    2,
+    33,
+    1,
+    1,
+    1,
+    2,
+    8,
+    3,
+    6,
+    1,
+    1,
+    1,
+    8,
+    1,
+    2,
+    5,
+    2,
+    21,
     3,
     2,
-    2
+    1,
+    1,
+    3,
+    8,
+    1,
+    5,
+    2,
+    1,
+    2,
+    9,
+    2,
+    1,
+    18,
+    36,
+    8,
+    8,
+    47,
+    8,
+    68,
+    2,
+    7,
+    7,
+    17,
+    27,
+    17
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
   "cls_rogue": {
    "id": "cls_rogue",
    "cls": "rogue",
+   "source": "handoff_v4/classes/nox_forms.png",
    "file": "assets/runtime/hero_cls_rogue.webp",
    "sourceRect": [
     0,
     0,
-    675,
-    1360
+    500,
+    1024
    ],
    "trimOffset": [
-    17,
-    72
+    36,
+    33
    ],
    "size": [
-    153,
-    285
+    144,
+    289
    ],
-   "scale": 0.2328,
+   "scale": 0.3094,
    "bodyHeightPx": 280.0,
    "pivot": [
-    63.7,
-    283.3
+    84.8,
+    286.5
    ],
    "hitbox": [
-    10.7,
-    18.5,
-    132.3,
-    247.8
+    10.6,
+    18.9,
+    123.1,
+    250.5
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
-    3,
+    1,
+    1,
+    1,
     1,
     1,
     2,
+    2,
     1,
-    20
+    1,
+    1,
+    1,
+    2
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
   "promo_assassin": {
    "id": "promo_assassin",
    "cls": "rogue",
+   "source": "handoff_v4/classes/nox_forms.png",
    "file": "assets/runtime/hero_promo_assassin.webp",
    "sourceRect": [
-    675,
+    500,
     0,
-    650,
-    1360
+    505,
+    1024
    ],
    "trimOffset": [
-    694,
-    73
+    509,
+    62
    ],
    "size": [
-    159,
-    308
+    169,
+    309
    ],
-   "scale": 0.2516,
+   "scale": 0.3409,
    "bodyHeightPx": 302.4,
    "pivot": [
-    67.4,
-    306.2
+    85.9,
+    306.5
    ],
    "hitbox": [
-    11.1,
-    20.0,
-    137.0,
-    267.9
+    12.3,
+    20.6,
+    145.2,
+    267.6
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
-    7,
-    571,
     1,
     1,
-    1
+    2,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
+    2,
+    1,
+    2,
+    2,
+    1,
+    2,
+    1,
+    2,
+    6,
+    4,
+    13,
+    2,
+    2,
+    2,
+    1,
+    1,
+    2,
+    2,
+    1,
+    2,
+    3
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
   "promo_trickster": {
    "id": "promo_trickster",
    "cls": "rogue",
+   "source": "handoff_v4/classes/nox_forms.png",
    "file": "assets/runtime/hero_promo_trickster.webp",
    "sourceRect": [
-    1325,
+    1005,
     0,
-    723,
-    1360
+    531,
+    1024
    ],
    "trimOffset": [
-    1325,
-    72
+    1043,
+    31
    ],
    "size": [
-    174,
-    308
+    158,
+    309
    ],
-   "scale": 0.2501,
+   "scale": 0.3309,
    "bodyHeightPx": 302.4,
    "pivot": [
-    84.3,
-    305.9
+    90.6,
+    306.7
    ],
    "hitbox": [
-    10.3,
-    20.0,
-    151.4,
-    267.7
+    11.5,
+    20.3,
+    134.5,
+    268.2
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
+    93,
+    2,
+    2,
+    1,
+    1,
+    2,
+    1,
+    24,
+    3,
+    1,
+    1,
+    1,
+    137,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    3,
+    1,
+    34,
+    1,
+    1,
     1
    ],
    "status": "RUNTIME_STATIC_SPRITE"
@@ -4115,107 +4591,58 @@
    "id": "promo_wizard_t2",
    "cls": "mage",
    "tier": 2,
+   "source": "generated/tier23_mage_gpt.png",
    "file": "assets/runtime/hero_promo_wizard_t2.webp",
    "sourceRect": [
     0,
     0,
-    661,
+    674,
     1520
    ],
    "trimOffset": [
-    21,
-    29
+    0,
+    43
    ],
    "size": [
-    143,
-    327
+    159,
+    331
    ],
-   "scale": 0.2242,
+   "scale": 0.2353,
    "bodyHeightPx": 302.4,
    "pivot": [
-    73.0,
-    325.5
+    75.7,
+    329.2
    ],
    "hitbox": [
-    10.0,
-    21.2,
-    123.9,
-    284.9
+    9.4,
+    21.5,
+    138.5,
+    288.1
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
-    11,
-    1,
-    21,
     4,
     1,
     1,
-    4,
-    2,
-    1,
-    14,
-    1,
-    8,
-    3,
-    8,
-    1,
-    1,
-    7,
-    1,
-    1,
-    4,
-    14,
-    2,
-    4,
-    1,
-    14,
-    2,
-    3,
-    518,
-    47,
-    19,
-    6,
-    10,
-    1,
-    3,
     6,
     1,
-    1,
-    24,
-    1,
-    59,
+    3,
+    2,
     3,
     1,
     1,
-    1,
-    3,
-    3,
-    1,
-    2,
-    8,
-    1,
-    13,
-    12,
-    1,
-    1,
-    1,
-    1,
-    1,
-    2,
-    4,
-    2,
+    23,
     1,
     1,
     1,
     2,
     1,
-    1,
-    1,
-    1,
+    76,
     2,
     1,
-    69
+    1,
+    2
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
@@ -4223,205 +4650,90 @@
    "id": "promo_wizard_t3",
    "cls": "mage",
    "tier": 3,
+   "source": "generated/tier23_mage_gpt.png",
    "file": "assets/runtime/hero_promo_wizard_t3.webp",
    "sourceRect": [
-    661,
+    674,
     0,
-    631,
+    670,
     1520
    ],
    "trimOffset": [
-    701,
-    103
+    674,
+    75
    ],
    "size": [
-    133,
-    311
+    165,
+    338
    ],
-   "scale": 0.2257,
+   "scale": 0.2459,
    "bodyHeightPx": 302.4,
    "pivot": [
-    77.4,
-    309.4
+    82.3,
+    335.8
    ],
    "hitbox": [
-    9.4,
-    20.5,
-    115.0,
-    270.5
+    10.3,
+    22.2,
+    144.3,
+    293.6
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
-    1,
-    1,
-    3,
     4,
-    1,
-    3,
     9,
-    4,
-    2,
+    22,
+    25,
     1,
     1,
-    2,
-    1,
-    11,
-    1,
-    1,
-    1,
-    4,
-    1,
+    164,
+    7,
+    81,
+    109,
     1,
     6,
-    1,
-    219,
-    36,
-    3,
     2,
-    36,
-    12,
-    1,
-    6,
-    1,
-    1,
-    2,
-    2,
-    27,
-    1,
-    1,
-    1,
-    14,
-    4,
-    1,
-    3,
-    1,
-    1,
+    23,
+    17,
+    21,
+    25,
+    68,
     13,
     4,
-    2,
-    18,
-    12,
-    7,
-    4,
+    109,
     1,
-    6,
-    6,
-    15,
-    60,
-    2,
-    4,
-    8,
-    5,
-    81,
-    22,
-    11,
-    3,
-    433,
-    1,
-    52,
-    2,
-    1,
-    2,
-    44,
-    7,
+    108,
     21,
     4,
-    1,
-    1,
-    6,
-    2,
-    11,
-    3,
-    1,
-    1,
-    20,
-    3,
     7,
-    2,
     1,
-    1,
-    2,
-    1,
-    3,
-    1,
-    1,
-    9,
-    1,
-    14,
-    2,
-    4,
-    3,
+    11,
+    7,
     40,
-    4,
-    1,
-    1,
-    38,
-    1,
-    2,
-    7,
-    8,
-    1,
-    3,
-    1,
-    2,
-    1,
-    3,
-    2,
-    3,
-    24,
-    1,
-    27,
-    3,
-    4,
-    3,
-    9,
-    3,
-    3,
-    4,
-    21,
-    14,
-    1,
-    5,
-    10,
-    2,
-    1,
-    6,
-    3,
-    1,
-    1,
-    2,
-    1,
-    32,
-    5,
-    3,
+    18,
+    103,
+    244,
     16,
-    5,
-    6,
     1,
-    4,
+    142,
+    102,
+    33,
+    8,
+    9,
+    7,
+    2,
+    2,
+    69,
+    1,
     1,
     1,
     2,
     1,
-    1,
-    1,
-    1,
-    2,
-    2,
-    3,
-    1,
-    3,
-    1,
-    1,
-    3,
-    4,
-    1,
-    1,
-    1,
-    1,
-    2,
-    1
+    31,
+    74,
+    576,
+    3
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
@@ -4429,141 +4741,51 @@
    "id": "promo_warlock_t2",
    "cls": "mage",
    "tier": 2,
+   "source": "generated/tier23_mage_gpt.png",
    "file": "assets/runtime/hero_promo_warlock_t2.webp",
    "sourceRect": [
-    1292,
+    1344,
     0,
-    652,
+    631,
     1520
    ],
    "trimOffset": [
-    1363,
-    82
+    1344,
+    158
    ],
    "size": [
-    131,
-    315
+    155,
+    317
    ],
-   "scale": 0.2257,
+   "scale": 0.2449,
    "bodyHeightPx": 302.4,
    "pivot": [
-    67.8,
-    313.7
+    81.2,
+    315.4
    ],
    "hitbox": [
     9.7,
-    20.5,
-    112.6,
-    274.5
+    21.0,
+    134.5,
+    275.6
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
-    39,
-    13,
     3,
-    1,
     3,
     1,
     1,
     1,
-    1,
-    1,
-    2,
     5,
-    1,
-    6,
-    2,
-    1,
-    2,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    7,
-    1,
-    1,
-    4,
-    4,
-    1,
-    34,
-    1,
-    1,
-    1,
-    1,
-    2,
-    2,
-    45,
-    1,
-    1,
-    2,
-    2,
-    1,
-    2,
-    2,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    4,
-    3,
-    1,
-    1,
-    1,
-    2,
-    1,
-    2,
-    1,
-    1,
-    1,
-    1,
-    10,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    17,
-    2,
-    1,
-    2,
-    2,
-    1,
-    94,
-    320,
-    2,
-    1,
-    1,
-    3,
-    6,
-    106,
-    2,
-    5,
-    1,
+    12,
+    43,
+    21,
     8,
-    1,
-    1,
-    140,
-    1,
+    54,
     2,
     1,
-    27,
-    2,
-    1,
-    1,
-    49,
-    1,
-    1,
-    1,
-    1,
-    13,
-    1
+    27
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
@@ -4571,72 +4793,48 @@
    "id": "promo_warlock_t3",
    "cls": "mage",
    "tier": 3,
+   "source": "generated/tier23_mage_gpt.png",
    "file": "assets/runtime/hero_promo_warlock_t3.webp",
    "sourceRect": [
-    1944,
+    1975,
     0,
-    744,
+    713,
     1520
    ],
    "trimOffset": [
-    1962,
-    190
+    1986,
+    112
    ],
    "size": [
-    172,
-    319
+    170,
+    326
    ],
-   "scale": 0.2457,
+   "scale": 0.2431,
    "bodyHeightPx": 302.4,
    "pivot": [
-    84.3,
-    316.9
+    86.4,
+    324.5
    ],
    "hitbox": [
-    12.1,
-    20.6,
-    148.1,
-    277.4
+    11.9,
+    21.5,
+    145.7,
+    283.7
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
-    7,
-    4,
-    125,
-    39,
-    1,
-    1,
-    3,
-    75,
-    4,
-    2,
-    6,
-    2,
-    3,
-    1,
-    1,
-    7,
-    83,
-    1,
-    2,
-    2,
-    4,
-    19,
-    1,
-    1,
-    4,
-    10,
-    1,
-    5,
+    14,
     9,
     2,
     1,
-    2,
-    2,
-    1,
-    1,
-    1
+    4,
+    7,
+    6,
+    9,
+    6,
+    10,
+    9
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
@@ -4644,67 +4842,65 @@
    "id": "promo_ranger_t2",
    "cls": "archer",
    "tier": 2,
+   "source": "generated/tier23_archer_gpt.png",
    "file": "assets/runtime/hero_promo_ranger_t2.webp",
    "sourceRect": [
     0,
     0,
-    620,
+    677,
     1520
    ],
    "trimOffset": [
     0,
-    80
+    35
    ],
    "size": [
-    138,
-    308
+    144,
+    311
    ],
-   "scale": 0.2224,
+   "scale": 0.2134,
    "bodyHeightPx": 302.4,
    "pivot": [
-    66.8,
-    306.2
+    69.3,
+    308.8
    ],
    "hitbox": [
-    8.3,
-    20.0,
-    121.1,
-    267.9
+    9.2,
+    19.9,
+    125.6,
+    270.4
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
-    2,
-    1,
-    1,
-    3,
-    2,
     1,
     1,
     2,
-    8,
+    2,
+    2,
+    1,
+    1,
+    5,
+    1,
+    1,
+    1,
     1,
     20,
+    1,
+    11,
+    1,
+    1,
     2,
-    17,
+    9,
+    2,
+    1,
+    16,
+    2,
     7,
-    5,
-    1,
-    1,
-    1,
-    22,
     2,
-    5,
-    3,
-    20,
-    5,
-    3,
     1,
-    4,
-    1,
-    503,
     2,
-    168
+    33
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
@@ -4712,61 +4908,58 @@
    "id": "promo_ranger_t3",
    "cls": "archer",
    "tier": 3,
+   "source": "generated/tier23_archer_gpt.png",
    "file": "assets/runtime/hero_promo_ranger_t3.webp",
    "sourceRect": [
-    620,
+    677,
     0,
-    733,
+    691,
     1520
    ],
    "trimOffset": [
-    620,
-    81
+    678,
+    43
    ],
    "size": [
-    165,
-    311
+    148,
+    310
    ],
-   "scale": 0.2247,
+   "scale": 0.2142,
    "bodyHeightPx": 302.4,
    "pivot": [
-    79.4,
-    308.9
+    75.2,
+    308.2
    ],
    "hitbox": [
-    10.7,
-    20.2,
-    143.1,
-    270.3
+    10.2,
+    19.9,
+    128.0,
+    269.9
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
     1,
-    47,
-    1,
-    1,
-    23,
-    2,
-    2,
     2,
     1,
-    10,
-    1,
-    1,
-    1,
-    1,
     2,
+    1,
+    1,
+    1,
+    5,
+    1,
+    1,
+    41,
+    35,
     2,
     3,
-    7,
+    2,
+    2,
+    4,
     1,
-    10,
-    13,
-    10,
-    26,
     1,
-    5
+    1,
+    25
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
@@ -4774,105 +4967,54 @@
    "id": "promo_hunter_t2",
    "cls": "archer",
    "tier": 2,
+   "source": "generated/tier23_archer_gpt.png",
    "file": "assets/runtime/hero_promo_hunter_t2.webp",
    "sourceRect": [
-    1353,
+    1368,
     0,
-    633,
+    639,
     1520
    ],
    "trimOffset": [
-    1373,
-    99
+    1368,
+    37
    ],
    "size": [
-    139,
-    311
+    137,
+    312
    ],
-   "scale": 0.2275,
+   "scale": 0.2151,
    "bodyHeightPx": 302.4,
    "pivot": [
-    63.7,
-    309.0
+    78.3,
+    310.6
    ],
    "hitbox": [
-    10.3,
-    20.3,
-    120.7,
-    270.3
+    8.2,
+    20.0,
+    120.8,
+    272.0
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
     2,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
     3,
-    4,
-    2,
-    7,
-    3,
-    3,
-    1,
-    1,
     1,
     2,
+    1,
+    2,
+    1,
+    1,
+    1,
+    3,
+    78,
     17,
-    2,
-    1,
-    1,
-    1,
-    2,
-    1,
     7,
-    5,
     1,
-    5,
-    1,
-    22,
-    2,
-    5,
-    1,
-    4,
-    4,
-    3,
-    29,
-    4,
-    4,
-    4,
-    5,
-    1,
-    1,
-    5,
-    5,
-    5,
-    6,
-    33,
-    1,
-    22,
-    1,
-    4,
-    1,
-    1,
-    1,
-    1,
-    20,
-    2,
-    1,
-    1,
-    3,
-    2,
-    1,
-    3,
-    9,
-    1,
-    134
+    234,
+    139,
+    1325
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
@@ -4880,92 +5022,64 @@
    "id": "promo_hunter_t3",
    "cls": "archer",
    "tier": 3,
+   "source": "generated/tier23_archer_gpt.png",
    "file": "assets/runtime/hero_promo_hunter_t3.webp",
    "sourceRect": [
-    1986,
+    2007,
     0,
-    702,
+    681,
     1520
    ],
    "trimOffset": [
-    1986,
-    35
+    2007,
+    24
    ],
    "size": [
-    150,
-    322
+    143,
+    313
    ],
-   "scale": 0.2255,
+   "scale": 0.2134,
    "bodyHeightPx": 302.4,
    "pivot": [
-    71.9,
-    320.7
+    70.4,
+    310.9
    ],
    "hitbox": [
-    8.9,
-    20.7,
-    130.2,
-    280.8
+    8.5,
+    20.3,
+    124.1,
+    272.1
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
-    8,
     2,
     1,
-    1,
-    8,
-    2,
-    2,
-    5,
-    2,
-    858,
-    55,
-    1,
-    4,
-    2,
-    7,
-    26,
-    2,
-    1,
-    1,
-    2,
-    35,
-    11,
-    5,
-    4,
-    26,
-    2,
-    18,
-    61,
-    1,
-    1,
-    1,
+    15,
+    3,
     3,
     1,
-    74,
-    75,
-    1,
-    5,
-    6,
-    16,
-    12,
-    16,
+    2,
+    43,
     3,
-    18,
-    11,
+    30,
     1,
-    11,
+    1,
+    1,
     46,
-    2,
-    2,
-    5,
-    2,
-    1,
     3,
+    7,
+    5,
+    5,
+    172,
+    6,
+    19,
+    60,
+    29,
+    36,
     1,
-    1,
-    154
+    2,
+    3
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
@@ -4973,45 +5087,52 @@
    "id": "promo_assassin_t2",
    "cls": "rogue",
    "tier": 2,
+   "source": "generated/tier23_rogue_gpt.png",
    "file": "assets/runtime/hero_promo_assassin_t2.webp",
    "sourceRect": [
     0,
     0,
-    660,
+    663,
     1520
    ],
    "trimOffset": [
-    29,
-    98
+    21,
+    93
    ],
    "size": [
-    145,
-    308
+    149,
+    309
    ],
-   "scale": 0.23,
+   "scale": 0.2314,
    "bodyHeightPx": 302.4,
    "pivot": [
-    62.4,
-    306.8
+    81.5,
+    307.0
    ],
    "hitbox": [
-    10.2,
+    10.4,
     19.9,
-    125.3,
-    268.5
+    128.3,
+    268.8
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
     1,
-    6,
     2,
-    11,
     2,
-    3,
+    2,
     1,
-    107,
-    1
+    14,
+    1,
+    9,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    27
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
@@ -5019,144 +5140,67 @@
    "id": "promo_assassin_t3",
    "cls": "rogue",
    "tier": 3,
+   "source": "generated/tier23_rogue_gpt.png",
    "file": "assets/runtime/hero_promo_assassin_t3.webp",
    "sourceRect": [
-    660,
+    663,
     0,
-    651,
+    682,
     1520
    ],
    "trimOffset": [
-    686,
-    98
+    687,
+    109
    ],
    "size": [
-    143,
-    308
+    154,
+    310
    ],
-   "scale": 0.2291,
+   "scale": 0.2348,
    "bodyHeightPx": 302.4,
    "pivot": [
-    62.9,
-    306.3
+    84.3,
+    307.6
    ],
    "hitbox": [
-    10.5,
-    19.9,
-    123.2,
-    268.1
+    10.7,
+    20.0,
+    133.5,
+    269.2
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
-    26,
-    291,
-    1,
-    109,
-    1,
-    7,
-    7,
-    9,
-    1,
-    14,
-    6,
-    90,
-    87,
+    2,
     1,
     1,
-    21,
-    3,
+    13,
     1,
-    47,
-    438,
+    1,
+    2,
+    5,
+    1,
     3,
     1,
     1,
+    53,
     1,
+    58,
+    5,
+    5,
     1,
-    4,
-    2,
+    129,
     3,
-    2,
-    2,
+    30,
+    17,
+    3,
+    22,
+    11,
     8,
     33,
-    49,
-    64,
-    2,
-    36,
-    15,
-    2,
-    1,
-    15,
-    1,
-    1,
-    24,
-    27,
-    4,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    15,
-    1,
-    1,
-    1,
-    11,
-    11,
-    4,
-    1,
-    1,
-    2,
-    1,
-    7,
-    15,
-    1,
-    2,
-    5,
-    1,
-    1,
-    2,
-    70,
-    1,
-    1,
-    2,
-    2,
-    2,
-    137,
-    1,
-    76,
-    1,
-    2,
-    40,
-    1,
-    27,
-    1,
-    27,
-    5,
-    3,
-    3,
-    1,
-    10,
-    1,
-    84,
-    5,
-    1,
-    1,
-    11,
-    1,
-    12,
-    14,
-    5,
-    1,
-    1,
-    3,
-    217,
-    3,
-    4
+    209,
+    32,
+    56
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
@@ -5164,89 +5208,47 @@
    "id": "promo_trickster_t2",
    "cls": "rogue",
    "tier": 2,
+   "source": "generated/tier23_rogue_gpt.png",
    "file": "assets/runtime/hero_promo_trickster_t2.webp",
    "sourceRect": [
-    1311,
+    1345,
     0,
     662,
     1520
    ],
    "trimOffset": [
-    1321,
-    85
+    1349,
+    94
    ],
    "size": [
-    150,
-    313
+    153,
+    310
    ],
-   "scale": 0.2305,
+   "scale": 0.2319,
    "bodyHeightPx": 302.4,
    "pivot": [
-    59.0,
-    310.9
+    85.9,
+    308.0
    ],
    "hitbox": [
-    10.5,
+    10.8,
     20.4,
-    130.6,
-    272.0
+    131.6,
+    269.2
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
-    2,
-    1,
-    13,
     1,
     1,
-    6,
-    5,
-    2,
-    1,
-    2,
-    1,
-    2,
-    2,
-    2,
-    2,
-    3,
-    5,
-    2,
-    2,
-    2,
-    60,
-    4,
-    24,
-    7,
-    2,
     1,
     3,
-    2,
-    15,
-    2,
-    109,
-    2,
-    1,
-    1,
+    498,
+    102,
     4,
-    2,
-    1,
-    17,
-    32,
-    2,
-    1,
-    2,
-    1,
-    7,
-    1,
-    2,
-    1,
-    1,
-    2,
-    10,
-    1,
-    2,
-    1
+    18,
+    28,
+    134
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
@@ -5254,102 +5256,49 @@
    "id": "promo_trickster_t3",
    "cls": "rogue",
    "tier": 3,
+   "source": "generated/tier23_rogue_gpt.png",
    "file": "assets/runtime/hero_promo_trickster_t3.webp",
    "sourceRect": [
-    1973,
+    2007,
     0,
-    715,
+    681,
     1520
    ],
    "trimOffset": [
-    1973,
-    97
+    2025,
+    107
    ],
    "size": [
-    157,
-    308
+    155,
+    310
    ],
-   "scale": 0.2279,
+   "scale": 0.2337,
    "bodyHeightPx": 302.4,
    "pivot": [
-    75.2,
-    306.3
+    92.3,
+    307.5
    ],
    "hitbox": [
-    9.3,
-    19.9,
-    136.8,
-    268.1
+    10.9,
+    20.0,
+    132.9,
+    269.2
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
+    125,
     3,
-    5,
-    105,
+    79,
+    44,
     1,
-    2,
-    1,
-    1,
-    1,
-    2,
-    2,
-    1,
-    2,
-    38,
-    1,
-    2,
-    1,
-    1,
-    1,
-    1,
-    1,
-    2,
-    2,
-    1,
-    110,
     24,
-    1,
-    17,
-    48,
-    2,
-    1,
-    1,
-    11,
-    13,
-    1,
-    2,
-    1,
-    1,
-    1,
-    1,
-    1,
-    14,
-    1,
-    6,
-    1,
-    57,
-    12,
-    7,
-    1,
-    2,
-    20,
-    47,
+    67,
+    398,
     3,
-    8,
-    1,
-    3,
+    94,
     2,
-    31,
-    6,
-    1,
-    2,
-    1,
-    2,
-    1,
-    1,
-    49,
-    16
+    1
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
@@ -5361,36 +5310,57 @@
    "sourceRect": [
     0,
     0,
-    349,
-    651
+    384,
+    512
    ],
    "trimOffset": [
-    11,
-    21
+    41,
+    20
    ],
    "size": [
-    167,
-    311
+    190,
+    291
    ],
-   "scale": 0.4938,
+   "scale": 0.6034,
    "bodyHeightPx": 280.0,
    "pivot": [
-    85.4,
-    308.6
+    94.7,
+    287.2
    ],
    "hitbox": [
-    13.6,
-    22.7,
-    141.2,
-    267.7
+    3.6,
+    7.2,
+    182.2,
+    280.0
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
+    1,
+    4,
     2,
-    1
+    6,
+    1,
+    1,
+    2,
+    2,
+    5,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    1,
+    2,
+    1,
+    1,
+    1,
+    2
    ],
-   "status": "RUNTIME_KEY_POSE"
+   "status": "RUNTIME_KEY_POSE",
+   "source": "handoff_v4/classes/elena_poses.png"
   },
   "pose_mage_step": {
    "id": "pose_mage_step",
@@ -5398,30 +5368,30 @@
    "pose": "step",
    "file": "assets/runtime/hero_pose_mage_step.webp",
    "sourceRect": [
-    349,
+    384,
     0,
-    573,
-    651
+    384,
+    512
    ],
    "trimOffset": [
-    466,
-    108
+    417,
+    20
    ],
    "size": [
-    225,
-    268
+    199,
+    291
    ],
-   "scale": 0.4938,
-   "bodyHeightPx": 255.8,
+   "scale": 0.6034,
+   "bodyHeightPx": 278.8,
    "pivot": [
-    150.3,
-    263.7
+    82.1,
+    286.6
    ],
    "hitbox": [
-    17.1,
-    19.1,
-    192.5,
-    229.0
+    3.6,
+    7.8,
+    190.7,
+    278.8
    ],
    "flying": false,
    "mirrored": false,
@@ -5429,10 +5399,24 @@
     1,
     1,
     1,
-    9,
-    2
+    1,
+    2,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    4,
+    5,
+    2,
+    1
    ],
-   "status": "RUNTIME_KEY_POSE"
+   "status": "RUNTIME_KEY_POSE",
+   "source": "handoff_v4/classes/elena_poses.png"
   },
   "pose_mage_anticipation": {
    "id": "pose_mage_anticipation",
@@ -5440,40 +5424,65 @@
    "pose": "anticipation",
    "file": "assets/runtime/hero_pose_mage_anticipation.webp",
    "sourceRect": [
-    922,
+    768,
     0,
-    502,
-    651
+    384,
+    512
    ],
    "trimOffset": [
-    997,
-    134
+    791,
+    21
    ],
    "size": [
-    211,
-    255
+    197,
+    291
    ],
-   "scale": 0.4938,
-   "bodyHeightPx": 243.5,
+   "scale": 0.6034,
+   "bodyHeightPx": 277.6,
    "pivot": [
-    124.9,
-    252.8
+    95.4,
+    286.0
    ],
    "hitbox": [
-    16.3,
-    19.3,
-    181.2,
-    218.6
+    4.2,
+    8.4,
+    187.7,
+    277.6
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
-    5,
-    18,
+    1,
+    10,
+    7,
     4,
-    12
+    2,
+    5,
+    3,
+    2,
+    1,
+    1,
+    1,
+    1,
+    4,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1
    ],
-   "status": "RUNTIME_KEY_POSE"
+   "status": "RUNTIME_KEY_POSE",
+   "source": "handoff_v4/classes/elena_poses.png"
   },
   "pose_mage_thrust": {
    "id": "pose_mage_thrust",
@@ -5481,40 +5490,64 @@
    "pose": "thrust",
    "file": "assets/runtime/hero_pose_mage_thrust.webp",
    "sourceRect": [
-    1424,
+    1152,
     0,
-    624,
-    651
+    384,
+    512
    ],
    "trimOffset": [
-    1424,
-    150
+    1168,
+    26
    ],
    "size": [
-    231,
-    247
+    205,
+    287
    ],
-   "scale": 0.4938,
-   "bodyHeightPx": 235.1,
+   "scale": 0.6034,
+   "bodyHeightPx": 273.4,
    "pivot": [
-    128.5,
-    243.5
+    96.1,
+    283.0
    ],
    "hitbox": [
-    15.9,
-    17.4,
-    197.3,
-    211.6
+    3.6,
+    9.7,
+    196.1,
+    273.4
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
-    45,
+    5,
+    2,
+    1,
+    3,
+    3,
+    2,
+    4,
+    1,
+    2,
+    4,
+    2,
+    2,
+    2,
+    4,
     6,
     1,
-    29
+    1,
+    2,
+    1,
+    3,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2
    ],
-   "status": "RUNTIME_KEY_POSE"
+   "status": "RUNTIME_KEY_POSE",
+   "source": "handoff_v4/classes/elena_poses.png"
   },
   "pose_mage_recovery": {
    "id": "pose_mage_recovery",
@@ -5523,36 +5556,48 @@
    "file": "assets/runtime/hero_pose_mage_recovery.webp",
    "sourceRect": [
     0,
-    651,
-    451,
-    709
+    512,
+    384,
+    512
    ],
    "trimOffset": [
-    29,
-    766
+    36,
+    527
    ],
    "size": [
-    208,
-    278
+    199,
+    294
    ],
-   "scale": 0.4938,
-   "bodyHeightPx": 267.7,
+   "scale": 0.6034,
+   "bodyHeightPx": 283.0,
    "pivot": [
-    75.2,
-    274.1
+    94.1,
+    290.3
    ],
    "hitbox": [
-    15.6,
-    19.7,
-    178.2,
-    238.1
+    3.6,
+    7.2,
+    191.3,
+    283.0
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
-    2
+    2,
+    1,
+    3,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
    ],
-   "status": "RUNTIME_KEY_POSE"
+   "status": "RUNTIME_KEY_POSE",
+   "source": "handoff_v4/classes/elena_poses.png"
   },
   "pose_mage_hit": {
    "id": "pose_mage_hit",
@@ -5560,37 +5605,58 @@
    "pose": "hit",
    "file": "assets/runtime/hero_pose_mage_hit.webp",
    "sourceRect": [
-    451,
-    651,
-    488,
-    709
+    384,
+    512,
+    384,
+    512
    ],
    "trimOffset": [
-    499,
-    771
+    405,
+    533
    ],
    "size": [
-    217,
-    271
+    212,
+    291
    ],
-   "scale": 0.4938,
-   "bodyHeightPx": 256.3,
+   "scale": 0.6034,
+   "bodyHeightPx": 276.4,
    "pivot": [
-    140.1,
-    266.7
+    103.4,
+    286.0
    ],
    "hitbox": [
-    16.6,
-    19.2,
-    185.6,
-    231.6
+    3.6,
+    9.7,
+    203.4,
+    276.4
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
-    1
+    1,
+    2,
+    2,
+    2,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    2,
+    5,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1,
+    2,
+    2
    ],
-   "status": "RUNTIME_KEY_POSE"
+   "status": "RUNTIME_KEY_POSE",
+   "source": "handoff_v4/classes/elena_poses.png"
   },
   "pose_mage_cast": {
    "id": "pose_mage_cast",
@@ -5598,50 +5664,59 @@
    "pose": "cast",
    "file": "assets/runtime/hero_pose_mage_cast.webp",
    "sourceRect": [
-    939,
-    651,
-    508,
-    709
+    768,
+    512,
+    384,
+    512
    ],
    "trimOffset": [
-    1013,
-    742
+    781,
+    528
    ],
    "size": [
-    214,
-    290
+    209,
+    294
    ],
-   "scale": 0.4938,
-   "bodyHeightPx": 279.0,
+   "scale": 0.6034,
+   "bodyHeightPx": 280.0,
    "pivot": [
-    105.8,
-    285.9
+    100.9,
+    289.1
    ],
    "hitbox": [
-    16.0,
-    21.3,
-    183.4,
-    247.7
+    3.6,
+    9.1,
+    200.9,
+    280.0
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
     1,
-    15,
-    87,
     1,
     1,
-    96,
-    11,
-    39,
-    7,
+    1,
+    1,
+    1,
+    4,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    20,
+    2,
     1,
     2,
     1,
     1,
-    3
+    1
    ],
-   "status": "RUNTIME_KEY_POSE"
+   "status": "RUNTIME_KEY_POSE",
+   "source": "handoff_v4/classes/elena_poses.png"
   },
   "pose_mage_victory": {
    "id": "pose_mage_victory",
@@ -5649,37 +5724,75 @@
    "pose": "victory",
    "file": "assets/runtime/hero_pose_mage_victory.webp",
    "sourceRect": [
-    1447,
-    651,
-    601,
-    709
+    1152,
+    512,
+    384,
+    512
    ],
    "trimOffset": [
-    1518,
-    651
+    1170,
+    527
    ],
    "size": [
-    209,
-    335
+    208,
+    294
    ],
-   "scale": 0.4938,
-   "bodyHeightPx": 310.6,
+   "scale": 0.6034,
+   "bodyHeightPx": 283.6,
    "pivot": [
-    115.2,
-    330.9
+    102.3,
+    290.3
    ],
    "hitbox": [
-    15.5,
-    19.9,
-    177.3,
-    291.2
+    3.6,
+    6.6,
+    199.1,
+    283.6
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
-    1
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    4,
+    2,
+    4,
+    2,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    6,
+    2,
+    1,
+    2,
+    1,
+    3,
+    2,
+    1,
+    1,
+    1,
+    1,
+    3,
+    3,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2
    ],
-   "status": "RUNTIME_KEY_POSE"
+   "status": "RUNTIME_KEY_POSE",
+   "source": "handoff_v4/classes/elena_poses.png"
   },
   "pose_archer_idle": {
    "id": "pose_archer_idle",
@@ -5689,39 +5802,71 @@
    "sourceRect": [
     0,
     0,
-    427,
-    650
+    384,
+    512
    ],
    "trimOffset": [
-    37,
-    60
+    72,
+    28
    ],
    "size": [
-    192,
-    290
+    175,
+    293
    ],
-   "scale": 0.4912,
+   "scale": 0.6061,
    "bodyHeightPx": 280.0,
    "pivot": [
-    99.7,
-    288.4
+    72.7,
+    288.5
    ],
    "hitbox": [
-    14.6,
-    21.0,
-    163.4,
-    250.3
+    3.6,
+    8.5,
+    167.3,
+    280.0
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
+    4,
+    3,
     1,
     1,
-    10,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    24,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    7,
+    1,
+    4,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
     1,
     2
    ],
-   "status": "RUNTIME_KEY_POSE"
+   "status": "RUNTIME_KEY_POSE",
+   "source": "handoff_v4/classes/lyra_poses.png"
   },
   "pose_archer_step": {
    "id": "pose_archer_step",
@@ -5729,45 +5874,67 @@
    "pose": "step",
    "file": "assets/runtime/hero_pose_archer_step.webp",
    "sourceRect": [
-    427,
+    384,
     0,
-    514,
-    650
+    384,
+    512
    ],
    "trimOffset": [
-    522,
-    63
+    417,
+    29
    ],
    "size": [
-    206,
-    288
+    190,
+    291
    ],
-   "scale": 0.4912,
-   "bodyHeightPx": 277.5,
+   "scale": 0.6061,
+   "bodyHeightPx": 279.4,
    "pivot": [
-    135.5,
-    285.9
+    110.8,
+    286.7
    ],
    "hitbox": [
-    15.4,
-    19.9,
-    175.9,
-    249.0
+    3.6,
+    7.3,
+    181.8,
+    279.4
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
-    5,
-    1,
+    2,
     1,
     3,
     2,
+    1,
+    1,
+    15,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    3,
+    1,
     2,
     2,
-    4,
-    7
+    2,
+    1,
+    1,
+    5,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1
    ],
-   "status": "RUNTIME_KEY_POSE"
+   "status": "RUNTIME_KEY_POSE",
+   "source": "handoff_v4/classes/lyra_poses.png"
   },
   "pose_archer_anticipation": {
    "id": "pose_archer_anticipation",
@@ -5775,55 +5942,138 @@
    "pose": "anticipation",
    "file": "assets/runtime/hero_pose_archer_anticipation.webp",
    "sourceRect": [
-    941,
+    768,
     0,
-    510,
-    650
+    384,
+    512
    ],
    "trimOffset": [
-    1003,
-    7
+    795,
+    1
    ],
    "size": [
-    220,
-    316
+    200,
+    309
    ],
-   "scale": 0.4912,
-   "bodyHeightPx": 269.7,
+   "scale": 0.6061,
+   "bodyHeightPx": 281.2,
    "pivot": [
-    118.7,
-    313.4
+    83.1,
+    304.8
    ],
    "hitbox": [
-    16.4,
-    22.5,
-    190.2,
-    272.3
+    3.6,
+    23.6,
+    192.1,
+    281.2
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
-    4,
-    4,
-    4,
-    4,
     1,
     1,
-    4,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
     1,
     2,
     1,
     1,
-    77,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    4,
+    1,
+    4,
+    1,
+    1,
+    1,
+    1,
     1,
     1,
     2,
     2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    15,
+    1,
+    2,
+    4,
+    4,
+    2,
+    2,
+    1,
+    2,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    2,
+    1,
+    2,
+    7,
+    2,
+    1,
+    3,
+    2,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    2,
+    1,
+    5,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
     1,
     1,
     1
    ],
-   "status": "RUNTIME_KEY_POSE"
+   "status": "RUNTIME_KEY_POSE",
+   "source": "handoff_v4/classes/lyra_poses.png"
   },
   "pose_archer_thrust": {
    "id": "pose_archer_thrust",
@@ -5831,62 +6081,71 @@
    "pose": "thrust",
    "file": "assets/runtime/hero_pose_archer_thrust.webp",
    "sourceRect": [
-    1451,
+    1152,
     0,
-    597,
-    650
+    384,
+    512
    ],
    "trimOffset": [
-    1451,
+    1180,
     7
    ],
    "size": [
-    293,
-    316
+    200,
+    305
    ],
-   "scale": 0.4912,
-   "bodyHeightPx": 260.8,
+   "scale": 0.6061,
+   "bodyHeightPx": 281.8,
    "pivot": [
-    147.0,
-    313.9
+    88.0,
+    301.2
    ],
    "hitbox": [
-    19.6,
-    22.5,
-    252.0,
-    272.8
+    3.6,
+    19.4,
+    191.5,
+    281.8
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
     1,
     1,
-    141,
     1,
     2,
-    4,
     2,
-    1,
-    1,
-    5,
-    1,
-    6,
-    1,
-    1,
-    1,
-    1,
-    1,
+    2,
+    2,
     1,
     1,
     1,
     1,
     1,
     2,
+    1,
     2,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
     3,
-    103
+    2,
+    2,
+    7,
+    2,
+    1,
+    1,
+    2,
+    1,
+    3,
+    3
    ],
-   "status": "RUNTIME_KEY_POSE"
+   "status": "RUNTIME_KEY_POSE",
+   "source": "handoff_v4/classes/lyra_poses.png"
   },
   "pose_archer_recovery": {
    "id": "pose_archer_recovery",
@@ -5895,41 +6154,68 @@
    "file": "assets/runtime/hero_pose_archer_recovery.webp",
    "sourceRect": [
     0,
-    650,
-    426,
-    710
+    512,
+    384,
+    512
    ],
    "trimOffset": [
-    46,
-    723
+    67,
+    526
    ],
    "size": [
-    187,
-    295
+    156,
+    301
    ],
-   "scale": 0.4912,
-   "bodyHeightPx": 281.5,
+   "scale": 0.6061,
+   "bodyHeightPx": 286.7,
    "pivot": [
-    90.8,
-    290.3
+    77.4,
+    295.8
    ],
    "hitbox": [
-    14.3,
-    21.1,
-    159.1,
-    252.0
+    3.6,
+    9.1,
+    148.5,
+    286.7
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
     2,
+    1,
     2,
-    6,
+    7,
+    1,
+    2,
     1,
     1,
-    1
+    1,
+    1,
+    4,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    1,
+    1,
+    2,
+    2
    ],
-   "status": "RUNTIME_KEY_POSE"
+   "status": "RUNTIME_KEY_POSE",
+   "source": "handoff_v4/classes/lyra_poses.png"
   },
   "pose_archer_hit": {
    "id": "pose_archer_hit",
@@ -5937,129 +6223,72 @@
    "pose": "hit",
    "file": "assets/runtime/hero_pose_archer_hit.webp",
    "sourceRect": [
-    426,
-    650,
-    523,
-    710
+    384,
+    512,
+    384,
+    512
    ],
    "trimOffset": [
-    531,
-    742
+    414,
+    540
    ],
    "size": [
-    205,
-    283
+    201,
+    291
    ],
-   "scale": 0.4912,
-   "bodyHeightPx": 270.2,
+   "scale": 0.6061,
+   "bodyHeightPx": 278.2,
    "pivot": [
-    130.0,
-    279.0
+    122.5,
+    286.1
    ],
    "hitbox": [
-    15.9,
-    20.0,
-    175.1,
-    242.5
+    3.6,
+    7.9,
+    192.7,
+    278.2
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
-    8,
+    1,
+    2,
+    1,
+    13,
+    1,
+    4,
+    2,
+    2,
+    2,
+    4,
+    5,
+    4,
+    2,
+    1,
+    1,
+    1,
+    1,
     1,
     3,
     1,
-    12
-   ],
-   "status": "RUNTIME_KEY_POSE"
-  },
-  "pose_archer_cast": {
-   "id": "pose_archer_cast",
-   "cls": "archer",
-   "pose": "cast",
-   "file": "assets/runtime/hero_pose_archer_cast.webp",
-   "sourceRect": [
-    949,
-    650,
-    474,
-    710
-   ],
-   "trimOffset": [
-    995,
-    657
-   ],
-   "size": [
-    210,
-    326
-   ],
-   "scale": 0.4912,
-   "bodyHeightPx": 299.2,
-   "pivot": [
-    129.1,
-    321.8
-   ],
-   "hitbox": [
-    15.7,
-    22.5,
-    179.8,
-    280.1
-   ],
-   "flying": false,
-   "mirrored": false,
-   "droppedBleedComponents": [
-    12,
-    1,
-    7,
-    10,
-    13,
+    4,
     1,
     1,
     4,
-    15,
-    3,
-    2,
-    27,
     1,
-    18
-   ],
-   "status": "RUNTIME_KEY_POSE"
-  },
-  "pose_archer_victory": {
-   "id": "pose_archer_victory",
-   "cls": "archer",
-   "pose": "victory",
-   "file": "assets/runtime/hero_pose_archer_victory.webp",
-   "sourceRect": [
-    1423,
-    650,
-    625,
-    710
-   ],
-   "trimOffset": [
-    1525,
-    650
-   ],
-   "size": [
-    232,
-    331
-   ],
-   "scale": 0.4912,
-   "bodyHeightPx": 325.2,
-   "pivot": [
-    120.8,
-    326.2
-   ],
-   "hitbox": [
-    16.9,
-    19.6,
-    197.1,
-    287.0
-   ],
-   "flying": false,
-   "mirrored": false,
-   "droppedBleedComponents": [
-    7,
-    221,
+    1,
+    1,
+    3,
+    1,
+    35,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
     1,
     1,
     1,
@@ -6067,7 +6296,170 @@
     1,
     2
    ],
-   "status": "RUNTIME_KEY_POSE"
+   "status": "RUNTIME_KEY_POSE",
+   "source": "handoff_v4/classes/lyra_poses.png"
+  },
+  "pose_archer_cast": {
+   "id": "pose_archer_cast",
+   "cls": "archer",
+   "pose": "cast",
+   "file": "assets/runtime/hero_pose_archer_cast.webp",
+   "sourceRect": [
+    768,
+    512,
+    384,
+    512
+   ],
+   "trimOffset": [
+    800,
+    512
+   ],
+   "size": [
+    195,
+    309
+   ],
+   "scale": 0.6061,
+   "bodyHeightPx": 289.7,
+   "pivot": [
+    86.3,
+    304.2
+   ],
+   "hitbox": [
+    3.6,
+    14.5,
+    186.1,
+    289.7
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    1,
+    1,
+    2,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    1,
+    12,
+    1,
+    2,
+    3,
+    2,
+    2,
+    1,
+    1,
+    4,
+    4,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1
+   ],
+   "status": "RUNTIME_KEY_POSE",
+   "source": "handoff_v4/classes/lyra_poses.png"
+  },
+  "pose_archer_victory": {
+   "id": "pose_archer_victory",
+   "cls": "archer",
+   "pose": "victory",
+   "file": "assets/runtime/hero_pose_archer_victory.webp",
+   "sourceRect": [
+    1152,
+    512,
+    384,
+    512
+   ],
+   "trimOffset": [
+    1204,
+    527
+   ],
+   "size": [
+    171,
+    299
+   ],
+   "scale": 0.6061,
+   "bodyHeightPx": 286.1,
+   "pivot": [
+    86.4,
+    295.2
+   ],
+   "hitbox": [
+    3.6,
+    9.1,
+    163.0,
+    286.1
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    2,
+    1,
+    1,
+    3,
+    2,
+    1,
+    1,
+    1,
+    2,
+    5,
+    1,
+    1,
+    1,
+    1,
+    5,
+    2,
+    1,
+    1,
+    8,
+    1,
+    1,
+    1,
+    2,
+    1,
+    2,
+    2,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    2,
+    7,
+    1,
+    2,
+    1,
+    1
+   ],
+   "status": "RUNTIME_KEY_POSE",
+   "source": "handoff_v4/classes/lyra_poses.png"
   },
   "pose_rogue_idle": {
    "id": "pose_rogue_idle",
@@ -6077,150 +6469,28 @@
    "sourceRect": [
     0,
     0,
-    430,
-    643
+    384,
+    512
    ],
    "trimOffset": [
-    44,
-    55
+    49,
+    32
    ],
    "size": [
-    189,
-    288
+    175,
+    292
    ],
-   "scale": 0.4904,
+   "scale": 0.6195,
    "bodyHeightPx": 280.0,
    "pivot": [
-    102.4,
-    285.9
+    89.4,
+    287.4
    ],
    "hitbox": [
-    14.4,
-    20.8,
-    161.4,
-    248.1
-   ],
-   "flying": false,
-   "mirrored": false,
-   "droppedBleedComponents": [
-    2,
-    6,
-    1,
-    1,
-    1
-   ],
-   "status": "RUNTIME_KEY_POSE"
-  },
-  "pose_rogue_step": {
-   "id": "pose_rogue_step",
-   "cls": "rogue",
-   "pose": "step",
-   "file": "assets/runtime/hero_pose_rogue_step.webp",
-   "sourceRect": [
-    430,
-    0,
-    531,
-    643
-   ],
-   "trimOffset": [
-    543,
-    59
-   ],
-   "size": [
-    205,
-    286
-   ],
-   "scale": 0.4904,
-   "bodyHeightPx": 275.6,
-   "pivot": [
-    155.2,
-    281.5
-   ],
-   "hitbox": [
-    15.4,
-    20.1,
-    175.2,
-    244.7
-   ],
-   "flying": false,
-   "mirrored": false,
-   "droppedBleedComponents": [
-    2
-   ],
-   "status": "RUNTIME_KEY_POSE"
-  },
-  "pose_rogue_anticipation": {
-   "id": "pose_rogue_anticipation",
-   "cls": "rogue",
-   "pose": "anticipation",
-   "file": "assets/runtime/hero_pose_rogue_anticipation.webp",
-   "sourceRect": [
-    961,
-    0,
-    499,
-    643
-   ],
-   "trimOffset": [
-    1014,
-    137
-   ],
-   "size": [
-    219,
-    246
-   ],
-   "scale": 0.4904,
-   "bodyHeightPx": 235.9,
-   "pivot": [
-    108.3,
-    242.2
-   ],
-   "hitbox": [
-    16.3,
-    17.8,
-    189.0,
-    210.2
-   ],
-   "flying": false,
-   "mirrored": false,
-   "droppedBleedComponents": [
-    1,
-    5,
-    1,
-    2,
-    1
-   ],
-   "status": "RUNTIME_KEY_POSE"
-  },
-  "pose_rogue_thrust": {
-   "id": "pose_rogue_thrust",
-   "cls": "rogue",
-   "pose": "thrust",
-   "file": "assets/runtime/hero_pose_rogue_thrust.webp",
-   "sourceRect": [
-    1460,
-    0,
-    588,
-    643
-   ],
-   "trimOffset": [
-    1460,
-    133
-   ],
-   "size": [
-    285,
-    248
-   ],
-   "scale": 0.4904,
-   "bodyHeightPx": 237.8,
-   "pivot": [
-    138.6,
-    243.7
-   ],
-   "hitbox": [
-    18.7,
-    17.4,
-    245.1,
-    211.9
+    3.7,
+    7.4,
+    166.6,
+    280.0
    ],
    "flying": false,
    "mirrored": false,
@@ -6228,9 +6498,159 @@
     6,
     4,
     1,
-    65
+    2,
+    1,
+    1,
+    1
    ],
-   "status": "RUNTIME_KEY_POSE"
+   "status": "RUNTIME_KEY_POSE",
+   "source": "handoff_v4/classes/nox_poses.png"
+  },
+  "pose_rogue_step": {
+   "id": "pose_rogue_step",
+   "cls": "rogue",
+   "pose": "step",
+   "file": "assets/runtime/hero_pose_rogue_step.webp",
+   "sourceRect": [
+    384,
+    0,
+    384,
+    512
+   ],
+   "trimOffset": [
+    401,
+    44
+   ],
+   "size": [
+    204,
+    282
+   ],
+   "scale": 0.6195,
+   "bodyHeightPx": 272.6,
+   "pivot": [
+    126.6,
+    277.5
+   ],
+   "hitbox": [
+    4.3,
+    5.0,
+    194.5,
+    272.6
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    1,
+    1,
+    2,
+    2,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "status": "RUNTIME_KEY_POSE",
+   "source": "handoff_v4/classes/nox_poses.png"
+  },
+  "pose_rogue_anticipation": {
+   "id": "pose_rogue_anticipation",
+   "cls": "rogue",
+   "pose": "anticipation",
+   "file": "assets/runtime/hero_pose_rogue_anticipation.webp",
+   "sourceRect": [
+    768,
+    0,
+    384,
+    512
+   ],
+   "trimOffset": [
+    773,
+    97
+   ],
+   "size": [
+    227,
+    250
+   ],
+   "scale": 0.6195,
+   "bodyHeightPx": 238.5,
+   "pivot": [
+    91.1,
+    245.3
+   ],
+   "hitbox": [
+    4.3,
+    6.8,
+    216.8,
+    238.5
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    9,
+    1,
+    1,
+    1,
+    2,
+    1,
+    2,
+    1,
+    1,
+    1,
+    13
+   ],
+   "status": "RUNTIME_KEY_POSE",
+   "source": "handoff_v4/classes/nox_poses.png"
+  },
+  "pose_rogue_thrust": {
+   "id": "pose_rogue_thrust",
+   "cls": "rogue",
+   "pose": "thrust",
+   "file": "assets/runtime/hero_pose_rogue_thrust.webp",
+   "sourceRect": [
+    1152,
+    0,
+    384,
+    512
+   ],
+   "trimOffset": [
+    1152,
+    101
+   ],
+   "size": [
+    238,
+    248
+   ],
+   "scale": 0.6195,
+   "bodyHeightPx": 236.6,
+   "pivot": [
+    92.2,
+    242.8
+   ],
+   "hitbox": [
+    0.0,
+    6.2,
+    233.5,
+    236.6
+   ],
+   "flying": false,
+   "mirrored": false,
+   "droppedBleedComponents": [
+    1,
+    1,
+    1,
+    2,
+    1,
+    6,
+    1,
+    1,
+    2
+   ],
+   "status": "RUNTIME_KEY_POSE",
+   "source": "handoff_v4/classes/nox_poses.png"
   },
   "pose_rogue_recovery": {
    "id": "pose_rogue_recovery",
@@ -6239,39 +6659,40 @@
    "file": "assets/runtime/hero_pose_rogue_recovery.webp",
    "sourceRect": [
     0,
-    643,
-    472,
-    717
+    512,
+    384,
+    512
    ],
    "trimOffset": [
-    27,
-    716
+    49,
+    548
    ],
    "size": [
-    218,
-    292
+    208,
+    287
    ],
-   "scale": 0.4904,
-   "bodyHeightPx": 281.0,
+   "scale": 0.6195,
+   "bodyHeightPx": 277.5,
    "pivot": [
-    116.2,
-    287.4
+    138.4,
+    283.1
    ],
    "hitbox": [
-    16.2,
-    20.5,
-    186.8,
-    249.9
+    3.7,
+    5.6,
+    200.7,
+    277.5
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
-    2,
-    74,
     1,
-    3
+    1,
+    1,
+    1
    ],
-   "status": "RUNTIME_KEY_POSE"
+   "status": "RUNTIME_KEY_POSE",
+   "source": "handoff_v4/classes/nox_poses.png"
   },
   "pose_rogue_hit": {
    "id": "pose_rogue_hit",
@@ -6279,44 +6700,54 @@
    "pose": "hit",
    "file": "assets/runtime/hero_pose_rogue_hit.webp",
    "sourceRect": [
-    472,
-    643,
-    496,
-    717
+    384,
+    512,
+    384,
+    512
    ],
    "trimOffset": [
-    531,
-    719
+    439,
+    547
    ],
    "size": [
-    214,
-    290
+    168,
+    287
    ],
-   "scale": 0.4904,
-   "bodyHeightPx": 277.5,
+   "scale": 0.6195,
+   "bodyHeightPx": 275.7,
    "pivot": [
-    115.1,
-    285.4
+    90.5,
+    282.5
    ],
    "hitbox": [
-    15.9,
-    20.8,
-    183.4,
-    247.7
+    3.7,
+    6.8,
+    159.8,
+    275.7
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
-    2,
-    2,
-    2,
-    2,
     1,
-    234,
-    6,
-    1
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    5,
+    1,
+    2,
+    4,
+    4,
+    1,
+    1,
+    1,
+    1,
+    2
    ],
-   "status": "RUNTIME_KEY_POSE"
+   "status": "RUNTIME_KEY_POSE",
+   "source": "handoff_v4/classes/nox_poses.png"
   },
   "pose_rogue_cast": {
    "id": "pose_rogue_cast",
@@ -6324,68 +6755,46 @@
    "pose": "cast",
    "file": "assets/runtime/hero_pose_rogue_cast.webp",
    "sourceRect": [
-    968,
-    643,
-    516,
-    717
+    768,
+    512,
+    384,
+    512
    ],
    "trimOffset": [
-    991,
-    716
+    791,
+    527
    ],
    "size": [
-    235,
-    292
+    183,
+    301
    ],
-   "scale": 0.4904,
-   "bodyHeightPx": 281.0,
+   "scale": 0.6195,
+   "bodyHeightPx": 289.9,
    "pivot": [
-    116.3,
-    287.4
+    113.5,
+    296.1
    ],
    "hitbox": [
-    17.1,
-    20.5,
-    199.8,
-    249.9
+    4.3,
+    6.2,
+    174.1,
+    289.9
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
     1,
-    1,
-    68,
-    5,
-    1,
-    5,
-    46,
-    19,
-    8,
-    162,
-    32,
-    12,
-    1,
-    8,
-    1,
-    12,
-    1,
-    1,
     2,
-    82,
-    48,
-    7,
-    34,
+    1,
+    1,
+    1,
+    1,
     11,
-    13,
-    203,
-    24,
-    6,
-    31,
-    131,
-    6,
+    1,
     1
    ],
-   "status": "RUNTIME_KEY_POSE"
+   "status": "RUNTIME_KEY_POSE",
+   "source": "handoff_v4/classes/nox_poses.png"
   },
   "pose_rogue_victory": {
    "id": "pose_rogue_victory",
@@ -6393,39 +6802,40 @@
    "pose": "victory",
    "file": "assets/runtime/hero_pose_rogue_victory.webp",
    "sourceRect": [
-    1484,
-    643,
-    564,
-    717
+    1152,
+    512,
+    384,
+    512
    ],
    "trimOffset": [
-    1572,
-    704
+    1159,
+    516
    ],
    "size": [
-    222,
-    304
+    198,
+    308
    ],
-   "scale": 0.4904,
-   "bodyHeightPx": 293.2,
+   "scale": 0.6195,
+   "bodyHeightPx": 296.7,
    "pivot": [
-    113.5,
-    299.6
+    116.4,
+    303.5
    ],
    "hitbox": [
-    16.8,
-    21.7,
-    188.6,
-    260.2
+    3.7,
+    6.8,
+    189.6,
+    296.7
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [
     1,
-    5,
+    1,
     1
    ],
-   "status": "RUNTIME_KEY_POSE"
+   "status": "RUNTIME_KEY_POSE",
+   "source": "handoff_v4/classes/nox_poses.png"
   }
  },
  "items": {
@@ -9352,6 +9762,159 @@
    ],
    "status": "RUNTIME_ICON",
    "source": "generated/icons_v4.png"
+  },
+  "I40": {
+   "id": "I40",
+   "name": "낡은 마도서",
+   "file": "assets/runtime/item_40.webp",
+   "sourceRect": [
+    0,
+    0,
+    512,
+    341
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/class_weapons_9.png"
+  },
+  "I41": {
+   "id": "I41",
+   "name": "성좌의 마도서",
+   "file": "assets/runtime/item_41.webp",
+   "sourceRect": [
+    512,
+    0,
+    512,
+    341
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/class_weapons_9.png"
+  },
+  "I42": {
+   "id": "I42",
+   "name": "심연의 마도서",
+   "file": "assets/runtime/item_42.webp",
+   "sourceRect": [
+    1024,
+    0,
+    512,
+    341
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/class_weapons_9.png"
+  },
+  "I43": {
+   "id": "I43",
+   "name": "사냥꾼의 활",
+   "file": "assets/runtime/item_43.webp",
+   "sourceRect": [
+    0,
+    341,
+    512,
+    341
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/class_weapons_9.png"
+  },
+  "I44": {
+   "id": "I44",
+   "name": "은월의 활",
+   "file": "assets/runtime/item_44.webp",
+   "sourceRect": [
+    512,
+    341,
+    512,
+    341
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/class_weapons_9.png"
+  },
+  "I45": {
+   "id": "I45",
+   "name": "가시나무 장궁",
+   "file": "assets/runtime/item_45.webp",
+   "sourceRect": [
+    1024,
+    341,
+    512,
+    341
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/class_weapons_9.png"
+  },
+  "I46": {
+   "id": "I46",
+   "name": "강철 쌍단검",
+   "file": "assets/runtime/item_46.webp",
+   "sourceRect": [
+    0,
+    682,
+    512,
+    341
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/class_weapons_9.png"
+  },
+  "I47": {
+   "id": "I47",
+   "name": "금장 쌍단검",
+   "file": "assets/runtime/item_47.webp",
+   "sourceRect": [
+    512,
+    682,
+    512,
+    341
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/class_weapons_9.png"
+  },
+  "I48": {
+   "id": "I48",
+   "name": "적월 쌍단검",
+   "file": "assets/runtime/item_48.webp",
+   "sourceRect": [
+    1024,
+    682,
+    512,
+    341
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/class_weapons_9.png"
   }
  },
  "skills": {
@@ -10142,6 +10705,414 @@
    ],
    "status": "RUNTIME_ICON",
    "source": "generated/skills_v4.png"
+  },
+  "G00": {
+   "id": "G00",
+   "name": "m_fireball",
+   "file": "assets/runtime/skill_G00.webp",
+   "sourceRect": [
+    0,
+    0,
+    384,
+    512
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/elena_skills.png"
+  },
+  "G01": {
+   "id": "G01",
+   "name": "m_meteor",
+   "file": "assets/runtime/skill_G01.webp",
+   "sourceRect": [
+    384,
+    0,
+    384,
+    512
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/elena_skills.png"
+  },
+  "G02": {
+   "id": "G02",
+   "name": "m_blizzard",
+   "file": "assets/runtime/skill_G02.webp",
+   "sourceRect": [
+    768,
+    0,
+    384,
+    512
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/elena_skills.png"
+  },
+  "G03": {
+   "id": "G03",
+   "name": "elena_3",
+   "file": "assets/runtime/skill_G03.webp",
+   "sourceRect": [
+    1152,
+    0,
+    384,
+    512
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/elena_skills.png"
+  },
+  "G04": {
+   "id": "G04",
+   "name": "m_chain",
+   "file": "assets/runtime/skill_G04.webp",
+   "sourceRect": [
+    0,
+    512,
+    384,
+    512
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/elena_skills.png"
+  },
+  "G05": {
+   "id": "G05",
+   "name": "m_drain",
+   "file": "assets/runtime/skill_G05.webp",
+   "sourceRect": [
+    384,
+    512,
+    384,
+    512
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/elena_skills.png"
+  },
+  "G06": {
+   "id": "G06",
+   "name": "m_shield",
+   "file": "assets/runtime/skill_G06.webp",
+   "sourceRect": [
+    768,
+    512,
+    384,
+    512
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/elena_skills.png"
+  },
+  "G07": {
+   "id": "G07",
+   "name": "m_curse",
+   "file": "assets/runtime/skill_G07.webp",
+   "sourceRect": [
+    1152,
+    512,
+    384,
+    512
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/elena_skills.png"
+  },
+  "G08": {
+   "id": "G08",
+   "name": "a_pierce",
+   "file": "assets/runtime/skill_G08.webp",
+   "sourceRect": [
+    0,
+    0,
+    384,
+    512
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/lyra_skills.png"
+  },
+  "G09": {
+   "id": "G09",
+   "name": "a_multi",
+   "file": "assets/runtime/skill_G09.webp",
+   "sourceRect": [
+    384,
+    0,
+    384,
+    512
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/lyra_skills.png"
+  },
+  "G10": {
+   "id": "G10",
+   "name": "lyra_2",
+   "file": "assets/runtime/skill_G10.webp",
+   "sourceRect": [
+    768,
+    0,
+    384,
+    512
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/lyra_skills.png"
+  },
+  "G11": {
+   "id": "G11",
+   "name": "a_snipe",
+   "file": "assets/runtime/skill_G11.webp",
+   "sourceRect": [
+    1152,
+    0,
+    384,
+    512
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/lyra_skills.png"
+  },
+  "G12": {
+   "id": "G12",
+   "name": "a_aim",
+   "file": "assets/runtime/skill_G12.webp",
+   "sourceRect": [
+    0,
+    512,
+    384,
+    512
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/lyra_skills.png"
+  },
+  "G13": {
+   "id": "G13",
+   "name": "a_beast",
+   "file": "assets/runtime/skill_G13.webp",
+   "sourceRect": [
+    384,
+    512,
+    384,
+    512
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/lyra_skills.png"
+  },
+  "G14": {
+   "id": "G14",
+   "name": "lyra_6",
+   "file": "assets/runtime/skill_G14.webp",
+   "sourceRect": [
+    768,
+    512,
+    384,
+    512
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/lyra_skills.png"
+  },
+  "G15": {
+   "id": "G15",
+   "name": "lyra_7",
+   "file": "assets/runtime/skill_G15.webp",
+   "sourceRect": [
+    1152,
+    512,
+    384,
+    512
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/lyra_skills.png"
+  },
+  "G16": {
+   "id": "G16",
+   "name": "r_shadowstrike",
+   "file": "assets/runtime/skill_G16.webp",
+   "sourceRect": [
+    0,
+    0,
+    384,
+    512
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/nox_skills.png"
+  },
+  "G17": {
+   "id": "G17",
+   "name": "r_poison",
+   "file": "assets/runtime/skill_G17.webp",
+   "sourceRect": [
+    384,
+    0,
+    384,
+    512
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/nox_skills.png"
+  },
+  "G18": {
+   "id": "G18",
+   "name": "r_shadow",
+   "file": "assets/runtime/skill_G18.webp",
+   "sourceRect": [
+    768,
+    0,
+    384,
+    512
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/nox_skills.png"
+  },
+  "G19": {
+   "id": "G19",
+   "name": "r_blades",
+   "file": "assets/runtime/skill_G19.webp",
+   "sourceRect": [
+    1152,
+    0,
+    384,
+    512
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/nox_skills.png"
+  },
+  "G20": {
+   "id": "G20",
+   "name": "r_execute",
+   "file": "assets/runtime/skill_G20.webp",
+   "sourceRect": [
+    0,
+    512,
+    384,
+    512
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/nox_skills.png"
+  },
+  "G21": {
+   "id": "G21",
+   "name": "r_illusion",
+   "file": "assets/runtime/skill_G21.webp",
+   "sourceRect": [
+    384,
+    512,
+    384,
+    512
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/nox_skills.png"
+  },
+  "G22": {
+   "id": "G22",
+   "name": "r_smoke",
+   "file": "assets/runtime/skill_G22.webp",
+   "sourceRect": [
+    768,
+    512,
+    384,
+    512
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/nox_skills.png"
+  },
+  "G23": {
+   "id": "G23",
+   "name": "r_stab",
+   "file": "assets/runtime/skill_G23.webp",
+   "sourceRect": [
+    1152,
+    512,
+    384,
+    512
+   ],
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "handoff_v4/classes/nox_skills.png"
   }
  },
  "backgrounds": {
@@ -10370,8 +11341,8 @@
    "id": "wizard",
    "file": "assets/runtime/hero_promo_wizard.webp",
    "size": [
-    170,
-    312
+    167,
+    333
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
@@ -10379,7 +11350,7 @@
    "id": "warlock",
    "file": "assets/runtime/hero_promo_warlock.webp",
    "size": [
-    182,
+    186,
     312
    ],
    "status": "RUNTIME_STATIC_SPRITE"
@@ -10409,7 +11380,7 @@
    "id": "ranger",
    "file": "assets/runtime/hero_promo_ranger.webp",
    "size": [
-    173,
+    157,
     311
    ],
    "status": "RUNTIME_STATIC_SPRITE"
@@ -10418,8 +11389,8 @@
    "id": "hunter",
    "file": "assets/runtime/hero_promo_hunter.webp",
    "size": [
-    149,
-    311
+    168,
+    313
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
@@ -10448,8 +11419,8 @@
    "id": "assassin",
    "file": "assets/runtime/hero_promo_assassin.webp",
    "size": [
-    159,
-    308
+    169,
+    309
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
@@ -10457,8 +11428,8 @@
    "id": "trickster",
    "file": "assets/runtime/hero_promo_trickster.webp",
    "size": [
-    174,
-    308
+    158,
+    309
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
@@ -10502,8 +11473,8 @@
    "id": "wizard_t2",
    "file": "assets/runtime/hero_promo_wizard_t2.webp",
    "size": [
-    143,
-    327
+    159,
+    331
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
@@ -10511,8 +11482,8 @@
    "id": "wizard_t3",
    "file": "assets/runtime/hero_promo_wizard_t3.webp",
    "size": [
-    133,
-    311
+    165,
+    338
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
@@ -10520,8 +11491,8 @@
    "id": "warlock_t2",
    "file": "assets/runtime/hero_promo_warlock_t2.webp",
    "size": [
-    131,
-    315
+    155,
+    317
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
@@ -10529,8 +11500,8 @@
    "id": "warlock_t3",
    "file": "assets/runtime/hero_promo_warlock_t3.webp",
    "size": [
-    172,
-    319
+    170,
+    326
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
@@ -10538,8 +11509,8 @@
    "id": "ranger_t2",
    "file": "assets/runtime/hero_promo_ranger_t2.webp",
    "size": [
-    138,
-    308
+    144,
+    311
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
@@ -10547,8 +11518,8 @@
    "id": "ranger_t3",
    "file": "assets/runtime/hero_promo_ranger_t3.webp",
    "size": [
-    165,
-    311
+    148,
+    310
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
@@ -10556,8 +11527,8 @@
    "id": "hunter_t2",
    "file": "assets/runtime/hero_promo_hunter_t2.webp",
    "size": [
-    139,
-    311
+    137,
+    312
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
@@ -10565,8 +11536,8 @@
    "id": "hunter_t3",
    "file": "assets/runtime/hero_promo_hunter_t3.webp",
    "size": [
-    150,
-    322
+    143,
+    313
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
@@ -10574,8 +11545,8 @@
    "id": "assassin_t2",
    "file": "assets/runtime/hero_promo_assassin_t2.webp",
    "size": [
-    145,
-    308
+    149,
+    309
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
@@ -10583,8 +11554,8 @@
    "id": "assassin_t3",
    "file": "assets/runtime/hero_promo_assassin_t3.webp",
    "size": [
-    143,
-    308
+    154,
+    310
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
@@ -10592,8 +11563,8 @@
    "id": "trickster_t2",
    "file": "assets/runtime/hero_promo_trickster_t2.webp",
    "size": [
-    150,
-    313
+    153,
+    310
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   },
@@ -10601,8 +11572,8 @@
    "id": "trickster_t3",
    "file": "assets/runtime/hero_promo_trickster_t3.webp",
    "size": [
-    157,
-    308
+    155,
+    310
    ],
    "status": "RUNTIME_STATIC_SPRITE"
   }

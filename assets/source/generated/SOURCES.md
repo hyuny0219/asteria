@@ -22,3 +22,9 @@ Originals kept unmodified; runtime crops are made by tools/extract_v4.py.
 | crops/*_base.png | 클래스 보드 왼쪽 기본 외형 단독 크롭 (AutoSprite 시도용, 2회 실패) | — |
 
 `*_alpha.png`: Higgsfield background removal of the same board (matte only; combined with the colour key by the extract scripts).
+| tier23_mage_gpt.png | 인계 v4 엘레나 기준 2·3차: 아크메이지, 엘리멘탈 마스터, 네크로맨서, 리치 로드 | 2ee44e6f |
+| tier23_archer_gpt.png | 인계 v4 리라 기준: 스나이퍼, 호크아이, 비스트마스터, 와일드 킹 | 51c55095 |
+| tier23_rogue_gpt.png | 인계 v4 녹스 기준: 나이트블레이드, 섀도우, 팬텀, 페이트위버 | 1930774d |
+| tier23_<cls>_gpt_alpha.png | Higgsfield 배경 제거 매트 (b084cf9e / af031ddd / a89e5356) | — |
+
+클래스 그림의 현재 출처는 `assets/source/handoff_v4/` (선배가 준 GPT 인계 v4). 위의 mage/archer/rogue_board, poses/, tier23_<cls>.png 는 이전 생성본으로 원본만 보관합니다.

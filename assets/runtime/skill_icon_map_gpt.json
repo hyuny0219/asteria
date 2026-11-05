@@ -1,0 +1,22 @@
+{
+ "m_fireball": "G00",
+ "m_meteor": "G01",
+ "m_blizzard": "G02",
+ "m_chain": "G04",
+ "m_drain": "G05",
+ "m_shield": "G06",
+ "m_curse": "G07",
+ "a_pierce": "G08",
+ "a_multi": "G09",
+ "a_snipe": "G11",
+ "a_aim": "G12",
+ "a_beast": "G13",
+ "r_shadowstrike": "G16",
+ "r_poison": "G17",
+ "r_shadow": "G18",
+ "r_blades": "G19",
+ "r_execute": "G20",
+ "r_illusion": "G21",
+ "r_smoke": "G22",
+ "r_stab": "G23"
+}

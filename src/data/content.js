@@ -84,11 +84,11 @@ export const CLASSES = Object.freeze({
   warrior: { id: 'warrior', name: '전사', hero: '세린', age: 28, role: '근접 탱커/딜러', range: 'melee', mainStat: 'str',
     mods: { hp: 1.25, def: 1.3 }, autoStats: { str: 2, vit: 2, agi: 1 }, sprite: 'hero', desc: '흑장미의 서약을 지키는 기사. 단단하고 꾸준합니다.' },
   mage: { id: 'mage', name: '마법사', hero: '엘레나', age: 30, role: '원거리 광역 딜러', range: 'ranged', mainStat: 'int',
-    mods: { atk: 1.15, hp: 0.85 }, autoStats: { int: 3, wis: 1, vit: 1 }, sprite: 'hero', art: { base: 'cls_mage', face: 'face_mage', card: 'card_mage', kv: 'kv_mage' }, desc: '별의 서고를 지키던 마도사. 여러 적을 한 번에 태웁니다.' },
+    mods: { atk: 1.15, hp: 0.85 }, autoStats: { int: 3, wis: 1, vit: 1 }, sprite: 'hero', art: { base: 'cls_mage', face: 'face_mage', card: 'card_mage', kv: 'kv_mage' }, desc: '보랏빛 긴 머리의 마도사. 마도서로 별을 불러 여러 적을 한 번에 공격합니다.' },
   archer: { id: 'archer', name: '궁수', hero: '리라', age: 26, role: '원거리 단일 딜러', range: 'ranged', mainStat: 'dex',
-    mods: { atk: 1.1 }, crit: 0.05, aspd: 0.1, autoStats: { dex: 3, agi: 1, vit: 1 }, sprite: 'hero', art: { base: 'cls_archer', face: 'face_archer', card: 'card_archer', kv: 'kv_archer' }, desc: '숲의 감시자. 빠르고 정확한 사격으로 하나씩 쓰러뜨립니다.' },
+    mods: { atk: 1.1 }, crit: 0.05, aspd: 0.1, autoStats: { dex: 3, agi: 1, vit: 1 }, sprite: 'hero', art: { base: 'cls_archer', face: 'face_archer', card: 'card_archer', kv: 'kv_archer' }, desc: '붉은 포니테일의 숲 감시자. 장궁으로 한 적씩 정확하게 노립니다.' },
   rogue: { id: 'rogue', name: '도적', hero: '녹스', age: 29, role: '근접 치명·회피', range: 'melee', mainStat: 'agi',
-    mods: { hp: 0.95 }, crit: 0.10, evade: 0.08, autoStats: { agi: 3, dex: 1, vit: 1 }, sprite: 'hero', art: { base: 'cls_rogue', face: 'face_rogue', card: 'card_rogue', kv: 'kv_rogue' }, desc: '그림자 길드의 칼날. 치명타와 회피로 싸웁니다.' },
+    mods: { hp: 0.95 }, crit: 0.10, evade: 0.08, autoStats: { agi: 3, dex: 1, vit: 1 }, sprite: 'hero', art: { base: 'cls_rogue', face: 'face_rogue', card: 'card_rogue', kv: 'kv_rogue' }, desc: '검은 단발에 진홍빛 눈의 그림자 칼날. 쌍단검 연타와 회피로 싸웁니다.' },
 });
 export const CLASS_IDS = Object.keys(CLASSES);
 export const STAT_KEYS = ['str', 'int', 'dex', 'agi', 'vit', 'wis'];
@@ -108,32 +108,32 @@ export const SKILLS = Object.freeze({
   w_whirl: { id: 'w_whirl', cls: 'warrior', name: '회전베기', icon: 'K33', kind: 'damage', coef: 1.6, cd: 6, target: 'all', desc: '대검을 휘둘러 모든 적을 벱니다.', unlock: { tier: 2, branch: 'berserker' } },
   starSlash: { id: 'starSlash', cls: 'warrior', name: '별빛 참격', icon: 'S5', kind: 'ultimate', coef: 6.0, target: 'all', stunSec: 2, desc: '궁극기. 모든 적에게 별빛 참격(대지 분쇄)을 날리고 2초 기절시킵니다. 게이지 100 소모.', unlock: { level: 1 } },
   // mage
-  m_fireball: { id: 'm_fireball', cls: 'mage', name: '파이어볼', icon: 'K00', kind: 'damage', coef: 2.0, cd: 2, target: 'single', desc: '불덩이를 던집니다.', unlock: { level: 1 } },
+  m_fireball: { id: 'm_fireball', cls: 'mage', name: '파이어볼', icon: 'G00', kind: 'damage', coef: 2.0, cd: 2, target: 'single', desc: '불덩이를 던집니다.', unlock: { level: 1 } },
   m_frost: { id: 'm_frost', cls: 'mage', name: '서리 고리', icon: 'K01', kind: 'damage', coef: 1.4, cd: 8, target: 'all', slow: { mul: 0.6, sec: 3 }, desc: '모든 적을 얼려 3초간 공격을 늦춥니다.', unlock: { level: 3 } },
-  m_shield: { id: 'm_shield', cls: 'mage', name: '마나 실드', icon: 'K02', kind: 'shield', cd: 25, shield: { pct: 0.25, sec: 10 }, desc: '10초간 최대 HP 25%만큼 피해를 흡수합니다.', unlock: { level: 6 } },
-  m_chain: { id: 'm_chain', cls: 'mage', name: '연쇄 번개', icon: 'K03', kind: 'damage', coef: 1.8, cd: 7, target: 'all', desc: '번개가 모든 적을 연달아 칩니다.', unlock: { tier: 1, branch: 'wizard' } },
-  m_curse: { id: 'm_curse', cls: 'mage', name: '저주', icon: 'K04', kind: 'damage', coef: 0.6, cd: 8, target: 'single', dot: { coefPerSec: 0.8, sec: 6 }, desc: '6초간 초당 피해를 주는 저주를 겁니다.', unlock: { tier: 1, branch: 'warlock' } },
-  m_blizzard: { id: 'm_blizzard', cls: 'mage', name: '눈보라', icon: 'K05', kind: 'damage', coef: 2.2, cd: 10, target: 'all', slow: { mul: 0.5, sec: 4 }, desc: '눈보라로 모든 적을 베고 4초간 크게 늦춥니다.', unlock: { tier: 2, branch: 'wizard' } },
-  m_drain: { id: 'm_drain', cls: 'mage', name: '생명 흡수', icon: 'K06', kind: 'damage', coef: 2.4, cd: 9, target: 'single', heal: 0.1, desc: '피해를 주고 최대 HP 10%를 회복합니다.', unlock: { tier: 2, branch: 'warlock' } },
-  m_meteor: { id: 'm_meteor', cls: 'mage', name: '메테오', icon: 'K07', kind: 'ultimate', coef: 3.5, hits: 3, target: 'all', desc: '궁극기. 운석 3개가 모든 적에게 떨어집니다.', unlock: { level: 1 } },
+  m_shield: { id: 'm_shield', cls: 'mage', name: '마나 실드', icon: 'G06', kind: 'shield', cd: 25, shield: { pct: 0.25, sec: 10 }, desc: '10초간 최대 HP 25%만큼 피해를 흡수합니다.', unlock: { level: 6 } },
+  m_chain: { id: 'm_chain', cls: 'mage', name: '연쇄 번개', icon: 'G04', kind: 'damage', coef: 1.8, cd: 7, target: 'all', desc: '번개가 모든 적을 연달아 칩니다.', unlock: { tier: 1, branch: 'wizard' } },
+  m_curse: { id: 'm_curse', cls: 'mage', name: '저주', icon: 'G07', kind: 'damage', coef: 0.6, cd: 8, target: 'single', dot: { coefPerSec: 0.8, sec: 6 }, desc: '6초간 초당 피해를 주는 저주를 겁니다.', unlock: { tier: 1, branch: 'warlock' } },
+  m_blizzard: { id: 'm_blizzard', cls: 'mage', name: '눈보라', icon: 'G02', kind: 'damage', coef: 2.2, cd: 10, target: 'all', slow: { mul: 0.5, sec: 4 }, desc: '눈보라로 모든 적을 베고 4초간 크게 늦춥니다.', unlock: { tier: 2, branch: 'wizard' } },
+  m_drain: { id: 'm_drain', cls: 'mage', name: '생명 흡수', icon: 'G05', kind: 'damage', coef: 2.4, cd: 9, target: 'single', heal: 0.1, desc: '피해를 주고 최대 HP 10%를 회복합니다.', unlock: { tier: 2, branch: 'warlock' } },
+  m_meteor: { id: 'm_meteor', cls: 'mage', name: '메테오', icon: 'G01', kind: 'ultimate', coef: 3.5, hits: 3, target: 'all', desc: '궁극기. 운석 3개가 모든 적에게 떨어집니다.', unlock: { level: 1 } },
   // archer
-  a_aim: { id: 'a_aim', cls: 'archer', name: '정조준', icon: 'K08', kind: 'damage', coef: 2.2, cd: 3, target: 'single', desc: '숨을 고르고 정확히 쏩니다.', unlock: { level: 1 } },
-  a_multi: { id: 'a_multi', cls: 'archer', name: '멀티샷', icon: 'K09', kind: 'damage', coef: 0.8, hits: 5, cd: 5, target: 'spread', desc: '화살 5발을 적들에게 나눠 쏩니다.', unlock: { level: 3 } },
+  a_aim: { id: 'a_aim', cls: 'archer', name: '정조준', icon: 'G12', kind: 'damage', coef: 2.2, cd: 3, target: 'single', desc: '숨을 고르고 정확히 쏩니다.', unlock: { level: 1 } },
+  a_multi: { id: 'a_multi', cls: 'archer', name: '멀티샷', icon: 'G09', kind: 'damage', coef: 0.8, hits: 5, cd: 5, target: 'spread', desc: '화살 5발을 적들에게 나눠 쏩니다.', unlock: { level: 3 } },
   a_leap: { id: 'a_leap', cls: 'archer', name: '후방 도약', icon: 'K10', kind: 'evade', cd: 10, evade: { sec: 2 }, desc: '뒤로 뛰어 2초간 모든 공격을 피합니다.', unlock: { level: 6 } },
-  a_pierce: { id: 'a_pierce', cls: 'archer', name: '관통 사격', icon: 'K11', kind: 'damage', coef: 2.0, cd: 6, target: 'all', desc: '일렬로 선 적을 모두 꿰뚫습니다.', unlock: { tier: 1, branch: 'ranger' } },
-  a_beast: { id: 'a_beast', cls: 'archer', name: '야수 소환', icon: 'K12', kind: 'damage', coef: 0.5, cd: 10, target: 'single', dot: { coefPerSec: 1.0, sec: 6 }, desc: '늑대를 불러 6초간 물어뜯게 합니다.', unlock: { tier: 1, branch: 'hunter' } },
-  a_snipe: { id: 'a_snipe', cls: 'archer', name: '저격', icon: 'K13', kind: 'damage', coef: 4.5, cd: 12, target: 'single', critBonus: 0.3, desc: '치명타 확률 +30%의 강력한 한 발.', unlock: { tier: 2, branch: 'ranger' } },
+  a_pierce: { id: 'a_pierce', cls: 'archer', name: '관통 사격', icon: 'G08', kind: 'damage', coef: 2.0, cd: 6, target: 'all', desc: '일렬로 선 적을 모두 꿰뚫습니다.', unlock: { tier: 1, branch: 'ranger' } },
+  a_beast: { id: 'a_beast', cls: 'archer', name: '야수 소환', icon: 'G13', kind: 'damage', coef: 0.5, cd: 10, target: 'single', dot: { coefPerSec: 1.0, sec: 6 }, desc: '늑대를 불러 6초간 물어뜯게 합니다.', unlock: { tier: 1, branch: 'hunter' } },
+  a_snipe: { id: 'a_snipe', cls: 'archer', name: '저격', icon: 'G11', kind: 'damage', coef: 4.5, cd: 12, target: 'single', critBonus: 0.3, desc: '치명타 확률 +30%의 강력한 한 발.', unlock: { tier: 2, branch: 'ranger' } },
   a_pack: { id: 'a_pack', cls: 'archer', name: '무리 사냥', icon: 'K14', kind: 'damage', coef: 1.5, hits: 2, cd: 9, target: 'all', desc: '야수 무리가 모든 적을 두 번 공격합니다.', unlock: { tier: 2, branch: 'hunter' } },
   a_rain: { id: 'a_rain', cls: 'archer', name: '화살비', icon: 'K15', kind: 'ultimate', coef: 1.5, hits: 5, target: 'all', desc: '궁극기. 하늘에서 화살비가 5번 쏟아집니다.', unlock: { level: 1 } },
   // rogue
-  r_stab: { id: 'r_stab', cls: 'rogue', name: '급소 찌르기', icon: 'K16', kind: 'damage', coef: 1.6, cd: 2, target: 'single', critBonus: 0.3, desc: '치명타 확률 +30%로 급소를 찌릅니다.', unlock: { level: 1 } },
-  r_poison: { id: 'r_poison', cls: 'rogue', name: '독칼', icon: 'K17', kind: 'damage', coef: 0.6, cd: 7, target: 'single', dot: { coefPerSec: 0.5, sec: 6 }, desc: '6초간 독 피해를 줍니다.', unlock: { level: 3 } },
-  r_shadow: { id: 'r_shadow', cls: 'rogue', name: '그림자 걸음', icon: 'K18', kind: 'evade', cd: 15, evade: { sec: 2, nextCrit: true }, desc: '2초간 은신해 모든 공격을 피하고, 다음 공격은 치명타가 됩니다.', unlock: { level: 6 } },
-  r_execute: { id: 'r_execute', cls: 'rogue', name: '처형', icon: 'K19', kind: 'damage', coef: 3.0, cd: 8, target: 'single', executeBelow: 0.3, desc: 'HP 30% 이하의 적에게 피해가 두 배입니다.', unlock: { tier: 1, branch: 'assassin' } },
-  r_smoke: { id: 'r_smoke', cls: 'rogue', name: '연막', icon: 'K20', kind: 'damage', coef: 1.0, cd: 12, target: 'all', evadeSec: 3, desc: '연막으로 모든 적을 베고 3초간 공격을 피합니다.', unlock: { tier: 1, branch: 'trickster' } },
-  r_shadowstrike: { id: 'r_shadowstrike', cls: 'rogue', name: '그림자 강습', icon: 'K21', kind: 'damage', coef: 2.0, hits: 3, cd: 9, target: 'single', desc: '세 번 연달아 벱니다.', unlock: { tier: 2, branch: 'assassin' } },
-  r_illusion: { id: 'r_illusion', cls: 'rogue', name: '환영 분신', icon: 'K22', kind: 'damage', coef: 1.4, hits: 2, cd: 10, target: 'all', evadeSec: 1, desc: '분신과 함께 모든 적을 두 번 공격합니다.', unlock: { tier: 2, branch: 'trickster' } },
-  r_blades: { id: 'r_blades', cls: 'rogue', name: '천 개의 칼날', icon: 'K23', kind: 'ultimate', coef: 0.9, hits: 12, target: 'single', desc: '궁극기. 칼날 12번으로 한 적을 몰아칩니다.', unlock: { level: 1 } },
+  r_stab: { id: 'r_stab', cls: 'rogue', name: '급소 찌르기', icon: 'G23', kind: 'damage', coef: 1.6, cd: 2, target: 'single', critBonus: 0.3, desc: '치명타 확률 +30%로 급소를 찌릅니다.', unlock: { level: 1 } },
+  r_poison: { id: 'r_poison', cls: 'rogue', name: '독칼', icon: 'G17', kind: 'damage', coef: 0.6, cd: 7, target: 'single', dot: { coefPerSec: 0.5, sec: 6 }, desc: '6초간 독 피해를 줍니다.', unlock: { level: 3 } },
+  r_shadow: { id: 'r_shadow', cls: 'rogue', name: '그림자 걸음', icon: 'G18', kind: 'evade', cd: 15, evade: { sec: 2, nextCrit: true }, desc: '2초간 은신해 모든 공격을 피하고, 다음 공격은 치명타가 됩니다.', unlock: { level: 6 } },
+  r_execute: { id: 'r_execute', cls: 'rogue', name: '처형', icon: 'G20', kind: 'damage', coef: 3.0, cd: 8, target: 'single', executeBelow: 0.3, desc: 'HP 30% 이하의 적에게 피해가 두 배입니다.', unlock: { tier: 1, branch: 'assassin' } },
+  r_smoke: { id: 'r_smoke', cls: 'rogue', name: '연막', icon: 'G22', kind: 'damage', coef: 1.0, cd: 12, target: 'all', evadeSec: 3, desc: '연막으로 모든 적을 베고 3초간 공격을 피합니다.', unlock: { tier: 1, branch: 'trickster' } },
+  r_shadowstrike: { id: 'r_shadowstrike', cls: 'rogue', name: '그림자 강습', icon: 'G16', kind: 'damage', coef: 2.0, hits: 3, cd: 9, target: 'single', desc: '세 번 연달아 벱니다.', unlock: { tier: 2, branch: 'assassin' } },
+  r_illusion: { id: 'r_illusion', cls: 'rogue', name: '환영 분신', icon: 'G21', kind: 'damage', coef: 1.4, hits: 2, cd: 10, target: 'all', evadeSec: 1, desc: '분신과 함께 모든 적을 두 번 공격합니다.', unlock: { tier: 2, branch: 'trickster' } },
+  r_blades: { id: 'r_blades', cls: 'rogue', name: '천 개의 칼날', icon: 'G19', kind: 'ultimate', coef: 0.9, hits: 12, target: 'single', desc: '궁극기. 칼날 12번으로 한 적을 몰아칩니다.', unlock: { level: 1 } },
 });
 
 export const CLASS_SKILLS = Object.freeze({
@@ -153,17 +153,17 @@ const BRANCH_DEFS = {
   berserker: { id: 'berserker', cls: 'warrior', names: ['진홍의 집행자', '워로드', '블러드 로드'], role: '대검 · 공격', weapon: '양손 대검', finalUlt: '피의 폭풍',
     tiers: [{ atk: 0.12 }, { atk: 0.08, crit: 0.03 }, { atk: 0.12, hp: 0.05 }], skills: ['berserkStrike', 'w_whirl'],
     desc: '검은 금속과 비대칭 붉은 코트. 체력이 낮을수록 강해지는 공격형입니다.' },
-  wizard: { id: 'wizard', cls: 'mage', names: ['위자드', '아크메이지', '엘리멘탈 마스터'], role: '원소 · 광역', weapon: '별 지팡이', finalUlt: '원소 대폭발',
+  wizard: { id: 'wizard', cls: 'mage', names: ['위자드', '아크메이지', '엘리멘탈 마스터'], role: '원소 · 광역', weapon: '천구 지팡이', finalUlt: '원소 대폭발',
     tiers: [{ atk: 0.1 }, { atk: 0.08, cdr: 0.05 }, { atk: 0.12 }], skills: ['m_chain', 'm_blizzard'], desc: '원소를 다루는 정통 마도사. 광역 피해와 둔화.' },
-  warlock: { id: 'warlock', cls: 'mage', names: ['워록', '네크로맨서', '리치 로드'], role: '암흑 · 지속 피해', weapon: '해골 홀', finalUlt: '죽음의 군단',
+  warlock: { id: 'warlock', cls: 'mage', names: ['워록', '네크로맨서', '리치 로드'], role: '암흑 · 지속 피해', weapon: '심연의 마도서', finalUlt: '죽음의 군단',
     tiers: [{ atk: 0.06, hp: 0.08 }, { atk: 0.08, hp: 0.05 }, { atk: 0.1, hp: 0.08 }], skills: ['m_curse', 'm_drain'], desc: '저주와 흡수로 오래 버티며 싸웁니다.' },
   ranger: { id: 'ranger', cls: 'archer', names: ['레인저', '스나이퍼', '호크아이'], role: '정밀 · 치명', weapon: '장궁', finalUlt: '매의 눈',
     tiers: [{ crit: 0.05, atk: 0.05 }, { critDmg: 0.2 }, { atk: 0.1, crit: 0.05 }], skills: ['a_pierce', 'a_snipe'], desc: '한 발 한 발이 치명적인 명사수.' },
-  hunter: { id: 'hunter', cls: 'archer', names: ['헌터', '비스트마스터', '와일드 킹'], role: '야성 · 소환', weapon: '복합궁', finalUlt: '야수의 왕',
+  hunter: { id: 'hunter', cls: 'archer', names: ['헌터', '비스트마스터', '와일드 킹'], role: '야성 · 소환', weapon: '가시나무 장궁', finalUlt: '야수의 왕',
     tiers: [{ atk: 0.06, hp: 0.06 }, { atk: 0.08, aspd: 0.05 }, { atk: 0.1, hp: 0.08 }], skills: ['a_beast', 'a_pack'], desc: '야수와 함께 사냥합니다.' },
   assassin: { id: 'assassin', cls: 'rogue', names: ['어쌔신', '나이트블레이드', '섀도우'], role: '암살 · 폭발', weapon: '쌍단검', finalUlt: '그림자 처형',
     tiers: [{ atk: 0.1 }, { critDmg: 0.25 }, { atk: 0.12, crit: 0.03 }], skills: ['r_execute', 'r_shadowstrike'], desc: '약한 적을 순식간에 끝냅니다.' },
-  trickster: { id: 'trickster', cls: 'rogue', names: ['트릭스터', '팬텀', '페이트위버'], role: '기교 · 회피', weapon: '곡도', finalUlt: '운명의 실',
+  trickster: { id: 'trickster', cls: 'rogue', names: ['트릭스터', '팬텀', '페이트위버'], role: '기교 · 회피', weapon: '단검과 카드', finalUlt: '운명의 실',
     tiers: [{ evade: 0.05, atk: 0.05 }, { evade: 0.04, aspd: 0.05 }, { atk: 0.1, evade: 0.04 }], skills: ['r_smoke', 'r_illusion'], desc: '회피와 환영으로 상대를 농락합니다.' },
 };
 for (const b of Object.values(BRANCH_DEFS)) { b.name = b.names[0]; b.passive = b.tiers[0]; }   // v3 fields
@@ -201,6 +201,12 @@ export const ITEM_LOOKS = Object.freeze({
   boots: [{ icon: 'I28', name: '가죽 장화' }, { icon: 'I29', name: '금장 각반' }, { icon: 'I30', name: '흑장미 각반' }, { icon: 'I31', name: '진홍 룬 장화' }],
   necklace: NECKLACE_LOOKS,
   ring: [{ icon: 'I32', name: '은 반지' }, { icon: 'I33', name: '자수정 반지' }, { icon: 'I34', name: '장미별 반지' }, { icon: 'I35', name: '진홍 룬 반지' }],
+});
+// Class weapons (handoff v4 class_weapons_9): common, uncommon, rare+ looks per class.
+export const CLASS_WEAPON_LOOKS = Object.freeze({
+  mage: [{ icon: 'I40', name: '낡은 마도서' }, { icon: 'I41', name: '성좌의 마도서' }, { icon: 'I42', name: '심연의 마도서' }],
+  archer: [{ icon: 'I43', name: '사냥꾼의 활' }, { icon: 'I44', name: '은월의 활' }, { icon: 'I45', name: '가시나무 장궁' }],
+  rogue: [{ icon: 'I46', name: '강철 쌍단검' }, { icon: 'I47', name: '금장 쌍단검' }, { icon: 'I48', name: '적월 쌍단검' }],
 });
 export const SLOT_NAMES = Object.freeze({ weapon: '무기', helmet: '투구', armor: '갑옷', gloves: '장갑', boots: '신발', necklace: '목걸이', ring: '반지', ring1: '반지 1', ring2: '반지 2', accessory: '목걸이' });
 export const equipSlotFor = (itemSlot) => (itemSlot === 'ring' ? ['ring1', 'ring2'] : [itemSlot]);

@@ -1,5 +1,5 @@
 {
- "startedAt": "2026-11-05T04:05:53.264Z",
+ "startedAt": "2026-11-05T04:48:18.738Z",
  "base": "http://127.0.0.1:8141/",
  "viewports": [
   [
@@ -2477,8 +2477,8 @@
    "name": "reload keeps the same pending claim",
    "pass": true,
    "detail": {
-    "first": "claim_mw30y6my_q3azwv",
-    "after": "claim_mw30y6my_q3azwv"
+    "first": "claim_mw32grfj_1oui92",
+    "after": "claim_mw32grfj_1oui92"
    }
   },
   {
@@ -2550,7 +2550,7 @@
     "k0": 1,
     "k1": {
      "kills": 1,
-     "acc": 16.699999999999932,
+     "acc": 0.10000000000002274,
      "mode": "FARM"
     }
    }
@@ -2589,7 +2589,7 @@
   }
  ],
  "errors": [],
- "finishedAt": "2026-11-05T04:07:32.474Z",
+ "finishedAt": "2026-11-05T04:49:59.794Z",
  "summary": {
   "screenChecks": 114,
   "screenPass": 114,
