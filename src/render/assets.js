@@ -40,15 +40,21 @@ export function promoKey(branch, tier = 1) {
   }
   return null;
 }
-// Tier-1 promoted forms with a GPT A01 pose sheet (tools/extract_gpt_a01.py) animate
-// with 8 key poses like the base forms. Tiers 2/3 keep their single figure.
+// Promoted forms animate with 8 key poses like the base forms: tier 1 from GPT A01
+// (tools/extract_gpt_a01.py → pose_promo_<branch>_<pose>), tiers 2/3 from GPT A02
+// (tools/extract_gpt_a02.py → pose_promo_<branch>_t<tier>_<pose>). A form without a
+// pose sheet falls back to its single figure + tweens.
 const POSE_NAMES = ['idle', 'step', 'anticipation', 'thrust', 'recovery', 'hit', 'cast', 'victory'];
 export function promoPoses(branch, tier = 1) {
-  if (!branch || !meta || promoKey(branch, tier) !== 'promo_' + branch) return null;
+  if (!branch || !meta) return null;
+  const k = promoKey(branch, tier);
+  if (!k) return null;
+  const t = k === 'promo_' + branch ? 1 : Number(k.slice(-1));
+  const pre = t === 1 ? `pose_promo_${branch}_` : `pose_promo_${branch}_t${t}_`;
   const H = meta.hero;
-  if (!H[`pose_promo_${branch}_idle`]) return null;
+  if (!H[pre + 'idle']) return null;
   const out = { promo: null };
-  for (const n of POSE_NAMES) out[n] = H[`pose_promo_${branch}_${n}`] || H[`pose_promo_${branch}_idle`];
+  for (const n of POSE_NAMES) out[n] = H[pre + n] || H[pre + 'idle'];
   return out;
 }
 export function heroFrames(branch, cls = 'warrior', tier = 1) {

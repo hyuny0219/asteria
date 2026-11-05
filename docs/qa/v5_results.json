@@ -30,9 +30,9 @@
   "pass": true,
   "info": {
    "choices": [
-    "b_berserk",
-    "b_aspd",
-    "b_def"
+    "b_evade",
+    "b_heal",
+    "b_cdmg"
    ]
   }
  },
@@ -82,9 +82,9 @@
   "pass": true,
   "info": {
    "choices": [
-    "b_regen",
-    "b_heal",
-    "b_greed"
+    "b_cdr",
+    "b_cdmg",
+    "b_heal"
    ]
   }
  },

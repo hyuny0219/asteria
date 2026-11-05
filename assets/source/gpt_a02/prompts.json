@@ -1,0 +1,162 @@
+[
+  {
+    "id": "paladin",
+    "name": "팔라딘",
+    "parent": "knight1",
+    "tier": 2,
+    "title": "백은 성벽",
+    "design": "Pearl white plate armor with a tall cathedral kite shield, cobalt inner cape, gold rose engravings, straight silver longsword; disciplined shield thrust.",
+    "ref": "/workspace/scratch/86afcc242fa2/Asteria_A01/poses_knight1.png",
+    "prompt": "Use case: stylized-concept. Game production key-pose atlas, landscape exactly1536x1024, true transparent PNG. FOUR columns TWO rows, each invisible cell384x512. EIGHT small widely spaced FULL BODY figures of SAME adult female character in SAME new promoted costume, all look RIGHT. Match reference identity/face/body proportion/art style; design new upgraded costume described below. Nonpixel detailed dark fantasy semi-realistic anime. Opaque battle clothing, no increased exposure. Grid reading order idle, walking step, attack windup, attack contact, recovery, hit recoil, skill cast, victory. HUGE EMPTY PADDING: figures only about280px tall, each figure INCLUDING weapon effects fits inside local cell x60..324,y110..420. Feet aligned y410. Keep scale constant across poses. All sword/bow tips/hair/cloth INSIDE cell, foreshorten extended weapon. Real alpha0 empty space, no background color, no floor/shadow, no ambient glow or haze. Only sharp tiny attached magic accents. No text, labels, borders, watermark. Exactly8 figures. Reference sheet is identity/style only, new attire must be distinct.\nCharacter: Serin28, silver lavender long hair, amber eyes. New promotion: 팔라딘, tier2. DESIGN: Pearl white plate armor with a tall cathedral kite shield, cobalt inner cape, gold rose engravings, straight silver longsword; disciplined shield thrust."
+  },
+  {
+    "id": "crusader",
+    "name": "크루세이더",
+    "parent": "knight1",
+    "tier": 3,
+    "title": "서약의 성기사",
+    "design": "Ivory gold articulated full armor, segmented rose-window shield with three angular panels, long white split mantle, narrow radiant cruciform sword. Sculptural shoulder fins, no wings. Regal precise shield thrust.",
+    "ref": "/workspace/scratch/86afcc242fa2/Asteria_A01/poses_knight1.png",
+    "prompt": "Use case: stylized-concept. Game production key-pose atlas, landscape exactly1536x1024, true transparent PNG. FOUR columns TWO rows, each invisible cell384x512. EIGHT small widely spaced FULL BODY figures of SAME adult female character in SAME new promoted costume, all look RIGHT. Match reference identity/face/body proportion/art style; design new upgraded costume described below. Nonpixel detailed dark fantasy semi-realistic anime. Opaque battle clothing, no increased exposure. Grid reading order idle, walking step, attack windup, attack contact, recovery, hit recoil, skill cast, victory. HUGE EMPTY PADDING: figures only about280px tall, each figure INCLUDING weapon effects fits inside local cell x60..324,y110..420. Feet aligned y410. Keep scale constant across poses. All sword/bow tips/hair/cloth INSIDE cell, foreshorten extended weapon. Real alpha0 empty space, no background color, no floor/shadow, no ambient glow or haze. Only sharp tiny attached magic accents. No text, labels, borders, watermark. Exactly8 figures. Reference sheet is identity/style only, new attire must be distinct.\nCharacter: Serin28, silver lavender long hair, amber eyes. New promotion: 크루세이더, tier3. DESIGN: Ivory gold articulated full armor, segmented rose-window shield with three angular panels, long white split mantle, narrow radiant cruciform sword. Sculptural shoulder fins, no wings. Regal precise shield thrust."
+  },
+  {
+    "id": "warlord",
+    "name": "워로드",
+    "parent": "berserker1",
+    "tier": 2,
+    "title": "전장의 지휘관",
+    "design": "Gunmetal heavy pauldrons and armored waist, wine red military split cape, riveted gauntlets, broad rectangular twohand greatsword with deep crimson central groove. Powerful overhead downslash.",
+    "ref": "/workspace/scratch/86afcc242fa2/Asteria_A01/poses_berserker1.png",
+    "prompt": "Use case: stylized-concept. Game production key-pose atlas, landscape exactly1536x1024, true transparent PNG. FOUR columns TWO rows, each invisible cell384x512. EIGHT small widely spaced FULL BODY figures of SAME adult female character in SAME new promoted costume, all look RIGHT. Match reference identity/face/body proportion/art style; design new upgraded costume described below. Nonpixel detailed dark fantasy semi-realistic anime. Opaque battle clothing, no increased exposure. Grid reading order idle, walking step, attack windup, attack contact, recovery, hit recoil, skill cast, victory. HUGE EMPTY PADDING: figures only about280px tall, each figure INCLUDING weapon effects fits inside local cell x60..324,y110..420. Feet aligned y410. Keep scale constant across poses. All sword/bow tips/hair/cloth INSIDE cell, foreshorten extended weapon. Real alpha0 empty space, no background color, no floor/shadow, no ambient glow or haze. Only sharp tiny attached magic accents. No text, labels, borders, watermark. Exactly8 figures. Reference sheet is identity/style only, new attire must be distinct.\nCharacter: Serin28, silver lavender long hair, amber eyes. New promotion: 워로드, tier2. DESIGN: Gunmetal heavy pauldrons and armored waist, wine red military split cape, riveted gauntlets, broad rectangular twohand greatsword with deep crimson central groove. Powerful overhead downslash."
+  },
+  {
+    "id": "bloodlord",
+    "name": "블러드 로드",
+    "parent": "berserker1",
+    "tier": 3,
+    "title": "진홍의 군주",
+    "design": "Black obsidian layered plate with ruby inset ribs, serrated red lined split mantle, massive angular obsidian greatsword with ruby fissures. Crownlike angular collar not actual crown; controlled deadly overhead slash, no gore.",
+    "ref": "/workspace/scratch/86afcc242fa2/Asteria_A01/poses_berserker1.png",
+    "prompt": "Use case: stylized-concept. Game production key-pose atlas, landscape exactly1536x1024, true transparent PNG. FOUR columns TWO rows, each invisible cell384x512. EIGHT small widely spaced FULL BODY figures of SAME adult female character in SAME new promoted costume, all look RIGHT. Match reference identity/face/body proportion/art style; design new upgraded costume described below. Nonpixel detailed dark fantasy semi-realistic anime. Opaque battle clothing, no increased exposure. Grid reading order idle, walking step, attack windup, attack contact, recovery, hit recoil, skill cast, victory. HUGE EMPTY PADDING: figures only about280px tall, each figure INCLUDING weapon effects fits inside local cell x60..324,y110..420. Feet aligned y410. Keep scale constant across poses. All sword/bow tips/hair/cloth INSIDE cell, foreshorten extended weapon. Real alpha0 empty space, no background color, no floor/shadow, no ambient glow or haze. Only sharp tiny attached magic accents. No text, labels, borders, watermark. Exactly8 figures. Reference sheet is identity/style only, new attire must be distinct.\nCharacter: Serin28, silver lavender long hair, amber eyes. New promotion: 블러드 로드, tier3. DESIGN: Black obsidian layered plate with ruby inset ribs, serrated red lined split mantle, massive angular obsidian greatsword with ruby fissures. Crownlike angular collar not actual crown; controlled deadly overhead slash, no gore."
+  },
+  {
+    "id": "archmage",
+    "name": "아크메이지",
+    "parent": "wizard1",
+    "tier": 2,
+    "title": "천구의 기록자",
+    "design": "Ivory navy layered high-collar scholarly battle robe, gold orbital shoulder clasps, rigid two-tailed cape, large floating open grimoire with mechanical gold astrolabe spine. Cast gold starbolt right.",
+    "ref": "/workspace/scratch/86afcc242fa2/Asteria_A01/poses_wizard1.png",
+    "prompt": "Use case: stylized-concept. Game production key-pose atlas, landscape exactly1536x1024, true transparent PNG. FOUR columns TWO rows, each invisible cell384x512. EIGHT small widely spaced FULL BODY figures of SAME adult female character in SAME new promoted costume, all look RIGHT. Match reference identity/face/body proportion/art style; design new upgraded costume described below. Nonpixel detailed dark fantasy semi-realistic anime. Opaque battle clothing, no increased exposure. Grid reading order idle, walking step, attack windup, attack contact, recovery, hit recoil, skill cast, victory. HUGE EMPTY PADDING: figures only about280px tall, each figure INCLUDING weapon effects fits inside local cell x60..324,y110..420. Feet aligned y410. Keep scale constant across poses. All sword/bow tips/hair/cloth INSIDE cell, foreshorten extended weapon. Real alpha0 empty space, no background color, no floor/shadow, no ambient glow or haze. Only sharp tiny attached magic accents. No text, labels, borders, watermark. Exactly8 figures. Reference sheet is identity/style only, new attire must be distinct.\nCharacter: Elena30, long deep violet hair, blue eyes. New promotion: 아크메이지, tier2. DESIGN: Ivory navy layered high-collar scholarly battle robe, gold orbital shoulder clasps, rigid two-tailed cape, large floating open grimoire with mechanical gold astrolabe spine. Cast gold starbolt right."
+  },
+  {
+    "id": "elementalmaster",
+    "name": "엘리멘탈 마스터",
+    "parent": "wizard1",
+    "tier": 3,
+    "title": "삼원소의 조율자",
+    "design": "White platinum navy sculptural robe, three differently shaped small crystal clasps amber cyan violet, segmented floating book cover forming triangular frame attached around open grimoire, clean three-element wrist sigils. Starbolt attack, small tri-element skill, no ambient halo.",
+    "ref": "/workspace/scratch/86afcc242fa2/Asteria_A01/poses_wizard1.png",
+    "prompt": "Use case: stylized-concept. Game production key-pose atlas, landscape exactly1536x1024, true transparent PNG. FOUR columns TWO rows, each invisible cell384x512. EIGHT small widely spaced FULL BODY figures of SAME adult female character in SAME new promoted costume, all look RIGHT. Match reference identity/face/body proportion/art style; design new upgraded costume described below. Nonpixel detailed dark fantasy semi-realistic anime. Opaque battle clothing, no increased exposure. Grid reading order idle, walking step, attack windup, attack contact, recovery, hit recoil, skill cast, victory. HUGE EMPTY PADDING: figures only about280px tall, each figure INCLUDING weapon effects fits inside local cell x60..324,y110..420. Feet aligned y410. Keep scale constant across poses. All sword/bow tips/hair/cloth INSIDE cell, foreshorten extended weapon. Real alpha0 empty space, no background color, no floor/shadow, no ambient glow or haze. Only sharp tiny attached magic accents. No text, labels, borders, watermark. Exactly8 figures. Reference sheet is identity/style only, new attire must be distinct.\nCharacter: Elena30, long deep violet hair, blue eyes. New promotion: 엘리멘탈 마스터, tier3. DESIGN: White platinum navy sculptural robe, three differently shaped small crystal clasps amber cyan violet, segmented floating book cover forming triangular frame attached around open grimoire, clean three-element wrist sigils. Starbolt attack, small tri-element skill, no ambient halo."
+  },
+  {
+    "id": "necromancer",
+    "name": "네크로맨서",
+    "parent": "warlock1",
+    "tier": 2,
+    "title": "망자의 서기관",
+    "design": "Black plum high-collar longcoat robe, ivory bone-shaped shoulder armor and clasp, emerald sealed black chained grimoire, bone filigree forearm guards. Green abyss bolts, elegant living adult face unchanged.",
+    "ref": "/workspace/scratch/86afcc242fa2/Asteria_A01/poses_warlock1.png",
+    "prompt": "Use case: stylized-concept. Game production key-pose atlas, landscape exactly1536x1024, true transparent PNG. FOUR columns TWO rows, each invisible cell384x512. EIGHT small widely spaced FULL BODY figures of SAME adult female character in SAME new promoted costume, all look RIGHT. Match reference identity/face/body proportion/art style; design new upgraded costume described below. Nonpixel detailed dark fantasy semi-realistic anime. Opaque battle clothing, no increased exposure. Grid reading order idle, walking step, attack windup, attack contact, recovery, hit recoil, skill cast, victory. HUGE EMPTY PADDING: figures only about280px tall, each figure INCLUDING weapon effects fits inside local cell x60..324,y110..420. Feet aligned y410. Keep scale constant across poses. All sword/bow tips/hair/cloth INSIDE cell, foreshorten extended weapon. Real alpha0 empty space, no background color, no floor/shadow, no ambient glow or haze. Only sharp tiny attached magic accents. No text, labels, borders, watermark. Exactly8 figures. Reference sheet is identity/style only, new attire must be distinct.\nCharacter: Elena30, long deep violet hair, blue eyes. New promotion: 네크로맨서, tier2. DESIGN: Black plum high-collar longcoat robe, ivory bone-shaped shoulder armor and clasp, emerald sealed black chained grimoire, bone filigree forearm guards. Green abyss bolts, elegant living adult face unchanged."
+  },
+  {
+    "id": "lichlord",
+    "name": "리치 로드",
+    "parent": "warlock1",
+    "tier": 3,
+    "title": "불멸의 계약자",
+    "design": "Obsidian and pale bone plated regal robe, emerald crystal sternum clasp, angular skeletal collar, three rigid segmented coattails, floating chained black codex with emerald lock. Same living adult female human face, no skull face. Green spell right.",
+    "ref": "/workspace/scratch/86afcc242fa2/Asteria_A01/poses_warlock1.png",
+    "prompt": "Use case: stylized-concept. Game production key-pose atlas, landscape exactly1536x1024, true transparent PNG. FOUR columns TWO rows, each invisible cell384x512. EIGHT small widely spaced FULL BODY figures of SAME adult female character in SAME new promoted costume, all look RIGHT. Match reference identity/face/body proportion/art style; design new upgraded costume described below. Nonpixel detailed dark fantasy semi-realistic anime. Opaque battle clothing, no increased exposure. Grid reading order idle, walking step, attack windup, attack contact, recovery, hit recoil, skill cast, victory. HUGE EMPTY PADDING: figures only about280px tall, each figure INCLUDING weapon effects fits inside local cell x60..324,y110..420. Feet aligned y410. Keep scale constant across poses. All sword/bow tips/hair/cloth INSIDE cell, foreshorten extended weapon. Real alpha0 empty space, no background color, no floor/shadow, no ambient glow or haze. Only sharp tiny attached magic accents. No text, labels, borders, watermark. Exactly8 figures. Reference sheet is identity/style only, new attire must be distinct.\nCharacter: Elena30, long deep violet hair, blue eyes. New promotion: 리치 로드, tier3. DESIGN: Obsidian and pale bone plated regal robe, emerald crystal sternum clasp, angular skeletal collar, three rigid segmented coattails, floating chained black codex with emerald lock. Same living adult female human face, no skull face. Green spell right."
+  },
+  {
+    "id": "sniper",
+    "name": "스나이퍼",
+    "parent": "ranger1",
+    "tier": 2,
+    "title": "은월의 저격수",
+    "design": "Deep green fitted long marksman coat, silver precision arm brace, narrow segmented shoulder armor, slim tall recurved silver composite bow with mechanical sight. Calm rightward bow draw and release.",
+    "ref": "/workspace/scratch/86afcc242fa2/Asteria_A01/poses_ranger1.png",
+    "prompt": "Use case: stylized-concept. Game production key-pose atlas, landscape exactly1536x1024, true transparent PNG. FOUR columns TWO rows, each invisible cell384x512. EIGHT small widely spaced FULL BODY figures of SAME adult female character in SAME new promoted costume, all look RIGHT. Match reference identity/face/body proportion/art style; design new upgraded costume described below. Nonpixel detailed dark fantasy semi-realistic anime. Opaque battle clothing, no increased exposure. Grid reading order idle, walking step, attack windup, attack contact, recovery, hit recoil, skill cast, victory. HUGE EMPTY PADDING: figures only about280px tall, each figure INCLUDING weapon effects fits inside local cell x60..324,y110..420. Feet aligned y410. Keep scale constant across poses. All sword/bow tips/hair/cloth INSIDE cell, foreshorten extended weapon. Real alpha0 empty space, no background color, no floor/shadow, no ambient glow or haze. Only sharp tiny attached magic accents. No text, labels, borders, watermark. Exactly8 figures. Reference sheet is identity/style only, new attire must be distinct.\nCharacter: Lyra26, auburn high ponytail, green eyes. New promotion: 스나이퍼, tier2. DESIGN: Deep green fitted long marksman coat, silver precision arm brace, narrow segmented shoulder armor, slim tall recurved silver composite bow with mechanical sight. Calm rightward bow draw and release."
+  },
+  {
+    "id": "hawkeye",
+    "name": "호크아이",
+    "parent": "ranger1",
+    "tier": 3,
+    "title": "천공의 명사수",
+    "design": "Midnight teal silver streamlined plated coat, hawk-feather-shaped silver shoulder plates, split silver-lined mantle, long crescent silver bow with folded wing-shaped limbs and small gold sight. No actual wings. Precise rightward archery.",
+    "ref": "/workspace/scratch/86afcc242fa2/Asteria_A01/poses_ranger1.png",
+    "prompt": "Use case: stylized-concept. Game production key-pose atlas, landscape exactly1536x1024, true transparent PNG. FOUR columns TWO rows, each invisible cell384x512. EIGHT small widely spaced FULL BODY figures of SAME adult female character in SAME new promoted costume, all look RIGHT. Match reference identity/face/body proportion/art style; design new upgraded costume described below. Nonpixel detailed dark fantasy semi-realistic anime. Opaque battle clothing, no increased exposure. Grid reading order idle, walking step, attack windup, attack contact, recovery, hit recoil, skill cast, victory. HUGE EMPTY PADDING: figures only about280px tall, each figure INCLUDING weapon effects fits inside local cell x60..324,y110..420. Feet aligned y410. Keep scale constant across poses. All sword/bow tips/hair/cloth INSIDE cell, foreshorten extended weapon. Real alpha0 empty space, no background color, no floor/shadow, no ambient glow or haze. Only sharp tiny attached magic accents. No text, labels, borders, watermark. Exactly8 figures. Reference sheet is identity/style only, new attire must be distinct.\nCharacter: Lyra26, auburn high ponytail, green eyes. New promotion: 호크아이, tier3. DESIGN: Midnight teal silver streamlined plated coat, hawk-feather-shaped silver shoulder plates, split silver-lined mantle, long crescent silver bow with folded wing-shaped limbs and small gold sight. No actual wings. Precise rightward archery."
+  },
+  {
+    "id": "beastmaster",
+    "name": "비스트마스터",
+    "parent": "hunter1",
+    "tier": 2,
+    "title": "무리의 인도자",
+    "design": "Moss walnut layered leather armor, short russet fur shoulder mantle, horn recurved bow with claw-shaped tips, carved animal totems at utility belt. Rugged rightward archery; no separate companion.",
+    "ref": "/workspace/scratch/86afcc242fa2/Asteria_A01/poses_hunter1.png",
+    "prompt": "Use case: stylized-concept. Game production key-pose atlas, landscape exactly1536x1024, true transparent PNG. FOUR columns TWO rows, each invisible cell384x512. EIGHT small widely spaced FULL BODY figures of SAME adult female character in SAME new promoted costume, all look RIGHT. Match reference identity/face/body proportion/art style; design new upgraded costume described below. Nonpixel detailed dark fantasy semi-realistic anime. Opaque battle clothing, no increased exposure. Grid reading order idle, walking step, attack windup, attack contact, recovery, hit recoil, skill cast, victory. HUGE EMPTY PADDING: figures only about280px tall, each figure INCLUDING weapon effects fits inside local cell x60..324,y110..420. Feet aligned y410. Keep scale constant across poses. All sword/bow tips/hair/cloth INSIDE cell, foreshorten extended weapon. Real alpha0 empty space, no background color, no floor/shadow, no ambient glow or haze. Only sharp tiny attached magic accents. No text, labels, borders, watermark. Exactly8 figures. Reference sheet is identity/style only, new attire must be distinct.\nCharacter: Lyra26, auburn high ponytail, green eyes. New promotion: 비스트마스터, tier2. DESIGN: Moss walnut layered leather armor, short russet fur shoulder mantle, horn recurved bow with claw-shaped tips, carved animal totems at utility belt. Rugged rightward archery; no separate companion."
+  },
+  {
+    "id": "wildking",
+    "name": "와일드 킹",
+    "parent": "hunter1",
+    "tier": 3,
+    "title": "태고의 여왕",
+    "design": "Forest black and bronze substantial leather plate armor, asymmetrical white fur mantle, branching antler-shaped shoulder guards, massive carved darkwood horn bow with jade inlays. Same adult woman, no animal ears, no separate animals, no crown. Grounded archery.",
+    "ref": "/workspace/scratch/86afcc242fa2/Asteria_A01/poses_hunter1.png",
+    "prompt": "Use case: stylized-concept. Game production key-pose atlas, landscape exactly1536x1024, true transparent PNG. FOUR columns TWO rows, each invisible cell384x512. EIGHT small widely spaced FULL BODY figures of SAME adult female character in SAME new promoted costume, all look RIGHT. Match reference identity/face/body proportion/art style; design new upgraded costume described below. Nonpixel detailed dark fantasy semi-realistic anime. Opaque battle clothing, no increased exposure. Grid reading order idle, walking step, attack windup, attack contact, recovery, hit recoil, skill cast, victory. HUGE EMPTY PADDING: figures only about280px tall, each figure INCLUDING weapon effects fits inside local cell x60..324,y110..420. Feet aligned y410. Keep scale constant across poses. All sword/bow tips/hair/cloth INSIDE cell, foreshorten extended weapon. Real alpha0 empty space, no background color, no floor/shadow, no ambient glow or haze. Only sharp tiny attached magic accents. No text, labels, borders, watermark. Exactly8 figures. Reference sheet is identity/style only, new attire must be distinct.\nCharacter: Lyra26, auburn high ponytail, green eyes. New promotion: 와일드 킹, tier3. DESIGN: Forest black and bronze substantial leather plate armor, asymmetrical white fur mantle, branching antler-shaped shoulder guards, massive carved darkwood horn bow with jade inlays. Same adult woman, no animal ears, no separate animals, no crown. Grounded archery."
+  },
+  {
+    "id": "nightblade",
+    "name": "나이트블레이드",
+    "parent": "assassin1",
+    "tier": 2,
+    "title": "적월의 추적자",
+    "design": "Matte black segmented stealth armor, burgundy scarf split into two tails, sharp silver forearm bracers, two crescent curved daggers with wine leather grips. Low rightward lunge dual slash.",
+    "ref": "/workspace/scratch/86afcc242fa2/Asteria_A01/poses_assassin1.png",
+    "prompt": "Use case: stylized-concept. Game production key-pose atlas, landscape exactly1536x1024, true transparent PNG. FOUR columns TWO rows, each invisible cell384x512. EIGHT small widely spaced FULL BODY figures of SAME adult female character in SAME new promoted costume, all look RIGHT. Match reference identity/face/body proportion/art style; design new upgraded costume described below. Nonpixel detailed dark fantasy semi-realistic anime. Opaque battle clothing, no increased exposure. Grid reading order idle, walking step, attack windup, attack contact, recovery, hit recoil, skill cast, victory. HUGE EMPTY PADDING: figures only about280px tall, each figure INCLUDING weapon effects fits inside local cell x60..324,y110..420. Feet aligned y410. Keep scale constant across poses. All sword/bow tips/hair/cloth INSIDE cell, foreshorten extended weapon. Real alpha0 empty space, no background color, no floor/shadow, no ambient glow or haze. Only sharp tiny attached magic accents. No text, labels, borders, watermark. Exactly8 figures. Reference sheet is identity/style only, new attire must be distinct.\nCharacter: Nox29, sleek black bob, red eyes. New promotion: 나이트블레이드, tier2. DESIGN: Matte black segmented stealth armor, burgundy scarf split into two tails, sharp silver forearm bracers, two crescent curved daggers with wine leather grips. Low rightward lunge dual slash."
+  },
+  {
+    "id": "shadow",
+    "name": "섀도우",
+    "parent": "assassin1",
+    "tier": 3,
+    "title": "월식의 칼날",
+    "design": "Graphite violet faceted light armor, compact layered blade-shaped shoulder guards, short three-tail dark mantle, two long angular obsidian daggers with thin red cutting edges. Human body opaque, face visible, no clone, low lunge right.",
+    "ref": "/workspace/scratch/86afcc242fa2/Asteria_A01/poses_assassin1.png",
+    "prompt": "Use case: stylized-concept. Game production key-pose atlas, landscape exactly1536x1024, true transparent PNG. FOUR columns TWO rows, each invisible cell384x512. EIGHT small widely spaced FULL BODY figures of SAME adult female character in SAME new promoted costume, all look RIGHT. Match reference identity/face/body proportion/art style; design new upgraded costume described below. Nonpixel detailed dark fantasy semi-realistic anime. Opaque battle clothing, no increased exposure. Grid reading order idle, walking step, attack windup, attack contact, recovery, hit recoil, skill cast, victory. HUGE EMPTY PADDING: figures only about280px tall, each figure INCLUDING weapon effects fits inside local cell x60..324,y110..420. Feet aligned y410. Keep scale constant across poses. All sword/bow tips/hair/cloth INSIDE cell, foreshorten extended weapon. Real alpha0 empty space, no background color, no floor/shadow, no ambient glow or haze. Only sharp tiny attached magic accents. No text, labels, borders, watermark. Exactly8 figures. Reference sheet is identity/style only, new attire must be distinct.\nCharacter: Nox29, sleek black bob, red eyes. New promotion: 섀도우, tier3. DESIGN: Graphite violet faceted light armor, compact layered blade-shaped shoulder guards, short three-tail dark mantle, two long angular obsidian daggers with thin red cutting edges. Human body opaque, face visible, no clone, low lunge right."
+  },
+  {
+    "id": "phantom",
+    "name": "팬텀",
+    "parent": "trickster1",
+    "tier": 2,
+    "title": "거울의 결투가",
+    "design": "Black violet tailored fencing tailcoat, silver asymmetrical half-mask ornament worn at temple leaving face visible, geometric mirror lapels, elegant slim silver rapier and three violet rune cards. Rightward fencing and card casting.",
+    "ref": "/workspace/scratch/86afcc242fa2/Asteria_A01/poses_trickster1.png",
+    "prompt": "Use case: stylized-concept. Game production key-pose atlas, landscape exactly1536x1024, true transparent PNG. FOUR columns TWO rows, each invisible cell384x512. EIGHT small widely spaced FULL BODY figures of SAME adult female character in SAME new promoted costume, all look RIGHT. Match reference identity/face/body proportion/art style; design new upgraded costume described below. Nonpixel detailed dark fantasy semi-realistic anime. Opaque battle clothing, no increased exposure. Grid reading order idle, walking step, attack windup, attack contact, recovery, hit recoil, skill cast, victory. HUGE EMPTY PADDING: figures only about280px tall, each figure INCLUDING weapon effects fits inside local cell x60..324,y110..420. Feet aligned y410. Keep scale constant across poses. All sword/bow tips/hair/cloth INSIDE cell, foreshorten extended weapon. Real alpha0 empty space, no background color, no floor/shadow, no ambient glow or haze. Only sharp tiny attached magic accents. No text, labels, borders, watermark. Exactly8 figures. Reference sheet is identity/style only, new attire must be distinct.\nCharacter: Nox29, sleek black bob, red eyes. New promotion: 팬텀, tier2. DESIGN: Black violet tailored fencing tailcoat, silver asymmetrical half-mask ornament worn at temple leaving face visible, geometric mirror lapels, elegant slim silver rapier and three violet rune cards. Rightward fencing and card casting."
+  },
+  {
+    "id": "fateweaver",
+    "name": "페이트위버",
+    "parent": "trickster1",
+    "tier": 3,
+    "title": "운명의 직조자",
+    "design": "Black plum structured ceremonial tailcoat with ivory gold geometric inner panels, fine gold lattice shoulder guards, long bifurcated coat tails, ornate spindle-guard rapier and three luminous geometric tarot cards linked by tiny gold threads at hand. Face visible, rightward fencing.",
+    "ref": "/workspace/scratch/86afcc242fa2/Asteria_A01/poses_trickster1.png",
+    "prompt": "Use case: stylized-concept. Game production key-pose atlas, landscape exactly1536x1024, true transparent PNG. FOUR columns TWO rows, each invisible cell384x512. EIGHT small widely spaced FULL BODY figures of SAME adult female character in SAME new promoted costume, all look RIGHT. Match reference identity/face/body proportion/art style; design new upgraded costume described below. Nonpixel detailed dark fantasy semi-realistic anime. Opaque battle clothing, no increased exposure. Grid reading order idle, walking step, attack windup, attack contact, recovery, hit recoil, skill cast, victory. HUGE EMPTY PADDING: figures only about280px tall, each figure INCLUDING weapon effects fits inside local cell x60..324,y110..420. Feet aligned y410. Keep scale constant across poses. All sword/bow tips/hair/cloth INSIDE cell, foreshorten extended weapon. Real alpha0 empty space, no background color, no floor/shadow, no ambient glow or haze. Only sharp tiny attached magic accents. No text, labels, borders, watermark. Exactly8 figures. Reference sheet is identity/style only, new attire must be distinct.\nCharacter: Nox29, sleek black bob, red eyes. New promotion: 페이트위버, tier3. DESIGN: Black plum structured ceremonial tailcoat with ivory gold geometric inner panels, fine gold lattice shoulder guards, long bifurcated coat tails, ornate spindle-guard rapier and three luminous geometric tarot cards linked by tiny gold threads at hand. Face visible, rightward fencing."
+  }
+]

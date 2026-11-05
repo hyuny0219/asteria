@@ -19,8 +19,8 @@
   "name": "pets hatched & active 390x844",
   "pass": true,
   "info": {
-   "owned": 4,
-   "active": "P06",
+   "owned": 5,
+   "active": "P02",
    "eggs": 0
   }
  },
@@ -61,7 +61,7 @@
   "pass": true,
   "info": {
    "equipped": "t_pioneer",
-   "status": "QA1266 「초원의 개척자」"
+   "status": "QA8270 「초원의 개척자」"
   }
  },
  {
@@ -105,7 +105,7 @@
   "name": "pet attacks in battle 390x844",
   "pass": true,
   "info": {
-   "hits": 2
+   "hits": 1
   }
  },
  {
@@ -144,7 +144,7 @@
   "pass": true,
   "info": {
    "owned": 5,
-   "active": "P05",
+   "active": "P01",
    "eggs": 0
   }
  },

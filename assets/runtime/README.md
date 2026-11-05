@@ -25,3 +25,6 @@ v5 2부: `pet_P01–P06.webp`(동료 6종, `pets_6.png`)와 `skill_V00–V15.web
 `hero_pose_promo_<branch>_<pose>.webp` (sprites.json `hero.pose_promo_<branch>_<pose>`), 1차 승급 외형의 8 키 포즈.
 원본: `assets/source/gpt_a01/poses_<branch>1.png` (1536×1024 RGBA, 4×2, idle·step·windup·contact·recovery·hit·skill·victory → idle·step·anticipation·thrust·recovery·hit·cast·victory).
 시트당 배율 1개, 발 피벗은 골반 열 기준. 위자드는 원본 재업로드 후 같은 스크립트를 다시 실행.
+
+## GPT A02 — 2·3차 승급 키 포즈
+`python3 tools/extract_gpt_a02.py` → `hero_pose_promo_<branch>_t<tier>_<pose>.webp`(16 외형 × 8 포즈), `portrait_promo_<branch>_t<tier>.webp`(승급 화면). 원본 `assets/source/gpt_a02/`(실제 알파, 시트마다 배율 1개, 발 기준점은 골반 열 근처 신발). id 대응: paladin·crusader→knight 2·3, warlord·bloodlord→berserker, archmage·elementalmaster→wizard, necromancer·lichlord→warlock, sniper·hawkeye→ranger, beastmaster·wildking→hunter, nightblade·shadow→assassin, phantom·fateweaver→trickster. 검수 시트 `docs/qa/assets_a02_poses.png`, 전투 캡처 `tools/qa_a02.cjs`.
