@@ -453,3 +453,25 @@ input.text { width: 100%; min-height: 36px; background: var(--panel); border: 1p
 .rchip.rare { border-color: var(--r-rare, #74B8FF); }
 .rchip.epic, .rchip.legendary { border-color: var(--gold); color: var(--gold); }
 .tal-tabs button { display: inline-flex; align-items: center; justify-content: center; gap: 4px; } .tal-tabs button img { width: 20px; height: 20px; border-radius: 4px; flex: none; }
+
+/* ===== immersive special fights (boss · dungeon · rift · tower · raid · trial) ===== */
+#iris { position: fixed; inset: 0; z-index: 70; background: #07050b; opacity: 0; pointer-events: none; transition: opacity 175ms ease; }
+#iris.on { opacity: 1; pointer-events: auto; }
+.reduce-motion #iris { transition: none; }
+#app.immersive .status, #app.immersive .lower, #app.immersive .nav, #app.immersive .topstrip,
+#app.immersive .overlay-tl, #app.immersive .overlay-tr .mini-btn[aria-label="보기 전환"] { display: none !important; }
+#app.immersive .battle { flex: 1 1 auto; min-height: 0; }
+#app.immersive .portrait { display: none !important; }
+#app.immersive .skills { height: calc(64px + var(--safe-b)); padding-bottom: var(--safe-b); background: linear-gradient(180deg, #1b1526, #120e19); border-top: 1px solid var(--border); }
+#app.immersive .overlay-tr { bottom: 10px; right: 10px; }
+.imm-hud { display: none; position: absolute; z-index: 3; top: 8px; left: 8px; right: 84px; pointer-events: none; }
+#app.immersive .imm-hud { display: flex; }
+.imm-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; max-width: 100%; padding: 6px 12px 8px; border-radius: 12px; background: rgba(16,13,24,.78); border: 1px solid rgba(113,93,113,.7); line-height: 1.25; }
+.imm-info b { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.imm-info > span:not(.imm-time) { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.imm-time { display: block; height: 4px; border-radius: 2px; background: rgba(255,255,255,.14); overflow: hidden; margin-top: 3px; width: 160px; max-width: 100%; }
+.imm-time i { display: block; height: 100%; background: var(--gold); transition: width .2s linear; }
+.imm-time.low i { background: var(--danger); }
+#app.immersive .session-bar { top: 8px; bottom: auto; right: 8px; left: auto; padding: 0; }
+#app.immersive .session-bar .mini-btn { min-height: 36px; padding: 0 14px; background: rgba(16,13,24,.78); }
+#app.immersive .rift-chips { top: 74px; right: 8px; }

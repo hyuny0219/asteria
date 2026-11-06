@@ -97,7 +97,7 @@ export function promoFrame(branch, tier = 1) { const k = promoKey(branch, tier);
 // Transparent full figure for promotion screens (portraits mirror the hero entries).
 export function promoPortrait(branch, tier = 1) { const k = promoKey(branch, tier); return k && meta.portraits[k] ? meta.portraits[k].file : null; }
 
-export async function preloadFor({ region, boss, branch, cls = 'warrior', tier = 1, bg = null, monsters = MONSTERS, bosses = BOSSES, pet = null }) {
+export async function preloadFor({ region, boss, branch, cls = 'warrior', tier = 1, bg = null, monsters = MONSTERS, bosses = BOSSES, pet = null, allMonsters = false }) {
   const art = CLASSES[cls] && CLASSES[cls].art;
   // Serin's 8 poses (also used by the instructor projection) + this class's figure
   const list = Object.entries(meta.hero).filter(([k]) => !k.startsWith('promo_') && !k.startsWith('cls_') && !k.startsWith('pose_')).map(([, f]) => f.file);
@@ -114,6 +114,8 @@ export async function preloadFor({ region, boss, branch, cls = 'warrior', tier =
     list.push(spriteFile(bosses ? bosses[region.boss] : { id: region.boss }));
   }
   if (boss) list.push(spriteFile(bosses ? bosses[boss] : { id: boss }));
+  // rift / tower / dungeons draw monsters from other regions
+  if (allMonsters && monsters) for (const m of Object.values(monsters)) list.push(spriteFile(m));
   if (pet && meta.pets && meta.pets[pet]) list.push(meta.pets[pet].file);
   if (bg && meta.backgrounds[bg]) list.push(meta.backgrounds[bg].file);
   await Promise.all(list.filter(Boolean).map(loadImage));

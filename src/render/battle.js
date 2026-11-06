@@ -46,9 +46,13 @@ export class BattleRenderer {
   }
 
   get sx() { return this.cssW / LOGICAL_W; }
+  // immersive: bigger figures → pull the waiting line in so the 2nd/3rd enemy stays on screen
+  ex(x) { return this.immersive && x > 250 ? 250 + (x - 250) * 0.5 : x; }
   get groundY() { return this.cssH * GROUND; }
   // vertical fit: sprites sized for a 220 px tall stage
-  get fit() { return Math.min(this.cssH / LOGICAL_H, this.cssW / LOGICAL_W * 1.15); }
+  // immersive special fights have a much taller canvas: let figures grow more (still
+  // width-limited so the hero and the front enemy never overlap)
+  get fit() { return Math.min(this.cssH / LOGICAL_H, this.cssW / LOGICAL_W * (this.immersive ? 1.35 : 1.15)); }
 
   // ---------- events from the simulation ----------
   onCombat(ev, battle) {
@@ -117,11 +121,11 @@ export class BattleRenderer {
     const lerp = (a, b) => a + (b - a) * Math.min(1, alpha);
 
     // telegraph markers first (on the ground, under the figures)
-    for (const e of battle.enemies) if (e.state === 'telegraph' || e.pending) this.drawTelegraph(e, battle, lerp(e.px, e.x) * sx, gy, now, s);
+    for (const e of battle.enemies) if (e.state === 'telegraph' || e.pending) this.drawTelegraph(e, battle, this.ex(lerp(e.px, e.x)) * sx, gy, now, s);
 
     // enemies back to front
     const sorted = [...battle.enemies].sort((a, b) => b.x - a.x);
-    for (const e of sorted) this.drawEnemy(e, battle, lerp(e.px, e.x) * sx, gy, s);
+    for (const e of sorted) this.drawEnemy(e, battle, this.ex(lerp(e.px, e.x)) * sx, gy, s);
 
     this.drawHero(battle, HERO_X * sx, gy, branch, s, victory);
     this.drawPet(battle, HERO_X * sx, gy, s, now);
@@ -133,7 +137,7 @@ export class BattleRenderer {
     // boss / session header
     const boss = battle.enemies.find((e) => e.boss);
     if (boss) this.drawBossBar(boss, battle);
-    if (label) this.drawLabel(label);
+    if (label && !this.immersive) this.drawLabel(label);   // the immersive HUD shows it
     ctx.restore();
   }
 

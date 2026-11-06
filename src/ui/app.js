@@ -5,7 +5,7 @@ import { BattleRenderer } from '../render/battle.js';
 import { itemIcon, portrait, classPortrait, preloadFor, skillIcon } from '../render/assets.js';
 import * as prog from '../core/progression.js';
 import { fmt } from '../core/util.js';
-import { button, clear, closeAllModals, h, icon, img, initModals, initToasts, modalOpen, toast } from './dom.js';
+import { button, clear, closeAllModals, h, icon, img, initModals, initToasts, modalOpen, openModal, toast } from './dom.js';
 import * as S from './screens.js';
 import * as V4 from './v4.js';
 import { sfx } from '../platform/audio.js';
@@ -81,9 +81,15 @@ export class App {
     E.autoBadge = h('span', { class: 'badge' }, '자동 전투');
     E.sessionBar = h('div', { class: 'session-bar' });
     E.riftChips = h('div', { class: 'rift-chips', 'aria-label': '균열 효과' });
+    // immersive HUD for special fights (boss / dungeon / rift / tower / raid / trial)
+    E.hudTitle = h('b', null, '');
+    E.hudInfo = h('span', null, '');
+    E.hudTime = h('i', { style: { width: '100%' } });
+    E.hud = h('div', { class: 'imm-hud', 'data-screen': 'immersive', 'aria-live': 'off' },
+      h('div', { class: 'imm-info' }, E.hudTitle, E.hudInfo, h('span', { class: 'imm-time', 'aria-hidden': 'true' }, E.hudTime)));
     E.battle = h('section', { class: 'battle', 'aria-label': '전투' }, E.canvas, E.portrait,
       h('div', { class: 'topstrip' }, h('span', { class: 'spacer' }), E.worldBtn, E.bossBtn),
-      h('div', { class: 'overlay-tl' }, E.autoBadge), h('div', { class: 'overlay-tr' }, E.speedBtn, E.viewBtn), E.sessionBar, E.riftChips, E.liveText);
+      h('div', { class: 'overlay-tl' }, E.autoBadge), h('div', { class: 'overlay-tr' }, E.speedBtn, E.viewBtn), E.sessionBar, E.riftChips, E.hud, E.liveText);
     app.appendChild(E.battle);
     // skills 64
     E.skills = h('div', { class: 'skills', role: 'toolbar', 'aria-label': '스킬' });
@@ -108,6 +114,7 @@ export class App {
     initToasts(document.getElementById('toasts'));
 
     this.renderer = new BattleRenderer(E.canvas, { getSettings: () => this.settings, topInset: 46 });
+    this.iris = document.getElementById('iris') || document.body.appendChild(h('div', { id: 'iris', 'aria-hidden': 'true' }));
     new ResizeObserver(() => this.renderer.resize()).observe(E.canvas);
     this.bindGame();
     this.buildSkills();
@@ -176,12 +183,77 @@ export class App {
       // boss/dungeon/trial always shows the real battle; restore the user's view after
       this.forcedBattleView = true;
       this.applyView();
-      preloadFor({ region: REGION_BY_ID[this.state.progression.region], boss: sess.bossId || null, branch: this.state.player.branch, cls: this.state.player.cls, tier: prog.tierOf(this.state), bg: sess.kind === 'tower' ? 'tower' : sess.kind === 'raid' ? 'void' : sess.kind === 'rift' ? sess.bg : sess.kind === 'trial' ? 'cathedral' : sess.kind === 'dungeon' ? ({ quarry: 'mine', gold: 'desert', books: 'cathedral' }[sess.type] || 'mine') : null });
+      this.setImmersive(true, sess);
+      preloadFor({ region: REGION_BY_ID[this.state.progression.region], boss: sess.bossId || null, branch: this.state.player.branch, cls: this.state.player.cls, tier: prog.tierOf(this.state), allMonsters: sess.kind === 'rift' || sess.kind === 'tower' || sess.kind === 'dungeon', bg: sess.kind === 'tower' ? 'tower' : sess.kind === 'raid' ? 'void' : sess.kind === 'rift' ? sess.bg : sess.kind === 'trial' ? 'cathedral' : sess.kind === 'dungeon' ? ({ quarry: 'mine', gold: 'desert', books: 'cathedral' }[sess.type] || 'mine') : null });
     } else {
       this.forcedBattleView = false;
       this.applyView();
+      this.setImmersive(false);
     }
     this.renderSession();
+  }
+
+  confirmForfeit() {
+    const sess = this.game.session;
+    if (!sess || modalOpen('forfeit')) return;
+    const what = sess.kind === 'rift' ? '균열 진행을 여기서 끝낼까요? 지금까지 내려간 층 기준으로 정산합니다.' : sess.kind === 'dungeon' ? '던전을 중단할까요? 입장권은 이미 사용되었습니다.' : '전투를 포기하고 사냥터로 돌아갈까요?';
+    const m = openModal({ id: 'forfeit', title: sess.kind === 'boss' || sess.kind === 'raid' ? '포기' : '중단', kind: 'center', desc: what, actions: [
+      button('포기하기', { cls: 'btn btn-danger', onClick: () => { m.close(); this.game.forfeit(); } }),
+      button('계속 싸우기', { cls: 'btn', onClick: () => m.close() })] });
+  }
+
+  // ---------- immersive special fights ----------
+  // Screen transition into a battle-only layout; the result modal shows over it and the
+  // farm layout comes back when the session ends (returnToFarm → session null).
+  setImmersive(on, sess = null) {
+    const app = this.root;
+    if (app.classList.contains('immersive') === on) { if (on) this.updateImmersiveHud(true); return; }
+    const apply = () => {
+      app.classList.toggle('immersive', on);
+      this.renderer.immersive = on;
+      this.renderer.topInset = on ? 74 : 46;
+      this.renderer.resize();
+      if (on) this.updateImmersiveHud(true);
+    };
+    const reduceMotion = this.state && this.state.settings.reduceMotion;
+    if (reduceMotion || !this.iris) { apply(); return; }
+    const iris = this.iris;
+    clearTimeout(this._irisT);
+    iris.classList.add('on');
+    this._irisT = setTimeout(() => { apply(); requestAnimationFrame(() => iris.classList.remove('on')); }, 175);
+  }
+  sessionLabel(sess) {
+    if (!sess) return '';
+    // the canvas boss bar already shows the boss name + time: the HUD only names the fight
+    if (sess.kind === 'boss') return `보스전 · ${REGION_BY_ID[(BOSSES[sess.bossId] || {}).region] ? REGION_BY_ID[BOSSES[sess.bossId].region].name : ''}`.replace(/ · $/, '');
+    if (sess.kind === 'raid') return '심연의 문 · 주간 레이드';
+    if (sess.kind === 'trial') return `교관 시련 · ${sess.tier || 1}차`;
+    if (sess.kind === 'tower') return `시련의 탑 · ${sess.floor}층`;
+    if (sess.kind === 'rift') return `균열 · ${sess.floor}층`;
+    if (sess.kind === 'dungeon') return `${({ quarry: '별의 채석장', gold: '황금 금고', books: '스킬북 서고' })[sess.type] || '던전'} · ${sess.stage}단계`;
+    return '';
+  }
+  updateImmersiveHud(force = false) {
+    const g = this.game, sess = g.session, b = g.active;
+    if (!sess || !b || !this.root.classList.contains('immersive')) return;
+    const now = performance.now();
+    if (!force && now - (this._hudAt || 0) < 200) return;
+    this._hudAt = now;
+    const E = this.el;
+    const title = this.sessionLabel(sess);
+    if (E.hudTitle.textContent !== title) E.hudTitle.textContent = title;
+    const bossBar = sess.kind === 'boss' || sess.kind === 'raid';   // time already on the boss bar
+    const lim = bossBar ? 0 : (b.timeLimitMs || 0);
+    const left = lim ? Math.max(0, lim - (b.t || 0)) : 0;
+    const sec = Math.ceil(left / 1000);
+    const parts = [];
+    if (lim) parts.push(`${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`);
+    if (Number.isFinite(b.killTarget)) parts.push(`처치 ${b.kills || 0}/${b.killTarget}`);
+    const info = parts.join(' · ');
+    if (E.hudInfo.textContent !== info) E.hudInfo.textContent = info;
+    E.hudTime.style.width = lim ? (left / lim * 100).toFixed(1) + '%' : '0%';
+    E.hudTime.parentElement.classList.toggle('low', lim > 0 && left < 15000);
+    E.hudTime.parentElement.hidden = !lim;
   }
 
   // Screen-reader announcements for key moments, at most one per 1.5 s (warnings excepted).
@@ -209,7 +281,7 @@ export class App {
     const bar = clear(this.el.sessionBar);
     const m = this.game.mode;
     if (m === 'BOSS' || m === 'DUNGEON' || m === 'PROMOTION_TRIAL') {
-      bar.appendChild(button(m === 'BOSS' ? '포기하고 파밍' : '중단', { cls: 'mini-btn', onClick: () => this.game.forfeit() }));
+      bar.appendChild(button(m === 'BOSS' ? '포기' : '중단', { cls: 'mini-btn', ariaLabel: m === 'BOSS' ? '포기하고 사냥터로' : '중단하고 사냥터로', onClick: () => this.confirmForfeit() }));
     }
   }
 
@@ -335,6 +407,7 @@ export class App {
   frame(alpha) {
     const g = this.game;
     if (!g.state || !this.renderer) return;
+    if (g.session) this.updateImmersiveHud();
     const b = g.active;
     const s = g.state;
     const view = this.forcedBattleView ? 'battle' : s.settings.battleView;

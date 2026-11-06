@@ -1,5 +1,5 @@
 {
- "startedAt": "2026-11-05T23:41:32.574Z",
+ "startedAt": "2026-11-06T00:11:40.342Z",
  "base": "http://127.0.0.1:8123/",
  "viewports": [
   [
@@ -279,19 +279,18 @@
    "errors": []
   },
   {
-   "id": "skills",
+   "id": "immersive",
    "viewport": "390x844",
    "pass": true,
-   "note": "보스전 진행 중 (탭은 스킬)",
-   "file": "skills_390x844.png",
+   "note": "보스전 몰입 화면 (하단 패널·탭 숨김)",
+   "file": "immersive_390x844.png",
    "over": false,
    "modalOver": false,
    "small": [],
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "skills",
-    "runes"
+    "immersive"
    ],
    "tiny": [],
    "errors": []
@@ -308,8 +307,7 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "skills",
-    "runes",
+    "immersive",
     "victory",
     "victory"
    ],
@@ -328,8 +326,7 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "skills",
-    "runes",
+    "immersive",
     "defeat",
     "defeat"
    ],
@@ -929,13 +926,7 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
-    "tower",
-    "rift",
-    "raid",
+    "immersive",
     "towerResult",
     "towerResult"
    ],
@@ -954,13 +945,7 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
-    "tower",
-    "rift",
-    "raid",
+    "immersive",
     "raidResult",
     "raidResult"
    ],
@@ -1342,19 +1327,18 @@
    "errors": []
   },
   {
-   "id": "skills",
+   "id": "immersive",
    "viewport": "360x700",
    "pass": true,
-   "note": "보스전 진행 중 (탭은 스킬)",
-   "file": "skills_360x700.png",
+   "note": "보스전 몰입 화면 (하단 패널·탭 숨김)",
+   "file": "immersive_360x700.png",
    "over": false,
    "modalOver": false,
    "small": [],
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "skills",
-    "runes"
+    "immersive"
    ],
    "tiny": [],
    "errors": []
@@ -1371,8 +1355,7 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "skills",
-    "runes",
+    "immersive",
     "victory",
     "victory"
    ],
@@ -1391,8 +1374,7 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "skills",
-    "runes",
+    "immersive",
     "defeat",
     "defeat"
    ],
@@ -1992,13 +1974,7 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
-    "tower",
-    "rift",
-    "raid",
+    "immersive",
     "towerResult",
     "towerResult"
    ],
@@ -2017,13 +1993,7 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
-    "tower",
-    "rift",
-    "raid",
+    "immersive",
     "raidResult",
     "raidResult"
    ],
@@ -2398,19 +2368,18 @@
    "errors": []
   },
   {
-   "id": "skills",
+   "id": "immersive",
    "viewport": "412x915",
    "pass": true,
-   "note": "보스전 진행 중 (탭은 스킬)",
-   "file": "skills_412x915.png",
+   "note": "보스전 몰입 화면 (하단 패널·탭 숨김)",
+   "file": "immersive_412x915.png",
    "over": false,
    "modalOver": false,
    "small": [],
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "skills",
-    "runes"
+    "immersive"
    ],
    "tiny": [],
    "errors": []
@@ -2427,8 +2396,7 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "skills",
-    "runes",
+    "immersive",
     "victory",
     "victory"
    ],
@@ -2447,8 +2415,7 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "skills",
-    "runes",
+    "immersive",
     "defeat",
     "defeat"
    ],
@@ -3047,13 +3014,7 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
-    "tower",
-    "rift",
-    "raid",
+    "immersive",
     "towerResult",
     "towerResult"
    ],
@@ -3072,13 +3033,7 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
-    "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
-    "tower",
-    "rift",
-    "raid",
+    "immersive",
     "raidResult",
     "raidResult"
    ],
@@ -3203,8 +3158,8 @@
    "name": "reload keeps the same pending claim",
    "pass": true,
    "detail": {
-    "first": "claim_mw46yer0_vpd0y8",
-    "after": "claim_mw46yer0_vpd0y8"
+    "first": "claim_mw48171u_1j36bx5",
+    "after": "claim_mw48171u_1j36bx5"
    }
   },
   {
@@ -3286,7 +3241,7 @@
     "k0": 1,
     "k1": {
      "kills": 1,
-     "acc": 16.600000000000023,
+     "acc": 0,
      "mode": "FARM"
     }
    }
@@ -3322,14 +3277,66 @@
     "over": false,
     "navVisible": true
    }
+  },
+  {
+   "name": "immersive boss 390x844",
+   "pass": true
+  },
+  {
+   "name": "immersive forfeit-back {\"immersive\":false,\"mode\":\"FARM\"}",
+   "pass": true
+  },
+  {
+   "name": "immersive dungeon 390x844",
+   "pass": true
+  },
+  {
+   "name": "immersive tower 390x844",
+   "pass": true
+  },
+  {
+   "name": "immersive rift 390x844",
+   "pass": true
+  },
+  {
+   "name": "immersive boss 360x700",
+   "pass": true
+  },
+  {
+   "name": "immersive dungeon 360x700",
+   "pass": true
+  },
+  {
+   "name": "immersive tower 360x700",
+   "pass": true
+  },
+  {
+   "name": "immersive rift 360x700",
+   "pass": true
+  },
+  {
+   "name": "immersive boss 412x915",
+   "pass": true
+  },
+  {
+   "name": "immersive dungeon 412x915",
+   "pass": true
+  },
+  {
+   "name": "immersive tower 412x915",
+   "pass": true
+  },
+  {
+   "name": "immersive rift 412x915",
+   "pass": true
   }
  ],
  "errors": [],
- "finishedAt": "2026-11-05T23:43:34.336Z",
+ "finishedAt": "2026-11-06T00:14:11.328Z",
  "summary": {
   "screenChecks": 141,
   "screenPass": 141,
-  "distinctScreens": 41,
+  "distinctScreens": 42,
   "ids": [
    "title",
    "main",
@@ -3343,6 +3350,7 @@
    "skilldetail",
    "world",
    "boss",
+   "immersive",
    "victory",
    "defeat",
    "dungeon",
@@ -3373,7 +3381,7 @@
    "saveerror",
    "conflict"
   ],
-  "flows": 14,
-  "flowPass": 14
+  "flows": 27,
+  "flowPass": 27
  }
 }

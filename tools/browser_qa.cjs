@@ -150,7 +150,7 @@ async function screensAt(browser, vp) {
   await page.evaluate(async () => { const g = window.__asteria.game; await window.__qaTx((s) => { s.player.statsUpgrades.atk = 120; s.player.statsUpgrades.hp = 60; return { ok: true }; }); });
   await page.click('.modal-actions .btn-primary');
   await page.waitForTimeout(300);
-  await check(page, 'skills', vp, '보스전 진행 중 (탭은 스킬)');
+  await check(page, 'immersive', vp, '보스전 몰입 화면 (하단 패널·탭 숨김)');
   await ff(page, 90);
   await page.waitForFunction(() => document.querySelector('[data-screen=victory],[data-screen=defeat]'), null, { timeout: 10000 }).catch(() => {});
   await check(page, 'victory', vp, '실제 보스전 승리');
@@ -463,6 +463,11 @@ async function flows(browser) {
   try {
     for (const vp of VIEWPORTS) await screensAt(browser, vp);
     await flows(browser);
+    // immersive special fights (boss / dungeon / tower / rift × 3 viewports + forfeit → farm): tools/qa_immersive.cjs
+    const port = (BASE.match(/:(\d+)\//) || [])[1] || '8123';
+    const im = require('child_process').spawnSync(process.execPath, [path.join(__dirname, 'qa_immersive.cjs'), port], { encoding: 'utf8', env: process.env });
+    for (const line of (im.stdout || '').split('\n')) { const m = line.match(/^(PASS|FAIL) (\S+) ?(\S*)/); if (m) results.flows.push({ name: `immersive ${m[2]} ${m[3]}`.trim(), pass: m[1] === 'PASS' }); }
+    console.log((im.stdout || '').split('\n').filter((l) => /^(PASS|FAIL|SUMMARY)/.test(l)).map((l) => 'immersive: ' + l.slice(0, 120)).join('\n'));
   } catch (e) {
     console.error(e);
     results.errors.push(String(e.stack || e));
