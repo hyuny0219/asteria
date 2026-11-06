@@ -95,6 +95,12 @@ export function spriteFile(def) {
   const m = def && (meta.monsters[def.sprite] || meta.bosses[def.sprite] || meta.monsters[def.id] || meta.bosses[def.id]);
   return m ? m.file : null;
 }
+// static sprite + GPT C action frames (idle/attack/hit/dead) when the creature has them
+export function spriteFiles(def) {
+  const m = def && (meta.monsters[def.sprite] || meta.bosses[def.sprite] || meta.monsters[def.id] || meta.bosses[def.id]);
+  if (!m) return [];
+  return [m.file, ...(m.frames ? Object.values(m.frames).map((f) => f.file) : [])];
+}
 export function promoFrame(branch, tier = 1) { const k = promoKey(branch, tier); return k ? meta.hero[k] : null; }
 // Transparent full figure for promotion screens (portraits mirror the hero entries).
 export function promoPortrait(branch, tier = 1) { const k = promoKey(branch, tier); return k && meta.portraits[k] ? meta.portraits[k].file : null; }
@@ -112,12 +118,12 @@ export async function preloadFor({ region, boss, branch, cls = 'warrior', tier =
   if (region) {
     const bg = meta.backgrounds[region.bg];
     if (bg) list.push(bg.file);
-    for (const m of region.monsters) list.push(spriteFile(monsters ? monsters[m] : { id: m }));
+    for (const m of region.monsters) list.push(...spriteFiles(monsters ? monsters[m] : { id: m }));
     list.push(spriteFile(bosses ? bosses[region.boss] : { id: region.boss }));
   }
   if (boss) list.push(spriteFile(bosses ? bosses[boss] : { id: boss }));
   // rift / tower / dungeons draw monsters from other regions
-  if (allMonsters && monsters) for (const m of Object.values(monsters)) list.push(spriteFile(m));
+  if (allMonsters && monsters) for (const m of Object.values(monsters)) list.push(...spriteFiles(m));
   if (pet && meta.pets && meta.pets[pet]) list.push(meta.pets[pet].file);
   if (bg && meta.backgrounds[bg]) list.push(meta.backgrounds[bg].file);
   if (meta.fx) for (const f of Object.values(meta.fx)) list.push(f.file);   // GPT B projectiles / hits (~220 KB)

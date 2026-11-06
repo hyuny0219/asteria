@@ -740,10 +740,22 @@ export class BattleRenderer {
     const m = enemyMeta(e.def.sprite === 'hero' ? 'hero' : e.def.sprite);
     const motion = !s.reduceMotion;
     const isTrial = e.def.sprite === 'hero';
-    const meta = isTrial ? spriteMeta().hero.idle : m;
+    const base = isTrial ? spriteMeta().hero.idle : m;
+    // GPT C action frames: attack while lunging, hit while flashing / knocked back, dead while dying
+    let meta = base;
+    if (!isTrial && m && m.frames) {
+      const kb0 = this.kb.get(e.uid);
+      const act = e.state === 'dying' ? 'dead' : e.state === 'attack' ? 'attack'
+        : t < e.flashUntil + 60 || (kb0 && now - kb0.at < 200) ? 'hit' : 'idle';
+      const fr = m.frames[act];
+      if (fr && ready(fr.file)) meta = fr;
+      else if (fr) loadImage(fr.file);
+      if (meta === base && m.frames.idle && ready(m.frames.idle.file)) meta = m.frames.idle;
+    }
     // boss display height capped to the 220 px stage (spec 150..200, leave HP space)
-    const bossScale = e.boss && !isTrial ? Math.min(1, 150 / meta.bodyHeightPx * 2) : 1;
+    const bossScale = e.boss && !isTrial ? Math.min(1, 150 / base.bodyHeightPx * 2) : 1;
     const d = this.spriteDims(meta, bossScale);
+    const dIdle = meta === base ? d : this.spriteDims(base, bossScale);   // HP bar / labels stay put between frames
     let dx = 0, dy = 0, sy = 1, sxx = 1, rot = 0, alpha = 1;
     if (e.def.flying) dy = -14 * this.fit * this.figScale + (motion ? Math.sin(t / 300) * 3 : 0);
     if (e.state === 'telegraph' && motion) {
@@ -754,7 +766,7 @@ export class BattleRenderer {
       else if (kind === 'line') { dx = 8 * p; }
     }
     if (e.state === 'attack' && motion) { const p = (t - e.stateAt) / 300; dx = -22 * Math.sin(Math.min(1, p) * Math.PI); }
-    if (e.state === 'dying') { const p = Math.min(1, 1 - (e.dieAt - t) / 420); alpha = 1 - p; dy += motion ? 10 * p : 0; sy *= 1 - 0.1 * p; }
+    if (e.state === 'dying') { const p = Math.min(1, 1 - (e.dieAt - t) / 420); alpha = 1 - p * p; dy += motion && !base.frames ? 10 * p : 0; sy *= base.frames ? 1 : 1 - 0.1 * p; }
     if (motion && e.state !== 'dying' && e.state !== 'telegraph') sy *= 1 + 0.015 * Math.sin(t / 380 + e.uid);
     // knockback nudge (bosses move half as far)
     const kb = this.kb.get(e.uid);
@@ -765,7 +777,7 @@ export class BattleRenderer {
     }
     // shadow
     ctx.fillStyle = 'rgba(0,0,0,' + (0.32 * alpha) + ')';
-    ctx.beginPath(); ctx.ellipse(x, gy + 2, d.w * 0.32, 6 * this.fit, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(x, gy + 2, dIdle.w * 0.32, 6 * this.fit, 0, 0, Math.PI * 2); ctx.fill();
     const img = ready(meta.file);
     if (img) {
       // instructor projection: grey/bright look baked into the cached bitmap (no per-frame filter)
@@ -784,10 +796,10 @@ export class BattleRenderer {
       if (t < e.flashUntil && e.state !== 'dying') { ctx.globalAlpha = alpha * Math.min(0.85, 0.35 + (e.flashUntil - t) / 160); ctx.drawImage(whiteOf(sc), -d.px, -d.py, d.w, d.h); }
       ctx.restore();
     } else this.placeholder(x, gy, 40, d.h || 80, e.name);
-    if (e.boss && e.enraged && e.state !== 'dying') this.text('광폭화', x, Math.max(this.topInset + 44, gy + dy - d.py - 6), 13, '#FF9DB2', 'center', 800, true);
+    if (e.boss && e.enraged && e.state !== 'dying') this.text('광폭화', x, Math.max(this.topInset + 44, gy + dy - dIdle.py - 6), 13, '#FF9DB2', 'center', 800, true);
     if (e.state === 'dying' || e.boss) return;
     // HP bar above head; elite marker = diamond + "정예" text (not colour only)
-    const bw = Math.max(40, d.w * 0.5), top = Math.max(16, gy + dy - d.py - 10);
+    const bw = Math.max(40, dIdle.w * 0.5), top = Math.max(16, gy + dy - dIdle.py - 10);
     this.bar(x - bw / 2, top, bw, 5, e.hp / e.maxHp, '#C9455F');
     if (e.elite) {
       ctx.fillStyle = '#EDBD68';

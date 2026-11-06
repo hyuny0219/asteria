@@ -223,7 +223,8 @@
    "note": "2·3차 8 key poses, real alpha (no colour key)"
   },
   "gpt_b/fx_projectiles.png": "GPT package B",
-  "gpt_i/map_*.png": "GPT package I"
+  "gpt_i/map_*.png": "GPT package I",
+  "gpt_c/mon_act_*.png": "GPT package C — monster idle/attack/hit/dead"
  },
  "monsters": {
   "M01": {
@@ -260,7 +261,82 @@
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [],
-   "status": "RUNTIME_STATIC_SPRITE"
+   "status": "RUNTIME_STATIC_SPRITE",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/mon_M01_idle.webp",
+     "size": [
+      188,
+      130
+     ],
+     "pivot": [
+      85.3,
+      124.5
+     ],
+     "bodyHeightPx": 120.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "attack": {
+     "file": "assets/runtime/mon_M01_attack.webp",
+     "size": [
+      247,
+      127
+     ],
+     "pivot": [
+      165.5,
+      121.5
+     ],
+     "bodyHeightPx": 117.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "hit": {
+     "file": "assets/runtime/mon_M01_hit.webp",
+     "size": [
+      179,
+      148
+     ],
+     "pivot": [
+      86.5,
+      142.4
+     ],
+     "bodyHeightPx": 138.6,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "dead": {
+     "file": "assets/runtime/mon_M01_dead.webp",
+     "size": [
+      212,
+      78
+     ],
+     "pivot": [
+      105.1,
+      71.6
+     ],
+     "bodyHeightPx": 67.1,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_c/mon_act_01.png row 1"
   },
   "M02": {
    "id": "M02",
@@ -296,7 +372,82 @@
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [],
-   "status": "RUNTIME_STATIC_SPRITE"
+   "status": "RUNTIME_STATIC_SPRITE",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/mon_M02_idle.webp",
+     "size": [
+      224,
+      181
+     ],
+     "pivot": [
+      96.7,
+      175.0
+     ],
+     "bodyHeightPx": 170.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "attack": {
+     "file": "assets/runtime/mon_M02_attack.webp",
+     "size": [
+      278,
+      157
+     ],
+     "pivot": [
+      155.4,
+      150.7
+     ],
+     "bodyHeightPx": 146.6,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "hit": {
+     "file": "assets/runtime/mon_M02_hit.webp",
+     "size": [
+      214,
+      208
+     ],
+     "pivot": [
+      91.6,
+      201.0
+     ],
+     "bodyHeightPx": 196.8,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "dead": {
+     "file": "assets/runtime/mon_M02_dead.webp",
+     "size": [
+      245,
+      112
+     ],
+     "pivot": [
+      114.2,
+      105.5
+     ],
+     "bodyHeightPx": 101.3,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_c/mon_act_01.png row 2"
   },
   "M03": {
    "id": "M03",
@@ -332,7 +483,82 @@
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [],
-   "status": "RUNTIME_STATIC_SPRITE"
+   "status": "RUNTIME_STATIC_SPRITE",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/mon_M03_idle.webp",
+     "size": [
+      234,
+      171
+     ],
+     "pivot": [
+      75.7,
+      164.2
+     ],
+     "bodyHeightPx": 160.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "attack": {
+     "file": "assets/runtime/mon_M03_attack.webp",
+     "size": [
+      281,
+      156
+     ],
+     "pivot": [
+      107.1,
+      149.0
+     ],
+     "bodyHeightPx": 143.9,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "hit": {
+     "file": "assets/runtime/mon_M03_hit.webp",
+     "size": [
+      209,
+      179
+     ],
+     "pivot": [
+      152.6,
+      171.0
+     ],
+     "bodyHeightPx": 165.9,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "dead": {
+     "file": "assets/runtime/mon_M03_dead.webp",
+     "size": [
+      259,
+      122
+     ],
+     "pivot": [
+      99.1,
+      116.0
+     ],
+     "bodyHeightPx": 110.9,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_c/mon_act_02.png row 1"
   },
   "M04": {
    "id": "M04",
@@ -368,7 +594,82 @@
    "flying": true,
    "mirrored": false,
    "droppedBleedComponents": [],
-   "status": "RUNTIME_STATIC_SPRITE"
+   "status": "RUNTIME_STATIC_SPRITE",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/mon_M04_idle.webp",
+     "size": [
+      200,
+      240
+     ],
+     "pivot": [
+      105.7,
+      234.7
+     ],
+     "bodyHeightPx": 230.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "attack": {
+     "file": "assets/runtime/mon_M04_attack.webp",
+     "size": [
+      260,
+      241
+     ],
+     "pivot": [
+      100.5,
+      235.5
+     ],
+     "bodyHeightPx": 230.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "hit": {
+     "file": "assets/runtime/mon_M04_hit.webp",
+     "size": [
+      196,
+      245
+     ],
+     "pivot": [
+      55.2,
+      239.4
+     ],
+     "bodyHeightPx": 235.5,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "dead": {
+     "file": "assets/runtime/mon_M04_dead.webp",
+     "size": [
+      257,
+      117
+     ],
+     "pivot": [
+      71.7,
+      111.1
+     ],
+     "bodyHeightPx": 106.4,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_c/mon_act_02.png row 2"
   },
   "M05": {
    "id": "M05",
@@ -404,7 +705,82 @@
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [],
-   "status": "RUNTIME_STATIC_SPRITE"
+   "status": "RUNTIME_STATIC_SPRITE",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/mon_M05_idle.webp",
+     "size": [
+      200,
+      231
+     ],
+     "pivot": [
+      104.9,
+      224.7
+     ],
+     "bodyHeightPx": 220.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "attack": {
+     "file": "assets/runtime/mon_M05_attack.webp",
+     "size": [
+      311,
+      213
+     ],
+     "pivot": [
+      156.4,
+      206.9
+     ],
+     "bodyHeightPx": 202.2,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "hit": {
+     "file": "assets/runtime/mon_M05_hit.webp",
+     "size": [
+      201,
+      239
+     ],
+     "pivot": [
+      82.0,
+      231.2
+     ],
+     "bodyHeightPx": 225.6,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "dead": {
+     "file": "assets/runtime/mon_M05_dead.webp",
+     "size": [
+      285,
+      109
+     ],
+     "pivot": [
+      25.7,
+      101.1
+     ],
+     "bodyHeightPx": 96.4,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_c/mon_act_03.png row 1"
   },
   "M06": {
    "id": "M06",
@@ -440,7 +816,82 @@
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [],
-   "status": "RUNTIME_STATIC_SPRITE"
+   "status": "RUNTIME_STATIC_SPRITE",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/mon_M06_idle.webp",
+     "size": [
+      183,
+      161
+     ],
+     "pivot": [
+      91.9,
+      154.8
+     ],
+     "bodyHeightPx": 150.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "attack": {
+     "file": "assets/runtime/mon_M06_attack.webp",
+     "size": [
+      268,
+      153
+     ],
+     "pivot": [
+      164.0,
+      147.6
+     ],
+     "bodyHeightPx": 142.7,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "hit": {
+     "file": "assets/runtime/mon_M06_hit.webp",
+     "size": [
+      181,
+      161
+     ],
+     "pivot": [
+      113.2,
+      154.8
+     ],
+     "bodyHeightPx": 150.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "dead": {
+     "file": "assets/runtime/mon_M06_dead.webp",
+     "size": [
+      233,
+      106
+     ],
+     "pivot": [
+      70.4,
+      100.0
+     ],
+     "bodyHeightPx": 95.2,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_c/mon_act_03.png row 2"
   },
   "M07": {
    "id": "M07",
@@ -500,7 +951,82 @@
     3
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "source": "generated"
+   "source": "generated",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/mon_M07_idle.webp",
+     "size": [
+      162,
+      132
+     ],
+     "pivot": [
+      94.2,
+      127.3
+     ],
+     "bodyHeightPx": 124.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "attack": {
+     "file": "assets/runtime/mon_M07_attack.webp",
+     "size": [
+      184,
+      121
+     ],
+     "pivot": [
+      138.9,
+      115.7
+     ],
+     "bodyHeightPx": 112.4,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "hit": {
+     "file": "assets/runtime/mon_M07_hit.webp",
+     "size": [
+      146,
+      131
+     ],
+     "pivot": [
+      105.8,
+      126.2
+     ],
+     "bodyHeightPx": 122.9,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "dead": {
+     "file": "assets/runtime/mon_M07_dead.webp",
+     "size": [
+      176,
+      79
+     ],
+     "pivot": [
+      88.3,
+      74.2
+     ],
+     "bodyHeightPx": 71.4,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_c/mon_act_04.png row 1"
   },
   "M08": {
    "id": "M08",
@@ -598,7 +1124,82 @@
     4
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "source": "generated"
+   "source": "generated",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/mon_M08_idle.webp",
+     "size": [
+      215,
+      235
+     ],
+     "pivot": [
+      121.5,
+      228.8
+     ],
+     "bodyHeightPx": 224.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "attack": {
+     "file": "assets/runtime/mon_M08_attack.webp",
+     "size": [
+      267,
+      214
+     ],
+     "pivot": [
+      154.3,
+      207.9
+     ],
+     "bodyHeightPx": 203.1,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "hit": {
+     "file": "assets/runtime/mon_M08_hit.webp",
+     "size": [
+      214,
+      237
+     ],
+     "pivot": [
+      84.4,
+      230.4
+     ],
+     "bodyHeightPx": 225.6,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "dead": {
+     "file": "assets/runtime/mon_M08_dead.webp",
+     "size": [
+      239,
+      177
+     ],
+     "pivot": [
+      149.2,
+      171.8
+     ],
+     "bodyHeightPx": 167.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_c/mon_act_04.png row 2"
   },
   "M09": {
    "id": "M09",
@@ -659,7 +1260,82 @@
     1
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "source": "generated"
+   "source": "generated",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/mon_M09_idle.webp",
+     "size": [
+      242,
+      223
+     ],
+     "pivot": [
+      132.8,
+      216.5
+     ],
+     "bodyHeightPx": 212.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "attack": {
+     "file": "assets/runtime/mon_M09_attack.webp",
+     "size": [
+      297,
+      213
+     ],
+     "pivot": [
+      271.3,
+      205.7
+     ],
+     "bodyHeightPx": 201.3,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "hit": {
+     "file": "assets/runtime/mon_M09_hit.webp",
+     "size": [
+      227,
+      248
+     ],
+     "pivot": [
+      96.6,
+      241.5
+     ],
+     "bodyHeightPx": 236.2,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "dead": {
+     "file": "assets/runtime/mon_M09_dead.webp",
+     "size": [
+      262,
+      167
+     ],
+     "pivot": [
+      121.9,
+      161.0
+     ],
+     "bodyHeightPx": 156.5,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_c/mon_act_05.png row 1"
   },
   "M10": {
    "id": "M10",
@@ -725,7 +1401,82 @@
     1
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "source": "generated"
+   "source": "generated",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/mon_M10_idle.webp",
+     "size": [
+      180,
+      216
+     ],
+     "pivot": [
+      102.7,
+      211.3
+     ],
+     "bodyHeightPx": 208.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "attack": {
+     "file": "assets/runtime/mon_M10_attack.webp",
+     "size": [
+      220,
+      195
+     ],
+     "pivot": [
+      87.4,
+      190.8
+     ],
+     "bodyHeightPx": 186.8,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "hit": {
+     "file": "assets/runtime/mon_M10_hit.webp",
+     "size": [
+      183,
+      217
+     ],
+     "pivot": [
+      67.2,
+      212.0
+     ],
+     "bodyHeightPx": 208.7,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "dead": {
+     "file": "assets/runtime/mon_M10_dead.webp",
+     "size": [
+      171,
+      172
+     ],
+     "pivot": [
+      102.8,
+      166.9
+     ],
+     "bodyHeightPx": 163.6,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_c/mon_act_05.png row 2"
   },
   "M11": {
    "id": "M11",
@@ -803,7 +1554,82 @@
     1
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "source": "generated"
+   "source": "generated",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/mon_M11_idle.webp",
+     "size": [
+      163,
+      218
+     ],
+     "pivot": [
+      89.3,
+      212.3
+     ],
+     "bodyHeightPx": 208.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "attack": {
+     "file": "assets/runtime/mon_M11_attack.webp",
+     "size": [
+      238,
+      210
+     ],
+     "pivot": [
+      104.8,
+      204.4
+     ],
+     "bodyHeightPx": 200.1,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "hit": {
+     "file": "assets/runtime/mon_M11_hit.webp",
+     "size": [
+      171,
+      219
+     ],
+     "pivot": [
+      62.8,
+      213.7
+     ],
+     "bodyHeightPx": 210.2,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "dead": {
+     "file": "assets/runtime/mon_M11_dead.webp",
+     "size": [
+      169,
+      162
+     ],
+     "pivot": [
+      100.3,
+      156.4
+     ],
+     "bodyHeightPx": 152.8,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_c/mon_act_06.png row 1"
   },
   "M12": {
    "id": "M12",
@@ -886,7 +1712,82 @@
     2
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "source": "generated"
+   "source": "generated",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/mon_M12_idle.webp",
+     "size": [
+      167,
+      124
+     ],
+     "pivot": [
+      72.8,
+      119.6
+     ],
+     "bodyHeightPx": 116.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "attack": {
+     "file": "assets/runtime/mon_M12_attack.webp",
+     "size": [
+      201,
+      123
+     ],
+     "pivot": [
+      109.3,
+      117.8
+     ],
+     "bodyHeightPx": 114.8,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "hit": {
+     "file": "assets/runtime/mon_M12_hit.webp",
+     "size": [
+      154,
+      124
+     ],
+     "pivot": [
+      54.0,
+      119.6
+     ],
+     "bodyHeightPx": 116.6,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "dead": {
+     "file": "assets/runtime/mon_M12_dead.webp",
+     "size": [
+      175,
+      76
+     ],
+     "pivot": [
+      71.8,
+      70.7
+     ],
+     "bodyHeightPx": 67.1,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_c/mon_act_06.png row 2"
   },
   "M13": {
    "id": "M13",
@@ -995,7 +1896,82 @@
     1
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "source": "generated"
+   "source": "generated",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/mon_M13_idle.webp",
+     "size": [
+      229,
+      230
+     ],
+     "pivot": [
+      187.1,
+      222.4
+     ],
+     "bodyHeightPx": 216.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "attack": {
+     "file": "assets/runtime/mon_M13_attack.webp",
+     "size": [
+      301,
+      225
+     ],
+     "pivot": [
+      263.2,
+      217.8
+     ],
+     "bodyHeightPx": 211.5,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "hit": {
+     "file": "assets/runtime/mon_M13_hit.webp",
+     "size": [
+      245,
+      257
+     ],
+     "pivot": [
+      76.4,
+      249.6
+     ],
+     "bodyHeightPx": 244.1,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "dead": {
+     "file": "assets/runtime/mon_M13_dead.webp",
+     "size": [
+      291,
+      142
+     ],
+     "pivot": [
+      140.4,
+      134.3
+     ],
+     "bodyHeightPx": 128.9,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_c/mon_act_07.png row 1"
   },
   "M14": {
    "id": "M14",
@@ -1196,7 +2172,82 @@
     1
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "source": "generated"
+   "source": "generated",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/mon_M14_idle.webp",
+     "size": [
+      179,
+      157
+     ],
+     "pivot": [
+      141.1,
+      151.8
+     ],
+     "bodyHeightPx": 148.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "attack": {
+     "file": "assets/runtime/mon_M14_attack.webp",
+     "size": [
+      199,
+      143
+     ],
+     "pivot": [
+      176.5,
+      137.9
+     ],
+     "bodyHeightPx": 134.1,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "hit": {
+     "file": "assets/runtime/mon_M14_hit.webp",
+     "size": [
+      136,
+      177
+     ],
+     "pivot": [
+      27.4,
+      171.9
+     ],
+     "bodyHeightPx": 163.1,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "dead": {
+     "file": "assets/runtime/mon_M14_dead.webp",
+     "size": [
+      209,
+      105
+     ],
+     "pivot": [
+      81.1,
+      99.5
+     ],
+     "bodyHeightPx": 95.7,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_c/mon_act_07.png row 2"
   },
   "M15": {
    "id": "M15",
@@ -1280,7 +2331,82 @@
     1
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "source": "generated"
+   "source": "generated",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/mon_M15_idle.webp",
+     "size": [
+      243,
+      238
+     ],
+     "pivot": [
+      144.3,
+      229.9
+     ],
+     "bodyHeightPx": 224.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "attack": {
+     "file": "assets/runtime/mon_M15_attack.webp",
+     "size": [
+      314,
+      215
+     ],
+     "pivot": [
+      173.7,
+      207.4
+     ],
+     "bodyHeightPx": 201.5,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "hit": {
+     "file": "assets/runtime/mon_M15_hit.webp",
+     "size": [
+      267,
+      230
+     ],
+     "pivot": [
+      147.2,
+      223.0
+     ],
+     "bodyHeightPx": 217.2,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "dead": {
+     "file": "assets/runtime/mon_M15_dead.webp",
+     "size": [
+      325,
+      152
+     ],
+     "pivot": [
+      108.4,
+      144.8
+     ],
+     "bodyHeightPx": 139.9,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_c/mon_act_08.png row 1"
   },
   "M16": {
    "id": "M16",
@@ -1478,7 +2604,82 @@
     1
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "source": "generated"
+   "source": "generated",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/mon_M16_idle.webp",
+     "size": [
+      179,
+      219
+     ],
+     "pivot": [
+      114.4,
+      212.6
+     ],
+     "bodyHeightPx": 208.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "attack": {
+     "file": "assets/runtime/mon_M16_attack.webp",
+     "size": [
+      257,
+      189
+     ],
+     "pivot": [
+      189.4,
+      183.3
+     ],
+     "bodyHeightPx": 178.6,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "hit": {
+     "file": "assets/runtime/mon_M16_hit.webp",
+     "size": [
+      202,
+      203
+     ],
+     "pivot": [
+      94.7,
+      197.2
+     ],
+     "bodyHeightPx": 192.5,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "dead": {
+     "file": "assets/runtime/mon_M16_dead.webp",
+     "size": [
+      223,
+      128
+     ],
+     "pivot": [
+      112.4,
+      122.2
+     ],
+     "bodyHeightPx": 117.5,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_c/mon_act_08.png row 2"
   },
   "M17": {
    "id": "M17",
@@ -1547,7 +2748,82 @@
     2
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "source": "generated"
+   "source": "generated",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/mon_M17_idle.webp",
+     "size": [
+      187,
+      201
+     ],
+     "pivot": [
+      107.4,
+      196.0
+     ],
+     "bodyHeightPx": 192.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "attack": {
+     "file": "assets/runtime/mon_M17_attack.webp",
+     "size": [
+      223,
+      191
+     ],
+     "pivot": [
+      178.6,
+      185.3
+     ],
+     "bodyHeightPx": 181.9,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "hit": {
+     "file": "assets/runtime/mon_M17_hit.webp",
+     "size": [
+      191,
+      210
+     ],
+     "pivot": [
+      60.2,
+      204.8
+     ],
+     "bodyHeightPx": 200.7,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "dead": {
+     "file": "assets/runtime/mon_M17_dead.webp",
+     "size": [
+      186,
+      160
+     ],
+     "pivot": [
+      108.4,
+      154.4
+     ],
+     "bodyHeightPx": 151.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_c/mon_act_09.png row 1"
   },
   "M18": {
    "id": "M18",
@@ -1605,7 +2881,82 @@
     1
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "source": "generated"
+   "source": "generated",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/mon_M18_idle.webp",
+     "size": [
+      209,
+      235
+     ],
+     "pivot": [
+      133.3,
+      228.6
+     ],
+     "bodyHeightPx": 224.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "attack": {
+     "file": "assets/runtime/mon_M18_attack.webp",
+     "size": [
+      252,
+      219
+     ],
+     "pivot": [
+      190.6,
+      213.4
+     ],
+     "bodyHeightPx": 209.6,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "hit": {
+     "file": "assets/runtime/mon_M18_hit.webp",
+     "size": [
+      224,
+      227
+     ],
+     "pivot": [
+      100.3,
+      221.7
+     ],
+     "bodyHeightPx": 217.9,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "dead": {
+     "file": "assets/runtime/mon_M18_dead.webp",
+     "size": [
+      212,
+      192
+     ],
+     "pivot": [
+      90.4,
+      185.3
+     ],
+     "bodyHeightPx": 180.7,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_c/mon_act_09.png row 2"
   },
   "M19": {
    "id": "M19",
@@ -1711,7 +3062,82 @@
     1
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "source": "generated"
+   "source": "generated",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/mon_M19_idle.webp",
+     "size": [
+      177,
+      218
+     ],
+     "pivot": [
+      80.9,
+      212.1
+     ],
+     "bodyHeightPx": 208.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "attack": {
+     "file": "assets/runtime/mon_M19_attack.webp",
+     "size": [
+      229,
+      202
+     ],
+     "pivot": [
+      127.7,
+      196.9
+     ],
+     "bodyHeightPx": 192.8,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "hit": {
+     "file": "assets/runtime/mon_M19_hit.webp",
+     "size": [
+      202,
+      226
+     ],
+     "pivot": [
+      98.5,
+      220.4
+     ],
+     "bodyHeightPx": 216.3,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "dead": {
+     "file": "assets/runtime/mon_M19_dead.webp",
+     "size": [
+      215,
+      149
+     ],
+     "pivot": [
+      107.0,
+      144.4
+     ],
+     "bodyHeightPx": 140.3,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_c/mon_act_10.png row 1"
   },
   "M20": {
    "id": "M20",
@@ -1878,7 +3304,82 @@
     1
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "source": "generated"
+   "source": "generated",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/mon_M20_idle.webp",
+     "size": [
+      167,
+      161
+     ],
+     "pivot": [
+      56.4,
+      155.7
+     ],
+     "bodyHeightPx": 152.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "attack": {
+     "file": "assets/runtime/mon_M20_attack.webp",
+     "size": [
+      207,
+      134
+     ],
+     "pivot": [
+      86.4,
+      128.3
+     ],
+     "bodyHeightPx": 124.6,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "hit": {
+     "file": "assets/runtime/mon_M20_hit.webp",
+     "size": [
+      160,
+      184
+     ],
+     "pivot": [
+      43.7,
+      179.4
+     ],
+     "bodyHeightPx": 175.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "dead": {
+     "file": "assets/runtime/mon_M20_dead.webp",
+     "size": [
+      194,
+      106
+     ],
+     "pivot": [
+      66.1,
+      101.5
+     ],
+     "bodyHeightPx": 98.4,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_c/mon_act_10.png row 2"
   }
  },
  "bosses": {

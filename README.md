@@ -49,6 +49,7 @@ node tools/qa_v6.cjs 8123                        # 도감·업적·칭호·시�
 node tools/qa_v7.cjs 8123                        # 슬롯 강화(이전 안내)·스테이지 지도 × 3해상도
 node tools/qa_combat_fx.cjs 8123                 # 콤보·치명타·스킬 이펙트·궁극기 컷인 캡처(docs/qa/screens/fx_*.png)·프레임 비용
 python3 tools/extract_gpt_b.py                  # GPT B 투사체·타격 → fx_*.webp
+python3 tools/extract_gpt_c.py                  # GPT C 몬스터 대기·공격·피격·쓰러짐 → mon_M##_<act>.webp
 python3 tools/extract_gpt_i.py                  # GPT I 스테이지 지도 → map_*.webp + 노드 좌표
 python3 tools/extract_v5.py                     # pets_6 / icons_v5 → pet_P0x, skill_V## 
 python3 tools/extract_assets.py                 # 원화 보드 → assets/runtime (원본 불변)
