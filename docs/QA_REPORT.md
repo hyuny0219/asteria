@@ -155,3 +155,17 @@
 | 보스·던전·탑·균열 몰입 화면 3해상도(390×844/360×700/412×915), 하단 패널·탭 숨김, 넘침 0, 작은 터치 0 | PASS | `tools/qa_immersive.cjs` 13/13 (포기 → 사냥 복귀 포함), `docs/qa/screens/immersive_*` |
 | 전체 회귀 | PASS | npm test 86/86, browser_qa 141/141 화면(42종)·흐름 27/27(몰입 13 포함), qa_login·qa_v5·qa_v6 실패 0, qa_a01·qa_a02 오류 없음 |
 | 레벨 속도 목표 (Lv30 6h · Lv60 2.5d · Lv90 7d · Lv100 10d) | PASS(시뮬) | `docs/qa/balance_sim_v6.txt` |
+
+## v6 타격감·콤보·스킬 연출·궁극기 컷인 (2026-11-06)
+| 항목 | 결과 | 근거 |
+|---|---|---|
+| 기본 공격 3단 콤보 순환(1→2→3), 2초 없으면 1타로 | PASS | `tools/qa_combat_fx.cjs` 4클래스 단계 기록 `123123…`, `docs/qa/combat_fx.json` |
+| 클래스별 콤보 모양(전사 호·피니시 / 마법사 별탄·쌍탄·별 폭발 / 궁수 단발·연사·충전 화살 / 도적 쌍베기·난도·X) | PASS(육안) | `docs/qa/screens/fx_combo2_*.png`, `fx_combo3_*.png` |
+| 치명타 숫자('치명!'·확대), 흰 피격 섬광, 밀려남, 히트스톱, 흔들림 | PASS(육안) | `fx_crit_warrior.png`, `fx_crit_rogue.png` |
+| 스킬 이펙트 8종 캡처(강타·심판의 일격·서리 고리·연쇄 번개·멀티샷·정조준·독칼·연막) + 스킬 이름 표시 | PASS(육안) | `fx_skill_*.png` |
+| 궁극기 컷인(어두워짐·사선 띠·초상·이름) 4클래스 + 타격 이펙트 4클래스 + 몰입 보스전 | PASS(육안) | `fx_ult_cutin_*.png`, `fx_ult_*.png`, `fx_boss_*.png` |
+| 동작 줄이기: 컷인·흔들림 없음 / 화면 탭 → 컷인 띠 건너뜀(전투 계속) | PASS | qa_combat_fx `reduced_motion`, `tap_skip_cutin` |
+| 그리기 비용(헤드리스 Chromium, 390×844 DPR 2) 평균 0.2ms · p95 0.4ms, 입자 최대 224/260 | PASS | `docs/qa/combat_fx.json` |
+| 피해·타이밍 불변 | PASS | npm test 86/86(FPS 15/30/60 동일 포함) |
+| 전체 회귀 | PASS | browser_qa 141/141 화면(42종)·흐름 28/28, qa_immersive 14/14, qa_login 10/10, qa_v5 14/14, qa_v6 32/32, qa_a01·qa_a02 오류 없음, qa_combat_fx 38/38 |
+| 실기기 체감(진동·소리·프레임) | 미검증 | — |

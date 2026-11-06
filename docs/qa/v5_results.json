@@ -30,9 +30,9 @@
   "pass": true,
   "info": {
    "choices": [
-    "b_echo",
     "b_def",
-    "b_evade"
+    "b_atk",
+    "b_combo"
    ]
   }
  },
@@ -82,9 +82,9 @@
   "pass": true,
   "info": {
    "choices": [
+    "b_greed",
     "b_atk2",
-    "b_regen",
-    "b_atk"
+    "b_combo"
    ]
   }
  },

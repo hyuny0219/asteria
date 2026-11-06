@@ -116,6 +116,8 @@ export class App {
     this.renderer = new BattleRenderer(E.canvas, { getSettings: () => this.settings, topInset: 46 });
     this.iris = document.getElementById('iris') || document.body.appendChild(h('div', { id: 'iris', 'aria-hidden': 'true' }));
     new ResizeObserver(() => this.renderer.resize()).observe(E.canvas);
+    // tap the battle during an ultimate: skip the cut-in banner (the attack itself still plays)
+    E.canvas.addEventListener('pointerdown', () => { if (this.renderer) this.renderer.skipCutin(); });
     this.bindGame();
     this.buildSkills();
     this.setTab('growth');
@@ -127,8 +129,8 @@ export class App {
   bindGame() {
     const g = this.game;
     g.on('combat', (ev) => {
-      if (this.renderer) this.renderer.onCombat(ev, g.active);
-      if (ev.type === 'hit' && ev.by === 'hero' && this.state.settings.sound) sfx(ev.crit ? 'crit' : 'hit');
+      const cue = this.renderer ? this.renderer.onCombat(ev, g.active) : null;
+      if (cue && this.state.settings.sound) sfx(cue);
       if (ev.type === 'kill' && ev.enemy && ev.enemy.boss && !ev.enemy.trial) this.announce('보스를 쓰러뜨렸습니다', true);
       if (ev.type === 'telegraph' && ev.heavy) {
         this.announce(`경고: ${ev.name}`, true);

@@ -1,0 +1,256 @@
+{
+ "results": [
+  {
+   "name": "fx_combo3_warrior",
+   "pass": true
+  },
+  {
+   "name": "fx_combo2_warrior",
+   "pass": true
+  },
+  {
+   "name": "fx_crit_warrior",
+   "pass": true
+  },
+  {
+   "name": "fx_skill_warrior_strike",
+   "pass": true
+  },
+  {
+   "name": "fx_skill_warrior_w_judgement",
+   "pass": true
+  },
+  {
+   "name": "fx_ult_cutin_warrior",
+   "pass": true
+  },
+  {
+   "name": "fx_ult_warrior",
+   "pass": true
+  },
+  {
+   "name": "perf_warrior",
+   "pass": true,
+   "m": {
+    "frames": 181,
+    "avgMs": 0.18,
+    "p95Ms": 0.3,
+    "maxParts": 76,
+    "fx": 1,
+    "steps": "1231231112",
+    "cues": "hit,hit2,finisher,crit,skill,boom"
+   },
+   "errs": []
+  },
+  {
+   "name": "fx_combo3_mage",
+   "pass": true
+  },
+  {
+   "name": "fx_combo2_mage",
+   "pass": true
+  },
+  {
+   "name": "fx_skill_mage_m_frost",
+   "pass": true
+  },
+  {
+   "name": "fx_skill_mage_m_chain",
+   "pass": true
+  },
+  {
+   "name": "fx_ult_cutin_mage",
+   "pass": true
+  },
+  {
+   "name": "fx_ult_mage",
+   "pass": true
+  },
+  {
+   "name": "perf_mage",
+   "pass": true,
+   "m": {
+    "frames": 181,
+    "avgMs": 0.25,
+    "p95Ms": 0.4,
+    "maxParts": 193,
+    "fx": 0,
+    "steps": "123121212",
+    "cues": "hit,hit2,finisher,crit,skill,boom"
+   },
+   "errs": []
+  },
+  {
+   "name": "fx_combo3_archer",
+   "pass": true
+  },
+  {
+   "name": "fx_combo2_archer",
+   "pass": true
+  },
+  {
+   "name": "fx_skill_archer_a_multi",
+   "pass": true
+  },
+  {
+   "name": "fx_skill_archer_a_aim",
+   "pass": true
+  },
+  {
+   "name": "fx_ult_cutin_archer",
+   "pass": true
+  },
+  {
+   "name": "fx_ult_archer",
+   "pass": true
+  },
+  {
+   "name": "perf_archer",
+   "pass": true,
+   "m": {
+    "frames": 180,
+    "avgMs": 0.18,
+    "p95Ms": 0.4,
+    "maxParts": 202,
+    "fx": 0,
+    "steps": "123121212",
+    "cues": "hit,hit2,finisher,skill,boom,crit"
+   },
+   "errs": []
+  },
+  {
+   "name": "fx_combo3_rogue",
+   "pass": true
+  },
+  {
+   "name": "fx_combo2_rogue",
+   "pass": true
+  },
+  {
+   "name": "fx_crit_rogue",
+   "pass": true
+  },
+  {
+   "name": "fx_skill_rogue_r_poison",
+   "pass": true
+  },
+  {
+   "name": "fx_skill_rogue_r_smoke",
+   "pass": true
+  },
+  {
+   "name": "fx_ult_cutin_rogue",
+   "pass": true
+  },
+  {
+   "name": "fx_ult_rogue",
+   "pass": true
+  },
+  {
+   "name": "perf_rogue",
+   "pass": true,
+   "m": {
+    "frames": 181,
+    "avgMs": 0.23,
+    "p95Ms": 0.4,
+    "maxParts": 136,
+    "fx": 0,
+    "steps": "1231231112",
+    "cues": "hit,hit2,finisher,crit,skill,,boom"
+   },
+   "errs": []
+  },
+  {
+   "name": "fx_ult_reduced_warrior",
+   "pass": true
+  },
+  {
+   "name": "reduced_motion",
+   "pass": true,
+   "m": {
+    "simple": true,
+    "shake": false
+   },
+   "errs": []
+  },
+  {
+   "name": "tap_skip_cutin",
+   "pass": true,
+   "sk": {
+    "skipped": true,
+    "mode": "FARM"
+   }
+  },
+  {
+   "name": "fx_boss_combo3_mage",
+   "pass": true
+  },
+  {
+   "name": "fx_boss_skill_mage",
+   "pass": true
+  },
+  {
+   "name": "fx_boss_ult_cutin_mage",
+   "pass": true
+  },
+  {
+   "name": "fx_boss_ult_mage",
+   "pass": true
+  },
+  {
+   "name": "immersive_boss",
+   "pass": true,
+   "st": {
+    "ok": true,
+    "mode": "BOSS"
+   },
+   "errs": []
+  }
+ ],
+ "perf": [
+  {
+   "cls": "warrior",
+   "frames": 181,
+   "avgMs": 0.18,
+   "p95Ms": 0.3,
+   "maxParts": 76,
+   "fx": 1,
+   "steps": "1231231112",
+   "cues": "hit,hit2,finisher,crit,skill,boom",
+   "errs": []
+  },
+  {
+   "cls": "mage",
+   "frames": 181,
+   "avgMs": 0.25,
+   "p95Ms": 0.4,
+   "maxParts": 193,
+   "fx": 0,
+   "steps": "123121212",
+   "cues": "hit,hit2,finisher,crit,skill,boom",
+   "errs": []
+  },
+  {
+   "cls": "archer",
+   "frames": 180,
+   "avgMs": 0.18,
+   "p95Ms": 0.4,
+   "maxParts": 202,
+   "fx": 0,
+   "steps": "123121212",
+   "cues": "hit,hit2,finisher,skill,boom,crit",
+   "errs": []
+  },
+  {
+   "cls": "rogue",
+   "frames": 181,
+   "avgMs": 0.23,
+   "p95Ms": 0.4,
+   "maxParts": 136,
+   "fx": 0,
+   "steps": "1231231112",
+   "cues": "hit,hit2,finisher,crit,skill,,boom",
+   "errs": []
+  }
+ ]
+}
