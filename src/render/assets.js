@@ -84,6 +84,8 @@ export const petMeta = (id) => (meta.pets ? meta.pets[id] : null) || null;
 export const petImage = (id) => (meta.pets && meta.pets[id] ? meta.pets[id].file : null);
 export function enemyMeta(id) { return meta.monsters[id] || meta.bosses[id] || null; }
 export function bgMeta(id) { return meta.backgrounds[id]; }
+// GPT B effect sprite → loaded <img> + anchor, or null (callers fall back to vector FX).
+export function fxSprite(name) { const f = meta && meta.fx && meta.fx[name]; if (!f) return null; const im = ready(f.file); if (!im) { loadImage(f.file); return null; } return { img: im, ...f }; }
 export const itemIcon = (iconId) => meta.items[iconId].file;
 export const skillIcon = (iconId) => meta.skills[iconId].file;
 export const portrait = (id) => meta.portraits[id].file;
@@ -118,6 +120,7 @@ export async function preloadFor({ region, boss, branch, cls = 'warrior', tier =
   if (allMonsters && monsters) for (const m of Object.values(monsters)) list.push(spriteFile(m));
   if (pet && meta.pets && meta.pets[pet]) list.push(meta.pets[pet].file);
   if (bg && meta.backgrounds[bg]) list.push(meta.backgrounds[bg].file);
+  if (meta.fx) for (const f of Object.values(meta.fx)) list.push(f.file);   // GPT B projectiles / hits (~220 KB)
   await Promise.all(list.filter(Boolean).map(loadImage));
 }
 

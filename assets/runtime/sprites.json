@@ -221,7 +221,8 @@
   "gpt_a02/poses_fateweaver.png": {
    "status": "GPT_A02_POSE_SHEET",
    "note": "2·3차 8 key poses, real alpha (no colour key)"
-  }
+  },
+  "gpt_b/fx_projectiles.png": "GPT package B"
  },
  "monsters": {
   "M01": {
@@ -20380,6 +20381,92 @@
    ],
    "status": "RUNTIME_STATIC_SPRITE",
    "source": "generated/pets_6.png"
+  }
+ },
+ "fx": {
+  "bolt": {
+   "file": "assets/runtime/fx_bolt.webp",
+   "w": 256,
+   "h": 124,
+   "ax": 0.975,
+   "ay": 0.503
+  },
+  "hex": {
+   "file": "assets/runtime/fx_hex.webp",
+   "w": 256,
+   "h": 122,
+   "ax": 0.982,
+   "ay": 0.516
+  },
+  "arrow": {
+   "file": "assets/runtime/fx_arrow.webp",
+   "w": 256,
+   "h": 61,
+   "ax": 0.98,
+   "ay": 0.482
+  },
+  "arrow_glow": {
+   "file": "assets/runtime/fx_arrow_glow.webp",
+   "w": 256,
+   "h": 69,
+   "ax": 0.972,
+   "ay": 0.505
+  },
+  "dagger": {
+   "file": "assets/runtime/fx_dagger.webp",
+   "w": 256,
+   "h": 78,
+   "ax": 0.977,
+   "ay": 0.476
+  },
+  "card": {
+   "file": "assets/runtime/fx_card.webp",
+   "w": 256,
+   "h": 167,
+   "ax": 0.688,
+   "ay": 0.508
+  },
+  "meteor": {
+   "file": "assets/runtime/fx_meteor.webp",
+   "w": 256,
+   "h": 114,
+   "ax": 0.967,
+   "ay": 0.571
+  },
+  "rain": {
+   "file": "assets/runtime/fx_rain.webp",
+   "w": 176,
+   "h": 256,
+   "ax": 0.5,
+   "ay": 0.83
+  },
+  "hit": {
+   "file": "assets/runtime/fx_hit.webp",
+   "w": 256,
+   "h": 214,
+   "ax": 0.639,
+   "ay": 0.505
+  },
+  "hit_magic": {
+   "file": "assets/runtime/fx_hit_magic.webp",
+   "w": 256,
+   "h": 193,
+   "ax": 0.52,
+   "ay": 0.522
+  },
+  "hit_poison": {
+   "file": "assets/runtime/fx_hit_poison.webp",
+   "w": 256,
+   "h": 191,
+   "ax": 0.505,
+   "ay": 0.543
+  },
+  "crit": {
+   "file": "assets/runtime/fx_crit.webp",
+   "w": 256,
+   "h": 219,
+   "ax": 0.505,
+   "ay": 0.474
   }
  }
 }

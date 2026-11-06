@@ -17,7 +17,7 @@
 //   time from 'ultStart' so it lines up with the 700 ms impact; tap skips the banner.
 import { HERO_X } from '../core/combat.js';
 import { CLASSES, SKILLS } from '../data/content.js';
-import { bgMeta, classPortrait, enemyMeta, heroFrames, loadImage, outlined, petMeta, promoPortrait, ready, scaledImage, spriteMeta } from './assets.js';
+import { bgMeta, fxSprite, classPortrait, enemyMeta, heroFrames, loadImage, outlined, petMeta, promoPortrait, ready, scaledImage, spriteMeta } from './assets.js';
 import { Particles, PK } from './particles.js';
 import { fmt } from '../core/util.js';
 
@@ -47,6 +47,9 @@ const DOT_COL = { r_poison: '#8BE07A', m_curse: '#C08CFF', a_beast: '#F08080' };
 const PROJ_SKILL = { m_fireball: 'fire', m_curse: 'hex', m_drain: null, m_chain: null, m_frost: null, m_blizzard: null,
   a_aim: 'arrowC', a_pierce: null, a_snipe: null, a_beast: null, a_pack: null, r_poison: 'daggerP' };
 const byXDesc = (a, b) => b.x - a.x;
+// projectile kind → GPT B sprite and on-screen length (px at u = 1)
+const PROJ_SPRITE = { bolt: 'bolt', star: 'bolt', hex: 'hex', fire: 'meteor', arrow: 'arrow', arrowC: 'arrow_glow', dagger: 'dagger', daggerP: 'dagger' };
+const PROJ_LEN = { bolt: 46, star: 52, hex: 46, fire: 52, arrow: 50, arrowC: 60, dagger: 30, daggerP: 30 };
 const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
 const white = new WeakMap();   // sprite canvas → white silhouette (hit flash), no ctx.filter needed
 
@@ -282,7 +285,7 @@ export class BattleRenderer {
       if (step === 3) {
         this.pushFx({ kind: 'nova', x: X, y: Y, r: 46 * u, col: P.main, born: t0, dur: 380 });
         this.parts.burst(t0, X, Y, 10, 160, 520, 5, P.hot, PK.STAR, 0);
-      } else this.pushFx({ kind: 'spark', x: X, y: Y, col: P.main, crit, born: t0, dur: 220 });
+      } else this.pushFx({ kind: 'spark', x: X, y: Y, col: P.main, crit, img: this.heroBranch === 'warlock' ? 'hit_poison' : 'hit_magic', born: t0, dur: 220 });
     } else {   // archer
       if (step === 3) {
         this.pushFx({ kind: 'ring', x: X, y: Y, r0: 6 * u, r1: 44 * u, col: P.main, w: 3, flat: 1, born: t0, dur: 320 });
@@ -903,6 +906,14 @@ export class BattleRenderer {
           break;
         }
         case 'spark': {
+          const hs = fxSprite(f.crit ? 'crit' : f.img || 'hit');
+          if (hs) {
+            const sz = (f.crit ? 46 : 32) * this.fit * (motion ? 0.7 + 0.5 * p : 1), sc = sz / Math.max(hs.w, hs.h);
+            ctx.globalAlpha = 1 - p * p; ctx.globalCompositeOperation = 'lighter';
+            ctx.drawImage(hs.img, f.x - hs.ax * hs.w * sc, f.y - hs.ay * hs.h * sc, hs.w * sc, hs.h * sc);
+            ctx.globalCompositeOperation = 'source-over';
+            break;
+          }
           ctx.strokeStyle = f.crit ? '#EDBD68' : f.col; ctx.lineWidth = 2;
           const r = (6 + (motion ? 16 * p : 8)) * this.fit;
           ctx.beginPath();
@@ -1032,7 +1043,13 @@ export class BattleRenderer {
             g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, f.col);
             ctx.strokeStyle = g; ctx.lineWidth = f.r * 1.4; ctx.lineCap = 'round';
             ctx.beginPath(); ctx.moveTo(mx + 60 * u, my - 70 * u); ctx.lineTo(mx, my); ctx.stroke();
-            ctx.fillStyle = '#FFF2D0'; ctx.beginPath(); ctx.arc(mx, my, f.r * 0.7, 0, Math.PI * 2); ctx.fill();
+            ctx.globalCompositeOperation = 'source-over';
+            const ms = fxSprite(f.col === '#7CE08A' ? 'hex' : 'meteor');
+            if (ms) {
+              const sc = (f.r * 4.2) / ms.w;
+              ctx.save(); ctx.translate(mx, my); ctx.rotate(Math.atan2(ty - sy0, f.x - sx0));
+              ctx.drawImage(ms.img, -ms.ax * ms.w * sc, -ms.ay * ms.h * sc, ms.w * sc, ms.h * sc); ctx.restore();
+            } else { ctx.fillStyle = '#FFF2D0'; ctx.beginPath(); ctx.arc(mx, my, f.r * 0.7, 0, Math.PI * 2); ctx.fill(); }
           } else {
             const q = (now - f.born - f.fall) / (f.dur - f.fall);
             if (!f.landed) { f.landed = true; this.parts.burst(now, f.x, ty, 14, 240, 500, 3.4, f.col, PK.DOT, 300, 2.2, -Math.PI / 2); this.parts.burst(now, f.x, ty, 5, 50, 800, 14 * u, 'rgba(50,35,35,0.9)', PK.SMOKE); }
@@ -1090,6 +1107,16 @@ export class BattleRenderer {
     ctx.globalAlpha = 1;
     ctx.translate(px, py); ctx.rotate(ang);
     const k = f.proj;
+    // GPT B sprite (anchor = leading tip at the projectile position); vector fallback below
+    const spr = fxSprite(PROJ_SPRITE[k] === 'dagger' && this.heroBranch === 'trickster' ? 'card' : PROJ_SPRITE[k]);
+    if (spr) {
+      const big = f.big || k === 'fire' ? 1.5 : 1;
+      const L = (spr.file.includes('card') ? 22 : PROJ_LEN[k] || 48) * big * u * (f.crit ? 1.15 : 1);
+      const sc = L / spr.w;
+      if (spr.file.includes('card') && motion) ctx.rotate(p * Math.PI * 4);
+      ctx.drawImage(spr.img, -spr.ax * spr.w * sc, -spr.ay * spr.h * sc, spr.w * sc, spr.h * sc);
+      return;
+    }
     if (k === 'bolt' || k === 'hex' || k === 'star' || k === 'fire') {
       const big = f.big || k === 'fire' ? 1.6 : 1;
       const col = k === 'fire' ? 'rgba(255,150,70,0.95)' : k === 'hex' ? 'rgba(130,220,120,0.9)' : f.crit || k === 'star' ? 'rgba(237,189,104,0.95)' : 'rgba(188,154,243,0.9)';
