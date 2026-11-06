@@ -1,5 +1,5 @@
 {
- "at": "2026-11-06T16:11:57.478Z",
+ "at": "2026-11-06T16:33:30.011Z",
  "pass": 42,
  "total": 42,
  "results": [
@@ -58,7 +58,7 @@
    "pass": true,
    "info": {
     "before": 5,
-    "after": 6,
+    "after": 5,
     "over": false,
     "small": [],
     "broken": []
@@ -79,7 +79,7 @@
     "status": "ccccculllll",
     "overlap": 0,
     "inside": true,
-    "mapH": 484,
+    "mapH": 420,
     "tabs": 10,
     "locked": 8,
     "detail": "2-5",
@@ -210,7 +210,7 @@
    "pass": true,
    "info": {
     "before": 5,
-    "after": 5,
+    "after": 6,
     "over": false,
     "small": [],
     "broken": []
@@ -231,7 +231,7 @@
     "status": "ccccculllll",
     "overlap": 0,
     "inside": true,
-    "mapH": 340,
+    "mapH": 350,
     "tabs": 10,
     "locked": 8,
     "detail": "2-5",
@@ -383,7 +383,7 @@
     "status": "ccccculllll",
     "overlap": 0,
     "inside": true,
-    "mapH": 540,
+    "mapH": 420,
     "tabs": 10,
     "locked": 8,
     "detail": "2-5",

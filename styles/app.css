@@ -496,8 +496,10 @@ input.text { width: 100%; min-height: 36px; background: var(--panel); border: 1p
 .stage-tabs .tab.locked { opacity: .6; }
 .stage-tabs .tab small { font-size: 12px; color: var(--gold); font-weight: 700; }
 .stage-map { position: relative; width: 100%; height: clamp(300px, calc(100dvh - 360px), 540px); border-radius: 12px; border: 1px solid var(--border); overflow: hidden;
-.stage-panel .stage-map { height: clamp(260px, 50dvh, 420px); }
   background-color: #1a1522; background-size: cover; background-position: center; isolation: isolate; }
+.stage-panel .stage-map { height: clamp(260px, 50dvh, 420px); }
+.stage-map.art { width: auto; align-self: center; aspect-ratio: 2 / 3; margin: 0 auto; background-size: 100% 100%; max-width: 100%; }
+.stage-map.art::before { background: radial-gradient(ellipse at center, rgba(16,13,24,0) 55%, rgba(16,13,24,.45)); }
 .stage-map::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(16,13,24,.55), rgba(16,13,24,.25) 40%, rgba(16,13,24,.6)); z-index: -1; }
 .stage-map.locked { filter: grayscale(.85) brightness(.75); }
 .stage-path { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
@@ -531,3 +533,5 @@ input.text { width: 100%; min-height: 36px; background: var(--panel); border: 1p
 .stage-rw { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
 .stage-rw .rw { display: inline-flex; align-items: center; gap: 3px; } .stage-rw img { width: 20px; height: 20px; }
 .stage-detail .btn { margin-top: 8px; }
+.stage-map.art .stage-title { left: 6px; top: 6px; padding: 3px 8px; font-size: 12px; max-width: 46%; }
+.stage-map.art .stage-title b { font-size: 13px; }

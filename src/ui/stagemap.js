@@ -64,13 +64,16 @@ function buildStage(app, ui, rerender, close) {
         `${x.order + 1}. ${x.name}`, h('small', null, ok ? ` ★${rs.got}` : ' 🔒'));
     }));
     // ---- the map
-    const bg = bgMeta(r.bg);
-    const map = h('div', { class: 'stage-map' + (open ? '' : ' locked'), dataset: { screen: 'stagemap' }, style: bg ? { backgroundImage: `url(${bg.file})` } : {} });
+    // GPT I map art (painted road) when present; otherwise battle bg + drawn trail
+    const mapArt = (spriteMeta().maps || {})[r.id] || null;
+    const pos = mapArt ? mapArt.nodes : POS;
+    const bg = mapArt || bgMeta(r.bg);
+    const map = h('div', { class: 'stage-map' + (mapArt ? ' art' : '') + (open ? '' : ' locked'), dataset: { screen: 'stagemap' }, style: bg ? { backgroundImage: `url(${bg.file})` } : {} });
     const svg = svgEl('svg', { viewBox: '0 0 100 100', preserveAspectRatio: 'none', class: 'stage-path', 'aria-hidden': 'true' });
-    svg.append(svgEl('path', { d: pathThrough(POS), class: 'trail' }));
+    if (!mapArt) svg.append(svgEl('path', { d: pathThrough(POS), class: 'trail' }));
     const doneIdx = NODES.reduce((a, n, i) => (status(n) === 'cleared' ? i : a), -1);
     const reach = current ? NODES.indexOf(current) : doneIdx;
-    if (reach > 0) svg.append(svgEl('path', { d: pathThrough(POS.slice(0, reach + 1)), class: 'trail-done' }));
+    if (reach > 0) svg.append(svgEl('path', { d: mapArt ? 'M' + mapArt.path.slice(0, mapArt.nodeIdx[reach] + 1).map((q) => q.join(',')).join(' L') : pathThrough(POS.slice(0, reach + 1)), class: 'trail-done' }));
     map.append(svg);
     const rs = ST.regionStars(s, r.id);
     map.append(h('div', { class: 'stage-title' }, h('b', null, `${r.order + 1}. ${r.name}`), h('span', null, `${r.label} · ★ ${rs.got}/${rs.max}`)));
@@ -82,7 +85,7 @@ function buildStage(app, ui, rerender, close) {
       const boss = n === 'boss';
       const art = boss ? spriteMeta().bosses[r.boss] : null;
       const node = h('button', { type: 'button', class: `stage-node ${stt}${boss ? ' boss' : ''}${sel === n ? ' sel' : ''}${here ? ' here' : ''}`, dataset: { node: String(n), status: stt },
-        style: { left: POS[i][0] + '%', top: POS[i][1] + '%' },
+        style: { left: pos[i][0] + '%', top: pos[i][1] + '%' },
         'aria-label': `${ST.stageLabel(r.id, n)} ${{ cleared: '클리어', current: '진행 중', locked: '잠김' }[stt]}${got ? ` 별 ${got}개` : ''}${here ? ' · 사냥 중' : ''}`,
         'aria-pressed': String(sel === n), onClick: () => { sel = n; render(); } },
         boss && art ? img(art.file, '') : h('span', { class: 'n' }, stt === 'locked' ? '🔒' : String(n)),
