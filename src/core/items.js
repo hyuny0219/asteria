@@ -42,7 +42,7 @@ export function makeItem(state, { slot, rarity, level, rng, source = 'drop', set
   const look = lookFor(slot, rarity, state && state.player ? state.player.cls : null);
   const main = slot === 'weapon' || slot === 'gloves' ? 'atk' : slot === 'necklace' || slot === 'ring' ? (rng() < 0.5 ? 'atk' : 'crit') : 'hp';
   const id = `it${state.nextItemSeq++}`;
-  const it = { id, slot, rarity, level, main, look: look.icon, name: look.name, enhance: 0, oreInvested: 0, locked: false, source, isNew: true, options: rollOptions(rarity, rng) };
+  const it = { id, slot, rarity, level, main, look: look.icon, name: look.name, locked: false, source, isNew: true, options: rollOptions(rarity, rng) };
   if (set && SETS[set] && ['helmet', 'armor', 'gloves', 'boots'].includes(slot)) { it.set = set; it.name = `${SETS[set].name}의 ${SLOT_NAMES[slot]}`; }
   if (look.iconPending) it.iconPending = true;
   return it;
@@ -64,10 +64,11 @@ export function itemBaseStats(item) {
   return out;
 }
 
-// Final flat stats: each enhance level adds +5% of the base.
-export function itemStats(item) {
+// Final flat stats. Enhancement belongs to the equip SLOT (schema 6): pass the slot
+// level `lv` and each level adds +5% of the item's base. Unworn items use lv 0.
+export function itemStats(item, lv = 0) {
   const base = itemBaseStats(item);
-  const mul = 1 + EQ.enhanceStatPerLevel * item.enhance;
+  const mul = 1 + EQ.enhanceStatPerLevel * (lv || 0);
   const out = {};
   for (const [k, v] of Object.entries(base)) out[k] = k === 'crit' ? v * mul : Math.floor(v * mul);
   return out;
@@ -92,15 +93,15 @@ export function mainScore(item) {
   return v * (1 + item.level / 200) + optVal * (1 + item.level / 50);
 }
 
-export function itemTitle(item) { return `${item.enhance ? '+' + item.enhance + ' ' : ''}${item.name}`; }
+export function itemTitle(item) { return item.name; }
 export function rarityLabel(r) { return `${RARITY[r].name} ${RARITY[r].mark}`; }
 export function slotLabel(slot) { return SLOT_NAMES[slot]; }
 export const rarityOrder = (r) => RARITY[r].order;
 
-export function enhanceCost(item) {
-  return Math.floor(EQ.enhanceCost.base * Math.pow(EQ.enhanceCost.growth, item.enhance) * (1 + rarityOrder(item.rarity) * 0.25));
+// Slot enhancement (schema 6): cost and chance depend only on the slot level.
+export function enhanceCost(lv) {
+  return Math.floor(EQ.enhanceCost.base * Math.pow(EQ.enhanceCost.growth, lv) * EQ.enhanceCost.slotMul);
 }
-export function enhanceChance(item) { return item.enhance >= EQ.enhanceMax ? 0 : EQ.enhanceSuccess[item.enhance]; }
-export function dismantleValue(item) {
-  return EQ.dismantle[item.rarity] + Math.floor(item.oreInvested * EQ.refundRate);
-}
+export function enhanceChance(lv) { return lv >= EQ.enhanceMax ? 0 : EQ.enhanceSuccess[lv]; }
+// Dismantle value is rarity only — enhancement stays on the slot.
+export function dismantleValue(item) { return EQ.dismantle[item.rarity]; }

@@ -100,7 +100,7 @@ export const BALANCE = Object.freeze({
     enhanceSuccess: [1, 1, 1, 1, 1, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.16, 0.12, 0.08, 0.05],
     enhanceFailDropFrom: 11,     // at +11 or more a failure drops one level; never destroyed
     enhanceStatPerLevel: 0.05,
-    enhanceCost: { base: 5, growth: 1.42 },
+    enhanceCost: { base: 5, growth: 1.42, slotMul: 1.5 },   // slot enhance (v7): rarity factor → fixed 1.5 (≈ 영웅 평균)
     dismantle: { common: 1, uncommon: 3, rare: 8, epic: 20, legendary: 60, mythic: 200 },
     refundRate: 0.8,
     inventoryCapacity: 200,

@@ -5,7 +5,7 @@
 
 - 4클래스(전사 세린 · 마법사 엘레나 · 궁수 리라 · 도적 녹스) · 승급 3차(Lv 30/60/90) × 갈래 8 · Lv 1–100
 - 지역 10 · 보스 10(+필드 보스, 광폭화) · 던전 3종(채석장·금고·서고) · 시련의 탑 · 주간 레이드(심연의 문)
-- 장비 6등급 · 8부위 · 랜덤 옵션 · 세트 · +15 강화 · 자동 분해 / 스킬 레벨(스킬북) · 각인 2칸 · 능력치 포인트
+- 장비 6등급 · 8부위 · 랜덤 옵션 · 세트 · **슬롯 강화 +15**(장비를 바꿔도 유지) · 자동 분해 / 스킬 레벨(스킬북) · 각인 2칸 · 능력치 포인트
 - 장비 뽑기 · 스킬 뽑기(게임 내 보석·뽑기권만, 확률 공개, 천장 200/100) · 일일 미션 · 출석 28일 · 복귀 보상 · 게스트 프로필 3개
 - 특성 트리 · 환생(Lv 100, 정수 영구 강화) · 균열(축복 3택·주간 저주, 30층)
 - 도감(몬스터·장비) · 업적 32 · 칭호 10(1개 장착, 이름 옆 표시) · **무료** 시즌 패스(28일, 30레벨, 유료 트랙 없음)
@@ -36,7 +36,7 @@ PC와 휴대폰을 같은 Wi-Fi에 두고 출력된 `http://<PC IP>:8000/`을 �
 ## 테스트와 검수
 
 ```bash
-npm test                                        # node --test: 로직 86개
+npm test                                        # node --test: 로직 테스트
 node tools/balance_sim.mjs --seeds 4 --hours 34 # 몬테카를로 밸런스 시뮬레이션 (스크립트 플레이어)
 node tools/branch_parity.mjs 30                 # 두 갈래로 같은 보스 비교
 node tools/serve.mjs 8123 & NODE_PATH=$(npm root -g) node tools/browser_qa.cjs   # Playwright: 42화면 × 해상도별(141회) + 흐름 27개(몰입 화면 포함)
@@ -45,6 +45,7 @@ node tools/balance_sim_v4.mjs --seeds 1 --days 14 # v6 진행 곡선 시뮬레�
 node tools/qa_login.cjs 8123                     # 게스트 로그인·클래스 선택·출석·복귀
 node tools/qa_v5.cjs 8123                        # 특성·환생·균열
 node tools/qa_v6.cjs 8123                        # 도감·업적·칭호·시즌 패스·동료·신화 제작
+node tools/qa_v7.cjs 8123                        # 슬롯 강화(이전 안내)·스테이지 지도 × 3해상도
 node tools/qa_combat_fx.cjs 8123                 # 콤보·치명타·스킬 이펙트·궁극기 컷인 캡처(docs/qa/screens/fx_*.png)·프레임 비용
 python3 tools/extract_v5.py                     # pets_6 / icons_v5 → pet_P0x, skill_V## 
 python3 tools/extract_assets.py                 # 원화 보드 → assets/runtime (원본 불변)

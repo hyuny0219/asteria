@@ -570,7 +570,9 @@ export class Game {
   unequip(slot) { return this.transact('unequip', (s) => eco.unequip(s, slot)); }
   autoEquip() { return this.transact('autoEquip', (s) => eco.autoEquip(s)); }
   setLock(id, v) { return this.transact('lock', (s) => eco.setLock(s, id, v)); }
-  enhance(id) { return this.transact('enhance', (s) => { const r = eco.enhance(s, id, this.rng); if (r.ok) missions.track(s, 'enhance', 1, this.now()); return r; }); }
+  dismissNotice(key) { return this.transact('notice', (s) => { if (!s.notices || !s.notices[key]) return { ok: false, reason: 'none' }; delete s.notices[key]; return { ok: true }; }); }
+  // slot enhancement (schema 6): `slot` = weapon … ring1 / ring2
+  enhance(slot) { return this.transact('enhance', (s) => { const r = eco.enhance(s, slot, this.rng); if (r.ok) missions.track(s, 'enhance', 1, this.now()); return r; }); }
   dismantle(ids) { return this.transact('dismantle', (s) => eco.dismantle(s, ids)); }
   moveOverflow() { return this.transact('overflow', (s) => eco.moveOverflow(s)); }
   markSeen(ids) { for (const it of this.state.inventory) if (ids.includes(it.id)) it.isNew = false; }

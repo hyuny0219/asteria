@@ -169,3 +169,12 @@
 | 피해·타이밍 불변 | PASS | npm test 86/86(FPS 15/30/60 동일 포함) |
 | 전체 회귀 | PASS | browser_qa 141/141 화면(42종)·흐름 28/28, qa_immersive 14/14, qa_login 10/10, qa_v5 14/14, qa_v6 32/32, qa_a01·qa_a02 오류 없음, qa_combat_fx 38/38 |
 | 실기기 체감(진동·소리·프레임) | 미검증 | — |
+
+## v7 슬롯 강화 (2026-11-07)
+| 항목 | 결과 | 근거 |
+|---|---|---|
+| 슬롯 단계 수식·비용·확률, 교체 후 유지, 반지 1·2 분리, +15·하락 규칙 | PASS | `tests/slot_enhance.test.mjs`, core/v4 테스트 갱신 |
+| 5 → 6 이전: 장착 단계 → 슬롯, 미장착 100% 환급, 안내 1회 | PASS | 단위 + `tools/qa_v7.cjs`(3해상도) `docs/qa/screens/v7_slot_notice_*.png` |
+| 장비 탭: 장착 칸만 +N, 비교 창 슬롯 안내, 슬롯 강화 창(칩·넘침 0·작은 터치 0) | PASS | `tools/qa_v7.cjs`, `v7_equipment_*`, `v7_compare_*`, `v7_slot_enhance_*` |
+| 브라우저 흐름: 강화 후 장비 교체해도 단계 유지 | PASS | `tools/browser_qa.cjs` 흐름 |
+| 전체 회귀 | PASS | npm test 91/91, browser_qa 141/141·흐름 31/31, qa_immersive 14/14, qa_login 10/10, qa_v5 14/14, qa_v6 32/32, qa_a01·a02 오류 없음, qa_combat_fx 38/38, qa_v7 21/21 |

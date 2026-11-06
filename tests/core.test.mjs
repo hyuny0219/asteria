@@ -122,16 +122,16 @@ test('dismantle: locked/equipped protected, 80% refund floored, no double refund
   addItems(s, [a, b, c, d]);
   s.wallet.ore = 100;
   equip(s, a.id); setLock(s, b.id, true);
-  enhance(s, c.id); enhance(s, c.id);                  // invests 5 + 7 = 12
-  assert.equal(c.oreInvested, 5 + 7);
+  enhance(s, 'armor'); enhance(s, 'armor');           // slot enhance: items carry nothing
   const q = dismantleQuote(s, [a.id, b.id, c.id, d.id, c.id]);
   assert.equal(q.count, 2); assert.equal(q.blocked.length, 2);
-  assert.equal(dismantleValue(c), 1 + Math.floor(12 * 0.8));
+  assert.equal(dismantleValue(c), 1);                 // rarity only (schema 6)
   const ore0 = s.wallet.ore;
   const r = dismantle(s, [a.id, b.id, c.id, d.id]);
-  assert.ok(r.ok); assert.equal(s.wallet.ore, ore0 + 1 + 9 + 1);
+  assert.ok(r.ok); assert.equal(s.wallet.ore, ore0 + 1 + 1);
   const again = dismantle(s, [c.id, d.id]);
-  assert.equal(again.ok, false); assert.equal(s.wallet.ore, ore0 + 11);
+  assert.equal(again.ok, false); assert.equal(s.wallet.ore, ore0 + 2);
+  assert.equal(s.slotEnhance.armor, 2);               // the slot keeps its level
   assert.ok(s.inventory.find((i) => i.id === a.id) && s.inventory.find((i) => i.id === b.id));
 });
 
@@ -141,15 +141,14 @@ test('enhance: +5 guaranteed, +15 cap, ore never negative', () => {
   const it = makeItem(s, { slot: 'weapon', rarity: 'common', level: 1, rng: makeRng(2) });
   addItems(s, [it]);
   s.wallet.ore = 1e9;
-  for (let i = 0; i < 5; i++) assert.equal(enhance(s, it.id, () => 0.99).success, true);
-  assert.equal(it.enhance, 5);
-  for (let i = 0; i < 10; i++) enhance(s, it.id, () => 0);   // rng 0 → always succeeds
-  assert.equal(it.enhance, 15);
-  assert.equal(enhance(s, it.id).reason, 'max');
+  for (let i = 0; i < 5; i++) assert.equal(enhance(s, 'weapon', () => 0.99).success, true);
+  assert.equal(s.slotEnhance.weapon, 5);
+  for (let i = 0; i < 10; i++) enhance(s, 'weapon', () => 0);   // rng 0 → always succeeds
+  assert.equal(s.slotEnhance.weapon, 15);
+  assert.equal(enhance(s, 'weapon').reason, 'max');
   s.wallet.ore = 0;
-  const it2 = makeItem(s, { slot: 'weapon', rarity: 'common', level: 1, rng: makeRng(2) });
-  addItems(s, [it2]);
-  assert.equal(enhance(s, it2.id).reason, 'ore');
+  assert.equal(enhance(s, 'helmet').reason, 'ore');
+  assert.equal(enhance(s, 'ring').reason, 'missing');
   assert.equal(s.wallet.ore, 0);
 });
 

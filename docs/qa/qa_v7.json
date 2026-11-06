@@ -1,0 +1,232 @@
+{
+ "at": "2026-11-06T15:09:19.588Z",
+ "pass": 21,
+ "total": 21,
+ "results": [
+  {
+   "name": "migration notice 390x844",
+   "pass": true,
+   "info": {
+    "ore0": 0,
+    "gained": 360,
+    "slot": {
+     "weapon": 9,
+     "helmet": 0,
+     "armor": 5,
+     "gloves": 0,
+     "boots": 0,
+     "necklace": 0,
+     "ring1": 3,
+     "ring2": 11
+    },
+    "notice": true,
+    "over": false,
+    "small": [],
+    "broken": []
+   }
+  },
+  {
+   "name": "notice shown once 390x844",
+   "pass": true,
+   "info": {
+    "notice": false,
+    "open": false
+   }
+  },
+  {
+   "name": "equipment tiles 390x844",
+   "pass": true,
+   "info": {
+    "eq": [
+     "+9",
+     "+5",
+     "+3",
+     "+11"
+    ],
+    "inv": 0
+   }
+  },
+  {
+   "name": "compare slot note 390x844",
+   "pass": true,
+   "info": {
+    "note": "갑옷 슬롯 강화 +5 (기본 능력치 +25%)가 두 장비 모두에 적용된 값입니다. 장비를 바꿔도 강화 단계는 슬롯에 남습니다."
+   }
+  },
+  {
+   "name": "slot enhance 390x844",
+   "pass": true,
+   "info": {
+    "before": 5,
+    "after": 6,
+    "over": false,
+    "small": [],
+    "broken": []
+   }
+  },
+  {
+   "name": "ring2 separate 390x844",
+   "pass": true,
+   "info": {
+    "r2": "반지 2 슬롯 +11"
+   }
+  },
+  {
+   "name": "no page errors 390x844",
+   "pass": true,
+   "info": {
+    "errs": []
+   }
+  },
+  {
+   "name": "migration notice 360x700",
+   "pass": true,
+   "info": {
+    "ore0": 0,
+    "gained": 360,
+    "slot": {
+     "weapon": 9,
+     "helmet": 0,
+     "armor": 5,
+     "gloves": 0,
+     "boots": 0,
+     "necklace": 0,
+     "ring1": 3,
+     "ring2": 11
+    },
+    "notice": true,
+    "over": false,
+    "small": [],
+    "broken": []
+   }
+  },
+  {
+   "name": "notice shown once 360x700",
+   "pass": true,
+   "info": {
+    "notice": false,
+    "open": false
+   }
+  },
+  {
+   "name": "equipment tiles 360x700",
+   "pass": true,
+   "info": {
+    "eq": [
+     "+9",
+     "+5",
+     "+3",
+     "+11"
+    ],
+    "inv": 0
+   }
+  },
+  {
+   "name": "compare slot note 360x700",
+   "pass": true,
+   "info": {
+    "note": "갑옷 슬롯 강화 +5 (기본 능력치 +25%)가 두 장비 모두에 적용된 값입니다. 장비를 바꿔도 강화 단계는 슬롯에 남습니다."
+   }
+  },
+  {
+   "name": "slot enhance 360x700",
+   "pass": true,
+   "info": {
+    "before": 5,
+    "after": 5,
+    "over": false,
+    "small": [],
+    "broken": []
+   }
+  },
+  {
+   "name": "ring2 separate 360x700",
+   "pass": true,
+   "info": {
+    "r2": "반지 2 슬롯 +11"
+   }
+  },
+  {
+   "name": "no page errors 360x700",
+   "pass": true,
+   "info": {
+    "errs": []
+   }
+  },
+  {
+   "name": "migration notice 412x915",
+   "pass": true,
+   "info": {
+    "ore0": 0,
+    "gained": 360,
+    "slot": {
+     "weapon": 9,
+     "helmet": 0,
+     "armor": 5,
+     "gloves": 0,
+     "boots": 0,
+     "necklace": 0,
+     "ring1": 3,
+     "ring2": 11
+    },
+    "notice": true,
+    "over": false,
+    "small": [],
+    "broken": []
+   }
+  },
+  {
+   "name": "notice shown once 412x915",
+   "pass": true,
+   "info": {
+    "notice": false,
+    "open": false
+   }
+  },
+  {
+   "name": "equipment tiles 412x915",
+   "pass": true,
+   "info": {
+    "eq": [
+     "+9",
+     "+5",
+     "+3",
+     "+11"
+    ],
+    "inv": 0
+   }
+  },
+  {
+   "name": "compare slot note 412x915",
+   "pass": true,
+   "info": {
+    "note": "갑옷 슬롯 강화 +5 (기본 능력치 +25%)가 두 장비 모두에 적용된 값입니다. 장비를 바꿔도 강화 단계는 슬롯에 남습니다."
+   }
+  },
+  {
+   "name": "slot enhance 412x915",
+   "pass": true,
+   "info": {
+    "before": 5,
+    "after": 6,
+    "over": false,
+    "small": [],
+    "broken": []
+   }
+  },
+  {
+   "name": "ring2 separate 412x915",
+   "pass": true,
+   "info": {
+    "r2": "반지 2 슬롯 +11"
+   }
+  },
+  {
+   "name": "no page errors 412x915",
+   "pass": true,
+   "info": {
+    "errs": []
+   }
+  }
+ ]
+}

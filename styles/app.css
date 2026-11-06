@@ -167,6 +167,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .mk.r-common { color: var(--r-common); } .mk.r-uncommon { color: var(--r-uncommon); } .mk.r-rare { color: var(--r-rare); }
 .item.sel { outline: 3px solid var(--gold); outline-offset: 1px; }
 .item.empty { border-style: dashed; border-color: var(--border); color: var(--muted); font-size: 13px; justify-content: center; cursor: default; }
+button.item.empty { cursor: pointer; font: inherit; font-size: 13px; }
+.slot-chips { flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+.slot-chips .tab { flex: 1 1 22%; min-width: 0; padding: 0 4px; font-size: 13px; white-space: nowrap; }
 .rar { font-weight: 800; }
 .rar.r-common { color: var(--r-common); } .rar.r-uncommon { color: var(--r-uncommon); } .rar.r-rare { color: var(--r-rare); }
 .newdot { position: absolute; left: 4px; top: 22px; font-size: 13px; font-weight: 800; color: #100D18; background: var(--gold); border-radius: 3px; padding: 0 3px; }

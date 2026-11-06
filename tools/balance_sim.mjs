@@ -93,10 +93,11 @@ async function runOne(seed) {
     await g.autoEquip();
     // enhance equipped items with ore, cheapest first
     for (let k = 0; k < 10; k++) {
-      const eq = Object.values(g.state.equipped).filter(Boolean).map((id) => g.state.inventory.find((i) => i.id === id)).filter((i) => i && i.enhance < 10);
-      eq.sort((a, b) => enhanceCost(a) - enhanceCost(b));
-      if (!eq.length || g.state.wallet.ore < enhanceCost(eq[0])) break;
-      await g.enhance(eq[0].id);
+      // slot enhancement (schema 6): cheapest worn slot first
+      const eq = Object.keys(g.state.equipped).filter((k) => g.state.equipped[k] && (g.state.slotEnhance[k] || 0) < 10);
+      eq.sort((a, b) => enhanceCost(g.state.slotEnhance[a] || 0) - enhanceCost(g.state.slotEnhance[b] || 0));
+      if (!eq.length || g.state.wallet.ore < enhanceCost(g.state.slotEnhance[eq[0]] || 0)) break;
+      await g.enhance(eq[0]);
     }
     if (g.state.inventory.length > 60) {
       const ids = g.state.inventory.filter((i) => i.rarity === 'common' && !i.locked && !Object.values(g.state.equipped).includes(i.id)).map((i) => i.id);

@@ -16,6 +16,8 @@ const U = BALANCE.upgrade;
 const C = BALANCE.combat;
 const SP = BALANCE.statPoints;
 
+// Slot enhancement level (schema 6): belongs to the equip slot, survives item swaps.
+export function slotLevel(state, slotKey) { return (state.slotEnhance && state.slotEnhance[slotKey]) || 0; }
 export function equippedItems(state) {
   const out = [];
   for (const id of Object.values(state.equipped)) {
@@ -63,8 +65,10 @@ export function playerStats(state, opts = {}) {
   const pct = { atkPct: 0, hpPct: 0, defPct: 0, critChance: 0, critDmg: 0, aspd: 0, cdr: 0, ultCharge: 0, goldPct: 0, evade: 0, lifesteal: 0, combo: 0, dmgTaken: 0, mythUltCdr: 0, mythHeal: 0, expPct: 0, offlinePct: 0, dropPct: 0, thorns: 0, regen: 0 };
   const add = (o) => { for (const [k, v] of Object.entries(o)) pct[k] = (pct[k] || 0) + v; };
   const equipBonus = { atk: 0, hp: 0, def: 0, crit: 0 };
-  for (const it of equippedItems(state)) {
-    const s = itemStats(it);
+  for (const [slotKey, id] of Object.entries(state.equipped)) {
+    const it = id && state.inventory.find((i) => i.id === id);
+    if (!it) continue;
+    const s = itemStats(it, slotLevel(state, slotKey));
     for (const k of Object.keys(s)) equipBonus[k] = (equipBonus[k] || 0) + s[k];
     add(itemOptions(it));
   }

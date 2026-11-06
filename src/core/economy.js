@@ -165,28 +165,32 @@ export function autoEquip(state) {
   return { ok: Object.keys(rec).length > 0, changed: rec, reason: Object.keys(rec).length ? null : 'already-best' };
 }
 
-// ---------- enhance ----------
-export function enhanceQuote(state, id) {
-  const it = findItem(state, id);
-  if (!it) return { ok: false, reason: 'missing' };
-  if (it.enhance >= EQ.enhanceMax) return { ok: false, reason: 'max', item: it };
-  const cost = enhanceCost(it);
-  return { ok: state.wallet.ore >= cost, reason: state.wallet.ore >= cost ? null : 'ore', cost, chance: enhanceChance(it), dropOnFail: it.enhance >= EQ.enhanceFailDropFrom, shortfall: Math.max(0, cost - state.wallet.ore), item: it };
+// ---------- enhance (slot) ----------
+// Enhancement belongs to the equip slot (weapon … ring1, ring2), not the item, so a
+// swap keeps the level. Works on an empty slot too (the level waits for an item).
+export const ENHANCE_SLOTS = ['weapon', 'helmet', 'armor', 'gloves', 'boots', 'necklace', 'ring1', 'ring2'];
+export function enhanceQuote(state, slot) {
+  if (!ENHANCE_SLOTS.includes(slot)) return { ok: false, reason: 'missing' };
+  const lv = state.slotEnhance[slot] || 0;
+  if (lv >= EQ.enhanceMax) return { ok: false, reason: 'max', slot, level: lv };
+  const cost = enhanceCost(lv);
+  return { ok: state.wallet.ore >= cost, reason: state.wallet.ore >= cost ? null : 'ore', slot, level: lv, cost, chance: enhanceChance(lv), dropOnFail: lv >= EQ.enhanceFailDropFrom, shortfall: Math.max(0, cost - state.wallet.ore) };
 }
 // +1..+5 always succeed; later levels can fail. At +11 or more a failure drops one level.
-// Items are never destroyed. `rng` is the game RNG (deterministic per save).
-export function enhance(state, id, rng = Math.random) {
-  const q = enhanceQuote(state, id);
+// Never destroyed. `rng` is the game RNG (deterministic per save).
+export function enhance(state, slot, rng = Math.random) {
+  const q = enhanceQuote(state, slot);
   if (!q.ok) return q;
-  const chance = enhanceChance(q.item);
   state.wallet.ore -= q.cost;
-  q.item.oreInvested += q.cost;
+  state.slotEnhanceOre[slot] = (state.slotEnhanceOre[slot] || 0) + q.cost;
   state.progression.counters.enhances += 1;
-  const before = q.item.enhance;
-  const success = chance >= 1 || rng() < chance;
-  if (success) q.item.enhance += 1;
-  else if (before >= EQ.enhanceFailDropFrom) q.item.enhance -= 1;
-  return { ok: true, success, chance, before, after: q.item.enhance, cost: q.cost, item: q.item };
+  const before = q.level;
+  const success = q.chance >= 1 || rng() < q.chance;
+  let after = before;
+  if (success) after += 1;
+  else if (before >= EQ.enhanceFailDropFrom) after -= 1;
+  state.slotEnhance[slot] = after;
+  return { ok: true, success, chance: q.chance, before, after, cost: q.cost, slot };
 }
 
 // ---------- dismantle ----------

@@ -117,10 +117,11 @@ async function runOne(seed, cls) {
     for (let i = 0; i < 2 && i < owned.length; i++) if (g.state.skills.runes.equipped[i] !== owned[i]) await g.equipRune(owned[i], i);
     await g.autoEquip();
     for (let k = 0; k < 12; k++) {
-      const eq = Object.values(g.state.equipped).filter(Boolean).map((id) => g.state.inventory.find((i) => i.id === id)).filter((i) => i && i.enhance < 15);
-      eq.sort((a, b) => enhanceCost(a) - enhanceCost(b));
-      if (!eq.length || g.state.wallet.ore < enhanceCost(eq[0])) break;
-      await g.enhance(eq[0].id);
+      // slot enhancement (schema 6): cheapest worn slot first
+      const eq = Object.keys(g.state.equipped).filter((k) => g.state.equipped[k] && (g.state.slotEnhance[k] || 0) < 15);
+      eq.sort((a, b) => enhanceCost(g.state.slotEnhance[a] || 0) - enhanceCost(g.state.slotEnhance[b] || 0));
+      if (!eq.length || g.state.wallet.ore < enhanceCost(g.state.slotEnhance[eq[0]] || 0)) break;
+      await g.enhance(eq[0]);
     }
     if (g.state.inventory.length > 80) {
       const ids = g.state.inventory.filter((i) => ['common', 'uncommon', 'rare'].includes(i.rarity) && !i.locked && !Object.values(g.state.equipped).includes(i.id)).map((i) => i.id);

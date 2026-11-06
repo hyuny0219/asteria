@@ -121,12 +121,13 @@ export function growthPanel(app) {
 }
 
 // ======================= S02 equipment panel =======================
-function itemTile(app, it, { onClick, sel = false } = {}) {
+// `slotLv` is given only for the equipped-slot grid: enhancement belongs to the slot (v7).
+function itemTile(app, it, { onClick, sel = false, slotLv = 0 } = {}) {
   const eq = isEquipped(app.state, it.id);
   const tile = h('button', { type: 'button', class: `item r-${it.rarity}${sel ? ' sel' : ''}`, dataset: { key: 'it-' + it.id },
-    'aria-label': `${rarityLabel(it.rarity)} ${it.name}${it.enhance ? ' +' + it.enhance : ''} Lv${it.level}${eq ? ' 장착 중' : ''}${it.locked ? ' 잠금' : ''}`, onClick },
+    'aria-label': `${rarityLabel(it.rarity)} ${it.name} Lv${it.level}${slotLv ? ` 슬롯 강화 +${slotLv}` : ''}${eq ? ' 장착 중' : ''}${it.locked ? ' 잠금' : ''}`, onClick },
     h('span', { class: `mk r-${it.rarity}` }, RARITY[it.rarity].mark),
-    it.enhance ? h('span', { class: 'en' }, '+' + it.enhance) : null,
+    slotLv ? h('span', { class: 'en' }, '+' + slotLv) : null,
     img(itemIcon(it.look), ''),
     h('span', { class: 'nm' }, it.name),
     h('span', { class: 'st' }, eq ? h('span', { class: 'tag' }, '장착') : null, it.locked ? h('span', { class: 'tag' }, '잠금') : null),
@@ -144,13 +145,18 @@ export function equipmentPanel(app) {
   const sc = h('div', { class: 'panel-scroll' });
   if (s.overflow.length) sc.appendChild(h('div', { class: 'banner', role: 'status' }, icon('warning', 20), h('span', { style: { flex: 1 } }, `임시 보관함 ${s.overflow.length}개`), button('확인', { cls: 'btn', onClick: () => openOverflow(app) })));
   // equipped 8 slots (two ring slots)
-  const eqGrid = h('div', { class: 'grid4', 'aria-label': '장착 장비' });
+  const eqGrid = h('div', { class: 'grid4', 'aria-label': '장착 장비 (슬롯 강화)' });
   for (const slot of Object.keys(s.equipped)) {
     const id = s.equipped[slot];
     const it = id && s.inventory.find((i) => i.id === id);
-    eqGrid.appendChild(it ? itemTile(app, it, { onClick: () => openCompare(app, it.id) }) : h('div', { class: 'item empty' }, SLOT_NAMES[slot], h('br'), '비어 있음'));
+    const lv = (s.slotEnhance || {})[slot] || 0;
+    eqGrid.appendChild(it ? itemTile(app, it, { slotLv: lv, onClick: () => openCompare(app, it.id) })
+      : h('button', { type: 'button', class: 'item empty', dataset: { slot }, 'aria-label': `${SLOT_NAMES[slot]} 비어 있음 · 슬롯 강화 +${lv}`, onClick: () => openEnhance(app, slot) },
+        lv ? h('span', { class: 'en' }, '+' + lv) : null, SLOT_NAMES[slot], h('br'), '비어 있음'));
   }
-  sc.append(h('p', { class: 'muted', style: { margin: '0 0 6px' } }, '장착 중'), eqGrid);
+  sc.append(h('div', { class: 'row-between', style: { margin: '0 0 6px', display: 'flex', alignItems: 'center', gap: '8px' } },
+    h('span', { class: 'muted' }, '장착 중 · 슬롯 강화는 장비를 바꿔도 유지'), h('span', { class: 'spacer', style: { flex: 1 } }),
+    button('슬롯 강화', { cls: 'chip-btn', dataset: { act: 'slot-enhance' }, onClick: () => openEnhance(app, firstSlot(s)) })), eqGrid);
   const sets = activeSetBonuses(s);
   const counts = setCounts(s);
   const setRows = Object.entries(counts).filter(([, n]) => n >= 1).map(([k, n]) => h('div', { class: 'kv' }, `${SETS[k].name} 세트 ${n}/4`,
@@ -169,7 +175,7 @@ export function equipmentPanel(app) {
   sc.appendChild(h('div', { class: 'tabs', role: 'group', 'aria-label': '부위 필터', style: { margin: '12px 0 8px' } },
     filters.map(([k, l]) => h('button', { type: 'button', class: 'tab', 'aria-pressed': String(app.eqFilter === k), onClick: () => { app.eqFilter = k; app.renderPanel(); } }, l))));
   const items = s.inventory.filter((i) => app.eqFilter === 'all' || i.slot === app.eqFilter)
-    .sort((a, b) => rarityOrder(b.rarity) - rarityOrder(a.rarity) || b.level - a.level || b.enhance - a.enhance);
+    .sort((a, b) => rarityOrder(b.rarity) - rarityOrder(a.rarity) || b.level - a.level);
   const grid = h('div', { class: 'grid4 inv' });
   for (const it of items.slice(0, 200)) grid.appendChild(itemTile(app, it, { onClick: () => openCompare(app, it.id) }));
   sc.appendChild(grid);
@@ -185,8 +191,8 @@ export function equipmentPanel(app) {
 // ======================= S03 compare =======================
 const PCT_OPTS = new Set(['atkPct', 'critChance', 'critDmg', 'aspd', 'hpPct', 'defPct', 'cdr', 'ultCharge', 'goldPct']);
 export function optText(o) { return Object.entries(o).map(([k, v]) => `${OPTION_NAMES[k] || k} +${PCT_OPTS.has(k) ? fmtPct(v, 1) : v}`).join(' · '); }
-function statLines(it) {
-  const s = itemStats(it);
+function statLines(it, lv = 0) {
+  const s = itemStats(it, lv);
   const out = [];
   if (s.atk !== undefined) out.push(['공격력', s.atk]);
   if (s.hp !== undefined) out.push(['체력', s.hp]);
@@ -208,18 +214,22 @@ export function openCompare(app, id) {
     const curId = s.equipped[target];
     const cur = curId && curId !== it.id ? s.inventory.find((i) => i.id === curId) : null;
     const eq = !!eqAt;
+    const lv = (s.slotEnhance || {})[target] || 0;
     const col = (x, title) => h('div', { class: 'card', style: { flex: 1, margin: 0 } }, h('p', { class: 'muted', style: { margin: 0 } }, title),
-      x ? [img(itemIcon(x.look), '', ''), h('h3', null, (x.enhance ? '+' + x.enhance + ' ' : '') + x.name), h('div', { class: `rar r-${x.rarity}` }, rarityLabel(x.rarity) + ` · Lv ${x.level}`),
-        statLines(x).map(([k, v, u]) => u ? h('p', { class: 'unique-line' }, `고유 · ${v}`) : h('div', { class: 'kv' }, k, h('b', null, typeof v === 'number' ? fmtFull(v) : v)))] : h('p', { class: 'muted' }, '비어 있음'));
+      x ? [img(itemIcon(x.look), '', ''), h('h3', null, x.name), h('div', { class: `rar r-${x.rarity}` }, rarityLabel(x.rarity) + ` · Lv ${x.level}`),
+        statLines(x, lv).map(([k, v, u]) => u ? h('p', { class: 'unique-line' }, `고유 · ${v}`) : h('div', { class: 'kv' }, k, h('b', null, typeof v === 'number' ? fmtFull(v) : v)))] : h('p', { class: 'muted' }, '비어 있음'));
     const body = h('div', { dataset: { screen: 'compare' } },
-      h('div', { class: 'btn-row', style: { alignItems: 'stretch' } }, col(cur || (eq ? null : null), eq ? '장착 중' : '현재 장착'), h('div', { style: { alignSelf: 'center', flex: 'none' } }, icon('compare', 22)), col(it, eq ? '이 장비' : '선택')));
+      h('div', { class: 'btn-row', style: { alignItems: 'stretch' } }, col(cur || (eq ? null : null), eq ? '장착 중' : '현재 장착'), h('div', { style: { alignSelf: 'center', flex: 'none' } }, icon('compare', 22)), col(it, eq ? '이 장비' : '선택')),
+      h('p', { class: 'muted', dataset: { note: 'slot-enhance' }, style: { margin: '8px 0 0' } }, lv
+        ? `${SLOT_NAMES[target]} 슬롯 강화 +${lv} (기본 능력치 +${lv * 5}%)가 두 장비 모두에 적용된 값입니다. 장비를 바꿔도 강화 단계는 슬롯에 남습니다.`
+        : `강화는 ${SLOT_NAMES[target]} 슬롯에 붙습니다. 장비를 바꿔도 강화 단계가 유지됩니다.`));
     m.setBody(body);
     const lockBtn = button(it.locked ? '잠금 해제' : '잠금', { cls: 'btn', busy: true, onClick: async () => { fail(await app.game.setLock(it.id, !it.locked)); render(); } });
     const actions = [
       eq ? button('장착 해제', { cls: 'btn', busy: true, onClick: async () => { fail(await app.game.unequip(eqAt)); render(); } })
         : slots.length > 1 ? h('div', { class: 'btn-row' }, slots.map((k) => button(`${SLOT_NAMES[k]}에 장착`, { cls: 'btn btn-primary', busy: true, onClick: async () => { const r = fail(await app.game.equip(it.id, k)); if (r.ok) { toast(`${it.name} 장착`, 'good'); render(); } } })))
         : button('장착', { cls: 'btn btn-primary', busy: true, onClick: async () => { const r = fail(await app.game.equip(it.id)); if (r.ok) { toast(`${it.name} 장착`, 'good'); render(); } } }),
-      h('div', { class: 'btn-row' }, button(`강화 +${it.enhance}`, { cls: 'btn btn-gold', onClick: () => openEnhance(app, it.id) }), lockBtn),
+      h('div', { class: 'btn-row' }, button(`${SLOT_NAMES[target]} 강화 +${lv}`, { cls: 'btn btn-gold', onClick: () => openEnhance(app, target) }), lockBtn),
     ];
     m.setActions(actions);
   };
@@ -228,38 +238,68 @@ export function openCompare(app, id) {
   return m;
 }
 
-// ======================= S04 enhance =======================
-export function openEnhance(app, id) {
+// ======================= S04 enhance (slot) =======================
+// Enhancement belongs to the equip slot (schema 6). Slot chips switch slots; the worn
+// item's stats preview before → after. Works on an empty slot too.
+const ENH_SLOTS = ['weapon', 'helmet', 'armor', 'gloves', 'boots', 'necklace', 'ring1', 'ring2'];
+function firstSlot(s) { return ENH_SLOTS.find((k) => s.equipped[k]) || 'weapon'; }
+export function openEnhance(app, slot = 'weapon') {
+  if (!ENH_SLOTS.includes(slot)) slot = firstSlot(app.state);
   const render = (anim = null) => {
     const s = app.state;
-    const it = s.inventory.find((i) => i.id === id);
-    if (!it) { m.close(); return; }
-    const q = enhanceQuote(s, id);
-    const before = itemStats(it);
+    const lv = s.slotEnhance[slot] || 0;
+    const id = s.equipped[slot];
+    const it = id && s.inventory.find((i) => i.id === id);
+    const q = enhanceQuote(s, slot);
     const MAX = BALANCE.equipment.enhanceMax;
-    const nextIt = { ...it, enhance: Math.min(MAX, it.enhance + 1) };
-    const chance = enhanceChance(it);
-    const after = itemStats(nextIt);
-    const lines = Object.keys(before).map((k) => h('div', { class: 'kv' }, { atk: '공격력', hp: '체력', def: '방어력', crit: '치명타' }[k],
-      h('b', null, k === 'crit' ? `${fmtPct(before[k], 2)} → ${fmtPct(after[k], 2)}` : `${fmtFull(before[k])} → ${it.enhance >= MAX ? 'MAX' : fmtFull(after[k])}`)));
+    const chance = enhanceChance(lv);
+    const chips = h('div', { class: 'tabs slot-chips', role: 'group', 'aria-label': '강화할 슬롯' }, ENH_SLOTS.map((k) =>
+      h('button', { type: 'button', class: 'tab', dataset: { slot: k }, 'aria-pressed': String(k === slot), onClick: () => { slot = k; render(); } },
+        `${SLOT_NAMES[k]} +${s.slotEnhance[k] || 0}`)));
+    let lines;
+    if (it) {
+      const before = itemStats(it, lv), after = itemStats(it, Math.min(MAX, lv + 1));
+      lines = Object.keys(before).map((k) => h('div', { class: 'kv' }, { atk: '공격력', hp: '체력', def: '방어력', crit: '치명타' }[k],
+        h('b', null, k === 'crit' ? `${fmtPct(before[k], 2)} → ${lv >= MAX ? 'MAX' : fmtPct(after[k], 2)}` : `${fmtFull(before[k])} → ${lv >= MAX ? 'MAX' : fmtFull(after[k])}`)));
+    } else lines = [h('p', { class: 'muted', style: { margin: 0 } }, '장착한 장비가 없습니다. 강화 단계는 슬롯에 남아, 나중에 끼우는 장비에 적용됩니다.')];
     const ring = h('div', { class: 'card' + (anim ? ' reveal' : ''), style: { textAlign: 'center' } },
-      img(itemIcon(it.look), '', ''), h('h3', null, `+${it.enhance} ${it.name}`), h('div', { class: `rar r-${it.rarity}` }, rarityLabel(it.rarity)),
-      anim ? h('p', { class: anim.success ? 'okc' : 'warn', role: 'status' }, anim.success ? `강화 성공 · +${it.enhance}` : anim.dropped ? `강화 실패 · +${anim.before} → +${it.enhance} (1단계 하락)` : `강화 실패 · +${it.enhance} 유지`) : null);
+      it ? img(itemIcon(it.look), '', '') : null,
+      h('h3', null, `${SLOT_NAMES[slot]} 슬롯 +${lv}`),
+      h('div', { class: 'muted' }, it ? `${it.name} · ${rarityLabel(it.rarity)}` : '비어 있음'),
+      h('div', { class: 'kv' }, '기본 능력치 보너스', h('b', null, `+${lv * 5}%${lv < MAX ? ` → +${(lv + 1) * 5}%` : ''}`)),
+      anim ? h('p', { class: anim.success ? 'okc' : 'warn', role: 'status' }, anim.success ? `강화 성공 · +${lv}` : anim.dropped ? `강화 실패 · +${anim.before} → +${lv} (1단계 하락)` : `강화 실패 · +${lv} 유지`) : null);
     if (anim && !reduce(app)) ring.animate(anim.success ? [{ boxShadow: '0 0 0 0 rgba(216,182,117,.9)' }, { boxShadow: '0 0 0 10px rgba(216,182,117,0)' }] : [{ transform: 'translateX(-4px)' }, { transform: 'translateX(4px)' }, { transform: 'none' }], { duration: anim.success ? 600 : 240 });
-    m.setBody(h('div', { dataset: { screen: 'enhance' } }, ring, h('div', { class: 'card' }, lines,
-      h('div', { class: 'kv' }, '성공 확률', h('b', null, it.enhance >= MAX ? '—' : fmtPct(chance, 0))),
-      h('div', { class: 'kv' }, '비용', h('b', null, it.enhance >= MAX ? '—' : `강화 광석 ${fmtFull(q.cost || 0)}`)),
+    m.setBody(h('div', { dataset: { screen: 'enhance' } }, chips, ring, h('div', { class: 'card' }, lines,
+      h('div', { class: 'kv' }, '성공 확률', h('b', null, lv >= MAX ? '—' : fmtPct(chance, 0))),
+      h('div', { class: 'kv' }, '비용', h('b', null, lv >= MAX ? '—' : `강화 광석 ${fmtFull(q.cost || 0)}`)),
       h('div', { class: 'kv' }, '보유', h('b', null, `강화 광석 ${fmtFull(s.wallet.ore)}`))),
-      h('p', { class: 'muted' }, `+1~+5는 100%, +6~+10은 70%→30%, +11~+${MAX}는 20%→5%입니다. 실패하면 +10 이하는 그대로, +11 이상은 1단계 내려갑니다. 파괴는 없고, 실패해도 광석은 사용됩니다. 분해 시 투입 광석의 80%를 돌려받습니다.`)));
-    const disabled = it.enhance >= MAX || !q.ok;
-    const label = it.enhance >= MAX ? `최대 강화 +${MAX}` : q.ok ? `강화 (${fmtPct(chance, 0)}) · 광석 ${fmtFull(q.cost)}` : `광석 ${fmtFull(q.shortfall)} 부족`;
+      h('p', { class: 'muted' }, `강화는 장비가 아니라 슬롯에 붙습니다. 장비를 바꿔도 단계가 그대로입니다. +1~+5는 100%, +6~+10은 70%→30%, +11~+${MAX}는 20%→5%. 실패하면 +10 이하는 그대로, +11 이상은 1단계 내려갑니다. 파괴는 없고, 실패해도 광석은 사용됩니다.`)));
+    const disabled = lv >= MAX || !q.ok;
+    const label = lv >= MAX ? `최대 강화 +${MAX}` : q.ok ? `강화 (${fmtPct(chance, 0)}) · 광석 ${fmtFull(q.cost)}` : `광석 ${fmtFull(q.shortfall)} 부족`;
     m.setActions([button(label, { cls: 'btn btn-primary', disabled, busy: true, onClick: async () => {
-      const r = fail(await app.game.enhance(id));
+      const r = fail(await app.game.enhance(slot));
       if (r.ok) { if (app.state.settings.sound) sfx(r.success ? 'metal' : 'warn'); render({ success: r.success, before: r.before, dropped: !r.success && r.after < r.before }); }
     } })]);
   };
-  const m = openModal({ id: 'enhance', title: '장비 강화', body: h('div'), actions: [] });
+  const m = openModal({ id: 'enhance', title: '슬롯 강화', body: h('div'), actions: [], onClose: () => app.renderPanel && app.renderPanel() });
   render();
+  return m;
+}
+
+// One-time notice after the schema 6 migration (아이템 강화 → 슬롯 강화).
+export function openSlotEnhanceNotice(app) {
+  const n = app.state.notices && app.state.notices.slotEnhance;
+  if (!n) return null;
+  const rows = ENH_SLOTS.filter((k) => (n.levels || {})[k] > 0).map((k) => h('div', { class: 'kv' }, SLOT_NAMES[k], h('b', null, '+' + n.levels[k])));
+  const done = async () => { await app.game.dismissNotice('slotEnhance'); m.close(); app.renderPanel && app.renderPanel(); setTimeout(() => app.showDailyPopups(), 50); };
+  const m = openModal({ id: 'slot-notice', title: '강화가 슬롯 강화로 바뀌었습니다', dismissible: false,
+    body: h('div', { dataset: { screen: 'slot-notice' } },
+      h('p', null, '이제 강화 단계는 장비가 아니라 장착 슬롯(무기·투구·갑옷·장갑·신발·목걸이·반지 1·반지 2)에 붙습니다. 더 좋은 장비로 바꿔도 강화가 초기화되지 않습니다.'),
+      h('div', { class: 'card' }, h('h3', null, '옮겨진 강화 단계'), rows.length ? rows : h('p', { class: 'muted', style: { margin: 0 } }, '강화된 슬롯 없음'),
+        h('div', { class: 'kv' }, '장착하지 않은 강화 장비 환급', h('b', { class: 'okc' }, `강화 광석 ${fmtFull(n.refund || 0)} (${n.refunded || 0}개, 100%)`))),
+      h('p', { class: 'muted' }, '장착 중이던 장비의 강화 단계는 그 슬롯으로 옮겨졌고, 장착하지 않은 장비에 쓴 광석은 모두 돌려드렸습니다. 분해 시에는 등급 기본값만 돌려받습니다.')),
+    actions: [button('확인', { cls: 'btn btn-primary', busy: true, onClick: done })] });
+  return m;
 }
 
 // ======================= S16 dismantle =======================
@@ -880,7 +920,7 @@ async function loadDevSave(app, kind) {
     const { makeItem } = await import('../core/items.js');
     const { makeRng } = await import('../core/util.js');
     const rng = makeRng(7);
-    for (const slot of ['weapon', 'helmet', 'armor', 'accessory']) { const it = makeItem(st, { slot, rarity: 'rare', level: 28, rng, source: 'dev' }); it.enhance = 6; st.inventory.push(it); st.equipped[slot] = it.id; }
+    for (const slot of ['weapon', 'helmet', 'armor', 'accessory']) { const it = makeItem(st, { slot, rarity: 'rare', level: 28, rng, source: 'dev' }); st.inventory.push(it); st.equipped[slot] = it.id; if (st.slotEnhance) st.slotEnhance[slot === 'accessory' ? 'necklace' : slot] = 6; }
   }
   st.offlineSnapshot.lastActiveAt = Date.now();
   const r = fail(await app.game.importState(st));

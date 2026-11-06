@@ -14,7 +14,7 @@ function build(branch, power) {
   s.player.level = 30;
   s.player.statsUpgrades = { atk: Math.round(55 * power), hp: Math.round(50 * power), def: Math.round(25 * power), crit: 15, speed: 20 };
   const rng = makeRng(11);
-  for (const slot of ['weapon', 'helmet', 'armor', 'accessory']) { const it = makeItem(s, { slot, rarity: 'rare', level: 28, rng }); it.enhance = 5; s.inventory.push(it); s.equipped[slot] = it.id; }
+  for (const slot of ['weapon', 'helmet', 'armor', 'accessory']) { const it = makeItem(s, { slot, rarity: 'rare', level: 28, rng }); s.inventory.push(it); s.equipped[slot] = it.id; if (s.slotEnhance[slot] !== undefined) s.slotEnhance[slot] = 5; }
   if (branch) { s.player.branch = branch; s.skills.equipped[3] = branch === 'knight' ? 'guardCounter' : 'berserkStrike'; }
   return s;
 }

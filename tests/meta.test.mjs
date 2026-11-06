@@ -129,14 +129,14 @@ test('mythic craft: locked until Lv 90 / B09, exact cost, failed save spends not
   assert.equal((await g.craftMythic('ring')).reason, 'starShard');
 });
 
-test('schema 4 save migrates to 5: items fill the equipment codex, boss clears the boss codex', () => {
+test('schema 4 save migrates to 5+: items fill the equipment codex, boss clears the boss codex', () => {
   const s = newGame(T0);
   for (const k of ['codex', 'achievements', 'titles', 'pass', 'pets']) delete s[k];
   s.schemaVersion = 4;
   s.inventory.push({ id: 'x', slot: 'ring1', rarity: 'epic', level: 1, options: [] });
   s.progression.bossCleared.B02 = true;
   const m = migrate(s);
-  assert.equal(m.schemaVersion, 5);
+  assert.ok(m.schemaVersion >= 5);
   assert.ok(m.codex.items['ring:epic']);
   assert.equal(m.codex.kills.B02, 1);
   assert.deepEqual(validate(m), []);

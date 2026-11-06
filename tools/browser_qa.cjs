@@ -116,11 +116,26 @@ async function screensAt(browser, vp) {
   await modal(page, 'openCompare', firstId);
   await check(page, 'compare', vp);
   await closeAll(page);
-  await modal(page, 'openEnhance', firstId);
-  await check(page, 'enhance', vp);
+  await modal(page, 'openEnhance', 'weapon');
+  await check(page, 'enhance', vp, '슬롯 강화');
   await page.click('.modal-actions .btn-primary');
   await page.waitForTimeout(600);
-  await check(page, 'enhance', vp, '강화 성공 후');
+  await check(page, 'enhance', vp, '슬롯 강화 성공 후');
+  {
+    // slot enhance persists across an item swap (v7)
+    const r = await page.evaluate(async () => {
+      const g = window.__asteria.game; const s = g.state;
+      const lv = s.slotEnhance.weapon;
+      const { makeItem } = await import('./src/core/items.js'); const { makeRng } = await import('./src/core/util.js');
+      await window.__qaTx((st) => { st.inventory.push(makeItem(st, { slot: 'weapon', rarity: 'epic', level: 30, rng: makeRng(9) })); return { ok: true }; });
+      const nid = g.state.inventory[g.state.inventory.length - 1].id;
+      await g.equip(nid, 'weapon');
+      return { lv, after: g.state.slotEnhance.weapon, worn: g.state.equipped.weapon === nid, tiles: [...document.querySelectorAll('.grid4.inv .item .en')].length };
+    });
+    const pass = r.lv >= 1 && r.after === r.lv && r.worn && r.tiles === 0;
+    results.flows.push({ name: `슬롯 강화 유지(교체 후 +${r.after}) ${vp[0]}x${vp[1]}`, pass, detail: r });
+    console.log(`${pass ? 'PASS' : 'FAIL'} flow: 슬롯 강화 유지 ${JSON.stringify(r)}`);
+  }
   await closeAll(page);
   await modal(page, 'openDismantle');
   await check(page, 'dismantle', vp);

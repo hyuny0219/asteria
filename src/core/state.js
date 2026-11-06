@@ -5,7 +5,7 @@ import { kstDayIndex } from './util.js';
 import { refreshLook } from './items.js';
 import { defaultMeta } from './meta.js';
 
-export const SCHEMA_VERSION = 5;
+export const SCHEMA_VERSION = 6;
 
 export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0, cls = 'warrior') {
   return {
@@ -35,6 +35,10 @@ export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0, cls = 'wa
     inventory: [],          // item objects
     overflow: [],           // items that did not fit (never auto-deleted)
     equipped: { weapon: null, helmet: null, armor: null, gloves: null, boots: null, necklace: null, ring1: null, ring2: null },
+    // 슬롯 강화 (schema 6): level per equip slot, ore spent per slot
+    slotEnhance: { weapon: 0, helmet: 0, armor: 0, gloves: 0, boots: 0, necklace: 0, ring1: 0, ring2: 0 },
+    slotEnhanceOre: { weapon: 0, helmet: 0, armor: 0, gloves: 0, boots: 0, necklace: 0, ring1: 0, ring2: 0 },
+    notices: {},            // one-time notices shown after load: { slotEnhance: { refund, levels } }
     skills: {
       equipped: [...CLASS_SKILLS[cls].base, null, null],   // 5 slots: 3 base, 4th at tier 1, 5th at tier 2
       ultAuto: 'ELITE_BOSS',                     // OFF | ELITE_BOSS | ALWAYS
@@ -155,6 +159,31 @@ const MIGRATIONS = {
     for (const b of Object.keys(s.progression.bossCleared || {})) s.codex.kills[b] = Math.max(s.codex.kills[b] || 0, 1);
     return s;
   },
+  // 5 → 6: 아이템 강화 → 슬롯 강화. Each slot takes the level of the item worn there;
+  // unworn items are refunded 100% of their invested ore and reset. A notice explains it once.
+  5: (s) => {
+    s.schemaVersion = 6;
+    const slots = ['weapon', 'helmet', 'armor', 'gloves', 'boots', 'necklace', 'ring1', 'ring2'];
+    s.slotEnhance = {}; s.slotEnhanceOre = {};
+    const worn = new Set();
+    for (const k of slots) {
+      const id = s.equipped && s.equipped[k];
+      const it = id && (s.inventory || []).find((i) => i.id === id);
+      s.slotEnhance[k] = it ? Math.max(0, Math.min(15, it.enhance || 0)) : 0;
+      s.slotEnhanceOre[k] = it ? (it.oreInvested || 0) : 0;
+      if (it) worn.add(it.id);
+    }
+    let refund = 0, refunded = 0;
+    for (const it of [...(s.inventory || []), ...(s.overflow || [])]) {
+      if (!worn.has(it.id) && (it.oreInvested || 0) > 0) { refund += it.oreInvested; refunded += 1; }
+      delete it.enhance; delete it.oreInvested;
+    }
+    s.wallet.ore += refund;
+    const levels = { ...s.slotEnhance };
+    s.notices = { ...(s.notices || {}) };
+    if (refund > 0 || Object.values(levels).some((v) => v > 0)) s.notices.slotEnhance = { refund, refunded, levels };
+    return s;
+  },
 };
 export function migrate(s) {
   let cur = s;
@@ -174,6 +203,7 @@ export function migrate(s) {
   for (const k of Object.keys(d.skills)) if (cur.skills[k] === undefined) cur.skills[k] = d.skills[k];
   for (const k of Object.keys(d.dungeons)) if (!cur.dungeons[k]) cur.dungeons[k] = d.dungeons[k];
   for (const k of Object.keys(d.player)) if (cur.player[k] === undefined) cur.player[k] = d.player[k];
+  for (const k of Object.keys(d.slotEnhance)) { cur.slotEnhance[k] ||= 0; cur.slotEnhanceOre[k] ||= 0; }
   return cur;
 }
 

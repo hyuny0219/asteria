@@ -165,6 +165,8 @@ export class App {
   // when there is something to claim. Called on entering and after each claim.
   showDailyPopups() {
     if (this.game.mode === 'OFFLINE' || this.game.mode === 'CONFLICT') return;
+    // one-time change notices come first and ignore ?nodaily (a fresh save has none)
+    if (this.state.notices && this.state.notices.slotEnhance) { if (!modalOpen()) S.openSlotEnhanceNotice(this); return; }
     if (new URLSearchParams(location.search).has('nodaily')) return;   // QA screenshots
     if (V4.needsClassPick(this.state)) { if (!modalOpen('classpick')) V4.openClassPicker(this, { onDone: () => this.showDailyPopups() }); return; }
     if (modalOpen()) return;

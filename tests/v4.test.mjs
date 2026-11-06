@@ -164,12 +164,12 @@ test('enhance +15: fail ≤ +10 keeps level, fail at +11+ drops one, never destr
   const it = makeItem(s, { slot: 'weapon', rarity: 'epic', level: 50, rng: makeRng(2) });
   addItems(s, [it]);
   s.wallet.ore = 1e9;
-  it.enhance = 8;
-  const f1 = enhance(s, it.id, () => 0.999);
-  assert.equal(f1.success, false); assert.equal(it.enhance, 8);
-  it.enhance = 12;
-  const f2 = enhance(s, it.id, () => 0.999);
-  assert.equal(f2.success, false); assert.equal(it.enhance, 11);
+  s.slotEnhance.weapon = 8;
+  const f1 = enhance(s, 'weapon', () => 0.999);
+  assert.equal(f1.success, false); assert.equal(s.slotEnhance.weapon, 8);
+  s.slotEnhance.weapon = 12;
+  const f2 = enhance(s, 'weapon', () => 0.999);
+  assert.equal(f2.success, false); assert.equal(s.slotEnhance.weapon, 11);
   assert.ok(s.inventory.includes(it));
 });
 
@@ -299,9 +299,9 @@ test('every class: skills deal damage and a fitting hero beats each region boss'
       const rng = makeRng(3);
       for (const slot of ['weapon', 'helmet', 'armor', 'gloves', 'boots', 'necklace', 'ring', 'ring']) {
         const it = makeItem(s, { slot, rarity: tier >= 2 ? 'epic' : 'rare', level: BOSSES[bossId].level, rng });
-        it.enhance = 3 + tier * 3;
         addItems(s, [it]); equip(s, it.id);
       }
+      for (const k of Object.keys(s.slotEnhance)) s.slotEnhance[k] = 3 + tier * 3;
       s.player.statsUpgrades = { atk: 25 + lv, hp: 25 + lv, def: 10 + lv / 2, crit: 20, speed: 25 };
       for (const id of unlockedSkills(s)) s.skills.levels[id] = Math.min(10, 1 + Math.floor(lv / 10));
       const eq = s.skills.equipped;

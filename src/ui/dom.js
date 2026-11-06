@@ -66,8 +66,9 @@ export function busyButton(btn, fn) {
   });
   return btn;
 }
-export function button(label, { cls = 'btn', onClick, busy = false, disabled = false, ariaLabel = null, title = null } = {}) {
+export function button(label, { cls = 'btn', onClick, busy = false, disabled = false, ariaLabel = null, title = null, dataset = null } = {}) {
   const b = h('button', { type: 'button', class: cls, disabled, 'aria-label': ariaLabel, title });
+  if (dataset) Object.assign(b.dataset, dataset);
   if (typeof label === 'string') b.textContent = label; else append(b, [label]);
   if (onClick) { if (busy) busyButton(b, onClick); else b.addEventListener('click', onClick); }
   return b;
