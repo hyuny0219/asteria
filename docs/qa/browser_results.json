@@ -1,6 +1,6 @@
 {
- "startedAt": "2026-11-06T15:25:35.187Z",
- "base": "http://127.0.0.1:8131/",
+ "startedAt": "2026-11-06T16:05:16.427Z",
+ "base": "http://localhost:8231/",
  "viewports": [
   [
    390,
@@ -43,11 +43,18 @@
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [],
+   "wide": [
+    "tab locked",
+    "SMALL",
+    "tab locked",
+    "SMALL",
+    "tab locked"
+   ],
    "brokenImg": [],
    "screens": [
     "main",
-    "statpoints"
+    "world",
+    "stagemap"
    ],
    "tiny": [],
    "errors": []
@@ -256,8 +263,7 @@
    ],
    "brokenImg": [],
    "screens": [
-    "skills",
-    "runes",
+    "main",
     "world",
     "stagemap"
    ],
@@ -273,15 +279,24 @@
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [],
+   "wide": [
+    "tab locked",
+    "SMALL",
+    "tab locked",
+    "SMALL",
+    "tab locked"
+   ],
    "brokenImg": [],
    "screens": [
-    "skills",
-    "runes",
+    "main",
+    "world",
+    "stagemap",
     "boss",
     "boss"
    ],
-   "tiny": [],
+   "tiny": [
+    "✓"
+   ],
    "errors": []
   },
   {
@@ -357,7 +372,10 @@
     "dungeon-books",
     "tower",
     "rift",
-    "raid"
+    "raid",
+    "growth",
+    "main",
+    "statpoints"
    ],
    "tiny": [],
    "errors": []
@@ -381,6 +399,9 @@
     "tower",
     "rift",
     "raid",
+    "growth",
+    "main",
+    "statpoints",
     "offline",
     "offline"
    ],
@@ -406,6 +427,9 @@
     "tower",
     "rift",
     "raid",
+    "growth",
+    "main",
+    "statpoints",
     "quest",
     "quest"
    ],
@@ -853,6 +877,14 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid",
+    "growth",
     "main",
     "statpoints"
    ],
@@ -872,7 +904,10 @@
    "brokenImg": [],
    "screens": [
     "skills",
-    "runes"
+    "runes",
+    "growth",
+    "main",
+    "statpoints"
    ],
    "tiny": [],
    "errors": []
@@ -892,7 +927,10 @@
    ],
    "brokenImg": [],
    "screens": [
-    "inventory"
+    "inventory",
+    "growth",
+    "main",
+    "statpoints"
    ],
    "tiny": [],
    "errors": []
@@ -915,7 +953,10 @@
     "dungeon-books",
     "tower",
     "rift",
-    "raid"
+    "raid",
+    "growth",
+    "main",
+    "statpoints"
    ],
    "tiny": [],
    "errors": []
@@ -933,6 +974,9 @@
    "brokenImg": [],
    "screens": [
     "immersive",
+    "growth",
+    "main",
+    "statpoints",
     "towerResult",
     "towerResult"
    ],
@@ -952,6 +996,9 @@
    "brokenImg": [],
    "screens": [
     "immersive",
+    "growth",
+    "main",
+    "statpoints",
     "raidResult",
     "raidResult"
    ],
@@ -977,6 +1024,9 @@
     "tower",
     "rift",
     "raid",
+    "growth",
+    "main",
+    "statpoints",
     "promotion",
     "promotion"
    ],
@@ -1002,6 +1052,9 @@
     "tower",
     "rift",
     "raid",
+    "growth",
+    "main",
+    "statpoints",
     "promoPlay",
     "promoPlay"
    ],
@@ -1097,11 +1150,18 @@
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [],
+   "wide": [
+    "tab locked",
+    "tab locked",
+    "SMALL",
+    "tab locked",
+    "SMALL"
+   ],
    "brokenImg": [],
    "screens": [
     "main",
-    "statpoints"
+    "world",
+    "stagemap"
    ],
    "tiny": [],
    "errors": []
@@ -1310,8 +1370,7 @@
    ],
    "brokenImg": [],
    "screens": [
-    "skills",
-    "runes",
+    "main",
     "world",
     "stagemap"
    ],
@@ -1327,15 +1386,24 @@
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [],
+   "wide": [
+    "tab locked",
+    "tab locked",
+    "SMALL",
+    "tab locked",
+    "SMALL"
+   ],
    "brokenImg": [],
    "screens": [
-    "skills",
-    "runes",
+    "main",
+    "world",
+    "stagemap",
     "boss",
     "boss"
    ],
-   "tiny": [],
+   "tiny": [
+    "✓"
+   ],
    "errors": []
   },
   {
@@ -1411,7 +1479,10 @@
     "dungeon-books",
     "tower",
     "rift",
-    "raid"
+    "raid",
+    "growth",
+    "main",
+    "statpoints"
    ],
    "tiny": [],
    "errors": []
@@ -1435,6 +1506,9 @@
     "tower",
     "rift",
     "raid",
+    "growth",
+    "main",
+    "statpoints",
     "offline",
     "offline"
    ],
@@ -1460,6 +1534,9 @@
     "tower",
     "rift",
     "raid",
+    "growth",
+    "main",
+    "statpoints",
     "quest",
     "quest"
    ],
@@ -1907,6 +1984,14 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid",
+    "growth",
     "main",
     "statpoints"
    ],
@@ -1926,7 +2011,10 @@
    "brokenImg": [],
    "screens": [
     "skills",
-    "runes"
+    "runes",
+    "growth",
+    "main",
+    "statpoints"
    ],
    "tiny": [],
    "errors": []
@@ -1946,7 +2034,10 @@
    ],
    "brokenImg": [],
    "screens": [
-    "inventory"
+    "inventory",
+    "growth",
+    "main",
+    "statpoints"
    ],
    "tiny": [],
    "errors": []
@@ -1969,7 +2060,10 @@
     "dungeon-books",
     "tower",
     "rift",
-    "raid"
+    "raid",
+    "growth",
+    "main",
+    "statpoints"
    ],
    "tiny": [],
    "errors": []
@@ -1987,6 +2081,9 @@
    "brokenImg": [],
    "screens": [
     "immersive",
+    "growth",
+    "main",
+    "statpoints",
     "towerResult",
     "towerResult"
    ],
@@ -2006,6 +2103,9 @@
    "brokenImg": [],
    "screens": [
     "immersive",
+    "growth",
+    "main",
+    "statpoints",
     "raidResult",
     "raidResult"
    ],
@@ -2031,6 +2131,9 @@
     "tower",
     "rift",
     "raid",
+    "growth",
+    "main",
+    "statpoints",
     "promotion",
     "promotion"
    ],
@@ -2056,6 +2159,9 @@
     "tower",
     "rift",
     "raid",
+    "growth",
+    "main",
+    "statpoints",
     "promoPlay",
     "promoPlay"
    ],
@@ -2151,11 +2257,18 @@
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [],
+   "wide": [
+    "tab locked",
+    "SMALL",
+    "tab locked",
+    "SMALL",
+    "tab locked"
+   ],
    "brokenImg": [],
    "screens": [
     "main",
-    "statpoints"
+    "world",
+    "stagemap"
    ],
    "tiny": [],
    "errors": []
@@ -2357,8 +2470,7 @@
    ],
    "brokenImg": [],
    "screens": [
-    "skills",
-    "runes",
+    "main",
     "world",
     "stagemap"
    ],
@@ -2374,15 +2486,24 @@
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [],
+   "wide": [
+    "tab locked",
+    "SMALL",
+    "tab locked",
+    "SMALL",
+    "tab locked"
+   ],
    "brokenImg": [],
    "screens": [
-    "skills",
-    "runes",
+    "main",
+    "world",
+    "stagemap",
     "boss",
     "boss"
    ],
-   "tiny": [],
+   "tiny": [
+    "✓"
+   ],
    "errors": []
   },
   {
@@ -2458,7 +2579,10 @@
     "dungeon-books",
     "tower",
     "rift",
-    "raid"
+    "raid",
+    "growth",
+    "main",
+    "statpoints"
    ],
    "tiny": [],
    "errors": []
@@ -2482,6 +2606,9 @@
     "tower",
     "rift",
     "raid",
+    "growth",
+    "main",
+    "statpoints",
     "offline",
     "offline"
    ],
@@ -2507,6 +2634,9 @@
     "tower",
     "rift",
     "raid",
+    "growth",
+    "main",
+    "statpoints",
     "quest",
     "quest"
    ],
@@ -2954,6 +3084,14 @@
    "wide": [],
    "brokenImg": [],
    "screens": [
+    "dungeon",
+    "dungeon-quarry",
+    "dungeon-gold",
+    "dungeon-books",
+    "tower",
+    "rift",
+    "raid",
+    "growth",
     "main",
     "statpoints"
    ],
@@ -2973,7 +3111,10 @@
    "brokenImg": [],
    "screens": [
     "skills",
-    "runes"
+    "runes",
+    "growth",
+    "main",
+    "statpoints"
    ],
    "tiny": [],
    "errors": []
@@ -2992,7 +3133,10 @@
    ],
    "brokenImg": [],
    "screens": [
-    "inventory"
+    "inventory",
+    "growth",
+    "main",
+    "statpoints"
    ],
    "tiny": [],
    "errors": []
@@ -3015,7 +3159,10 @@
     "dungeon-books",
     "tower",
     "rift",
-    "raid"
+    "raid",
+    "growth",
+    "main",
+    "statpoints"
    ],
    "tiny": [],
    "errors": []
@@ -3033,6 +3180,9 @@
    "brokenImg": [],
    "screens": [
     "immersive",
+    "growth",
+    "main",
+    "statpoints",
     "towerResult",
     "towerResult"
    ],
@@ -3052,6 +3202,9 @@
    "brokenImg": [],
    "screens": [
     "immersive",
+    "growth",
+    "main",
+    "statpoints",
     "raidResult",
     "raidResult"
    ],
@@ -3077,6 +3230,9 @@
     "tower",
     "rift",
     "raid",
+    "growth",
+    "main",
+    "statpoints",
     "promotion",
     "promotion"
    ],
@@ -3102,6 +3258,9 @@
     "tower",
     "rift",
     "raid",
+    "growth",
+    "main",
+    "statpoints",
     "promoPlay",
     "promoPlay"
    ],
@@ -3239,8 +3398,8 @@
    "name": "reload keeps the same pending claim",
    "pass": true,
    "detail": {
-    "first": "claim_mw54oet8_1vt1yqg",
-    "after": "claim_mw54oet8_1vt1yqg"
+    "first": "claim_mw563fy4_3jev34",
+    "after": "claim_mw563fy4_3jev34"
    }
   },
   {
@@ -3322,7 +3481,7 @@
     "k0": 1,
     "k1": {
      "kills": 1,
-     "acc": 16.600000000000023,
+     "acc": 16.700000000000045,
      "mode": "FARM"
     }
    }
@@ -3417,7 +3576,7 @@
   }
  ],
  "errors": [],
- "finishedAt": "2026-11-06T15:28:02.988Z",
+ "finishedAt": "2026-11-06T16:07:44.844Z",
  "summary": {
   "screenChecks": 141,
   "screenPass": 141,

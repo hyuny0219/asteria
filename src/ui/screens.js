@@ -25,7 +25,8 @@ import { enableAudio, setVolume, sfx } from '../platform/audio.js';
 import { button, closeAllModals, h, icon, img, modalOpen, openModal, toast } from './dom.js';
 import * as FS from './fullscreen.js';
 import { openShop, openClassChange } from './shop.js';
-import { openStageMap } from './stagemap.js';
+import { openStageMap, stagePanel } from './stagemap.js';
+export { stagePanel };
 import { stageLabel } from '../core/stages.js';
 
 const STAT_INFO = {
@@ -52,7 +53,8 @@ const reduce = (app) => app.state.settings.reduceMotion;
 export function go(app, action) {
   if (!action) return;
   closeAllModals();
-  if (action === 'growth' || action === 'equipment' || action === 'skills' || action === 'dungeon') return app.setTab(action);
+  if (action === 'growth') return openGrowth(app);
+  if (action === 'equipment' || action === 'skills' || action === 'dungeon' || action === 'stage') return app.setTab(action);
   if (action === 'world') return openWorld(app);
   if (action === 'quest') return openQuest(app);
   if (action === 'promotion') return openPromotion(app);
@@ -63,7 +65,7 @@ export function go(app, action) {
   if (action === 'pets') return V6.openPets(app);
   if (action === 'pass') return V6.openPass(app);
   if (action === 'achievements') return V6.openAchievements(app);
-  if (action === 'farm') return app.setTab('growth');
+  if (action === 'farm') return app.setTab('stage');
   if (action === 'mine') return openWorld(app, 'mine');
   if (action.startsWith('boss:')) return openBoss(app, action.slice(5));
 }
@@ -169,7 +171,7 @@ export function equipmentPanel(app) {
     // S19 empty state
     sc.appendChild(h('div', { class: 'card', style: { marginTop: '12px', textAlign: 'center' } }, img(itemIcon('I21'), '', ''),
       h('h3', null, '아직 장비가 없습니다'), h('p', { class: 'muted' }, '사냥 중 처치한 적이 5% 확률로 장비를 떨어뜨립니다. 보스를 처음 처치하면 희귀 무기를 확정으로 얻습니다.'),
-      button('자동 사냥 계속하기', { cls: 'btn btn-primary', onClick: () => app.setTab('growth') })));
+      button('자동 사냥 계속하기', { cls: 'btn btn-primary', onClick: () => app.setTab('stage') })));
     root.appendChild(sc);
     return root;
   }
@@ -485,7 +487,7 @@ export function menuTiles(app) {
       on: () => (cl && cl.canChoose ? openPromotion(app) : cl && cl.canPromote && tier >= 1 ? V4.openPromotionTier(app, cl.tier) : openQuest(app)) },
     { id: 'shop', ic: 'equipment', t: '상점', s: '보석·골드로 구매', on: () => openShop(app) },
     { id: 'classChange', ic: 'growth', t: '클래스 전환', s: (s.player.classChanges || 0) === 0 ? '1회 무료' : `전환권 ${s.wallet.classTicket || 0}장`, on: () => openClassChange(app) },
-    { id: 'world', ic: 'dungeon', t: '스테이지 지도', s: `${REGION_BY_ID[s.progression.region].name} ${stageLabel(s.progression.region, s.progression.wave)}`, on: () => openWorld(app) },
+    { id: 'growth', ic: 'growth', t: '능력치', s: `전투력 ${fmt(powerRating(playerStats(s)))}`, on: () => openGrowth(app) },
     { id: 'settings', ic: 'menu', t: '환경 설정', s: '저장 · 소리 · 접근성', on: () => openSettings(app) },
     { id: 'help', ic: 'info', t: '도움말', s: '처음 하는 분', on: () => openHelp(app) },
   ];
@@ -507,7 +509,24 @@ export function menuPanel(app) {
 
 // ======================= S07 world =======================
 // 지역 선택 → 스테이지 지도 (v7, see stagemap.js)
-export function openWorld(app, focus = null) { return openStageMap(app, focus); }
+// 스테이지는 하단 첫 탭이 되었으므로 지도 열기 = 탭 이동 (지역 지정 가능).
+export function openWorld(app, focus = null) {
+  closeAllModals();
+  app.stageUi = { region: focus || null, sel: null };
+  app.setTab('stage');
+}
+export { openStageMap };
+
+// 능력치(확인 전용)는 메뉴 타일 → 전체 화면 창. 1초마다 값만 갱신.
+export function openGrowth(app) {
+  const panel = growthPanel(app);
+  panel.style.height = 'auto';
+  const h2 = panel.querySelector('.panel-head h2'); if (h2) h2.textContent = '';
+  let timer = null;
+  const m = openModal({ id: 'growth', title: '능력치', body: panel, kind: 'full', onClose: () => clearInterval(timer) });
+  timer = setInterval(() => { if (panel._update) panel._update(); }, 1000);
+  return m;
+}
 
 // ======================= S08 boss =======================
 export function openBoss(app, bossId = null) {
@@ -586,7 +605,7 @@ export function openResult(app, r) {
         h('div', { class: 'kv' }, '장비 강화', h('b', null, `광석 ${fmtFull(app.state.wallet.ore)}`)),
         h('div', { class: 'kv' }, '스킬 레벨업', h('b', null, '스킬 탭 · 스킬북')),
         h('div', { class: 'kv' }, '뽑기', h('b', null, `보석 ${fmtFull(app.state.wallet.gem)}`)))),
-      actions: [button('성장하러 가기', { cls: 'btn btn-primary', onClick: () => { m.close(); back(); app.setTab('growth'); } }), button('장비 확인', { cls: 'btn', onClick: () => { m.close(); back(); app.setTab('equipment'); } })] });
+      actions: [button('성장하러 가기', { cls: 'btn btn-primary', onClick: () => { m.close(); back(); openGrowth(app); } }), button('장비 확인', { cls: 'btn', onClick: () => { m.close(); back(); app.setTab('equipment'); } })] });
     return m;
   }
   if (r.kind === 'tower') return V4.openTowerResult(app, r, back);

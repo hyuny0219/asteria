@@ -496,6 +496,7 @@ input.text { width: 100%; min-height: 36px; background: var(--panel); border: 1p
 .stage-tabs .tab.locked { opacity: .6; }
 .stage-tabs .tab small { font-size: 12px; color: var(--gold); font-weight: 700; }
 .stage-map { position: relative; width: 100%; height: clamp(300px, calc(100dvh - 360px), 540px); border-radius: 12px; border: 1px solid var(--border); overflow: hidden;
+.stage-panel .stage-map { height: clamp(260px, 50dvh, 420px); }
   background-color: #1a1522; background-size: cover; background-position: center; isolation: isolate; }
 .stage-map::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(16,13,24,.55), rgba(16,13,24,.25) 40%, rgba(16,13,24,.6)); z-index: -1; }
 .stage-map.locked { filter: grayscale(.85) brightness(.75); }

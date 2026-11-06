@@ -16,7 +16,7 @@ import * as V5 from './v5.js';
 import { BLESSINGS, CURSES } from '../core/rift.js';
 
 export const TABS = [
-  { id: 'growth', label: '능력치', icon: 'growth' },
+  { id: 'stage', label: '스테이지', icon: 'map' },
   { id: 'equipment', label: '장비', icon: 'equipment' },
   { id: 'skills', label: '스킬', icon: 'skill' },
   { id: 'dungeon', label: '모험', icon: 'dungeon' },
@@ -30,7 +30,7 @@ export class App {
     this.lock = lock;
     this.root = root;
     this.saverWarning = saverWarning;
-    this.tab = 'growth';
+    this.tab = 'stage';
     this.mult = 1;
     this.lastHud = 0;
     this.panelDirty = true;
@@ -121,7 +121,7 @@ export class App {
     E.canvas.addEventListener('pointerdown', () => { if (this.renderer) this.renderer.skipCutin(); });
     this.bindGame();
     this.buildSkills();
-    this.setTab('growth');
+    this.setTab('stage');
     this.applyView();
     this.applyA11y();
     this.renderFsBtn();
@@ -375,7 +375,7 @@ export class App {
     const top = scroll ? scroll.scrollTop : 0;
     const keepFocus = document.activeElement && this.el.panel.contains(document.activeElement) ? document.activeElement.dataset.key : null;
     clear(this.el.panel);
-    const map = { growth: S.growthPanel, equipment: S.equipmentPanel, skills: S.skillsPanel, dungeon: S.dungeonPanel, menu: S.menuPanel };
+    const map = { stage: S.stagePanel, growth: S.growthPanel, equipment: S.equipmentPanel, skills: S.skillsPanel, dungeon: S.dungeonPanel, menu: S.menuPanel };
     this.el.panel.appendChild(map[this.tab](this));
     const ns = this.el.panel.querySelector('.panel-scroll');
     if (ns) ns.scrollTop = top;

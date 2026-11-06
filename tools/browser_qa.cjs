@@ -275,7 +275,7 @@ async function screensAt(browser, vp) {
   await v4('openClassPicker');
   await check(page, 'classpick', vp, '클래스 선택 4종');
   await closeAll(page);
-  await page.evaluate(() => window.__asteria.app.setTab('growth'));
+  await page.evaluate(() => window.__asteria.screens.openGrowth(window.__asteria.app));
   await check(page, 'statpoints', vp, '능력치 포인트');
   await page.evaluate(async () => { await window.__qaTx((s) => { s.skills.runes.owned = { lifesteal: 2, focus: 1, gale: 1 }; s.skills.runes.equipped = ['lifesteal', null]; return { ok: true }; }); window.__asteria.app.setTab('skills'); });
   await check(page, 'runes', vp, '각인 2칸');

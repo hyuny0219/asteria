@@ -34,10 +34,13 @@ function rewardLine(rw) {
     h('span', { class: 'rw' }, img(itemIcon(CURRENCY_ICONS[k]), ''), h('b', null, fmt(v)))));
 }
 
-export function openStageMap(app, focus = null) {
-  let region = focus || app.state.progression.region;
-  let sel = null;   // selected node (1..10 | 'boss'); null → current stage
-  const render = () => {
+// Builds the map UI. `ui` keeps {region, sel} across rebuilds; `rerender` redraws;
+// `close` runs after the player leaves (starts a hunt / opens the boss).
+function buildStage(app, ui, rerender, close) {
+  let region = ui.region || app.state.progression.region;
+  let sel = ui.sel === undefined ? null : ui.sel;   // selected node (1..10 | 'boss'); null → current stage
+  const render = () => { ui.region = region; ui.sel = sel; rerender(); };
+  {
     const s = app.state;
     const p = s.progression;
     const r = REGION_BY_ID[region];
@@ -104,14 +107,14 @@ export function openStageMap(app, focus = null) {
     let action;
     if (boss) {
       action = button(!open ? '잠긴 지역입니다' : stt === 'locked' ? `${r.order + 1}-10 도달 시 도전` : p.bossCleared[r.boss] ? '보스 재도전' : '보스 도전', { cls: 'btn btn-primary', disabled: stt === 'locked', dataset: { act: 'stage-go' },
-        onClick: () => { m.close(); openBoss(app, r.boss); } });
+        onClick: () => { close(); openBoss(app, r.boss); } });
     } else {
       action = button(!open ? '잠긴 지역입니다' : stt === 'locked' ? '이전 스테이지를 깨면 열립니다' : here ? '이 스테이지에서 사냥 중' : '여기서 사냥', { cls: 'btn btn-primary', disabled: stt === 'locked' || here, busy: true, dataset: { act: 'stage-go' },
         onClick: async () => {
           const res = await app.game.setFarm(r.id, n, s.stages.auto !== false);
           if (!res.ok) { toast(res.reason === 'busy' ? '잠시 후 다시 시도해 주세요.' : '이 스테이지로 갈 수 없습니다.', 'error'); return; }
           toast(`${ST.stageLabel(r.id, n)}에서 사냥합니다.${s.stages.auto === false ? ' (자동 진행 꺼짐)' : ''}`, 'info');
-          m.close();
+          close();
         } });
     }
     const detail = h('div', { class: 'card stage-detail', dataset: { detail: String(n) } },
@@ -122,12 +125,31 @@ export function openStageMap(app, focus = null) {
       h('div', { class: 'kv' }, '별 조건', h('b', null, boss ? `★ 처치 · ★★ 처치 · ★★★ ${ST.starTimeSec('boss')}초 안에` : `★ ${BALANCE.combat.waveKillTarget}마리 · ★★ 사망 없이 · ★★★ ${ST.starTimeSec(n)}초 안에`)),
       h('div', { class: 'kv' }, '최초 클리어 보상', claimed ? h('b', { class: 'okc' }, '받음 ✓') : rewardLine(ST.stageReward(r.id, n))),
       action);
-    m.setBody(h('div', { class: 'stage-wrap' }, head, tabs, map, detail,
-      h('p', { class: 'muted small', style: { margin: '6px 2px 0' } }, '스테이지 = 웨이브. 적 10마리를 처치하면 클리어입니다. 보스를 처치하면 다음 지역이 열립니다. 자동 진행을 끄면 고른 스테이지에서 계속 사냥합니다.')));
+    ui.region = region; ui.sel = sel;
     // keep the tab strip scrolled to the selected region
     requestAnimationFrame(() => { const t = tabs.querySelector('[aria-selected="true"]'); if (t && t.scrollIntoView) t.scrollIntoView({ block: 'nearest', inline: 'center' }); });
-  };
+    return h('div', { class: 'stage-wrap', dataset: { screen: 'world' } }, head, tabs, map, detail,
+      h('p', { class: 'muted small', style: { margin: '6px 2px 0' } }, '스테이지 = 웨이브. 적 10마리를 처치하면 클리어입니다. 보스를 처치하면 다음 지역이 열립니다. 자동 진행을 끄면 고른 스테이지에서 계속 사냥합니다.'));
+  }
+}
+
+// Modal version (kept for direct calls).
+export function openStageMap(app, focus = null) {
+  const ui = { region: focus || null, sel: null };
   const m = openModal({ id: 'world', title: '스테이지 지도', body: h('div'), kind: 'full' });
-  render();
+  const draw = () => m.setBody(buildStage(app, ui, draw, () => m.close()));
+  draw();
   return m;
+}
+
+// Bottom-tab version (선배 요청: 스테이지가 하단 첫 탭). Selection survives the
+// once-a-second panel rebuild via app.stageUi.
+export function stagePanel(app) {
+  if (!app.stageUi) app.stageUi = { region: null, sel: null };
+  const root = h('div', { class: 'panel', dataset: { screen: 'main' }, style: { height: '100%', margin: 0 } });
+  root.appendChild(h('div', { class: 'panel-head' }, h('h2', null, '스테이지')));
+  const sc = h('div', { class: 'panel-scroll stage-panel' });
+  sc.appendChild(buildStage(app, app.stageUi, () => app.renderPanel(), () => app.renderPanel()));
+  root.appendChild(sc);
+  return root;
 }
