@@ -1,0 +1,648 @@
+{
+ "balanceVersion": "0.4-v4-experimental",
+ "classes": [
+  "warrior",
+  "mage",
+  "archer",
+  "rogue"
+ ],
+ "seeds": 1,
+ "sessions": 4,
+ "sessionMin": 30,
+ "milestones": {
+  "rebirth1": {
+   "median": 10,
+   "p10": 9,
+   "p90": 11,
+   "reached": 4
+  },
+  "rb_lv50": {
+   "median": 10.25,
+   "p10": 9.25,
+   "p90": 11.25,
+   "reached": 4
+  },
+  "rb_lv100": {
+   "median": 10.5,
+   "p10": 9.5,
+   "p90": 11.5,
+   "reached": 4
+  },
+  "rebirth2": {
+   "median": null,
+   "p10": null,
+   "p90": null,
+   "reached": 0
+  },
+  "rebirth3": {
+   "median": null,
+   "p10": null,
+   "p90": null,
+   "reached": 0
+  },
+  "lv10": {
+   "median": 0.01,
+   "p10": 0.01,
+   "p90": 0.01,
+   "reached": 4
+  },
+  "lv20": {
+   "median": 0.25,
+   "p10": 0.25,
+   "p90": 0.25,
+   "reached": 4
+  },
+  "lv30": {
+   "median": 0.25,
+   "p10": 0.25,
+   "p90": 0.25,
+   "reached": 4
+  },
+  "tier1": {
+   "median": 0.25,
+   "p10": 0.25,
+   "p90": 0.26,
+   "reached": 4
+  },
+  "lv40": {
+   "median": 0.75,
+   "p10": 0.75,
+   "p90": 1,
+   "reached": 4
+  },
+  "lv50": {
+   "median": 1.5,
+   "p10": 1.5,
+   "p90": 1.75,
+   "reached": 4
+  },
+  "lv60": {
+   "median": 2.52,
+   "p10": 2.25,
+   "p90": 3,
+   "reached": 4
+  },
+  "tier2": {
+   "median": 2.52,
+   "p10": 2.25,
+   "p90": 3,
+   "reached": 4
+  },
+  "lv70": {
+   "median": 4,
+   "p10": 3.5,
+   "p90": 4.5,
+   "reached": 4
+  },
+  "lv80": {
+   "median": 5.5,
+   "p10": 4.75,
+   "p90": 6,
+   "reached": 4
+  },
+  "lv90": {
+   "median": 7.25,
+   "p10": 6.25,
+   "p90": 7.75,
+   "reached": 4
+  },
+  "tier3": {
+   "median": 7.25,
+   "p10": 6.25,
+   "p90": 7.75,
+   "reached": 4
+  },
+  "lv100": {
+   "median": 10,
+   "p10": 9,
+   "p90": 11,
+   "reached": 4
+  },
+  "win_B01": {
+   "median": 0,
+   "p10": 0,
+   "p90": 0,
+   "reached": 4
+  },
+  "win_B02": {
+   "median": 0.01,
+   "p10": 0.01,
+   "p90": 0.01,
+   "reached": 4
+  },
+  "win_B03": {
+   "median": 0.01,
+   "p10": 0.01,
+   "p90": 0.01,
+   "reached": 4
+  },
+  "win_B04": {
+   "median": 0.25,
+   "p10": 0.25,
+   "p90": 0.26,
+   "reached": 4
+  },
+  "win_B05": {
+   "median": 0.26,
+   "p10": 0.26,
+   "p90": 0.26,
+   "reached": 4
+  },
+  "win_B06": {
+   "median": 0.27,
+   "p10": 0.26,
+   "p90": 0.5,
+   "reached": 4
+  },
+  "win_B07": {
+   "median": 0.77,
+   "p10": 0.77,
+   "p90": 0.77,
+   "reached": 4
+  },
+  "win_B08": {
+   "median": 1.25,
+   "p10": 1.01,
+   "p90": 1.26,
+   "reached": 4
+  },
+  "win_B09": {
+   "median": 1.52,
+   "p10": 1.5,
+   "p90": 2.27,
+   "reached": 4
+  }
+ },
+ "ttk": {
+  "0": {
+   "median": 1.35,
+   "p90": 2.8,
+   "n": 1375
+  },
+  "10": {
+   "median": 2.55,
+   "p90": 3.7,
+   "n": 1110
+  },
+  "20": {
+   "median": 0.3,
+   "p90": 1,
+   "n": 508
+  },
+  "30": {
+   "median": 2.6,
+   "p90": 4.9,
+   "n": 7996
+  },
+  "40": {
+   "median": 3.15,
+   "p90": 4.7,
+   "n": 9416
+  },
+  "50": {
+   "median": 3.4,
+   "p90": 5.3,
+   "n": 7361
+  },
+  "60": {
+   "median": 2.4,
+   "p90": 3.8,
+   "n": 16153
+  },
+  "70": {
+   "median": 1.9,
+   "p90": 3.05,
+   "n": 19547
+  },
+  "80": {
+   "median": 1.7,
+   "p90": 2.85,
+   "n": 23968
+  },
+  "90": {
+   "median": 1.35,
+   "p90": 2.4,
+   "n": 50018
+  },
+  "100": {
+   "median": 1.25,
+   "p90": 2.25,
+   "n": 7846
+  }
+ },
+ "bosses": {
+  "B01": {
+   "fights": 4,
+   "winRate": 1,
+   "winSec": 21
+  },
+  "B02": {
+   "fights": 4,
+   "winRate": 1,
+   "winSec": 25
+  },
+  "B03": {
+   "fights": 6,
+   "winRate": 0.6666666666666666,
+   "winSec": 51
+  },
+  "B04": {
+   "fights": 4,
+   "winRate": 1,
+   "winSec": 26
+  },
+  "B05": {
+   "fights": 4,
+   "winRate": 1,
+   "winSec": 40
+  },
+  "B06": {
+   "fights": 12,
+   "winRate": 0.3333333333333333,
+   "winSec": 50
+  },
+  "B07": {
+   "fights": 12,
+   "winRate": 0.3333333333333333,
+   "winSec": 50
+  },
+  "B08": {
+   "fights": 13,
+   "winRate": 0.3076923076923077,
+   "winSec": 57
+  },
+  "B09": {
+   "fights": 15,
+   "winRate": 0.26666666666666666,
+   "winSec": 47
+  }
+ },
+ "final": [
+  {
+   "cls": "warrior",
+   "seed": 1,
+   "level": 100,
+   "tier": 3,
+   "region": "void",
+   "wave": 10,
+   "tower": 82,
+   "stats": {
+    "atk": 3702,
+    "hp": 36343,
+    "def": 1335,
+    "crit": 0.6,
+    "critMul": 2.334,
+    "aspd": 2.493012,
+    "evade": 0.223,
+    "cdr": 0.066,
+    "ultCharge": 0.335,
+    "goldPct": 0.47340000000000004,
+    "lifesteal": 0.025,
+    "combo": 0.1,
+    "dmgTaken": 0.05,
+    "expPct": 0.15,
+    "offlinePct": 0.15,
+    "dropPct": 0.2,
+    "thorns": 0,
+    "regen": 0,
+    "caps": {
+     "cap_berserk": true
+    },
+    "rebirth": {
+     "atk": 1.16,
+     "hp": 1.16,
+     "gold": 1.3,
+     "exp": 1.4
+    },
+    "mythUltCdr": false,
+    "mythHeal": false,
+    "rawCrit": 0.679255,
+    "equipBonus": {
+     "atk": 989,
+     "hp": 10966,
+     "def": 460,
+     "crit": 0.189255
+    },
+    "capped": {
+     "crit": true,
+     "aspd": false
+    }
+   },
+   "gem": 292,
+   "days": 13.001423611111111,
+   "locked": 0,
+   "marks": {
+    "win_B01": 0,
+    "win_B02": 0.01,
+    "lv10": 0.01,
+    "win_B03": 0.01,
+    "lv20": 0.25,
+    "lv30": 0.25,
+    "win_B04": 0.26,
+    "trial1": 0.26,
+    "tier1": 0.26,
+    "win_B05": 0.26,
+    "win_B06": 0.51,
+    "lv40": 1,
+    "win_B07": 1.27,
+    "lv50": 1.75,
+    "win_B08": 2,
+    "win_B09": 2.27,
+    "lv60": 3,
+    "tier2": 3,
+    "lv70": 4.75,
+    "lv80": 6.5,
+    "lv90": 8.25,
+    "trial3": 8.25,
+    "tier3": 8.25,
+    "lv100": 11.75,
+    "rebirth1": 11.75,
+    "rb_lv50": 12,
+    "rb_lv100": 12.25
+   },
+   "raid": [
+    "S",
+    "S",
+    "S"
+   ]
+  },
+  {
+   "cls": "mage",
+   "seed": 1,
+   "level": 100,
+   "tier": 3,
+   "region": "void",
+   "wave": 10,
+   "tower": 98,
+   "stats": {
+    "atk": 5671,
+    "hp": 29904,
+    "def": 957,
+    "crit": 0.391735,
+    "critMul": 2.253,
+    "aspd": 2.01951,
+    "evade": 0.025,
+    "cdr": 0.32499999999999996,
+    "ultCharge": 0.539,
+    "goldPct": 0.3134,
+    "lifesteal": 0.025,
+    "combo": 0,
+    "dmgTaken": 0.1,
+    "expPct": 0.15,
+    "offlinePct": 0.15,
+    "dropPct": 0.2,
+    "thorns": 0,
+    "regen": 0,
+    "caps": {
+     "cap_dot2": true,
+     "cap_secondWind": true
+    },
+    "rebirth": {
+     "atk": 1.16,
+     "hp": 1.16,
+     "gold": 1.4,
+     "exp": 1.4
+    },
+    "mythUltCdr": false,
+    "mythHeal": false,
+    "rawCrit": 0.391735,
+    "equipBonus": {
+     "atk": 1532,
+     "hp": 11795,
+     "def": 515,
+     "crit": 0.06773499999999999
+    },
+    "capped": {
+     "crit": false,
+     "aspd": false
+    }
+   },
+   "gem": 78,
+   "days": 11,
+   "locked": 0,
+   "marks": {
+    "win_B01": 0,
+    "win_B02": 0.01,
+    "lv10": 0.01,
+    "win_B03": 0.01,
+    "lv20": 0.25,
+    "lv30": 0.25,
+    "trial1": 0.26,
+    "tier1": 0.26,
+    "win_B04": 0.26,
+    "win_B05": 0.26,
+    "win_B06": 0.5,
+    "lv40": 0.75,
+    "win_B07": 0.77,
+    "win_B08": 1.01,
+    "lv50": 1.5,
+    "win_B09": 1.5,
+    "lv60": 2.52,
+    "tier2": 2.52,
+    "lv70": 4,
+    "lv80": 5.5,
+    "lv90": 7.25,
+    "trial3": 7.25,
+    "tier3": 7.25,
+    "lv100": 10,
+    "rebirth1": 10,
+    "rb_lv50": 10.25,
+    "rb_lv100": 10.5
+   },
+   "raid": [
+    "S",
+    "S",
+    "S"
+   ]
+  },
+  {
+   "cls": "archer",
+   "seed": 1,
+   "level": 100,
+   "tier": 3,
+   "region": "void",
+   "wave": 10,
+   "tower": 112,
+   "stats": {
+    "atk": 5923,
+    "hp": 33042,
+    "def": 1097,
+    "crit": 0.44800000000000006,
+    "critMul": 2.4939999999999998,
+    "aspd": 2.826195,
+    "evade": 0.223,
+    "cdr": 0.133,
+    "ultCharge": 0.54,
+    "goldPct": 0.27340000000000003,
+    "lifesteal": 0.02,
+    "combo": 0,
+    "dmgTaken": 0.1,
+    "expPct": 0.15,
+    "offlinePct": 0.15,
+    "dropPct": 0.2,
+    "thorns": 0,
+    "regen": 0,
+    "caps": {
+     "cap_beast2": true,
+     "cap_secondWind": true
+    },
+    "rebirth": {
+     "atk": 1.16,
+     "hp": 1.16,
+     "gold": 1.4,
+     "exp": 1.4
+    },
+    "mythUltCdr": false,
+    "mythHeal": false,
+    "rawCrit": 0.44800000000000006,
+    "equipBonus": {
+     "atk": 1720,
+     "hp": 11934,
+     "def": 525,
+     "crit": 0
+    },
+    "capped": {
+     "crit": false,
+     "aspd": false
+    }
+   },
+   "gem": 406,
+   "days": 10.00011574074074,
+   "locked": 0,
+   "marks": {
+    "win_B01": 0,
+    "win_B02": 0.01,
+    "lv10": 0.01,
+    "win_B03": 0.01,
+    "lv20": 0.25,
+    "lv30": 0.25,
+    "win_B04": 0.25,
+    "trial1": 0.25,
+    "tier1": 0.25,
+    "win_B05": 0.26,
+    "win_B06": 0.26,
+    "lv40": 0.75,
+    "win_B07": 0.77,
+    "win_B08": 1.26,
+    "lv50": 1.5,
+    "win_B09": 1.52,
+    "lv60": 2.25,
+    "tier2": 2.25,
+    "lv70": 3.5,
+    "lv80": 4.75,
+    "lv90": 6.25,
+    "trial3": 6.25,
+    "tier3": 6.25,
+    "lv100": 9,
+    "rebirth1": 9,
+    "rb_lv50": 9.25,
+    "rb_lv100": 9.5
+   },
+   "raid": [
+    "S",
+    "S",
+    "S"
+   ]
+  },
+  {
+   "cls": "rogue",
+   "seed": 1,
+   "level": 100,
+   "tier": 3,
+   "region": "void",
+   "wave": 10,
+   "tower": 94,
+   "stats": {
+    "atk": 4094,
+    "hp": 27981,
+    "def": 1038,
+    "crit": 0.6,
+    "critMul": 2.16,
+    "aspd": 2.884509,
+    "evade": 0.4,
+    "cdr": 0.147,
+    "ultCharge": 0.5362,
+    "goldPct": 0.5554,
+    "lifesteal": 0,
+    "combo": 0.1,
+    "dmgTaken": 0.05,
+    "expPct": 0.15,
+    "offlinePct": 0.15,
+    "dropPct": 0.2,
+    "thorns": 0,
+    "regen": 0,
+    "caps": {
+     "cap_illusion": true,
+     "cap_secondWind": true
+    },
+    "rebirth": {
+     "atk": 1.16,
+     "hp": 1.16,
+     "gold": 1.4,
+     "exp": 1.4
+    },
+    "mythUltCdr": false,
+    "mythHeal": false,
+    "rawCrit": 0.737,
+    "equipBonus": {
+     "atk": 1393,
+     "hp": 11403,
+     "def": 482,
+     "crit": 0
+    },
+    "capped": {
+     "crit": true,
+     "aspd": false
+    }
+   },
+   "gem": 400,
+   "days": 12.000335648148148,
+   "locked": 0,
+   "marks": {
+    "win_B01": 0,
+    "win_B02": 0.01,
+    "lv10": 0.01,
+    "win_B03": 0.01,
+    "lv20": 0.25,
+    "lv30": 0.25,
+    "win_B04": 0.25,
+    "trial1": 0.25,
+    "tier1": 0.25,
+    "win_B05": 0.26,
+    "win_B06": 0.27,
+    "win_B07": 0.77,
+    "lv40": 1,
+    "win_B08": 1.25,
+    "lv50": 2,
+    "lv60": 3,
+    "tier2": 3,
+    "win_B09": 3.26,
+    "lv70": 4.5,
+    "lv80": 6,
+    "lv90": 7.75,
+    "trial3": 7.75,
+    "tier3": 7.75,
+    "lv100": 11,
+    "rebirth1": 11,
+    "rb_lv50": 11.25,
+    "rb_lv100": 11.5
+   },
+   "raid": [
+    "S",
+    "S",
+    "A"
+   ]
+  }
+ ],
+ "earlyMin": {
+  "2": 0.18333333333333332,
+  "3": 0.35,
+  "4": 0.6833333333333333,
+  "5": 1.0166666666666666,
+  "6": 1.85,
+  "7": 3.683333333333333,
+  "8": 5.016666666666667,
+  "9": 6.683333333333334,
+  "10": 10.016666666666667
+ }
+}

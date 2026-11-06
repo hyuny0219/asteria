@@ -130,6 +130,7 @@ async function runOne(seed, cls) {
     // milestones
     const lv = g.state.player.level;
     for (const L of [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]) if (lv >= L) mark('lv' + L);
+    m.early ||= {}; for (let L = 2; L <= 10; L++) if (lv >= L && m.early[L] === undefined) m.early[L] = (clock - start) / 60000;
     // rebirth at Lv 100 (--rebirths, default 1), then spend essence on the cheapest upgrade
     if (lv >= 100 && (g.state.rebirth.count || 0) < Number(args.rebirths ?? 1)) { const r = await g.doRebirth(); if (r.ok) { mark('rebirth' + g.state.rebirth.count); m.rebirthLevelAtDay = day(); return; } }
     if (g.state.rebirth.count) { for (const L of [50, 100]) if (lv >= L) mark('rb_lv' + L); }
@@ -186,7 +187,8 @@ async function runOne(seed, cls) {
       g.onVisible();
       if (g.mode === "OFFLINE") { const lv0 = g.state.player.level; const pc = g.state.offlineSnapshot.pendingClaim; await g.claimOffline(); if (args.trace && g.state.rebirth.count) console.error("off", lv0, "->", g.state.player.level, pc && pc.exp, pc && pc.reason, pc && pc.farm && pc.farm.level); }
     }
-    if (g.state.player.level >= 100 && m.marks.tier3) break;
+    if (g.state.player.level >= 100) mark('lv100');
+    if (g.state.player.level >= 100 && m.marks.tier3 && (g.state.rebirth.count || 0) >= Number(args.rebirths ?? 1)) break;
   }
   if (args.trace) console.error("end", JSON.stringify(m.marks), g.state.player.exp, g.state.player.pendingExp, cls, g.mode, JSON.stringify(g.state.rift.run), g.state.player.level, g.state.progression.region);
   m.final = { level: g.state.player.level, tier: tierOf(g.state), region: g.state.progression.region, wave: g.state.progression.wave, tower: g.state.tower.best, stats: playerStats(g.state), gem: g.state.wallet.gem, days: day(), locked: lockTierAt(g.state) };
@@ -220,5 +222,7 @@ for (const cls of CLASSES) {
   const rs = runs.filter((r) => r.cls === cls);
   console.log(`${cls}: final ${rs.map((r) => `L${r.final.level}/T${r.final.tier}/tower${r.final.tower}/${r.final.region}`).join(' ')} · lv100 day ${rs.map((r) => r.marks.lv100 ?? '—').join(',')} · raid ${rs.map((r) => (r.raid || []).join('')).join(' ')} · deaths ${rs.map((r) => r.deaths).join(',')}`);
 }
+{ const em = {}; for (let L = 2; L <= 10; L++) { const v = runs.map((r) => r.early && r.early[L]).filter((x) => x !== undefined); em[L] = median(v); } report.earlyMin = em;
+  console.log('early Lv (min since start, median): ' + Object.entries(em).map(([L, v]) => `Lv${L} ${v?.toFixed(1)}`).join(' · ')); }
 report.final = runs.map((r) => ({ cls: r.cls, seed: r.seed, ...r.final, marks: r.marks, raid: r.raid }));
 if (args.json) writeFileSync(args.json, JSON.stringify(report, null, 1));

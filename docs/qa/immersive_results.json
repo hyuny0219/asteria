@@ -1,0 +1,238 @@
+[
+ {
+  "kind": "boss",
+  "vp": "390x844",
+  "pass": true,
+  "st": {
+   "r": true,
+   "mode": "BOSS"
+  },
+  "m": {
+   "immersive": true,
+   "battleH": 780,
+   "navVisible": false,
+   "panelVisible": false,
+   "hud": "보스전 · 잊힌 폐광",
+   "overflow": false,
+   "small": []
+  },
+  "errs": []
+ },
+ {
+  "kind": "forfeit-back",
+  "pass": true,
+  "back": {
+   "immersive": false,
+   "mode": "FARM"
+  }
+ },
+ {
+  "kind": "dungeon",
+  "vp": "390x844",
+  "pass": true,
+  "st": {
+   "r": true,
+   "mode": "DUNGEON"
+  },
+  "m": {
+   "immersive": true,
+   "battleH": 780,
+   "navVisible": false,
+   "panelVisible": false,
+   "hud": "별의 채석장 · 1단계",
+   "overflow": false,
+   "small": []
+  },
+  "errs": []
+ },
+ {
+  "kind": "tower",
+  "vp": "390x844",
+  "pass": true,
+  "st": {
+   "r": true,
+   "mode": "DUNGEON"
+  },
+  "m": {
+   "immersive": true,
+   "battleH": 780,
+   "navVisible": false,
+   "panelVisible": false,
+   "hud": "시련의 탑 · 1층",
+   "overflow": false,
+   "small": []
+  },
+  "errs": []
+ },
+ {
+  "kind": "rift",
+  "vp": "390x844",
+  "pass": true,
+  "st": {
+   "r": true,
+   "mode": "DUNGEON"
+  },
+  "m": {
+   "immersive": true,
+   "battleH": 780,
+   "navVisible": false,
+   "panelVisible": false,
+   "hud": "균열 · 1층",
+   "overflow": false,
+   "small": []
+  },
+  "errs": []
+ },
+ {
+  "kind": "boss",
+  "vp": "360x700",
+  "pass": true,
+  "st": {
+   "r": true,
+   "mode": "BOSS"
+  },
+  "m": {
+   "immersive": true,
+   "battleH": 636,
+   "navVisible": false,
+   "panelVisible": false,
+   "hud": "보스전 · 잊힌 폐광",
+   "overflow": false,
+   "small": []
+  },
+  "errs": []
+ },
+ {
+  "kind": "dungeon",
+  "vp": "360x700",
+  "pass": true,
+  "st": {
+   "r": true,
+   "mode": "DUNGEON"
+  },
+  "m": {
+   "immersive": true,
+   "battleH": 636,
+   "navVisible": false,
+   "panelVisible": false,
+   "hud": "별의 채석장 · 1단계",
+   "overflow": false,
+   "small": []
+  },
+  "errs": []
+ },
+ {
+  "kind": "tower",
+  "vp": "360x700",
+  "pass": true,
+  "st": {
+   "r": true,
+   "mode": "DUNGEON"
+  },
+  "m": {
+   "immersive": true,
+   "battleH": 636,
+   "navVisible": false,
+   "panelVisible": false,
+   "hud": "시련의 탑 · 1층",
+   "overflow": false,
+   "small": []
+  },
+  "errs": []
+ },
+ {
+  "kind": "rift",
+  "vp": "360x700",
+  "pass": true,
+  "st": {
+   "r": true,
+   "mode": "DUNGEON"
+  },
+  "m": {
+   "immersive": true,
+   "battleH": 636,
+   "navVisible": false,
+   "panelVisible": false,
+   "hud": "균열 · 1층",
+   "overflow": false,
+   "small": []
+  },
+  "errs": []
+ },
+ {
+  "kind": "boss",
+  "vp": "412x915",
+  "pass": true,
+  "st": {
+   "r": true,
+   "mode": "BOSS"
+  },
+  "m": {
+   "immersive": true,
+   "battleH": 851,
+   "navVisible": false,
+   "panelVisible": false,
+   "hud": "보스전 · 잊힌 폐광",
+   "overflow": false,
+   "small": []
+  },
+  "errs": []
+ },
+ {
+  "kind": "dungeon",
+  "vp": "412x915",
+  "pass": true,
+  "st": {
+   "r": true,
+   "mode": "DUNGEON"
+  },
+  "m": {
+   "immersive": true,
+   "battleH": 851,
+   "navVisible": false,
+   "panelVisible": false,
+   "hud": "별의 채석장 · 1단계",
+   "overflow": false,
+   "small": []
+  },
+  "errs": []
+ },
+ {
+  "kind": "tower",
+  "vp": "412x915",
+  "pass": true,
+  "st": {
+   "r": true,
+   "mode": "DUNGEON"
+  },
+  "m": {
+   "immersive": true,
+   "battleH": 851,
+   "navVisible": false,
+   "panelVisible": false,
+   "hud": "시련의 탑 · 1층",
+   "overflow": false,
+   "small": []
+  },
+  "errs": []
+ },
+ {
+  "kind": "rift",
+  "vp": "412x915",
+  "pass": true,
+  "st": {
+   "r": true,
+   "mode": "DUNGEON"
+  },
+  "m": {
+   "immersive": true,
+   "battleH": 851,
+   "navVisible": false,
+   "panelVisible": false,
+   "hud": "균열 · 1층",
+   "overflow": false,
+   "small": []
+  },
+  "errs": []
+ }
+]

@@ -18,7 +18,7 @@ export const BALANCE = Object.freeze({
   levelCap: 100,
   promotionLevel: 30,                 // first tier (kept for v3 UI)
   promotionLevels: [30, 60, 90],      // tier 1 / 2 / 3: EXP is stored at these levels until promoted
-  expCurve: { base: 100, exponent: 1.8, bandMul: [[30, 1], [60, 1.35], [90, 1.9], [101, 2.85]] },   // floor(100 · Lv^1.8 · band) — band ×1 / ×1.35 / ×1.9 / ×2.85 (v5 retune)
+  expCurve: { base: 100, exponent: 1.8, bandMul: [[10, 0.25], [30, 0.15], [60, 0.6], [90, 0.8], [101, 1.6]] },   // floor(100 · Lv^1.8 · band) — band ×0.25 / ×0.15 / ×0.6 / ×0.8 / ×1.6 (v6 속도 조정: Lv30≈6h·Lv60≈2.5d·Lv90≈7d·Lv100≈10d)
   combat: {
     tickMs: 50,
     bossTimeoutSec: 90,

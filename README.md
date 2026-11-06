@@ -10,10 +10,11 @@
 - 특성 트리 · 환생(Lv 100, 정수 영구 강화) · 균열(축복 3택·주간 저주, 30층)
 - 도감(몬스터·장비) · 업적 32 · 칭호 10(1개 장착, 이름 옆 표시) · **무료** 시즌 패스(28일, 30레벨, 유료 트랙 없음)
 - 동료 6종(정령 알 부화, 판매 없음, 확률 공개, 먹이 레벨·조각 별, 전투 보조 공격 + 오라) · 신화 제작(부위 선택)
-- 새 클래스·지역·몬스터 그림은 준비 중이라 기존 그림 색조 변경으로 임시 표시(`docs/KNOWN_ISSUES.md`)
+- 특별 전투(보스·던전·균열·탑·레이드·교관 시련)는 화면 전환 후 전투만 크게 보이는 몰입 화면
+- 그림: 4클래스 기본·승급 24종 8 키 포즈(GPT A01·A02), 몬스터·보스·배경·아이콘 생성 그림(`docs/KNOWN_ISSUES.md`)
 - 전투 Canvas2D, UI DOM/SVG, Vanilla JS(ES 모듈, 빌드 도구·외부 의존성 없음), 폰트 Noto Sans KR(WOFF2 서브셋, OFL)
 - 비도트 성인 여성 다크 판타지 일러스트. 도트·치비·픽셀 폰트·정수 확대는 사용하지 않습니다.
-- 실제 광고·결제·장비 소환·캐릭터 가챠·호감도는 없습니다(소환은 "확장" 비활성 화면만).
+- 실제 광고·결제·캐릭터 가챠·호감도는 없습니다(뽑기는 게임 내 재화만).
 
 ## 실행
 
@@ -37,7 +38,9 @@ PC와 휴대폰을 같은 Wi-Fi에 두고 출력된 `http://<PC IP>:8000/`을 �
 npm test                                        # node --test: 로직 86개
 node tools/balance_sim.mjs --seeds 4 --hours 34 # 몬테카를로 밸런스 시뮬레이션 (스크립트 플레이어)
 node tools/branch_parity.mjs 30                 # 두 갈래로 같은 보스 비교
-node tools/serve.mjs 8123 & NODE_PATH=$(npm root -g) node tools/browser_qa.cjs   # Playwright: 41화면 × 해상도별(141회) + 흐름 14개
+node tools/serve.mjs 8123 & NODE_PATH=$(npm root -g) node tools/browser_qa.cjs   # Playwright: 42화면 × 해상도별(141회) + 흐름 27개(몰입 화면 포함)
+node tools/qa_immersive.cjs 8123                 # 몰입 화면: 보스·던전·탑·균열 × 3해상도
+node tools/balance_sim_v4.mjs --seeds 1 --days 14 # v6 진행 곡선 시뮬레이션
 node tools/qa_login.cjs 8123                     # 게스트 로그인·클래스 선택·출석·복귀
 node tools/qa_v5.cjs 8123                        # 특성·환생·균열
 node tools/qa_v6.cjs 8123                        # 도감·업적·칭호·시즌 패스·동료·신화 제작
