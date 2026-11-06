@@ -1,5 +1,5 @@
 {
- "startedAt": "2026-11-06T15:09:32.366Z",
+ "startedAt": "2026-11-06T15:25:35.187Z",
  "base": "http://127.0.0.1:8131/",
  "viewports": [
   [
@@ -242,18 +242,24 @@
    "id": "world",
    "viewport": "390x844",
    "pass": true,
-   "note": "",
+   "note": "스테이지 지도",
    "file": "world_390x844.png",
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [],
+   "wide": [
+    "tab locked",
+    "SMALL",
+    "tab locked",
+    "SMALL",
+    "tab locked"
+   ],
    "brokenImg": [],
    "screens": [
     "skills",
     "runes",
     "world",
-    "world"
+    "stagemap"
    ],
    "tiny": [],
    "errors": []
@@ -1290,18 +1296,24 @@
    "id": "world",
    "viewport": "360x700",
    "pass": true,
-   "note": "",
+   "note": "스테이지 지도",
    "file": "world_360x700.png",
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [],
+   "wide": [
+    "tab locked",
+    "tab locked",
+    "SMALL",
+    "tab locked",
+    "SMALL"
+   ],
    "brokenImg": [],
    "screens": [
     "skills",
     "runes",
     "world",
-    "world"
+    "stagemap"
    ],
    "tiny": [],
    "errors": []
@@ -2331,18 +2343,24 @@
    "id": "world",
    "viewport": "412x915",
    "pass": true,
-   "note": "",
+   "note": "스테이지 지도",
    "file": "world_412x915.png",
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [],
+   "wide": [
+    "tab locked",
+    "SMALL",
+    "tab locked",
+    "SMALL",
+    "tab locked"
+   ],
    "brokenImg": [],
    "screens": [
     "skills",
     "runes",
     "world",
-    "world"
+    "stagemap"
    ],
    "tiny": [],
    "errors": []
@@ -3165,6 +3183,17 @@
    }
   },
   {
+   "name": "스테이지 지도 노드 390x844",
+   "pass": true,
+   "detail": {
+    "nodes": 11,
+    "overlap": 0,
+    "inside": true,
+    "tabs": 10,
+    "current": true
+   }
+  },
+  {
    "name": "슬롯 강화 유지(교체 후 +1) 360x700",
    "pass": true,
    "detail": {
@@ -3172,6 +3201,17 @@
     "after": 1,
     "worn": true,
     "tiles": 0
+   }
+  },
+  {
+   "name": "스테이지 지도 노드 360x700",
+   "pass": true,
+   "detail": {
+    "nodes": 11,
+    "overlap": 0,
+    "inside": true,
+    "tabs": 10,
+    "current": true
    }
   },
   {
@@ -3185,11 +3225,22 @@
    }
   },
   {
+   "name": "스테이지 지도 노드 412x915",
+   "pass": true,
+   "detail": {
+    "nodes": 11,
+    "overlap": 0,
+    "inside": true,
+    "tabs": 10,
+    "current": true
+   }
+  },
+  {
    "name": "reload keeps the same pending claim",
    "pass": true,
    "detail": {
-    "first": "claim_mw543uec_tcjwy0",
-    "after": "claim_mw543uec_tcjwy0"
+    "first": "claim_mw54oet8_1vt1yqg",
+    "after": "claim_mw54oet8_1vt1yqg"
    }
   },
   {
@@ -3271,7 +3322,7 @@
     "k0": 1,
     "k1": {
      "kills": 1,
-     "acc": 16.59999999999991,
+     "acc": 16.600000000000023,
      "mode": "FARM"
     }
    }
@@ -3366,7 +3417,7 @@
   }
  ],
  "errors": [],
- "finishedAt": "2026-11-06T15:12:05.483Z",
+ "finishedAt": "2026-11-06T15:28:02.988Z",
  "summary": {
   "screenChecks": 141,
   "screenPass": 141,
@@ -3415,7 +3466,7 @@
    "saveerror",
    "conflict"
   ],
-  "flows": 31,
-  "flowPass": 31
+  "flows": 34,
+  "flowPass": 34
  }
 }

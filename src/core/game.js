@@ -30,6 +30,7 @@ import * as missions from './missions.js';
 import * as tower from './tower.js';
 import * as raid from './raid.js';
 import * as meta from './meta.js';
+import * as stages from './stages.js';
 import { PASS } from '../data/meta.js';
 import { deepClone, makeRng, uid } from './util.js';
 
@@ -220,6 +221,7 @@ export class Game {
   // realDtMs: wall time since last call (caller caps it). Returns ticks run.
   advance(realDtMs) {
     if (!this.state || this.busy) return 0;
+    if (this.stageQueue && this.stageQueue.length) this.flushStageClears();
     if (!['FARM', 'BOSS', 'DUNGEON', 'PROMOTION_TRIAL', 'DEFEAT'].includes(this.mode)) return 0;
     const speed = this.state.settings.speed === 2 ? 2 : 1;
     this.acc += realDtMs * speed;
@@ -228,6 +230,7 @@ export class Game {
       this.acc -= TICK;
       this.active.step();
       n++;
+      if ((this.mode === 'FARM' || this.mode === 'DEFEAT') && this.active === this.farm) this.stageRun().ms += TICK;
       if (this.mode === 'FARM' && this.active === this.farm) {
         const p = this.state.progression;
         p.fieldBossSec = (p.fieldBossSec || 0) + TICK / 1000;
@@ -284,6 +287,10 @@ export class Game {
       let advanced = false;
       if (p.waveKills >= BALANCE.combat.waveKillTarget) {
         p.waveKills = 0;
+        // 스테이지 클리어 (wave = stage): stars from this run, first-clear reward once (own tx)
+        const run = this.stageRun();
+        this.queueStageClear(p.region, p.wave, { deaths: run.deaths, timeSec: run.ms / 1000 });
+        this.run = null;
         if (p.holdKills > 0) { /* holding after a retreat */ }
         else if (p.wave < 10 && p.autoAdvance !== false) { p.wave++; advanced = true; }
         p.maxWave[p.region] = Math.max(p.maxWave[p.region] || 1, p.wave);
@@ -306,6 +313,7 @@ export class Game {
       if (loot.items.length) this.checkpoint('loot');
     } else if (ev.type === 'heroDown') {
       s.progression.counters.deaths++;
+      if (this.active === this.farm) this.stageRun().deaths++;
       this.verifier.onDeath();
       // idle-friendly: repeated deaths on one wave step back one wave for a while
       const p = s.progression;
@@ -323,6 +331,38 @@ export class Game {
     }
   }
 
+  // transient per-stage run (combat ms + deaths); resets when the farm stage changes
+  stageRun() {
+    const p = this.state.progression;
+    const key = stages.stageKey(p.region, p.wave);
+    if (!this.run || this.run.key !== key) this.run = { key, ms: 0, deaths: 0 };
+    return this.run;
+  }
+  // Clears are committed in their own transaction (first-clear reward once). They wait in a
+  // queue while another commit is in flight and are flushed by the loop — never dropped.
+  queueStageClear(region, wave, run) {
+    const st = this.state.stages || {};
+    const key = stages.stageKey(region, wave);
+    if (st.claimed && st.claimed[key] && stages.starsFor(run, wave) <= (st.stars[key] || 0)) return;   // nothing to gain
+    (this.stageQueue ||= []).push({ region, wave, run });
+    queueMicrotask(() => this.flushStageClears());
+  }
+  async flushStageClears() {
+    if (this.busy || this.flushingStages || !this.stageQueue || !this.stageQueue.length) return;
+    this.flushingStages = true;
+    try {
+      while (this.stageQueue.length && !this.busy) {
+        const q = this.stageQueue[0];
+        const r = await this.transact('stageClear', (s) => stages.recordClear(s, q.region, q.wave, q.run));
+        if (!r.ok && (r.reason === 'busy' || r.reason === 'save' || r.reason === 'conflict')) break;   // retry on next flush
+        this.stageQueue.shift();
+        if (r.ok && (r.first || r.improved)) this.emit('stageClear', r);   // UI shows it only after the commit
+      }
+    } finally { this.flushingStages = false; }
+  }
+  setStageAuto(on) {
+    return this.transact('stageAuto', (s) => { s.stages.auto = !!on; s.progression.autoAdvance = !!on; return { ok: true, auto: !!on }; });
+  }
   sameFarm(a, b) { return a && a.region === b.region && a.wave === b.wave && Math.abs(a.killsPerSec - b.killsPerSec) < 0.02; }
 
   rollLoot(e) {
@@ -449,6 +489,7 @@ export class Game {
         res.exp = rw.exp;
         res.expRes = prog.gainExp(s, rw.exp);
         const cleared = prog.onBossCleared(s, sess.bossId);
+        if (REGION_BY_ID[BOSSES[sess.bossId].region]?.boss === sess.bossId) res.stage = stages.recordClear(s, BOSSES[sess.bossId].region, 'boss', { deaths: 0, timeSec: ev.t / 1000 });
         res.first = cleared.first;
         res.unlocked = cleared.unlocked;
         const items = [];

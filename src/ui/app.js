@@ -11,6 +11,7 @@ import * as V4 from './v4.js';
 import { sfx } from '../platform/audio.js';
 import * as FS from './fullscreen.js';
 import { titleName } from '../core/meta.js';
+import { stageLabel } from '../core/stages.js';
 import * as V5 from './v5.js';
 import { BLESSINGS, CURSES } from '../core/rift.js';
 
@@ -66,7 +67,7 @@ export class App {
     E.where = h('span', { class: 'nm' }, '');
     E.prog = h('span', { class: 'pt' }, '');
     E.progBar = h('i', { style: { width: '0%' } });
-    E.worldBtn = h('button', { type: 'button', class: 'where-btn', 'aria-label': '지역 선택', onClick: () => S.openWorld(this) },
+    E.worldBtn = h('button', { type: 'button', class: 'where-btn', 'aria-label': '스테이지 지도', onClick: () => S.openWorld(this) },
       h('b', null, E.where, h('span', { 'aria-hidden': 'true', style: { color: 'var(--gold)' } }, '▾')), h('span', { class: 'wp' }, E.prog, h('span', { class: 'pb' }, E.progBar)));
     E.bossBtn = button('보스 도전', { cls: 'boss-chip', onClick: () => S.openBoss(this) });
     // battle 220
@@ -159,6 +160,12 @@ export class App {
     g.on('result', (r) => S.openResult(this, r));
     g.on('session', (sess) => this.onSession(sess));
     g.on('farmChanged', () => { this.panelDirty = true; this.preload(); });
+    // stage clear (emitted only after its commit): stars + first-clear reward
+    g.on('stageClear', (r) => {
+      const rw = r.reward ? ` · 보석 +${r.reward.gem} 광석 +${r.reward.ore} 골드 +${fmt(r.reward.gold)}` : '';
+      toast(`${r.label} 클리어 ${'★'.repeat(r.best)}${'☆'.repeat(3 - r.best)}${rw}`, 'good');
+      this.panelDirty = true;
+    });
   }
 
   // Offline claim → return bonus → today's attendance, one after another, each only
@@ -497,7 +504,7 @@ export class App {
     else if (m === 'DUNGEON' && this.game.session && this.game.session.kind === 'tower') { E.where.textContent = '시련의 탑'; E.prog.textContent = `${this.game.session.floor}층`; }
     else if (m === 'DUNGEON') { E.where.textContent = BALANCE.dungeons[this.game.session.type || 'quarry'].name; E.prog.textContent = `${this.game.session.stage}단계`; }
     else if (m === 'PROMOTION_TRIAL') { E.where.textContent = (this.game.session && this.game.session.tier === 3) ? '영웅의 시련' : '교관 시련'; E.prog.textContent = '승급 시련'; }
-    else { E.where.textContent = region.name; E.prog.textContent = `W${s.progression.wave}/10`; pv = s.progression.waveKills / BALANCE.combat.waveKillTarget; }
+    else { E.where.textContent = region.name; E.prog.textContent = stageLabel(region.id, s.progression.wave); pv = s.progression.waveKills / BALANCE.combat.waveKillTarget; }
     E.progBar.style.width = Math.round(Math.min(1, pv) * 100) + '%';
     E.worldBtn.disabled = m !== 'FARM' && m !== 'DEFEAT';
     const need = expToNext(p.level);
@@ -505,13 +512,13 @@ export class App {
     const bossId = region.boss;
     const can = this.game.canChallengeBoss(bossId);
     E.bossBtn.disabled = m !== 'FARM';
-    E.bossBtn.textContent = m === 'BOSS' || m === 'DUNGEON' || m === 'PROMOTION_TRIAL' ? '전투 중' : s.progression.bossCleared[bossId] ? '보스 재도전' : can.ok ? '보스 도전!' : `보스 · W10 필요`;
+    E.bossBtn.textContent = m === 'BOSS' || m === 'DUNGEON' || m === 'PROMOTION_TRIAL' ? '전투 중' : s.progression.bossCleared[bossId] ? '보스 재도전' : can.ok ? '보스 도전!' : `보스 · ${stageLabel(region.id, 10)} 필요`;
     E.bossBtn.classList.toggle('hot', can.ok && !s.progression.bossCleared[bossId]);
     E.speedBtn.textContent = s.settings.speed === 2 ? '×2' : '×1';
     E.autoBadge.textContent = m === 'DEFEAT' ? '재정비 중' : m === 'BOSS' ? '보스전' : m === 'DUNGEON' ? '던전' : m === 'PROMOTION_TRIAL' ? '시련' : `자동 전투 · ×${s.settings.speed}`;
     // portrait live summary (same simulation)
     const vf = s.progression.verifiedFarm;
-    clear(E.portraitLive).append(h('span', null, `자동 사냥 중 · ${region.name} W${s.progression.wave}`), h('span', { class: 'muted' }, vf ? `검증 사냥터 W${vf.wave} · 분당 ${fmt(vf.killsPerSec * 60)}마리` : '사냥터 검증 중 (웨이브 10마리 ×3회 무사 처치)'));
+    clear(E.portraitLive).append(h('span', null, `자동 사냥 중 · ${region.name} ${stageLabel(region.id, s.progression.wave)}`), h('span', { class: 'muted' }, vf ? `검증 사냥터 W${vf.wave} · 분당 ${fmt(vf.killsPerSec * 60)}마리` : '사냥터 검증 중 (웨이브 10마리 ×3회 무사 처치)'));
     // nav badges
     const newItems = s.inventory.some((i) => i.isNew) || s.overflow.length > 0;
     this.navDot('equipment', newItems);

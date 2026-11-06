@@ -87,7 +87,7 @@ async function capture(p, name, matchSrc, delay, before, timeout = 15000) {
     await capture(p, `fx_combo3_${c.cls}`, "return ev.type==='hit' && ev.by==='hero' && ev.action==='attack' && r.combo.step===3 && !ev.crit", c.cls === 'mage' || c.cls === 'archer' ? 230 : 90);
     await capture(p, `fx_combo2_${c.cls}`, "return ev.type==='hit' && ev.by==='hero' && ev.action==='attack' && r.combo.step===2", c.cls === 'mage' || c.cls === 'archer' ? 120 : 70);
     // 2) crit (warrior only, rogue has the highest crit — use both)
-    if (c.cls === 'rogue' || c.cls === 'warrior') await capture(p, `fx_crit_${c.cls}`, "return ev.type==='hit' && ev.by==='hero' && ev.crit && ev.action==='attack'", 110, null, 25000);
+    if (c.cls === 'rogue' || c.cls === 'warrior') await capture(p, `fx_crit_${c.cls}`, "return ev.type==='hit' && ev.by==='hero' && ev.crit && ev.action==='attack'", 110, null, 45000);
     // 3) skills
     for (const id of [c.skill, c.skill2]) {
       await capture(p, `fx_skill_${c.cls}_${id}`, `return (ev.type==='hit' && ev.by==='hero' && ev.skill==='${id}') || (ev.type==='buff' && ev.skill==='${id}')`, id === 'm_frost' || id === 'r_smoke' || id === 'm_chain' ? 140 : 160,

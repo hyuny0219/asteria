@@ -78,6 +78,14 @@ export const BALANCE = Object.freeze({
     // kept for the offline module's rate (same numbers as above)
     expBase: 12,
   },
+  // 스테이지 지도 (v7): first-clear rewards (once per stage) and star time targets
+  stages: {
+    gem: 5, milestoneGem: 10,              // stages 5 and 10 are milestones
+    ore: 3, orePerRegion: 2, goldKills: 10, // gold = 10 kills at that stage's level
+    bossGem: 30, bossGemPerRegion: 10, bossOre: 20, bossOrePerRegion: 10, bossGoldKills: 30,
+    starSec: 30,                           // 3★: 10 kills within 30 s of combat time, no death (at-level ≈ 14–22 s)
+    bossStarSec: 45,                       // 3★ boss: win within 45 s
+  },
   equipment: {
     slots: ['weapon', 'helmet', 'armor', 'gloves', 'boots', 'necklace', 'ring1', 'ring2'],   // equip slots
     itemSlots: ['weapon', 'helmet', 'armor', 'gloves', 'boots', 'necklace', 'ring'],

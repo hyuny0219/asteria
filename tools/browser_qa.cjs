@@ -156,7 +156,19 @@ async function screensAt(browser, vp) {
   await closeAll(page);
   // world (7), boss (8)
   await modal(page, 'openWorld');
-  await check(page, 'world', vp);
+  await check(page, 'world', vp, '스테이지 지도');
+  {
+    // stage map (v7): 11 nodes inside the map, no overlap, region tabs 10
+    const r = await page.evaluate(() => {
+      const box = document.querySelector('.stage-map').getBoundingClientRect();
+      const rs = [...document.querySelectorAll('.stage-map .stage-node')].map((n) => n.getBoundingClientRect());
+      let overlap = 0; for (let i = 0; i < rs.length; i++) for (let j = i + 1; j < rs.length; j++) { const a = rs[i], b = rs[j]; if (a.left < b.right - 2 && b.left < a.right - 2 && a.top < b.bottom - 2 && b.top < a.bottom - 2) overlap++; }
+      return { nodes: rs.length, overlap, inside: rs.every((x) => x.left >= box.left - 1 && x.right <= box.right + 1 && x.top >= box.top - 1 && x.bottom <= box.bottom + 1), tabs: document.querySelectorAll('.stage-tabs .tab').length, current: !!document.querySelector('.stage-node.current') };
+    });
+    const pass = r.nodes === 11 && r.overlap === 0 && r.inside && r.tabs === 10 && r.current;
+    results.flows.push({ name: `스테이지 지도 노드 ${vp[0]}x${vp[1]}`, pass, detail: r });
+    console.log(`${pass ? 'PASS' : 'FAIL'} flow: 스테이지 지도 ${JSON.stringify(r)}`);
+  }
   await closeAll(page);
   await page.evaluate(async () => { const g = window.__asteria.game; await window.__qaTx((s) => { s.progression.maxWave.meadow = 10; s.progression.wave = 10; return { ok: true }; }); });
   await modal(page, 'openBoss', 'B01');

@@ -30,9 +30,9 @@
   "pass": true,
   "info": {
    "choices": [
-    "b_hp",
-    "b_aspd",
-    "b_berserk"
+    "b_combo",
+    "b_thorns",
+    "b_crit"
    ]
   }
  },
@@ -82,9 +82,9 @@
   "pass": true,
   "info": {
    "choices": [
-    "b_cdr",
-    "b_aspd",
-    "b_steal"
+    "b_steal",
+    "b_cdmg",
+    "b_greed"
    ]
   }
  },

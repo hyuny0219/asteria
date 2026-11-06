@@ -178,3 +178,13 @@
 | 장비 탭: 장착 칸만 +N, 비교 창 슬롯 안내, 슬롯 강화 창(칩·넘침 0·작은 터치 0) | PASS | `tools/qa_v7.cjs`, `v7_equipment_*`, `v7_compare_*`, `v7_slot_enhance_*` |
 | 브라우저 흐름: 강화 후 장비 교체해도 단계 유지 | PASS | `tools/browser_qa.cjs` 흐름 |
 | 전체 회귀 | PASS | npm test 91/91, browser_qa 141/141·흐름 31/31, qa_immersive 14/14, qa_login 10/10, qa_v5 14/14, qa_v6 32/32, qa_a01·a02 오류 없음, qa_combat_fx 38/38, qa_v7 21/21 |
+
+## v7 스테이지 지도 (2026-11-07)
+| 항목 | 결과 | 근거 |
+|---|---|---|
+| 별 규칙(1/2/3★, 보스 시간), 최초 보상 1회·재클리어 지급 없음, 노드 상태, 6 → 7 이전(소급 없음) | PASS | `tests/stages.test.mjs` |
+| 실제 사냥으로 1-1~1-3 클리어·자동 진행·토글 끔이면 제자리·저장 후 다시 불러와도 별 유지 | PASS | `tests/stages.test.mjs` game 케이스 |
+| 지도 3해상도: 노드 11 겹침 0·상자 밖 0, 탭 10(잠김 8), 넘침 0, 작은 터치 0 | PASS | `tools/qa_v7.cjs` 42/42, `tools/browser_qa.cjs` 흐름, `docs/qa/screens/v7_stagemap_*.png` |
+| 칩 → 지도 → 클리어 스테이지 선택 → 사냥 이동(칩 `2-3`), 모험 탭 → 지도, 보스 노드 재도전, 잠긴 지역 버튼 비활성, 자동 진행 토글 | PASS | `tools/qa_v7.cjs` |
+| 브라우저에서 진행 중 스테이지 실제 클리어 → 보석 지급 1회 + 토스트(저장 후) + 다음 스테이지 | PASS | `tools/qa_v7.cjs` live first clear |
+| 전체 회귀 | PASS | npm test 96/96, browser_qa 141/141 화면(42종)·흐름 34/34, qa_immersive 14/14, qa_login 10/10, qa_v5 14/14, qa_v6 32/32, qa_a01·a02 오류 없음, qa_combat_fx 38/38(치명타 캡처 대기 25→45초, 확률 의존) |

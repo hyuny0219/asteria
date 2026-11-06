@@ -25,6 +25,8 @@ import { enableAudio, setVolume, sfx } from '../platform/audio.js';
 import { button, closeAllModals, h, icon, img, modalOpen, openModal, toast } from './dom.js';
 import * as FS from './fullscreen.js';
 import { openShop, openClassChange } from './shop.js';
+import { openStageMap } from './stagemap.js';
+import { stageLabel } from '../core/stages.js';
 
 const STAT_INFO = {
   atk: { name: '공격력', fmt: (s) => fmtFull(s.atk) },
@@ -442,10 +444,10 @@ function adventureHeader(app) {
   const wrap = h('div');
   wrap.appendChild(h('div', { class: 'section-title' }, '사냥터 · 보스'));
   wrap.appendChild(h('div', { class: 'card' },
-    h('div', { class: 'kv' }, region.name, h('b', null, `웨이브 ${s.progression.wave}/10 · 최고 ${s.progression.maxWave[region.id] || 1}`)),
+    h('div', { class: 'kv' }, region.name, h('b', null, `스테이지 ${stageLabel(region.id, s.progression.wave)} · 최고 ${stageLabel(region.id, s.progression.maxWave[region.id] || 1)}`)),
     h('div', { class: 'kv' }, boss.name, h('b', null, cleared ? '처치 완료' : can.ok ? '도전 가능' : '웨이브 10 도달 시')),
     h('div', { class: 'btn-row', style: { marginTop: '8px' } },
-      button('지역 선택', { cls: 'btn', onClick: () => openWorld(app) }),
+      button('스테이지 지도', { cls: 'btn', onClick: () => openWorld(app) }),
       button(cleared ? '보스 재도전' : '보스 도전', { cls: 'btn' + (can.ok && !cleared ? ' btn-primary' : ''), onClick: () => openBoss(app, region.boss) }))));
   return wrap;
 }
@@ -483,7 +485,7 @@ export function menuTiles(app) {
       on: () => (cl && cl.canChoose ? openPromotion(app) : cl && cl.canPromote && tier >= 1 ? V4.openPromotionTier(app, cl.tier) : openQuest(app)) },
     { id: 'shop', ic: 'equipment', t: '상점', s: '보석·골드로 구매', on: () => openShop(app) },
     { id: 'classChange', ic: 'growth', t: '클래스 전환', s: (s.player.classChanges || 0) === 0 ? '1회 무료' : `전환권 ${s.wallet.classTicket || 0}장`, on: () => openClassChange(app) },
-    { id: 'world', ic: 'dungeon', t: '지역 선택', s: REGION_BY_ID[s.progression.region].name, on: () => openWorld(app) },
+    { id: 'world', ic: 'dungeon', t: '스테이지 지도', s: `${REGION_BY_ID[s.progression.region].name} ${stageLabel(s.progression.region, s.progression.wave)}`, on: () => openWorld(app) },
     { id: 'settings', ic: 'menu', t: '환경 설정', s: '저장 · 소리 · 접근성', on: () => openSettings(app) },
     { id: 'help', ic: 'info', t: '도움말', s: '처음 하는 분', on: () => openHelp(app) },
   ];
@@ -504,38 +506,8 @@ export function menuPanel(app) {
 }
 
 // ======================= S07 world =======================
-export function openWorld(app, focus = null) {
-  const s = app.state;
-  let expanded = focus || s.progression.region;
-  const render = () => {
-    const body = h('div', { dataset: { screen: 'world' } });
-    for (const r of REGIONS) {
-      const open = prog.regionUnlocked(s, r.id);
-      const max = s.progression.maxWave[r.id] || 0;
-      const cleared = s.progression.bossCleared[r.boss];
-      const here = s.progression.region === r.id;
-      const status = !open ? `${BOSSES[REGIONS[r.order - 1].boss].name} 처치 시 열림` : cleared ? '보스 처치 완료' : max >= 10 ? '보스 도전 가능' : `웨이브 ${max}/10`;
-      const head = h('button', { type: 'button', class: 'world-row' + (here ? ' here' : '') + (open ? '' : ' locked'), disabled: !open, 'aria-expanded': String(expanded === r.id), onClick: () => { expanded = expanded === r.id ? null : r.id; render(); } },
-        h('span', { class: 'wn' }, h('b', null, r.name), h('span', { class: 'muted' }, ` ${r.label}`)), h('span', { class: 'ws' + (cleared ? ' ok' : '') }, here ? '사냥 중' : status));
-      const card = h('div', { class: 'world-card' }, head);
-      if (open && expanded === r.id) {
-        const waves = h('div', { class: 'tabs', role: 'group', 'aria-label': `${r.name} 웨이브 선택` });
-        for (let w = 1; w <= Math.max(1, max); w++) waves.appendChild(h('button', { type: 'button', class: 'tab', 'aria-pressed': String(here && s.progression.wave === w), onClick: async () => {
-          const res = fail(await app.game.setFarm(r.id, w, w === max));
-          if (res.ok) { toast(`${r.name} 웨이브 ${w}에서 사냥합니다.${w < max ? ' (자동 진행 멈춤)' : ''}`, 'info'); m.close(); }
-        } }, `W${w}`));
-        card.append(h('div', { class: 'world-body' }, h('div', { class: 'kv' }, '적 레벨', h('b', null, `Lv ${waveLevel(r, 1)}–${waveLevel(r, 10)} · ${r.monsters.map((id) => MONSTERS_NAME(id)).join(' · ')}`)),
-          h('p', { class: 'small', style: { margin: '6px 0 4px' } }, '파밍 위치'), waves,
-          button(cleared ? `${BOSSES[r.boss].name} 재도전` : `${BOSSES[r.boss].name} 정보`, { cls: 'btn', onClick: () => openBoss(app, r.boss) })));
-      }
-      body.appendChild(card);
-    }
-    body.appendChild(h('p', { class: 'muted' }, '권장 레벨은 잠금 조건이 아닙니다. 낮은 웨이브를 고르면 자동 진행이 멈추고 그 웨이브에서 계속 사냥합니다.'));
-    m.setBody(body);
-  };
-  const m = openModal({ id: 'world', title: '지역 선택', body: h('div') });
-  render();
-}
+// 지역 선택 → 스테이지 지도 (v7, see stagemap.js)
+export function openWorld(app, focus = null) { return openStageMap(app, focus); }
 
 // ======================= S08 boss =======================
 export function openBoss(app, bossId = null) {
