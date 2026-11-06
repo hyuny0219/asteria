@@ -234,5 +234,18 @@
    "small": []
   },
   "errs": []
+ },
+ {
+  "kind": "tower-chain",
+  "pass": true,
+  "st": {
+   "immersive": true,
+   "mode": "DUNGEON",
+   "floor": 2,
+   "flips": [],
+   "iris": 0,
+   "banner": true
+  },
+  "errs": []
  }
 ]

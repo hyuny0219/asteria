@@ -475,3 +475,7 @@ input.text { width: 100%; min-height: 36px; background: var(--panel); border: 1p
 #app.immersive .session-bar { top: 8px; bottom: auto; right: 8px; left: auto; padding: 0; }
 #app.immersive .session-bar .mini-btn { min-height: 36px; padding: 0 14px; background: rgba(16,13,24,.78); }
 #app.immersive .rift-chips { top: 74px; right: 8px; }
+/* floor/stage banner when chaining fights inside the immersive screen */
+.imm-banner { position: absolute; left: 50%; top: 38%; transform: translate(-50%, -50%); z-index: 4; padding: 8px 18px; border-radius: 20px; background: rgba(16,13,24,.78); border: 1px solid var(--gold); color: var(--gold); font-size: 18px; font-weight: 800; pointer-events: none; animation: immBanner 1.4s ease forwards; white-space: nowrap; }
+@keyframes immBanner { 0% { opacity: 0; transform: translate(-50%, -40%); } 15%, 75% { opacity: 1; transform: translate(-50%, -50%); } 100% { opacity: 0; transform: translate(-50%, -60%); } }
+@media (prefers-reduced-motion: reduce) { .imm-banner { animation: none; } }

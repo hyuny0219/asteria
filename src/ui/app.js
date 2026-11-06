@@ -185,12 +185,33 @@ export class App {
       this.applyView();
       this.setImmersive(true, sess);
       preloadFor({ region: REGION_BY_ID[this.state.progression.region], boss: sess.bossId || null, branch: this.state.player.branch, cls: this.state.player.cls, tier: prog.tierOf(this.state), allMonsters: sess.kind === 'rift' || sess.kind === 'tower' || sess.kind === 'dungeon', bg: sess.kind === 'tower' ? 'tower' : sess.kind === 'raid' ? 'void' : sess.kind === 'rift' ? sess.bg : sess.kind === 'trial' ? 'cathedral' : sess.kind === 'dungeon' ? ({ quarry: 'mine', gold: 'desert', books: 'cathedral' }[sess.type] || 'mine') : null });
+    } else if (this._chaining) {
+      // going straight into the next fight (e.g. next tower floor): stay in the battle view
     } else {
       this.forcedBattleView = false;
       this.applyView();
       this.setImmersive(false);
     }
     this.renderSession();
+  }
+
+  // Continue into another special fight without leaving the immersive screen:
+  // ends the current result (back → farm) and starts the next one in the same frame.
+  chainSession(back, start) {
+    this._chaining = true;
+    let r;
+    try { back(); r = start(); } finally { this._chaining = false; }
+    if (!r || !r.ok) { this.forcedBattleView = false; this.applyView(); this.setImmersive(false); this.renderSession(); }
+    else this.flashBanner(this.sessionLabel(this.game.session));
+    return r;
+  }
+  flashBanner(text) {
+    if (!text || !this.el.battle) return;
+    const old = this.el.battle.querySelector('.imm-banner');
+    if (old) old.remove();
+    const b = h('div', { class: 'imm-banner', 'aria-live': 'polite' }, text);
+    this.el.battle.appendChild(b);
+    setTimeout(() => b.remove(), 1400);
   }
 
   confirmForfeit() {

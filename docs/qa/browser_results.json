@@ -1,5 +1,5 @@
 {
- "startedAt": "2026-11-06T00:11:40.342Z",
+ "startedAt": "2026-11-06T14:28:20.326Z",
  "base": "http://127.0.0.1:8123/",
  "viewports": [
   [
@@ -3158,8 +3158,8 @@
    "name": "reload keeps the same pending claim",
    "pass": true,
    "detail": {
-    "first": "claim_mw48171u_1j36bx5",
-    "after": "claim_mw48171u_1j36bx5"
+    "first": "claim_mw52msjn_1tkvn6e",
+    "after": "claim_mw52msjn_1tkvn6e"
    }
   },
   {
@@ -3241,7 +3241,7 @@
     "k0": 1,
     "k1": {
      "kills": 1,
-     "acc": 0,
+     "acc": 16.600000000000023,
      "mode": "FARM"
     }
    }
@@ -3329,10 +3329,14 @@
   {
    "name": "immersive rift 412x915",
    "pass": true
+  },
+  {
+   "name": "immersive tower-chain {\"immersive\":true,\"mode\":\"DUNGEON\",\"floor\":2,\"flips\":[],\"iris\":0,\"banner\":true}",
+   "pass": true
   }
  ],
  "errors": [],
- "finishedAt": "2026-11-06T00:14:11.328Z",
+ "finishedAt": "2026-11-06T14:30:49.403Z",
  "summary": {
   "screenChecks": 141,
   "screenPass": 141,
@@ -3381,7 +3385,7 @@
    "saveerror",
    "conflict"
   ],
-  "flows": 27,
-  "flowPass": 27
+  "flows": 28,
+  "flowPass": 28
  }
 }

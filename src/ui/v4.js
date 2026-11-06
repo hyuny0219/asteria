@@ -302,7 +302,7 @@ export function openTowerResult(app, r, back) {
     body: h('div', { dataset: { screen: 'towerResult' } },
       h('p', null, r.cleared ? `${r.timeSec}초 · ${r.kills}마리 처치${r.record ? ' · 최고 기록 갱신' : ' · 이미 깬 층이라 보상 없음'}` : `${r.reason === 'timeout' ? '시간 초과' : r.reason === 'forfeit' ? '중단' : '패배'} · 잃은 것은 없어요. 성장하고 다시 도전하세요.`),
       tiles.length ? rewardTiles(tiles) : null),
-    actions: [r.cleared ? button(`${r.floor + 1}층 바로 도전`, { cls: 'btn btn-primary', onClick: () => { m.close(); back(); const x = app.game.startTower(); if (!x.ok) fail(x); } }) : null,
+    actions: [r.cleared ? button(`${r.floor + 1}층 바로 도전`, { cls: 'btn btn-primary', onClick: () => { m.close(); const x = app.chainSession(back, () => app.game.startTower()); if (!x || !x.ok) fail(x || { ok: false }); } }) : null,
       button('확인', { cls: 'btn' + (r.cleared ? '' : ' btn-primary'), onClick: () => { m.close(); back(); app.setTab('dungeon'); } })].filter(Boolean) });
   return m;
 }

@@ -82,6 +82,36 @@ async function start(p, kind) {
       await c.close();
     }
   }
+  // tower: clear a floor, then "다음 층 바로 도전" must stay in the immersive view (no flip back to farm)
+  {
+    const c = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
+    const p = await c.newPage();
+    const errs = [];
+    p.on('pageerror', (e) => errs.push(String(e)));
+    await setup(p);
+    await start(p, 'tower');
+    await p.waitForTimeout(800);
+    const floor1 = await p.evaluate(() => __asteria.game.session.floor);
+    await p.evaluate(() => __asteria.game.processSession({ type: 'victory' }));
+    await p.waitForSelector('[data-screen="towerResult"]', { timeout: 8000 });
+    // watch the layout while the next floor starts
+    await p.evaluate(() => {
+      window.__flips = [];
+      const app = document.getElementById('app');
+      new MutationObserver(() => window.__flips.push(app.classList.contains('immersive'))).observe(app, { attributes: true, attributeFilter: ['class'] });
+      const iris = document.getElementById('iris');
+      window.__iris = 0;
+      if (iris) new MutationObserver(() => { if (iris.classList.contains('on')) window.__iris++; }).observe(iris, { attributes: true, attributeFilter: ['class'] });
+    });
+    await p.click('text=층 바로 도전');
+    await p.waitForTimeout(900);
+    const st = await p.evaluate(() => ({ immersive: document.getElementById('app').classList.contains('immersive'), mode: __asteria.game.mode, floor: __asteria.game.session && __asteria.game.session.floor, flips: window.__flips, iris: window.__iris, banner: !!document.querySelector('.imm-banner') }));
+    await p.screenshot({ path: out + 'immersive_tower_chain_390x844.png' });
+    const ok = st.immersive && st.mode === 'DUNGEON' && st.floor === floor1 + 1 && !st.flips.includes(false) && st.iris === 0 && errs.length === 0;
+    results.push({ kind: 'tower-chain', pass: ok, st, errs });
+    console.log(ok ? 'PASS' : 'FAIL', 'tower-chain', JSON.stringify(st), errs.join('|'));
+    await c.close();
+  }
   await b.close();
   require('fs').writeFileSync('docs/qa/immersive_results.json', JSON.stringify(results, null, 1));
   const fails = results.filter((r) => !r.pass).length;
