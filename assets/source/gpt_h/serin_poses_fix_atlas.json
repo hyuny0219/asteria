@@ -1,0 +1,115 @@
+{
+  "image": "assets/serin_poses_fix.png",
+  "size": [
+    1536,
+    1024
+  ],
+  "alpha": true,
+  "productionStatus": "8_KEY_POSES_NOT_FULL_ANIMATION",
+  "frames": [
+    {
+      "name": "idle",
+      "rect": [
+        0,
+        0,
+        384,
+        512
+      ],
+      "pivot": [
+        210,
+        454
+      ]
+    },
+    {
+      "name": "step",
+      "rect": [
+        384,
+        0,
+        384,
+        512
+      ],
+      "pivot": [
+        210,
+        454
+      ]
+    },
+    {
+      "name": "anticipation",
+      "rect": [
+        768,
+        0,
+        384,
+        512
+      ],
+      "pivot": [
+        210,
+        454
+      ]
+    },
+    {
+      "name": "thrust",
+      "rect": [
+        1152,
+        0,
+        384,
+        512
+      ],
+      "pivot": [
+        180,
+        454
+      ]
+    },
+    {
+      "name": "recovery",
+      "rect": [
+        0,
+        512,
+        384,
+        512
+      ],
+      "pivot": [
+        210,
+        454
+      ]
+    },
+    {
+      "name": "hit",
+      "rect": [
+        384,
+        512,
+        384,
+        512
+      ],
+      "pivot": [
+        210,
+        454
+      ]
+    },
+    {
+      "name": "cast",
+      "rect": [
+        768,
+        512,
+        384,
+        512
+      ],
+      "pivot": [
+        210,
+        454
+      ]
+    },
+    {
+      "name": "victory",
+      "rect": [
+        1152,
+        512,
+        384,
+        512
+      ],
+      "pivot": [
+        210,
+        454
+      ]
+    }
+  ]
+}

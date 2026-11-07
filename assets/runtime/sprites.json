@@ -228,7 +228,8 @@
   "gpt_d/boss_act_*.png": "GPT package D — boss idle/windup/heavy/enrage",
   "gpt_e/pets_act_*.png": "GPT package E — companion idle/attack/happy",
   "gpt_f/icons_*.png": "GPT package F — high-rarity gear, 4 skill fixes, talent & rift emblems",
-  "gpt_g/bg_*.png": "GPT package G — vault / library / trial hall / rift backgrounds"
+  "gpt_g/bg_*.png": "GPT package G — vault / library / trial hall / rift backgrounds",
+  "gpt_h/serin_poses_fix.png": "GPT package H — Serin 8 key poses (thrust fixed, alpha)"
  },
  "monsters": {
   "M01": {
@@ -5542,34 +5543,37 @@
     512
    ],
    "trimOffset": [
-    51,
-    40
+    80,
+    98
    ],
    "size": [
-    181,
-    288
+    183,
+    290
    ],
-   "scale": 0.6437,
+   "scale": 0.7932,
    "bodyHeightPx": 280.0,
    "pivot": [
-    102.3,
-    283.2
+    103.1,
+    284.0
    ],
    "hitbox": [
-    14.2,
-    20.7,
-    151.8,
-    246.4
+    5.6,
+    4.8,
+    171.3,
+    279.2
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [],
    "status": "RUNTIME_STATIC_SPRITE",
-   "pivotAuto": [
-    97.7,
-    283.9
-   ],
-   "pivotSource": "motion/atlas.json"
+   "pivotSource": "gpt_h atlas x + alpha feet",
+   "source": "gpt_h/serin_poses_fix.png",
+   "touchesCellEdge": [
+    false,
+    false,
+    false,
+    false
+   ]
   },
   "step": {
    "id": "step",
@@ -5579,40 +5583,43 @@
    ],
    "file": "assets/runtime/serin_step.webp",
    "sourceRect": [
-    384,
+    0,
     0,
     384,
     512
    ],
    "trimOffset": [
-    11,
-    61
+    33,
+    113
    ],
    "size": [
-    209,
-    271
+    212,
+    277
    ],
-   "scale": 0.6437,
-   "bodyHeightPx": 262.6,
+   "scale": 0.7932,
+   "bodyHeightPx": 265.7,
    "pivot": [
-    121.7,
-    268.4
+    140.4,
+    270.5
    ],
    "hitbox": [
-    15.9,
-    19.6,
-    176.2,
-    231.1
+    4.8,
+    5.6,
+    200.7,
+    264.9
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [],
    "status": "RUNTIME_STATIC_SPRITE",
-   "pivotAuto": [
-    125.4,
-    266.5
-   ],
-   "pivotSource": "motion/atlas.json"
+   "pivotSource": "gpt_h atlas x + alpha feet",
+   "source": "gpt_h/serin_poses_fix.png",
+   "touchesCellEdge": [
+    false,
+    false,
+    false,
+    false
+   ]
   },
   "anticipation": {
    "id": "anticipation",
@@ -5622,30 +5629,30 @@
    ],
    "file": "assets/runtime/serin_anticipation.webp",
    "sourceRect": [
-    768,
+    0,
     0,
     384,
     512
    ],
    "trimOffset": [
-    10,
-    33
+    27,
+    85
    ],
    "size": [
-    205,
-    292
+    221,
+    301
    ],
-   "scale": 0.6437,
-   "bodyHeightPx": 283.2,
+   "scale": 0.7932,
+   "bodyHeightPx": 289.5,
    "pivot": [
-    115.9,
-    286.4
+    145.2,
+    294.3
    ],
    "hitbox": [
-    15.6,
-    20.9,
-    172.8,
-    249.2
+    5.6,
+    5.6,
+    209.4,
+    288.7
    ],
    "flying": false,
    "mirrored": false,
@@ -5653,11 +5660,14 @@
     560
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "pivotAuto": [
-    115.1,
-    287.1
-   ],
-   "pivotSource": "motion/atlas.json"
+   "pivotSource": "gpt_h atlas x + alpha feet",
+   "source": "gpt_h/serin_poses_fix.png",
+   "touchesCellEdge": [
+    false,
+    false,
+    false,
+    false
+   ]
   },
   "thrust": {
    "id": "thrust",
@@ -5667,40 +5677,43 @@
    ],
    "file": "assets/runtime/serin_thrust.webp",
    "sourceRect": [
-    1152,
+    0,
     0,
     384,
     512
    ],
    "trimOffset": [
-    0,
-    83
+    6,
+    132
    ],
    "size": [
-    247,
-    259
+    274,
+    263
    ],
-   "scale": 0.6437,
-   "bodyHeightPx": 250.4,
+   "scale": 0.7932,
+   "bodyHeightPx": 252.2,
    "pivot": [
-    115.9,
-    254.3
+    138.0,
+    257.0
    ],
    "hitbox": [
-    14.6,
-    19.5,
-    213.5,
-    220.3
+    5.6,
+    5.6,
+    262.5,
+    251.4
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [],
    "status": "RUNTIME_STATIC_SPRITE",
-   "pivotAuto": [
-    112.2,
-    254.9
-   ],
-   "pivotSource": "motion/atlas.json"
+   "pivotSource": "gpt_h atlas x + alpha feet",
+   "source": "gpt_h/serin_poses_fix.png",
+   "touchesCellEdge": [
+    false,
+    false,
+    false,
+    false
+   ]
   },
   "recovery": {
    "id": "recovery",
@@ -5711,39 +5724,42 @@
    "file": "assets/runtime/serin_recovery.webp",
    "sourceRect": [
     0,
-    512,
+    0,
     384,
     512
    ],
    "trimOffset": [
-    28,
-    81
+    61,
+    117
    ],
    "size": [
-    213,
-    266
+    218,
+    274
    ],
-   "scale": 0.6437,
-   "bodyHeightPx": 257.5,
+   "scale": 0.7932,
+   "bodyHeightPx": 263.3,
    "pivot": [
-    110.7,
-    262.0
+    118.2,
+    268.1
    ],
    "hitbox": [
-    16.1,
-    20.0,
-    180.1,
-    226.6
+    5.6,
+    5.6,
+    206.2,
+    262.5
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [],
    "status": "RUNTIME_STATIC_SPRITE",
-   "pivotAuto": [
-    130.5,
-    262.0
-   ],
-   "pivotSource": "motion/atlas.json"
+   "pivotSource": "gpt_h atlas x + alpha feet",
+   "source": "gpt_h/serin_poses_fix.png",
+   "touchesCellEdge": [
+    false,
+    false,
+    false,
+    false
+   ]
   },
   "hit": {
    "id": "hit",
@@ -5753,40 +5769,43 @@
    ],
    "file": "assets/runtime/serin_hit.webp",
    "sourceRect": [
-    384,
-    512,
+    0,
+    0,
     384,
     512
    ],
    "trimOffset": [
-    29,
-    61
+    51,
+    96
    ],
    "size": [
-    196,
-    279
+    208,
+    292
    ],
-   "scale": 0.6437,
-   "bodyHeightPx": 271.0,
+   "scale": 0.7932,
+   "bodyHeightPx": 280.8,
    "pivot": [
-    110.1,
-    274.9
+    126.1,
+    285.6
    ],
    "hitbox": [
-    15.7,
-    20.1,
-    163.7,
-    238.5
+    5.6,
+    5.6,
+    196.7,
+    280.0
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [],
    "status": "RUNTIME_STATIC_SPRITE",
-   "pivotAuto": [
-    113.6,
-    274.9
-   ],
-   "pivotSource": "motion/atlas.json"
+   "pivotSource": "gpt_h atlas x + alpha feet",
+   "source": "gpt_h/serin_poses_fix.png",
+   "touchesCellEdge": [
+    false,
+    false,
+    false,
+    false
+   ]
   },
   "cast": {
    "id": "cast",
@@ -5796,40 +5815,43 @@
    ],
    "file": "assets/runtime/serin_cast.webp",
    "sourceRect": [
-    768,
-    512,
+    0,
+    0,
     384,
     512
    ],
    "trimOffset": [
-    6,
-    6
+    37,
+    59
    ],
    "size": [
-    223,
-    315
+    225,
+    321
    ],
-   "scale": 0.6437,
-   "bodyHeightPx": 306.4,
+   "scale": 0.7932,
+   "bodyHeightPx": 310.9,
    "pivot": [
-    124.9,
-    310.3
+    137.2,
+    315.7
    ],
    "hitbox": [
-    16.8,
-    22.9,
-    189.2,
-    269.6
+    4.8,
+    5.6,
+    214.2,
+    310.1
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [],
    "status": "RUNTIME_STATIC_SPRITE",
-   "pivotAuto": [
-    116.9,
-    310.9
-   ],
-   "pivotSource": "motion/atlas.json"
+   "pivotSource": "gpt_h atlas x + alpha feet",
+   "source": "gpt_h/serin_poses_fix.png",
+   "touchesCellEdge": [
+    false,
+    false,
+    false,
+    false
+   ]
   },
   "victory": {
    "id": "victory",
@@ -5839,40 +5861,43 @@
    ],
    "file": "assets/runtime/serin_victory.webp",
    "sourceRect": [
-    1152,
-    512,
+    0,
+    0,
     384,
     512
    ],
    "trimOffset": [
-    19,
-    30
+    37,
+    81
    ],
    "size": [
-    175,
-    300
+    191,
+    304
    ],
-   "scale": 0.6437,
-   "bodyHeightPx": 290.9,
+   "scale": 0.7932,
+   "bodyHeightPx": 292.7,
    "pivot": [
-    116.5,
-    294.8
+    137.2,
+    297.5
    ],
    "hitbox": [
-    13.9,
-    21.3,
-    146.7,
-    256.0
+    5.6,
+    5.6,
+    179.3,
+    291.9
    ],
    "flying": false,
    "mirrored": false,
    "droppedBleedComponents": [],
    "status": "RUNTIME_STATIC_SPRITE",
-   "pivotAuto": [
-    112.5,
-    294.8
-   ],
-   "pivotSource": "motion/atlas.json"
+   "pivotSource": "gpt_h atlas x + alpha feet",
+   "source": "gpt_h/serin_poses_fix.png",
+   "touchesCellEdge": [
+    false,
+    false,
+    false,
+    false
+   ]
   },
   "promo_knight": {
    "id": "knight",

@@ -32,12 +32,12 @@
    "name": "perf_warrior",
    "pass": true,
    "m": {
-    "frames": 181,
-    "avgMs": 0.23,
-    "p95Ms": 0.4,
-    "maxParts": 76,
-    "fx": 1,
-    "steps": "1231231112",
+    "frames": 180,
+    "avgMs": 0.18,
+    "p95Ms": 0.3,
+    "maxParts": 88,
+    "fx": 0,
+    "steps": "12312312121",
     "cues": "hit,hit2,finisher,crit,skill,boom"
    },
    "errs": []
@@ -71,12 +71,12 @@
    "pass": true,
    "m": {
     "frames": 180,
-    "avgMs": 0.23,
-    "p95Ms": 0.4,
-    "maxParts": 175,
-    "fx": 0,
+    "avgMs": 0.37,
+    "p95Ms": 1.3,
+    "maxParts": 160,
+    "fx": 1,
     "steps": "123121212",
-    "cues": "hit,crit,finisher,hit2,skill,boom"
+    "cues": "hit,hit2,finisher,skill,boom,crit"
    },
    "errs": []
   },
@@ -108,10 +108,10 @@
    "name": "perf_archer",
    "pass": true,
    "m": {
-    "frames": 181,
-    "avgMs": 0.47,
-    "p95Ms": 1.5,
-    "maxParts": 202,
+    "frames": 180,
+    "avgMs": 0.19,
+    "p95Ms": 0.3,
+    "maxParts": 242,
     "fx": 0,
     "steps": "123121212",
     "cues": "hit,hit2,finisher,skill,boom,crit"
@@ -150,13 +150,13 @@
    "name": "perf_rogue",
    "pass": true,
    "m": {
-    "frames": 181,
-    "avgMs": 0.33,
-    "p95Ms": 1.5,
-    "maxParts": 117,
+    "frames": 180,
+    "avgMs": 0.2,
+    "p95Ms": 0.3,
+    "maxParts": 142,
     "fx": 0,
-    "steps": "1231231231",
-    "cues": "hit,hit2,finisher,crit,skill,,boom"
+    "steps": "123123123123123123123123",
+    "cues": "hit,crit,finisher,hit2,skill,,boom"
    },
    "errs": []
   },
@@ -210,32 +210,32 @@
  "perf": [
   {
    "cls": "warrior",
-   "frames": 181,
-   "avgMs": 0.23,
-   "p95Ms": 0.4,
-   "maxParts": 76,
-   "fx": 1,
-   "steps": "1231231112",
+   "frames": 180,
+   "avgMs": 0.18,
+   "p95Ms": 0.3,
+   "maxParts": 88,
+   "fx": 0,
+   "steps": "12312312121",
    "cues": "hit,hit2,finisher,crit,skill,boom",
    "errs": []
   },
   {
    "cls": "mage",
    "frames": 180,
-   "avgMs": 0.23,
-   "p95Ms": 0.4,
-   "maxParts": 175,
-   "fx": 0,
+   "avgMs": 0.37,
+   "p95Ms": 1.3,
+   "maxParts": 160,
+   "fx": 1,
    "steps": "123121212",
-   "cues": "hit,crit,finisher,hit2,skill,boom",
+   "cues": "hit,hit2,finisher,skill,boom,crit",
    "errs": []
   },
   {
    "cls": "archer",
-   "frames": 181,
-   "avgMs": 0.47,
-   "p95Ms": 1.5,
-   "maxParts": 202,
+   "frames": 180,
+   "avgMs": 0.19,
+   "p95Ms": 0.3,
+   "maxParts": 242,
    "fx": 0,
    "steps": "123121212",
    "cues": "hit,hit2,finisher,skill,boom,crit",
@@ -243,13 +243,13 @@
   },
   {
    "cls": "rogue",
-   "frames": 181,
-   "avgMs": 0.33,
-   "p95Ms": 1.5,
-   "maxParts": 117,
+   "frames": 180,
+   "avgMs": 0.2,
+   "p95Ms": 0.3,
+   "maxParts": 142,
    "fx": 0,
-   "steps": "1231231231",
-   "cues": "hit,hit2,finisher,crit,skill,,boom",
+   "steps": "123123123123123123123123",
+   "cues": "hit,crit,finisher,hit2,skill,,boom",
    "errs": []
   }
  ]
