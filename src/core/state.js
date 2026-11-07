@@ -5,8 +5,9 @@ import { kstDayIndex } from './util.js';
 import { refreshLook } from './items.js';
 import { defaultMeta } from './meta.js';
 import { defaultStages, stagesFromProgress } from './stages.js';
+import { defaultMplus } from './mplus.js';
 
-export const SCHEMA_VERSION = 7;
+export const SCHEMA_VERSION = 8;
 
 export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0, cls = 'warrior') {
   return {
@@ -39,7 +40,9 @@ export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0, cls = 'wa
     // 슬롯 강화 (schema 6): level per equip slot, ore spent per slot
     slotEnhance: { weapon: 0, helmet: 0, armor: 0, gloves: 0, boots: 0, necklace: 0, ring1: 0, ring2: 0 },
     slotEnhanceOre: { weapon: 0, helmet: 0, armor: 0, gloves: 0, boots: 0, necklace: 0, ring1: 0, ring2: 0 },
-    stages: defaultStages(),   // 스테이지 지도 (schema 7): best stars, first-clear claimed, auto-advance
+    stages: defaultStages(),
+    // v8 콘텐츠 (schema 8): 쐐기 던전 (mplus.js)
+    mplus: defaultMplus(),   // 스테이지 지도 (schema 7): best stars, first-clear claimed, auto-advance
     notices: {},            // one-time notices shown after load: { slotEnhance: { refund, levels } }
     skills: {
       equipped: [...CLASS_SKILLS[cls].base, null, null],   // 5 slots: 3 base, 4th at tier 1, 5th at tier 2
@@ -190,6 +193,12 @@ const MIGRATIONS = {
   6: (s) => {
     s.schemaVersion = 7;
     if (!s.stages) s.stages = stagesFromProgress(s);
+    return s;
+  },
+  // 7 → 8: v8 콘텐츠. New top-level blocks start empty (filled below from newGame defaults).
+  7: (s) => {
+    s.schemaVersion = 8;
+    if (!s.mplus) s.mplus = defaultMplus();
     return s;
   },
 };

@@ -83,13 +83,17 @@ export class Battle {
     this.manualQueue = [];
     this.hitChargeWindow = { start: 0, count: 0 };
     const T = BALANCE;
-    this.killTarget = o.kind === 'dungeon' ? (o.dungeon.killTarget || T.dungeon.killTarget) : o.kind === 'tower' ? T.tower.killTarget : o.kind === 'rift' ? o.rift.killTarget : Infinity;
+    // 쐐기 던전 (mplus): trash count + boss; HUD timer is o.mplus.timeSec, hard stop hardSec
+    this.mp = o.kind === 'mplus' ? { ...o.mplus, spawned: 0, bossUp: false, quakeAt: 15000, aff: new Set(o.mplus.affixes || []) } : null;
+    if (this.mp) { this.timerMs = o.mplus.timeSec * 1000; }
+    this.killTarget = o.kind === 'mplus' ? o.mplus.trash + 1 : o.kind === 'dungeon' ? (o.dungeon.killTarget || T.dungeon.killTarget) : o.kind === 'tower' ? T.tower.killTarget : o.kind === 'rift' ? o.rift.killTarget : Infinity;
     this.timeLimitMs = o.kind === 'boss' ? C.bossTimeoutSec * 1000
       : o.kind === 'trial' ? T.promotion.trialTimeSec * 1000
       : o.kind === 'dungeon' ? T.dungeon.stageTimeSec * 1000
       : o.kind === 'tower' ? T.tower.timeSec * 1000
       : o.kind === 'raid' ? T.raid.timeSec * 1000
-      : o.kind === 'rift' ? o.rift.timeSec * 1000 : Infinity;
+      : o.kind === 'rift' ? o.rift.timeSec * 1000
+      : o.kind === 'mplus' ? o.mplus.hardSec * 1000 : Infinity;
     this.secondWindUsed = false;
     this.respawnAt = null;
     this.setHero(o.hero, true);
@@ -145,6 +149,13 @@ export class Battle {
   }
   addEnemy(def, level, { elite = false, boss = false, fieldBoss = false } = {}) {
     const st = monsterStats(level, { elite, boss, fieldBoss });
+    if (this.mp) {
+      const a = this.mp.aff;
+      let hm = this.mp.statMul, am = this.mp.statMul;
+      if (boss) { hm *= this.mp.bossHpMul; if (a.has('tyrannical')) { hm *= 1.3; am *= 1.15; } }
+      else if (a.has('fortified')) { hm *= 1.2; am *= 1.3; }
+      st.hp = Math.floor(st.hp * hm); st.atk = Math.floor(st.atk * am);
+    }
     if (this.kind === 'rift') {
       const r = this.cfg.rift;
       st.hp = Math.floor(st.hp * r.statMul * (r.curse === 'c_iron' ? 1.4 : 1));
@@ -177,6 +188,18 @@ export class Battle {
     if (raid) { e.raid = true; e.maxHp = e.hp = Math.floor(e.hp * 3); }
   }
   spawnSessionEnemy() {
+    if (this.mp) {
+      const mp = this.mp;
+      if (mp.spawned < mp.trash) {
+        mp.spawned++;
+        this.addEnemy(MONSTERS[mp.monsters[this.rng.int(0, mp.monsters.length - 1)]], mp.level, { elite: this.rng() < 0.15 });
+      } else if (!mp.bossUp && this.alive().length === 0) {
+        mp.bossUp = true;
+        const e = this.addEnemy(BOSSES[mp.boss], mp.level + 2, { boss: true });
+        this.events.push({ type: 'mplusBoss', enemy: e.uid, name: e.name, t: this.t });
+      }
+      return;
+    }
     if (this.kind === 'rift') {
       const r = this.cfg.rift;
       const ids = r.monsters;
@@ -230,7 +253,12 @@ export class Battle {
       this.finish(this.kind === 'raid' ? 'victory' : 'defeat', 'timeout');
       return;
     }
-    if (this.kind === 'farm' || this.kind === 'dungeon' || this.kind === 'tower' || this.kind === 'rift') {
+    if (this.mp && this.mp.aff.has('quaking') && t >= this.mp.quakeAt) {
+      this.mp.quakeAt += 15000;
+      this.affixHit(0.08, 'quaking');
+      if (this.hero.dead) return;
+    }
+    if (this.kind === 'farm' || this.kind === 'dungeon' || this.kind === 'tower' || this.kind === 'rift' || this.kind === 'mplus') {
       if (this.alive().length < C.maxEnemiesOnField && t >= this.nextSpawnAt) {
         if (this.kind === 'farm') this.spawnFarmEnemy(); else this.spawnSessionEnemy();
         this.nextSpawnAt = t + C.spawnGapSec * 1000;
@@ -301,7 +329,7 @@ export class Battle {
     const h = this.hero;
     const engaged = this.alive().some((e) => e.state !== 'approach');
     const rate = engaged ? 0.006 : 0.06;
-    if (this.kind === 'farm' || this.kind === 'dungeon' || this.kind === 'tower') h.hp = Math.min(h.maxHp, h.hp + h.maxHp * rate * (TICK / 1000));
+    if (this.kind === 'farm' || this.kind === 'dungeon' || this.kind === 'tower' || this.kind === 'mplus') h.hp = Math.min(h.maxHp, h.hp + h.maxHp * rate * this.healMul() * (TICK / 1000));
     const rg = this.heroCfg.stats.regen || 0;   // rift blessing 재생
     if (rg && !h.dead) this.heal(h.maxHp * rg * (TICK / 1000));
   }
@@ -502,7 +530,18 @@ export class Battle {
     if (e.hp <= 0) { this.kill(e); return true; }
     return false;
   }
-  heal(v) { const h = this.hero; if (h.dead) return; if (this.curse === 'c_famine') v *= 0.5; h.hp = Math.min(h.maxHp, h.hp + v); }
+  heal(v) { const h = this.hero; if (h.dead) return; if (this.curse === 'c_famine') v *= 0.5; v *= this.healMul(); h.hp = Math.min(h.maxHp, h.hp + v); }
+  healMul() { return this.mp && this.mp.aff.has('grievous') ? 0.6 : 1; }
+  // 쐐기 변칙 피해 (파열·지진): % of max HP, ignores defense/shield, can finish the hero
+  affixHit(pct, affix) {
+    const h = this.hero;
+    if (h.dead) return;
+    const dmg = Math.max(1, Math.floor(h.maxHp * pct));
+    h.hp -= dmg;
+    h.hitFxUntil = this.t + 160;
+    this.events.push({ type: 'hit', by: 'enemy', target: 'hero', source: affix, dmg, heavy: false, affix, t: this.t });
+    if (h.hp <= 0) this.heroDown();
+  }
 
   addGauge(v) {
     const mul = 1 + (this.heroCfg.stats.ultCharge || 0);
@@ -517,6 +556,7 @@ export class Battle {
     if (this.heroCfg.stats.mythHeal && this.rng() < 0.1) this.heal(this.hero.maxHp * 0.2);
     if (this.kind === 'boss' || this.kind === 'trial' || this.kind === 'raid') { if (e.boss) this.finish('victory'); }
     if ((this.kind === 'dungeon' || this.kind === 'tower' || this.kind === 'rift') && this.kills >= this.killTarget) this.finish('victory');
+    if (this.mp) { if (e.boss) this.finish('victory'); else if (this.mp.aff.has('bursting')) this.affixHit(0.03, 'bursting'); }
   }
 
   enemiesAct() {
@@ -567,6 +607,7 @@ export class Battle {
       return;
     }
     let dmg = damageFormula(e.atk, mult, st.def, e.level, false, this.rng());
+    if (this.mp && this.mp.aff.has('raging') && !e.boss && e.hp / e.maxHp < 0.3) dmg = Math.floor(dmg * 1.5);
     const guard = h.buffs.guard;
     if (guard) dmg = Math.max(1, Math.floor(dmg * (1 - guard.reduce)));
     if (st.dmgTaken) dmg = Math.max(1, Math.floor(dmg * (1 - st.dmgTaken)));

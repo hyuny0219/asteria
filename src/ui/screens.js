@@ -6,6 +6,7 @@ import { BOSSES, BRANCHES, CLASSES, CURRENCY_ICONS, OPTION_NAMES, REGIONS, REGIO
 import * as V4 from './v4.js';
 import * as V5 from './v5.js';
 import * as V6 from './v6.js';
+import * as V8 from './v8.js';
 import { MONSTERS } from '../data/content.js';
 const MONSTERS_NAME = (id) => (MONSTERS[id] ? MONSTERS[id].name : id);
 import { classPortrait, itemIcon, portrait, skillIcon, spriteMeta } from '../render/assets.js';
@@ -463,6 +464,7 @@ export function dungeonPanel(app) {
   sc.appendChild(h('div', { class: 'section-title' }, '던전'));
   for (const t of ['quarry', 'gold', 'books']) sc.appendChild(V4.dungeonCard(app, t));
   sc.appendChild(h('div', { class: 'section-title' }, '도전'));
+  sc.appendChild(V8.mplusCard(app));
   sc.appendChild(V4.towerCard(app));
   sc.appendChild(V5.riftCard(app));
   sc.appendChild(V4.raidCard(app));
@@ -611,6 +613,7 @@ export function openResult(app, r) {
   if (r.kind === 'tower') return V4.openTowerResult(app, r, back);
   if (r.kind === 'rift') return V5.openRiftResult(app, r, back);
   if (r.kind === 'raid') return V4.openRaidResult(app, r, back, itemRewards);
+  if (r.kind === 'mplus') return V8.openMplusResult(app, r, back);
   if (r.kind === 'dungeon') {
     const tiles = [];
     if (r.ore) tiles.push({ icon: itemIcon(CURRENCY_ICONS.ore), value: '+' + r.ore, label: '강화 광석' });

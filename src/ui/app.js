@@ -14,6 +14,8 @@ import { titleName } from '../core/meta.js';
 import { stageLabel } from '../core/stages.js';
 import * as V5 from './v5.js';
 import { BLESSINGS, CURSES } from '../core/rift.js';
+import { AFFIXES, MPLUS } from '../core/mplus.js';
+import * as V8 from './v8.js';
 
 export const TABS = [
   { id: 'battle', label: '전투', icon: 'battle' },
@@ -205,7 +207,7 @@ export class App {
       this.forcedBattleView = true;
       this.applyView();
       this.setImmersive(true, sess);
-      preloadFor({ region: REGION_BY_ID[this.state.progression.region], boss: sess.bossId || null, branch: this.state.player.branch, cls: this.state.player.cls, tier: prog.tierOf(this.state), allMonsters: sess.kind === 'rift' || sess.kind === 'tower' || sess.kind === 'dungeon', bg: sess.kind === 'tower' ? 'tower' : sess.kind === 'raid' ? 'void' : sess.kind === 'rift' ? 'rift' : sess.kind === 'trial' ? 'trial' : sess.kind === 'dungeon' ? ({ quarry: 'mine', gold: 'vault', books: 'library' }[sess.type] || 'mine') : null });
+      preloadFor({ region: REGION_BY_ID[this.state.progression.region], boss: sess.bossId || null, branch: this.state.player.branch, cls: this.state.player.cls, tier: prog.tierOf(this.state), allMonsters: sess.kind === 'rift' || sess.kind === 'tower' || sess.kind === 'dungeon' || sess.kind === 'mplus', bg: sess.kind === 'tower' ? 'tower' : sess.kind === 'raid' ? 'void' : sess.kind === 'rift' ? 'rift' : sess.kind === 'trial' ? 'trial' : sess.kind === 'mplus' ? sess.bg : sess.kind === 'dungeon' ? ({ quarry: 'mine', gold: 'vault', books: 'library' }[sess.type] || 'mine') : null });
     } else if (this._chaining) {
       // going straight into the next fight (e.g. next tower floor): stay in the battle view
     } else {
@@ -238,7 +240,7 @@ export class App {
   confirmForfeit() {
     const sess = this.game.session;
     if (!sess || modalOpen('forfeit')) return;
-    const what = sess.kind === 'rift' ? '균열 진행을 여기서 끝낼까요? 지금까지 내려간 층 기준으로 정산합니다.' : sess.kind === 'dungeon' ? '던전을 중단할까요? 입장권은 이미 사용되었습니다.' : '전투를 포기하고 사냥터로 돌아갈까요?';
+    const what = sess.kind === 'mplus' ? '쐐기 던전을 포기할까요? 실패로 처리되어 열쇠가 1단계 내려갑니다(최소 +2).' : sess.kind === 'rift' ? '균열 진행을 여기서 끝낼까요? 지금까지 내려간 층 기준으로 정산합니다.' : sess.kind === 'dungeon' ? '던전을 중단할까요? 입장권은 이미 사용되었습니다.' : '전투를 포기하고 사냥터로 돌아갈까요?';
     const m = openModal({ id: 'forfeit', title: sess.kind === 'boss' || sess.kind === 'raid' ? '포기' : '중단', kind: 'center', desc: what, actions: [
       button('포기하기', { cls: 'btn btn-danger', onClick: () => { m.close(); this.game.forfeit(); } }),
       button('계속 싸우기', { cls: 'btn', onClick: () => m.close() })] });
@@ -272,6 +274,7 @@ export class App {
     if (sess.kind === 'trial') return `교관 시련 · ${sess.tier || 1}차`;
     if (sess.kind === 'tower') return `시련의 탑 · ${sess.floor}층`;
     if (sess.kind === 'rift') return `균열 · ${sess.floor}층`;
+    if (sess.kind === 'mplus') return `쐐기 +${sess.key} · ${(MPLUS.dungeons[sess.dungeon] || {}).name || ''}`;
     if (sess.kind === 'dungeon') return `${({ quarry: '별의 채석장', gold: '황금 금고', books: '스킬북 서고' })[sess.type] || '던전'} · ${sess.stage}단계`;
     return '';
   }
@@ -285,11 +288,14 @@ export class App {
     const title = this.sessionLabel(sess);
     if (E.hudTitle.textContent !== title) E.hudTitle.textContent = title;
     const bossBar = sess.kind === 'boss' || sess.kind === 'raid';   // time already on the boss bar
-    const lim = bossBar ? 0 : (b.timeLimitMs || 0);
+    // 쐐기: the HUD timer is the key timer; past it the run keeps going (over time, key does not rise)
+    const lim = bossBar ? 0 : sess.kind === 'mplus' ? (b.timerMs || 0) : (b.timeLimitMs || 0);
     const left = lim ? Math.max(0, lim - (b.t || 0)) : 0;
     const sec = Math.ceil(left / 1000);
     const parts = [];
-    if (lim) parts.push(`${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`);
+    const mm = (v) => `${Math.floor(v / 60)}:${String(v % 60).padStart(2, '0')}`;
+    if (sess.kind === 'mplus' && lim && b.t > lim) parts.push(`시간 초과 +${mm(Math.floor((b.t - lim) / 1000))}`);
+    else if (lim) parts.push(mm(sec));
     if (Number.isFinite(b.killTarget)) parts.push(`처치 ${b.kills || 0}/${b.killTarget}`);
     const info = parts.join(' · ');
     if (E.hudInfo.textContent !== info) E.hudInfo.textContent = info;
@@ -309,6 +315,12 @@ export class App {
   renderRiftChips() {
     const box = clear(this.el.riftChips);
     const sess = this.game.session;
+    if (sess && sess.kind === 'mplus') {
+      box.hidden = false;
+      box.appendChild(h('span', { class: 'rchip curse' }, `열쇠 +${sess.key}`));
+      for (const a of sess.affixes || []) { const x = AFFIXES[a]; if (x) box.appendChild(h('span', { class: 'rchip rare', title: x.desc }, x.name)); }
+      return;
+    }
     const run = sess && sess.kind === 'rift' && this.state.rift && this.state.rift.run;
     box.hidden = !run;
     if (!run) return;
@@ -467,11 +479,12 @@ export class App {
       const sess = g.session;
       // GPT G: 금고 · 서고 · 시련장 · 균열 전용 배경
       const SB = { quarry: ['mine', null], gold: ['vault', null], books: ['library', null], tower: ['tower', null], raid: ['void', null], rift: ['rift', null] };
-      const sk = sess ? (sess.kind === 'dungeon' ? sess.type || 'quarry' : sess.kind) : null;
+      const sk = sess ? (sess.kind === 'dungeon' ? sess.type || 'quarry' : sess.kind === 'mplus' ? sess.dungeon : sess.kind) : null;
       const [bg, bgTint] = g.mode === 'PROMOTION_TRIAL' ? ['trial', null] : SB[sk] || [region.bg, region.bgTint || null];
       const left = b.timeLeftMs ? b.timeLeftMs() : null;
       const DN = { quarry: '채석장', gold: '황금 금고', books: '스킬북 서고' };
-      const label = sk === 'rift' ? `균열 ${sess.floor}층 · 처치 ${b.kills}/${b.killTarget} · ${Math.ceil((left || 0) / 1000)}초`
+      const label = sess && sess.kind === 'mplus' ? null
+        : sk === 'rift' ? `균열 ${sess.floor}층 · 처치 ${b.kills}/${b.killTarget} · ${Math.ceil((left || 0) / 1000)}초`
         : sk === 'tower' ? `시련의 탑 ${sess.floor}층 · 처치 ${b.kills}/${BALANCE.tower.killTarget} · ${Math.ceil((left || 0) / 1000)}초`
         : g.mode === 'DUNGEON' && sess ? `${DN[sk] || '던전'} ${sess.stage}단계 · 처치 ${b.kills} · ${Math.ceil((left || 0) / 1000)}초`
         : sk === 'raid' ? `레이드 · 누적 피해 ${fmt(b.raidDamage || b.damageDealt || 0)} · ${Math.ceil((left || 0) / 1000)}초`
@@ -521,6 +534,7 @@ export class App {
     let pv = 0;
     if (m === 'BOSS') { E.where.textContent = BOSSES[this.game.session.bossId].name; E.prog.textContent = '보스전'; }
     else if (m === 'DUNGEON' && this.game.session && this.game.session.kind === 'rift') { E.where.textContent = '균열'; E.prog.textContent = `${this.game.session.floor}층`; }
+    else if (m === 'DUNGEON' && this.game.session && this.game.session.kind === 'mplus') { E.where.textContent = MPLUS.dungeons[this.game.session.dungeon].name; E.prog.textContent = `쐐기 +${this.game.session.key}`; }
     else if (m === 'DUNGEON' && this.game.session && this.game.session.kind === 'tower') { E.where.textContent = '시련의 탑'; E.prog.textContent = `${this.game.session.floor}층`; }
     else if (m === 'DUNGEON') { E.where.textContent = BALANCE.dungeons[this.game.session.type || 'quarry'].name; E.prog.textContent = `${this.game.session.stage}단계`; }
     else if (m === 'PROMOTION_TRIAL') { E.where.textContent = (this.game.session && this.game.session.tier === 3) ? '영웅의 시련' : '교관 시련'; E.prog.textContent = '승급 시련'; }
@@ -546,7 +560,7 @@ export class App {
     const newItems = s.inventory.some((i) => i.isNew) || s.overflow.length > 0;
     this.navDot('equipment', newItems);
     const dunHot = ['quarry', 'gold', 'books'].some((t) => prog.dungeonOpen(s, t) && (t === 'quarry' ? s.dungeon : s.dungeons[t]).tickets > 0);
-    this.navDot('dungeon', dunHot || V5.riftDot(s));
+    this.navDot('dungeon', dunHot || V5.riftDot(s) || V8.mplusDot(s));
     this.navDot('skills', prog.unlockedSkills(s).some((id) => { const c = prog.skillLevelCost(s, id); return c && (s.skills.books[id] || 0) >= c.books && s.wallet.gold >= c.gold; }));
     this.navDot('menu', S.todoCount(this) > 0);
     // growth: patch values in place. Other tabs: rebuild when data changed, at most once

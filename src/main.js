@@ -183,6 +183,7 @@ function enter() {
   app.renderer.resize();
   for (const n of game.notices || []) {
     if (n.type === 'dungeonRefund') import('./ui/dom.js').then((d) => d.toast(`중단된 채석장 ${n.stage}단계 도전의 입장권 1장을 돌려드렸습니다.`, 'info', 4000));
+    if (n.type === 'mplusRefund') import('./ui/dom.js').then((d) => d.toast(`중단된 쐐기 던전(+${n.key}) 도전 횟수를 돌려드렸습니다. 열쇠는 그대로예요.`, 'info', 4000));
     if (n.type === 'clockRollback') import('./ui/dom.js').then((d) => d.toast('기기 시계가 과거로 바뀌어 입장권 충전을 건너뛰었습니다.', 'error', 4000));
   }
   if (game.mode === 'OFFLINE') app.onMode('OFFLINE');

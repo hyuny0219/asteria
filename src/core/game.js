@@ -31,6 +31,7 @@ import * as tower from './tower.js';
 import * as raid from './raid.js';
 import * as meta from './meta.js';
 import * as stages from './stages.js';
+import * as mplus from './mplus.js';
 import { PASS } from '../data/meta.js';
 import { deepClone, makeRng, uid } from './util.js';
 
@@ -83,6 +84,9 @@ export class Game {
     missions.refreshMissions(this.state, this.now());
     raid.refreshRaid(this.state, this.now());
     eco.applyAutoStats(this.state);
+    mplus.refreshMplus(this.state, this.now());
+    const mpRefund = mplus.recoverRun(this.state);
+    if (mpRefund) this.notices.push({ type: 'mplusRefund', ...mpRefund });
     const refund = dun.recoverPendingRun(this.state);
     if (refund) this.notices.push({ type: 'dungeonRefund', ...refund });
     if (tickets.rollback) this.notices.push({ type: 'clockRollback' });
@@ -177,6 +181,22 @@ export class Game {
     this.emit('session', this.session);
     return { ok: true, floor: run.floor };
   }
+  // ---------- 쐐기 던전 ----------
+  async startMplus(dungeon) {
+    if (this.mode !== 'FARM') return { ok: false, reason: 'mode' };
+    const id = uid('mplus');
+    const r = await this.transact('mplusBegin', (s) => mplus.beginRun(s, dungeon, id, this.now()));
+    if (!r.ok) return r;
+    const run = this.state.mplus.run;
+    const cfg = mplus.runConfig(this.state, dungeon, run.key, run.affixes);
+    this.session = { kind: 'mplus', id, dungeon, key: run.key, affixes: run.affixes, bg: cfg.bg, startedAt: this.now(), viewBefore: this.state.settings.battleView };
+    this.active = new Battle({ kind: 'mplus', rng: this.rng, hero: this.sessionHero(), mplus: cfg });
+    this.acc = 0;
+    this.setMode('DUNGEON');
+    this.emit('session', this.session);
+    return { ok: true, key: run.key };
+  }
+  claimMplusVault() { return this.transact('mplusVault', (s) => mplus.claimVault(s, this.now())); }
   riftPick(id) { return this.transact('riftPick', (s) => rift.pickBlessing(s, id)); }
   riftEnd() { return this.transact('riftEnd', (s) => rift.endRun(s, this.now(), this.rng, this.bookSkills(s))); }
 
@@ -539,6 +559,12 @@ export class Game {
           if ((fr.cleared || 0) >= 10) { s.pets.eggs += 1; fr.petEgg = 1; }
         }
         return { ...fr, kills: ev.kills, timeSec: Math.round(ev.t / 1000), reason: ev.reason };
+      });
+    } else if (sess.kind === 'mplus') {
+      r = await this.transact('mplusResult', (s) => {
+        const fr = mplus.finishRun(s, sess.id, { win, timeSec: Math.round(ev.t / 100) / 10 }, this.now(), this.rng);
+        if (fr.ok) { fr.overflowed = eco.addItems(s, fr.items).overflowed; if (win) missions.track(s, 'dungeon', 1, this.now()); }
+        return { ...fr, win, kills: ev.kills, reason: ev.reason };
       });
     } else if (sess.kind === 'raid') {
       r = await this.transact('raidResult', (s) => {

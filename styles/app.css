@@ -556,3 +556,10 @@ input.text { width: 100%; min-height: 36px; background: var(--panel); border: 1p
 #app.immersive .mini-battle { display: none !important; }
 #app.immersive.tab-page .battle { display: block; }
 #app.immersive.tab-page .skills { display: flex; }
+
+/* ---- v8: 쐐기 던전 ---- */
+.mp-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; margin: 6px 0; border: 1px solid var(--border); border-radius: 10px; background: rgba(255,255,255,.02); }
+.mp-row .mp-name { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.mp-row .mp-name b { color: var(--text); }
+.mp-row .btn { flex: none; width: auto; min-width: 92px; }
+.mp-row .mp-name .muted { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

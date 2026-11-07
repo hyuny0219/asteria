@@ -30,9 +30,9 @@
   "pass": true,
   "info": {
    "choices": [
-    "b_guard",
-    "b_greed",
-    "b_aspd"
+    "b_thorns",
+    "b_echo",
+    "b_heal"
    ]
   }
  },
@@ -82,9 +82,9 @@
   "pass": true,
   "info": {
    "choices": [
-    "b_cdmg",
+    "b_thorns",
     "b_heal",
-    "b_def"
+    "b_regen"
    ]
   }
  },
