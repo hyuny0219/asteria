@@ -47,6 +47,7 @@ node tools/qa_login.cjs 8123                     # 게스트 로그인·클래�
 node tools/qa_v5.cjs 8123                        # 특성·환생·균열
 node tools/qa_v6.cjs 8123                        # 도감·업적·칭호·시즌 패스·동료·신화 제작
 node tools/qa_v7.cjs 8123                        # 슬롯 강화(이전 안내)·스테이지 지도 × 3해상도
+node tools/qa_stage_stable.cjs 8123              # 스테이지 탭이 전투 중에 튀지 않는지(고른 지역·칸 유지)
 node tools/qa_combat_fx.cjs 8123                 # 콤보·치명타·스킬 이펙트·궁극기 컷인 캡처(docs/qa/screens/fx_*.png)·프레임 비용
 python3 tools/extract_gpt_b.py                  # GPT B 투사체·타격 → fx_*.webp
 python3 tools/extract_gpt_c.py                  # GPT C 몬스터 대기·공격·피격·쓰러짐 → mon_M##_<act>.webp

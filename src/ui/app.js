@@ -99,7 +99,8 @@ export class App {
     // lower: goal + panel (panel takes the rest of the screen)
     E.goal = h('button', { type: 'button', class: 'goal', onClick: () => this.goGoal() });
     E.panel = h('section', { class: 'panel', 'aria-live': 'off' });
-    E.panel.addEventListener('pointerdown', () => { this.pointerDown = true; });
+    E.panel.addEventListener('pointerdown', () => { this.pointerDown = true; this.lastTouch = performance.now(); });
+    E.panel.addEventListener('scroll', () => { this.lastTouch = performance.now(); }, { capture: true, passive: true });
     window.addEventListener('pointerup', () => { this.pointerDown = false; });
     window.addEventListener('pointercancel', () => { this.pointerDown = false; });
     // page tabs: slim live strip instead of the battle (tap → back to the battle tab)
@@ -392,6 +393,7 @@ export class App {
     if (this.tab === 'battle') { this.renderGoal(); return; }
     const map = { stage: S.stagePanel, growth: S.growthPanel, equipment: S.equipmentPanel, skills: S.skillsPanel, dungeon: S.dungeonPanel, menu: S.menuPanel };
     this.el.panel.appendChild(map[this.tab](this));
+    if (this.tab === 'stage' && S.stageSig) this._stageSig = S.stageSig(this);
     const ns = this.el.panel.querySelector('.panel-scroll');
     if (ns) ns.scrollTop = top;
     if (keepFocus) { const f = this.el.panel.querySelector(`[data-key="${keepFocus}"]`); if (f) f.focus({ preventScroll: true }); }
@@ -551,6 +553,13 @@ export class App {
     const live = this.el.panel.firstChild;
     if (this.tab === 'growth' && live && live._update && !this.structural) { live._update(); this.renderGoal(); this.panelDirty = false; return; }
     const nowMs = performance.now();
+    // 스테이지 지도: 처치·골드·자동 강화마다 다시 그리지 않음. 지도에 보이는 값이 바뀔 때만,
+    // 그리고 마지막 터치 후 4초가 지난 뒤에만 다시 그림 (고르던 칸·탭 스크롤이 튀지 않게).
+    if (this.tab === 'stage' && this.panelDirty) {
+      const sig = S.stageSig ? S.stageSig(this) : null;
+      if (sig === this._stageSig) { this.panelDirty = false; return; }
+      if (nowMs - (this.lastTouch || 0) < 4000) return;
+    }
     if (this.panelDirty && !this.pointerDown && (force || nowMs - (this.lastPanel || 0) > 1000)) this.renderPanel();
   }
   navDot(tab, on) {

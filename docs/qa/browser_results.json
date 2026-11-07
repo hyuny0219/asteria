@@ -1,5 +1,5 @@
 {
- "startedAt": "2026-11-07T01:54:29.699Z",
+ "startedAt": "2026-11-07T02:15:13.083Z",
  "base": "http://localhost:8234/",
  "viewports": [
   [
@@ -3374,8 +3374,8 @@
    "name": "reload keeps the same pending claim",
    "pass": true,
    "detail": {
-    "first": "claim_mw5r54ub_15gfwyx",
-    "after": "claim_mw5r54ub_15gfwyx"
+    "first": "claim_mw5rvs5t_1esvyu4",
+    "after": "claim_mw5rvs5t_1esvyu4"
    }
   },
   {
@@ -3552,7 +3552,7 @@
   }
  ],
  "errors": [],
- "finishedAt": "2026-11-07T01:56:55.572Z",
+ "finishedAt": "2026-11-07T02:17:38.438Z",
  "summary": {
   "screenChecks": 141,
   "screenPass": 141,

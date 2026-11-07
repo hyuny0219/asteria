@@ -130,7 +130,14 @@ function buildStage(app, ui, rerender, close) {
       action);
     ui.region = region; ui.sel = sel;
     // keep the tab strip scrolled to the selected region
-    requestAnimationFrame(() => { const t = tabs.querySelector('[aria-selected="true"]'); if (t && t.scrollIntoView) t.scrollIntoView({ block: 'nearest', inline: 'center' }); });
+    // region strip: centre the chosen region only when it changed; otherwise keep where the player scrolled it
+    const recentre = ui.tabsFor !== region;
+    ui.tabsFor = region;
+    tabs.addEventListener('scroll', () => { ui.tabsLeft = tabs.scrollLeft; }, { passive: true });
+    requestAnimationFrame(() => {
+      if (!recentre && ui.tabsLeft != null) { tabs.scrollLeft = ui.tabsLeft; return; }
+      const t = tabs.querySelector('[aria-selected="true"]'); if (t && t.scrollIntoView) t.scrollIntoView({ block: 'nearest', inline: 'center' });
+    });
     return h('div', { class: 'stage-wrap', dataset: { screen: 'world' } }, head, tabs, map, detail,
       h('p', { class: 'muted small', style: { margin: '6px 2px 0' } }, '스테이지 = 웨이브. 적 10마리를 처치하면 클리어입니다. 보스를 처치하면 다음 지역이 열립니다. 자동 진행을 끄면 고른 스테이지에서 계속 사냥합니다.'));
   }
@@ -143,6 +150,15 @@ export function openStageMap(app, focus = null) {
   const draw = () => m.setBody(buildStage(app, ui, draw, () => m.close()));
   draw();
   return m;
+}
+
+// What the map shows. The stage tab only rebuilds when this changes (not on every kill / gold tick).
+export function stageSig(app) {
+  const s = app.state;
+  if (!s) return null;
+  const p = s.progression, st = s.stages || {};
+  return [p.region, p.wave, app.game.mode, (p.unlockedRegions || []).join(), JSON.stringify(p.maxWave || {}), Object.keys(p.bossCleared || {}).length,
+    JSON.stringify(st.stars || {}), Object.keys(st.claimed || {}).length, st.auto, p.autoAdvance, s.player.level >= 100 ? 100 : Math.floor(s.player.level / 10)].join('|');
 }
 
 // Bottom-tab version (선배 요청: 스테이지가 하단 첫 탭). Selection survives the

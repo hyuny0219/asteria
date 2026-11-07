@@ -25,8 +25,8 @@ import { enableAudio, setVolume, sfx } from '../platform/audio.js';
 import { button, closeAllModals, h, icon, img, modalOpen, openModal, toast } from './dom.js';
 import * as FS from './fullscreen.js';
 import { openShop, openClassChange } from './shop.js';
-import { openStageMap, stagePanel } from './stagemap.js';
-export { stagePanel };
+import { openStageMap, stagePanel, stageSig } from './stagemap.js';
+export { stagePanel, stageSig };
 import { stageLabel } from '../core/stages.js';
 
 const STAT_INFO = {
