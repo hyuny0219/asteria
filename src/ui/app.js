@@ -560,7 +560,7 @@ export class App {
     const newItems = s.inventory.some((i) => i.isNew) || s.overflow.length > 0;
     this.navDot('equipment', newItems);
     const dunHot = ['quarry', 'gold', 'books'].some((t) => prog.dungeonOpen(s, t) && (t === 'quarry' ? s.dungeon : s.dungeons[t]).tickets > 0);
-    this.navDot('dungeon', dunHot || V5.riftDot(s) || V8.mplusDot(s));
+    this.navDot('dungeon', dunHot || V5.riftDot(s) || V8.mplusDot(s) || V8.expeditionDot(s));
     this.navDot('skills', prog.unlockedSkills(s).some((id) => { const c = prog.skillLevelCost(s, id); return c && (s.skills.books[id] || 0) >= c.books && s.wallet.gold >= c.gold; }));
     this.navDot('menu', S.todoCount(this) > 0);
     // growth: patch values in place. Other tabs: rebuild when data changed, at most once

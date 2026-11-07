@@ -32,6 +32,7 @@ import * as raid from './raid.js';
 import * as meta from './meta.js';
 import * as stages from './stages.js';
 import * as mplus from './mplus.js';
+import * as expedition from './expedition.js';
 import { PASS } from '../data/meta.js';
 import { deepClone, makeRng, uid } from './util.js';
 
@@ -85,6 +86,7 @@ export class Game {
     raid.refreshRaid(this.state, this.now());
     eco.applyAutoStats(this.state);
     mplus.refreshMplus(this.state, this.now());
+    expedition.refreshExpedition(this.state, this.now());
     const mpRefund = mplus.recoverRun(this.state);
     if (mpRefund) this.notices.push({ type: 'mplusRefund', ...mpRefund });
     const refund = dun.recoverPendingRun(this.state);
@@ -196,6 +198,10 @@ export class Game {
     this.emit('session', this.session);
     return { ok: true, key: run.key };
   }
+  // ---------- 원정 파견 ----------
+  sendExpedition(expId, petId) { return this.transact('expSend', (s) => expedition.send(s, expId, petId, this.now())); }
+  claimExpedition(slot) { return this.transact('expClaim', (s) => expedition.claim(s, slot, this.now())); }
+  claimAllExpeditions() { return this.transact('expClaim', (s) => expedition.claimAll(s, this.now())); }
   claimMplusVault() { return this.transact('mplusVault', (s) => mplus.claimVault(s, this.now())); }
   riftPick(id) { return this.transact('riftPick', (s) => rift.pickBlessing(s, id)); }
   riftEnd() { return this.transact('riftEnd', (s) => rift.endRun(s, this.now(), this.rng, this.bookSkills(s))); }

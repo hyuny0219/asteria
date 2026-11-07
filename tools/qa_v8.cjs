@@ -60,6 +60,32 @@ const shot = (p, name, vp) => p.screenshot({ path: path.join(OUT, `v8_${name}_${
     await p.click('.modal .btn:not(.btn-primary)');
     await p.waitForTimeout(600);
     ok(await p.evaluate(() => __asteria.game.mode === 'FARM' && !document.getElementById('app').classList.contains('immersive')), `${vp[0]} back to farm`);
+    // ---- 원정 파견 ----
+    await p.evaluate(() => __asteria.app.setTab('dungeon'));
+    ok(await p.locator('[data-screen="expedition"].locked-card').count() === 1, `${vp[0]} expedition locked without a companion`);
+    await p.evaluate(() => __qaTx((s) => { s.pets.owned.P01 = { level: 12, stars: 2, shards: 0 }; s.pets.owned.P03 = { level: 3, stars: 1, shards: 0 }; s.pets.active = 'P01'; return { ok: true }; }));
+    await p.evaluate(() => { __asteria.app.renderPanel(); });
+    await p.waitForTimeout(300);
+    await p.click('[data-screen="expedition"] .btn-primary');
+    await p.waitForTimeout(400);
+    ok(await p.locator('[data-screen="expeditionList"] .exp-card').count() === 5, `${vp[0]} board of 5`);
+    await p.click('[data-screen="expeditionList"] .exp-card .exp-pets .btn >> nth=0');
+    await p.waitForTimeout(500);
+    const sent = await p.evaluate(() => __asteria.game.state.expedition.slots.filter(Boolean).length);
+    ok(sent === 1, `${vp[0]} sent one expedition`);
+    ok(!(await overflowX(p)), `${vp[0]} expedition modal no horizontal overflow`);
+    await shot(p, 'expedition', vp);
+    // finish it by moving its end time
+    await p.evaluate(() => __qaTx((s) => { for (const x of s.expedition.slots) if (x) x.endAt = Date.now() - 1000; return { ok: true }; }));
+    await p.evaluate(() => { document.querySelectorAll('.modal-overlay').forEach((o) => o.remove()); document.getElementById('app').inert = false; __asteria.app.renderPanel(); });
+    await p.click('[data-screen="expedition"] .btn-primary');
+    await p.waitForTimeout(500);
+    const btn = p.locator('[data-screen="expeditionList"] .mp-row .btn-primary').first();
+    await btn.click();
+    await p.waitForSelector('[data-screen="expResult"]', { timeout: 5000 });
+    ok(await p.evaluate(() => __asteria.game.state.expedition.done === 1), `${vp[0]} expedition claimed`);
+    await shot(p, 'expedition_result', vp);
+    await p.evaluate(() => { document.querySelectorAll('.modal-overlay').forEach((o) => o.remove()); document.getElementById('app').inert = false; });
     ok(p.errs.length === 0, `${vp[0]} no page errors ${p.errs.join(' | ')}`);
     await p.close();
   }

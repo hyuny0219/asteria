@@ -6,6 +6,7 @@ import { refreshLook } from './items.js';
 import { defaultMeta } from './meta.js';
 import { defaultStages, stagesFromProgress } from './stages.js';
 import { defaultMplus } from './mplus.js';
+import { defaultExpedition } from './expedition.js';
 
 export const SCHEMA_VERSION = 8;
 
@@ -42,7 +43,9 @@ export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0, cls = 'wa
     slotEnhanceOre: { weapon: 0, helmet: 0, armor: 0, gloves: 0, boots: 0, necklace: 0, ring1: 0, ring2: 0 },
     stages: defaultStages(),
     // v8 콘텐츠 (schema 8): 쐐기 던전 (mplus.js)
-    mplus: defaultMplus(),   // 스테이지 지도 (schema 7): best stars, first-clear claimed, auto-advance
+    mplus: defaultMplus(),
+    expedition: defaultExpedition(),     // 원정 파견 (expedition.js)
+    craft: { herb: 0, meat: 0 },          // 제작 재료 (원정 보상)   // 스테이지 지도 (schema 7): best stars, first-clear claimed, auto-advance
     notices: {},            // one-time notices shown after load: { slotEnhance: { refund, levels } }
     skills: {
       equipped: [...CLASS_SKILLS[cls].base, null, null],   // 5 slots: 3 base, 4th at tier 1, 5th at tier 2

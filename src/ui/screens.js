@@ -468,6 +468,8 @@ export function dungeonPanel(app) {
   sc.appendChild(V4.towerCard(app));
   sc.appendChild(V5.riftCard(app));
   sc.appendChild(V4.raidCard(app));
+  sc.appendChild(h('div', { class: 'section-title' }, '원정'));
+  sc.appendChild(V8.expeditionCard(app));
   sc.appendChild(h('p', { class: 'muted' }, `던전은 입장할 때 입장권 1장을 먼저 사용합니다. 시간 안에 실패하면 보상 30%만 받고, 전투 중 앱이 꺼지면 다음 실행 때 입장권을 돌려드립니다.`));
   root.appendChild(sc);
   return root;

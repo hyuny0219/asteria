@@ -563,3 +563,7 @@ input.text { width: 100%; min-height: 36px; background: var(--panel); border: 1p
 .mp-row .mp-name b { color: var(--text); }
 .mp-row .btn { flex: none; width: auto; min-width: 92px; }
 .mp-row .mp-name .muted { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* ---- v8: 원정 파견 ---- */
+.exp-card { margin: 6px 0; }
+.exp-pets { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.exp-pets .btn.small-btn { flex: 0 1 auto; width: auto; min-height: 34px; padding: 4px 10px; font-size: 12px; }

@@ -2,6 +2,8 @@
 import { CURRENCY_ICONS, RARITY } from '../data/content.js';
 import { itemIcon, skillIcon } from '../render/assets.js';
 import * as MP from '../core/mplus.js';
+import * as EX from '../core/expedition.js';
+import { PETS } from '../data/meta.js';
 import { fmt } from '../core/util.js';
 import { sfx } from '../platform/audio.js';
 import { button, h, img, openModal } from './dom.js';
@@ -100,3 +102,70 @@ function chainNext(app, back, dungeon) {
 }
 
 export const mplusDot = (s) => MP.mplusOpen(s) && (!!(s.mplus && s.mplus.vault) || MP.rewardedLeft(s, Date.now()) > 0);
+
+// ======================= 원정 파견 =======================
+const hm = (ms) => { const m = Math.max(0, Math.ceil(ms / 60000)); return m >= 60 ? `${Math.floor(m / 60)}시간 ${m % 60}분` : `${m}분`; };
+const rwTxt = (type, n) => `${EX.EXP_REWARD_NAMES[type]} ×${n}`;
+
+export function expeditionCard(app) {
+  const s = app.state;
+  const now = Date.now();
+  if (!EX.expeditionOpen(s)) return h('div', { class: 'card locked-card', dataset: { screen: 'expedition' } }, h('div', { class: 'kv' }, h('b', { style: { color: 'var(--text)' } }, '원정 파견'), h('span', { class: 'muted' }, '잠김')), h('p', { class: 'muted', style: { margin: 0 } }, '첫 동료를 얻으면 열림 (메뉴 › 동료 · 정령 알 부화)'));
+  const e = EX.refreshExpedition(s, now);
+  const busy = e.slots.filter(Boolean).length;
+  const ready = EX.readyCount(s, now);
+  return h('div', { class: 'card', dataset: { screen: 'expedition' } },
+    h('div', { class: 'kv' }, h('span', { class: 'card-title' }, ico('V10'), h('b', { style: { color: 'var(--text)' } }, '원정 파견')), h('b', null, `${busy}/${EX.EXPEDITION.slots} 진행 중`)),
+    h('div', { class: 'kv' }, '오늘 원정 목록', h('b', null, `${e.board.length}개 남음 · 매일 00:00 갱신`)),
+    ready ? h('div', { class: 'kv' }, h('span', { class: 'okc' }, `${ready}개 원정 완료`), h('b', null, '보상 받기')) : null,
+    h('div', { class: 'btn-row' }, button(ready ? `보상 받기 (${ready})` : '원정 보내기', { cls: 'btn btn-primary', onClick: () => openExpedition(app) })));
+}
+
+export function openExpedition(app) {
+  let timer = null;
+  const m = openModal({ id: 'expedition', title: '원정 파견', body: h('div'), kind: 'full', onClose: () => clearInterval(timer) });
+  const render = () => {
+    const s = app.state;
+    const now = Date.now();
+    const e = EX.refreshExpedition(s, now);
+    const busy = EX.busyPets(s);
+    const pets = Object.keys(s.pets.owned);
+    const freeSlot = e.slots.some((x) => !x);
+    const slotRows = e.slots.map((x, i) => x
+      ? h('div', { class: 'mp-row' },
+        h('div', { class: 'mp-name' }, h('b', null, `${x.exp.name} · ${x.exp.hours}시간`), h('span', { class: 'muted small' }, `${EX.petName(x.pet)} · ${rwTxt(x.exp.type, x.exp.amount)} · 성공 ${Math.round(x.chance * 100)}%`),
+          now < x.endAt ? h('span', { class: 'small', dataset: { end: x.endAt } }, `남은 시간 ${hm(x.endAt - now)}`) : h('span', { class: 'okc small' }, '완료')),
+        button(now < x.endAt ? '진행 중' : '받기', { cls: 'btn' + (now < x.endAt ? '' : ' btn-primary'), disabled: now < x.endAt, busy: true, onClick: async () => { const r = fail(await app.game.claimExpedition(i)); if (r.ok) { showExpResults(app, [r]); render(); } } }))
+      : h('div', { class: 'mp-row muted' }, h('div', { class: 'mp-name' }, h('span', null, `빈 슬롯 ${i + 1}`))));
+    const board = e.board.map((x) => h('div', { class: 'card exp-card' },
+      h('div', { class: 'kv' }, h('b', { style: { color: 'var(--text)' } }, `${x.name} · ${x.hours}시간`), h('b', null, rwTxt(x.type, x.amount))),
+      h('div', { class: 'muted small' }, `권장 동료 점수 ${x.req} (레벨 + 별 5점씩) · 대성공 시 2배 · 실패해도 30%`),
+      h('div', { class: 'exp-pets' }, pets.map((pid) => {
+        const ch = EX.successChance(s, pid, x);
+        return button(`${PETS[pid].name} ${Math.round(ch.success * 100)}%`, { cls: 'btn small-btn', disabled: busy.has(pid) || !freeSlot, busy: true, ariaLabel: `${PETS[pid].name} 보내기, 성공 ${Math.round(ch.success * 100)}%`,
+          onClick: async () => { const r = fail(await app.game.sendExpedition(x.id, pid)); if (r.ok) render(); } });
+      }))));
+    const ready = EX.readyCount(s, now);
+    m.setBody(h('div', { dataset: { screen: 'expeditionList' } },
+      h('p', { class: 'modal-desc' }, `동료를 원정에 보내면 실제 시간으로 진행돼요(앱을 꺼도). 원정 중에도 동료는 전투를 계속 도와요. 보유: 달빛 약초 ${s.craft.herb} · 야수 고기 ${s.craft.meat} · 동료 먹이 ${s.pets.food}`),
+      h('div', { class: 'section-title' }, `진행 중 ${e.slots.filter(Boolean).length}/${EX.EXPEDITION.slots}`), slotRows,
+      ready > 1 ? button(`모두 받기 (${ready})`, { cls: 'btn btn-primary', busy: true, onClick: async () => { const r = fail(await app.game.claimAllExpeditions()); if (r.ok) { showExpResults(app, r.results); render(); } } }) : null,
+      h('div', { class: 'section-title' }, `오늘의 원정 ${e.board.length}개`), board.length ? board : h('p', { class: 'muted' }, '오늘 원정을 모두 보냈어요. 00:00(KST)에 새 목록이 와요.')));
+  };
+  render();
+  timer = setInterval(() => {
+    const els = m.el ? m.el.querySelectorAll('[data-end]') : document.querySelectorAll('[data-screen="expeditionList"] [data-end]');
+    let done = false;
+    for (const el of els) { const left = Number(el.dataset.end) - Date.now(); if (left <= 0) done = true; else el.textContent = `남은 시간 ${hm(left)}`; }
+    if (done) render();
+  }, 1000);
+  return m;
+}
+
+function showExpResults(app, results) {
+  if (app.state.settings.sound) sfx('bell');
+  const RES = { great: '대성공! ×2', success: '성공', fail: '실패 · 30%' };
+  const lines = results.map((r) => h('div', { class: 'kv' }, `${r.name} · ${EX.petName(r.pet)}`, h('b', { class: r.result === 'fail' ? 'warn' : 'okc' }, `${RES[r.result]} · ${rwTxt(r.type, r.amount)}`)));
+  const rm = openModal({ id: 'expResult', title: '원정 결과', kind: 'center', body: h('div', { dataset: { screen: 'expResult' } }, lines), actions: [button('확인', { cls: 'btn btn-primary', onClick: () => rm.close() })] });
+}
+export const expeditionDot = (s) => EX.expeditionOpen(s) && (EX.readyCount(s, Date.now()) > 0 || (s.expedition && s.expedition.slots.some((x) => !x) && (s.expedition.board || []).length > 0));

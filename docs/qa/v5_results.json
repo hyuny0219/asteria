@@ -30,9 +30,9 @@
   "pass": true,
   "info": {
    "choices": [
-    "b_thorns",
-    "b_echo",
-    "b_heal"
+    "b_aspd",
+    "b_ult",
+    "b_cdr"
    ]
   }
  },
@@ -82,9 +82,9 @@
   "pass": true,
   "info": {
    "choices": [
-    "b_thorns",
-    "b_heal",
-    "b_regen"
+    "b_crit",
+    "b_guard",
+    "b_def"
    ]
   }
  },
