@@ -690,6 +690,15 @@ export class BattleRenderer {
     // Others have one authored figure per costume: that figure + lunge/trail only
     // (the base poses would change costume mid-swing).
     let m = frames[pose];
+    // GPT J3 cycle frames (base form): 4-frame walk while closing in, 4-frame basic attack
+    if (frames.cycle && !h.dead && !victory) {
+      if (ac && ac.kind === 'attack') {
+        const rel = t - ac.start, imp = ac.impactAt - ac.start, hold = COMBO[step].hold;
+        m = frames.cycle.atk[rel < imp * 0.5 ? 0 : rel < imp ? 1 : rel < imp + hold ? 2 : 3] || m;
+      } else if (!ac && pose === 'step' || (!ac && pose === 'idle' && battle.enemies.length && battle.enemies.every((e) => e.state === 'approach'))) {
+        m = frames.cycle.walk[Math.floor(t / 150) % 4] || m;
+      }
+    }
     if (branch && frames.promo) m = frames.promo;
     const hf = this.heroTint ? `hue-rotate(${this.heroTint}deg) saturate(1.1)` : '';
     const img = ready(m.file);

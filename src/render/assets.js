@@ -69,7 +69,10 @@ export function heroFrames(branch, cls = 'warrior', tier = 1) {
     const f = promo || base;
     // base form: 8 key poses when extracted (tools/extract_poses_v4.py), like Serin
     const P = (k) => H[`pose_${cls}_${k}`];
-    if (!promo && P('idle')) return { idle: P('idle'), step: P('step'), anticipation: P('anticipation'), thrust: P('thrust'), recovery: P('recovery'), hit: P('hit'), cast: P('cast'), victory: P('victory'), promo: null };
+    // GPT J3: walk cycle 4 + basic attack 4 (base form only)
+    const C = (k) => H[`cyc_${cls}_${k}`];
+    const cycle = C('walk1') ? { walk: [1, 2, 3, 4].map((i) => C('walk' + i)), atk: [1, 2, 3, 4].map((i) => C('atk' + i)) } : null;
+    if (!promo && P('idle')) return { idle: P('idle'), step: P('step'), anticipation: P('anticipation'), thrust: P('thrust'), recovery: P('recovery'), hit: P('hit'), cast: P('cast'), victory: P('victory'), promo: null, cycle };
     return { idle: f, step: f, anticipation: f, thrust: f, recovery: f, hit: f, cast: f, victory: f, promo, static: true };
   }
   return { idle: H.idle, step: H.step, anticipation: H.anticipation, thrust: H.thrust, recovery: H.recovery, hit: H.hit, cast: H.cast, victory: H.victory, promo: pk ? H[pk] : null };
@@ -110,7 +113,7 @@ export async function preloadFor({ region, boss, branch, cls = 'warrior', tier =
   // Serin's 8 poses (also used by the instructor projection) + this class's figure
   const list = Object.entries(meta.hero).filter(([k]) => !k.startsWith('promo_') && !k.startsWith('cls_') && !k.startsWith('pose_')).map(([, f]) => f.file);
   if (art && meta.hero[art.base]) list.push(meta.hero[art.base].file);
-  for (const [k, f] of Object.entries(meta.hero)) if (k.startsWith(`pose_${cls}_`)) list.push(f.file);
+  for (const [k, f] of Object.entries(meta.hero)) if (k.startsWith(`pose_${cls}_`) || k.startsWith(`cyc_${cls}_`)) list.push(f.file);
   const pf = promoFrame(branch, tier);
   if (pf) list.push(pf.file);
   const pp = promoPoses(branch, tier);

@@ -231,7 +231,8 @@
   "gpt_g/bg_*.png": "GPT package G — vault / library / trial hall / rift backgrounds",
   "gpt_h/serin_poses_fix.png": "GPT package H — Serin 8 key poses (thrust fixed, alpha)",
   "gpt_j/icons_gear_high2.png": "GPT package J1 — helmet/armor/necklace epic+ icons",
-  "gpt_j/elena_poses_fix.png": "GPT package J2 — Elena 8 key poses (alpha, tome glow kept)"
+  "gpt_j/elena_poses_fix.png": "GPT package J2 — Elena 8 key poses (alpha, tome glow kept)",
+  "gpt_j3/*_cycle.png": "GPT J3 — walk 4 + basic attack 4 frames (Lyra, Elena, Nox)"
  },
  "monsters": {
   "M01": {
@@ -16863,6 +16864,582 @@
    "flying": false,
    "mirrored": false,
    "status": "RUNTIME_KEY_POSE"
+  },
+  "cyc_archer_walk1": {
+   "id": "cyc_archer_walk1",
+   "cls": "archer",
+   "pose": "walk1",
+   "file": "assets/runtime/hero_cyc_archer_walk1.webp",
+   "size": [
+    157,
+    288
+   ],
+   "scale": 0.6264,
+   "bodyHeightPx": 280.0,
+   "pivot": [
+    92.3,
+    283.8
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/lyra_cycle.png"
+  },
+  "cyc_archer_walk2": {
+   "id": "cyc_archer_walk2",
+   "cls": "archer",
+   "pose": "walk2",
+   "file": "assets/runtime/hero_cyc_archer_walk2.webp",
+   "size": [
+    133,
+    291
+   ],
+   "scale": 0.6264,
+   "bodyHeightPx": 281.3,
+   "pivot": [
+    81.1,
+    285.0
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/lyra_cycle.png"
+  },
+  "cyc_archer_walk3": {
+   "id": "cyc_archer_walk3",
+   "cls": "archer",
+   "pose": "walk3",
+   "file": "assets/runtime/hero_cyc_archer_walk3.webp",
+   "size": [
+    155,
+    285
+   ],
+   "scale": 0.6264,
+   "bodyHeightPx": 276.2,
+   "pivot": [
+    90.6,
+    280.0
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/lyra_cycle.png"
+  },
+  "cyc_archer_walk4": {
+   "id": "cyc_archer_walk4",
+   "cls": "archer",
+   "pose": "walk4",
+   "file": "assets/runtime/hero_cyc_archer_walk4.webp",
+   "size": [
+    132,
+    290
+   ],
+   "scale": 0.6264,
+   "bodyHeightPx": 281.3,
+   "pivot": [
+    78.0,
+    285.0
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/lyra_cycle.png"
+  },
+  "cyc_archer_atk1": {
+   "id": "cyc_archer_atk1",
+   "cls": "archer",
+   "pose": "atk1",
+   "file": "assets/runtime/hero_cyc_archer_atk1.webp",
+   "size": [
+    163,
+    296
+   ],
+   "scale": 0.6264,
+   "bodyHeightPx": 286.9,
+   "pivot": [
+    82.9,
+    291.3
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/lyra_cycle.png"
+  },
+  "cyc_archer_atk2": {
+   "id": "cyc_archer_atk2",
+   "cls": "archer",
+   "pose": "atk2",
+   "file": "assets/runtime/hero_cyc_archer_atk2.webp",
+   "size": [
+    186,
+    306
+   ],
+   "scale": 0.6264,
+   "bodyHeightPx": 300.7,
+   "pivot": [
+    90.7,
+    301.3
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/lyra_cycle.png"
+  },
+  "cyc_archer_atk3": {
+   "id": "cyc_archer_atk3",
+   "cls": "archer",
+   "pose": "atk3",
+   "file": "assets/runtime/hero_cyc_archer_atk3.webp",
+   "size": [
+    165,
+    306
+   ],
+   "scale": 0.6264,
+   "bodyHeightPx": 300.7,
+   "pivot": [
+    96.7,
+    301.3
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/lyra_cycle.png"
+  },
+  "cyc_archer_atk4": {
+   "id": "cyc_archer_atk4",
+   "cls": "archer",
+   "pose": "atk4",
+   "file": "assets/runtime/hero_cyc_archer_atk4.webp",
+   "size": [
+    156,
+    296
+   ],
+   "scale": 0.6264,
+   "bodyHeightPx": 287.5,
+   "pivot": [
+    91.2,
+    291.9
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/lyra_cycle.png"
+  },
+  "cyc_mage_walk1": {
+   "id": "cyc_mage_walk1",
+   "cls": "mage",
+   "pose": "walk1",
+   "file": "assets/runtime/hero_cyc_mage_walk1.webp",
+   "size": [
+    181,
+    288
+   ],
+   "scale": 0.6278,
+   "bodyHeightPx": 280.0,
+   "pivot": [
+    79.8,
+    283.8
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/elena_cycle.png"
+  },
+  "cyc_mage_walk2": {
+   "id": "cyc_mage_walk2",
+   "cls": "mage",
+   "pose": "walk2",
+   "file": "assets/runtime/hero_cyc_mage_walk2.webp",
+   "size": [
+    141,
+    288
+   ],
+   "scale": 0.6278,
+   "bodyHeightPx": 279.4,
+   "pivot": [
+    52.7,
+    283.1
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/elena_cycle.png"
+  },
+  "cyc_mage_walk3": {
+   "id": "cyc_mage_walk3",
+   "cls": "mage",
+   "pose": "walk3",
+   "file": "assets/runtime/hero_cyc_mage_walk3.webp",
+   "size": [
+    171,
+    288
+   ],
+   "scale": 0.6278,
+   "bodyHeightPx": 280.0,
+   "pivot": [
+    84.6,
+    283.1
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/elena_cycle.png"
+  },
+  "cyc_mage_walk4": {
+   "id": "cyc_mage_walk4",
+   "cls": "mage",
+   "pose": "walk4",
+   "file": "assets/runtime/hero_cyc_mage_walk4.webp",
+   "size": [
+    151,
+    288
+   ],
+   "scale": 0.6278,
+   "bodyHeightPx": 279.4,
+   "pivot": [
+    59.1,
+    283.1
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/elena_cycle.png"
+  },
+  "cyc_mage_atk1": {
+   "id": "cyc_mage_atk1",
+   "cls": "mage",
+   "pose": "atk1",
+   "file": "assets/runtime/hero_cyc_mage_atk1.webp",
+   "size": [
+    190,
+    292
+   ],
+   "scale": 0.6278,
+   "bodyHeightPx": 283.8,
+   "pivot": [
+    93.5,
+    287.5
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/elena_cycle.png"
+  },
+  "cyc_mage_atk2": {
+   "id": "cyc_mage_atk2",
+   "cls": "mage",
+   "pose": "atk2",
+   "file": "assets/runtime/hero_cyc_mage_atk2.webp",
+   "size": [
+    197,
+    292
+   ],
+   "scale": 0.6278,
+   "bodyHeightPx": 283.1,
+   "pivot": [
+    98.3,
+    286.9
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/elena_cycle.png"
+  },
+  "cyc_mage_atk3": {
+   "id": "cyc_mage_atk3",
+   "cls": "mage",
+   "pose": "atk3",
+   "file": "assets/runtime/hero_cyc_mage_atk3.webp",
+   "size": [
+    213,
+    293
+   ],
+   "scale": 0.6278,
+   "bodyHeightPx": 285.0,
+   "pivot": [
+    99.5,
+    288.8
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/elena_cycle.png"
+  },
+  "cyc_mage_atk4": {
+   "id": "cyc_mage_atk4",
+   "cls": "mage",
+   "pose": "atk4",
+   "file": "assets/runtime/hero_cyc_mage_atk4.webp",
+   "size": [
+    196,
+    293
+   ],
+   "scale": 0.6278,
+   "bodyHeightPx": 285.0,
+   "pivot": [
+    97.6,
+    288.8
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/elena_cycle.png"
+  },
+  "cyc_rogue_walk1": {
+   "id": "cyc_rogue_walk1",
+   "cls": "rogue",
+   "pose": "walk1",
+   "file": "assets/runtime/hero_cyc_rogue_walk1.webp",
+   "size": [
+    173,
+    289
+   ],
+   "scale": 0.6167,
+   "bodyHeightPx": 280.0,
+   "pivot": [
+    109.9,
+    283.7
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/nox_cycle.png"
+  },
+  "cyc_rogue_walk2": {
+   "id": "cyc_rogue_walk2",
+   "cls": "rogue",
+   "pose": "walk2",
+   "file": "assets/runtime/hero_cyc_rogue_walk2.webp",
+   "size": [
+    138,
+    291
+   ],
+   "scale": 0.6167,
+   "bodyHeightPx": 281.9,
+   "pivot": [
+    74.9,
+    286.2
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/nox_cycle.png"
+  },
+  "cyc_rogue_walk3": {
+   "id": "cyc_rogue_walk3",
+   "cls": "rogue",
+   "pose": "walk3",
+   "file": "assets/runtime/hero_cyc_rogue_walk3.webp",
+   "size": [
+    144,
+    290
+   ],
+   "scale": 0.6167,
+   "bodyHeightPx": 281.9,
+   "pivot": [
+    92.4,
+    285.6
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/nox_cycle.png"
+  },
+  "cyc_rogue_walk4": {
+   "id": "cyc_rogue_walk4",
+   "cls": "rogue",
+   "pose": "walk4",
+   "file": "assets/runtime/hero_cyc_rogue_walk4.webp",
+   "size": [
+    118,
+    290
+   ],
+   "scale": 0.6167,
+   "bodyHeightPx": 281.9,
+   "pivot": [
+    59.2,
+    285.6
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/nox_cycle.png"
+  },
+  "cyc_rogue_atk1": {
+   "id": "cyc_rogue_atk1",
+   "cls": "rogue",
+   "pose": "atk1",
+   "file": "assets/runtime/hero_cyc_rogue_atk1.webp",
+   "size": [
+    176,
+    278
+   ],
+   "scale": 0.6167,
+   "bodyHeightPx": 269.5,
+   "pivot": [
+    110.4,
+    273.2
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/nox_cycle.png"
+  },
+  "cyc_rogue_atk2": {
+   "id": "cyc_rogue_atk2",
+   "cls": "rogue",
+   "pose": "atk2",
+   "file": "assets/runtime/hero_cyc_rogue_atk2.webp",
+   "size": [
+    171,
+    279
+   ],
+   "scale": 0.6167,
+   "bodyHeightPx": 271.4,
+   "pivot": [
+    104.9,
+    275.1
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/nox_cycle.png"
+  },
+  "cyc_rogue_atk3": {
+   "id": "cyc_rogue_atk3",
+   "cls": "rogue",
+   "pose": "atk3",
+   "file": "assets/runtime/hero_cyc_rogue_atk3.webp",
+   "size": [
+    218,
+    278
+   ],
+   "scale": 0.6167,
+   "bodyHeightPx": 270.1,
+   "pivot": [
+    118.0,
+    273.8
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/nox_cycle.png"
+  },
+  "cyc_rogue_atk4": {
+   "id": "cyc_rogue_atk4",
+   "cls": "rogue",
+   "pose": "atk4",
+   "file": "assets/runtime/hero_cyc_rogue_atk4.webp",
+   "size": [
+    175,
+    280
+   ],
+   "scale": 0.6167,
+   "bodyHeightPx": 271.4,
+   "pivot": [
+    104.2,
+    275.1
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/nox_cycle.png"
   }
  },
  "items": {
