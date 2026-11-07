@@ -8,6 +8,7 @@ import { defaultStages, stagesFromProgress } from './stages.js';
 import { defaultMplus } from './mplus.js';
 import { defaultExpedition } from './expedition.js';
 import { defaultWorldBoss } from './worldboss.js';
+import { defaultCraft } from './crafting.js';
 
 export const SCHEMA_VERSION = 8;
 
@@ -46,7 +47,7 @@ export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0, cls = 'wa
     // v8 콘텐츠 (schema 8): 쐐기 던전 (mplus.js)
     mplus: defaultMplus(),
     expedition: defaultExpedition(),     // 원정 파견 (expedition.js)
-    craft: { herb: 0, meat: 0 },          // 제작 재료 (원정 보상)
+    craft: defaultCraft(),                // 제작 재료 · 보옥 가방 · 마부(슬롯) · 버프 음식 (crafting.js)
     worldBoss: defaultWorldBoss(),        // 월드 보스 기록 + 희귀 정예 도감 (worldboss.js)   // 스테이지 지도 (schema 7): best stars, first-clear claimed, auto-advance
     notices: {},            // one-time notices shown after load: { slotEnhance: { refund, levels } }
     skills: {
@@ -226,6 +227,7 @@ export function migrate(s) {
   for (const k of Object.keys(d.dungeons)) if (!cur.dungeons[k]) cur.dungeons[k] = d.dungeons[k];
   for (const k of Object.keys(d.player)) if (cur.player[k] === undefined) cur.player[k] = d.player[k];
   for (const k of Object.keys(d.slotEnhance)) { cur.slotEnhance[k] ||= 0; cur.slotEnhanceOre[k] ||= 0; }
+  for (const k of Object.keys(d.craft)) if (cur.craft[k] === undefined) cur.craft[k] = d.craft[k];
   return cur;
 }
 

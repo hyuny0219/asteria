@@ -30,9 +30,9 @@
   "pass": true,
   "info": {
    "choices": [
-    "b_combo",
-    "b_evade",
-    "b_ult"
+    "b_aspd",
+    "b_guard",
+    "b_heal"
    ]
   }
  },
@@ -83,8 +83,8 @@
   "info": {
    "choices": [
     "b_cdr",
-    "b_def",
-    "b_hp"
+    "b_cdmg",
+    "b_greed"
    ]
   }
  },

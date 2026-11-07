@@ -20,7 +20,7 @@
   "pass": true,
   "info": {
    "owned": 4,
-   "active": "P03",
+   "active": "P05",
    "eggs": 0
   }
  },
@@ -61,7 +61,7 @@
   "pass": true,
   "info": {
    "equipped": "t_pioneer",
-   "status": "QA1170 「초원의 개척자」"
+   "status": "QA4807 「초원의 개척자」"
   }
  },
  {
@@ -185,7 +185,7 @@
   "pass": true,
   "info": {
    "equipped": "t_pioneer",
-   "status": "QA8652 「초원의 개척자」"
+   "status": "QA7476 「초원의 개척자」"
   }
  },
  {

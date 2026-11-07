@@ -10,6 +10,7 @@ import { itemOptions, itemStats } from './items.js';
 import { talentEffects } from './talents.js';
 import { rebirthMultipliers, farmMultipliers as rebirthFarm } from './rebirth.js';
 import { metaBonus } from './meta.js';
+import { enchantBonus, foodBonus, jewelBonus } from './crafting.js';
 
 const P = BALANCE.player;
 const U = BALANCE.upgrade;
@@ -71,6 +72,7 @@ export function playerStats(state, opts = {}) {
     const s = itemStats(it, slotLevel(state, slotKey));
     for (const k of Object.keys(s)) equipBonus[k] = (equipBonus[k] || 0) + s[k];
     add(itemOptions(it));
+    add(jewelBonus(it));   // v8 보옥
   }
   for (const sb of activeSetBonuses(state)) add(sb.bonus);
   // branch passives for every tier reached
@@ -90,6 +92,9 @@ export function playerStats(state, opts = {}) {
   }
   // 도감 · 칭호 · 동료 오라 (small permanent bonuses)
   add(metaBonus(state));
+  // v8 마부(슬롯) · 버프 음식(30분)
+  add(enchantBonus(state));
+  add(foodBonus(state, opts.now !== undefined ? opts.now : Date.now()));
   // talents (preset), rift blessings/curse
   const tal = state.talents ? talentEffects(state, opts.preset !== undefined ? opts.preset : state.talents.active) : { pct: {}, caps: {} };
   add(tal.pct);

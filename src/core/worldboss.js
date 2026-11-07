@@ -10,6 +10,7 @@ import { BOSSES, REGIONS } from '../data/content.js';
 import { kstDayIndex } from './util.js';
 import { markTx } from './state.js';
 import { makeItem, rollRarity, rollSlot } from './items.js';
+import { rollJewel } from './crafting.js';
 
 export const WB = Object.freeze({
   unlockBoss: 'B03', hours: [12, 18, 21], windowMin: 60, timeSec: 60, hpMul: 9,
@@ -80,8 +81,11 @@ export function finishWorldBoss(state, runId, damage, bossHp, rng) {
   if (rw.skTicket) state.wallet.skTicket += rw.skTicket;
   const items = [];
   if (grade === 'S' || grade === 'A') items.push(makeItem(state, { slot: rollSlot(rng), rarity: rollRarity(rng, grade === 'S' ? { epic: 0.6, legendary: 0.4 } : { rare: 0.5, epic: 0.5 }), level: bossLevel(state), rng, source: 'worldBoss' }));
+  const JW = { S: [2, 2], A: [1, 2], B: [1, 1] }[grade];   // [count, level] 보옥
+  const jewels = [];
+  if (JW) for (let i = 0; i < JW[0]; i++) jewels.push(rollJewel(state, rng, JW[1]));
   if (damage > w.best) { w.best = damage; w.bestGrade = grade; }
-  return { ok: true, grade, share, damage, reward: rw, items };
+  return { ok: true, grade, share, damage, reward: rw, items, jewels };
 }
 
 // ---------- 희귀 정예 ----------

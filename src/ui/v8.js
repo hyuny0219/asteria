@@ -4,14 +4,16 @@ import { itemIcon, skillIcon } from '../render/assets.js';
 import * as MP from '../core/mplus.js';
 import * as EX from '../core/expedition.js';
 import * as WBm from '../core/worldboss.js';
-import { BOSSES } from '../data/content.js';
+import { BOSSES, SLOT_NAMES } from '../data/content.js';
+import * as CR from '../core/crafting.js';
 import { PETS } from '../data/meta.js';
-import { fmt } from '../core/util.js';
+import { fmt, fmtPct } from '../core/util.js';
 import { sfx } from '../platform/audio.js';
-import { button, h, img, openModal } from './dom.js';
+import { button, h, img, openModal, toast } from './dom.js';
 import { fail, itemRewards, rewardTiles } from './screens.js';
 
 const ico = (id) => { try { return img(skillIcon(id), '', 'emblem'); } catch { return null; } };
+const jewelTiles = (js) => (js || []).map((g) => ({ icon: itemIcon(CURRENCY_ICONS.gem), value: CR.jewelName(g.type, g.lv), label: '보옥' }));
 const pctTxt = (t) => Object.entries(t).map(([r, p]) => `${RARITY[r].name} ${Math.round(p * 1000) / 10}%`).join(' · ');
 
 // ======================= 쐐기 던전 =======================
@@ -77,6 +79,7 @@ export function openMplusResult(app, r, back) {
   if (r.reward.gem) tiles.push({ icon: itemIcon(CURRENCY_ICONS.gem), value: '+' + r.reward.gem, label: '보석' });
   if (r.reward.ore) tiles.push({ icon: itemIcon(CURRENCY_ICONS.ore), value: '+' + r.reward.ore, label: '강화 광석' });
   tiles.push(...itemRewards(r.items || []));
+  tiles.push(...jewelTiles(r.jewels));
   const head = r.result === 'timed' ? `시간 내 완료 · ${fmt(r.timeSec)}초` : r.result === 'overtime' ? `시간 초과 완료 · ${fmt(r.timeSec)}초` : r.reason === 'forfeit' ? '포기' : r.reason === 'timeout' ? '제한 시간 초과(실패)' : '실패';
   const keyTxt = r.result === 'timed' ? `열쇠 +${r.key} → +${r.newKey} (▲${r.delta})` : r.result === 'overtime' ? `열쇠 +${r.newKey} 유지` : `열쇠 +${r.key} → +${r.newKey}`;
   if (app.state.settings.sound && r.result === 'timed') sfx('bell');
@@ -167,7 +170,7 @@ export function openExpedition(app) {
 function showExpResults(app, results) {
   if (app.state.settings.sound) sfx('bell');
   const RES = { great: '대성공! ×2', success: '성공', fail: '실패 · 30%' };
-  const lines = results.map((r) => h('div', { class: 'kv' }, `${r.name} · ${EX.petName(r.pet)}`, h('b', { class: r.result === 'fail' ? 'warn' : 'okc' }, `${RES[r.result]} · ${rwTxt(r.type, r.amount)}`)));
+  const lines = results.map((r) => h('div', { class: 'kv' }, `${r.name} · ${EX.petName(r.pet)}`, h('b', { class: r.result === 'fail' ? 'warn' : 'okc' }, `${RES[r.result]} · ${r.jewels && r.jewels.length ? r.jewels.map((g) => CR.jewelName(g.type, g.lv)).join(', ') : rwTxt(r.type, r.amount)}`)));
   const rm = openModal({ id: 'expResult', title: '원정 결과', kind: 'center', body: h('div', { dataset: { screen: 'expResult' } }, lines), actions: [button('확인', { cls: 'btn btn-primary', onClick: () => rm.close() })] });
 }
 export const expeditionDot = (s) => EX.expeditionOpen(s) && (EX.readyCount(s, Date.now()) > 0 || (s.expedition && s.expedition.slots.some((x) => !x) && (s.expedition.board || []).length > 0));
@@ -196,6 +199,7 @@ export function openWorldBossResult(app, r, back) {
   if (r.reward.eqTicket) tiles.push({ icon: itemIcon(CURRENCY_ICONS.chest), value: '+' + r.reward.eqTicket, label: '장비 뽑기권' });
   if (r.reward.skTicket) tiles.push({ icon: itemIcon(CURRENCY_ICONS.goldChest), value: '+' + r.reward.skTicket, label: '스킬 뽑기권' });
   tiles.push(...itemRewards(r.items || []));
+  tiles.push(...jewelTiles(r.jewels));
   if (app.state.settings.sound) sfx('bell');
   const m = openModal({ id: 'worldBossResult', title: `월드 보스 · ${r.grade} 등급`, dismissible: false,
     body: h('div', { dataset: { screen: 'worldBossResult' }, class: 'reveal' },
@@ -207,3 +211,85 @@ export function openWorldBossResult(app, r, back) {
   return m;
 }
 export const worldBossDot = (s) => WBm.canChallenge(s, Date.now()).ok;
+
+// ======================= 제작소: 보옥 · 마부 · 버프 음식 =======================
+const EQ_SLOTS = ['weapon', 'helmet', 'armor', 'gloves', 'boots', 'necklace', 'ring1', 'ring2'];
+const pct1 = (v) => `+${Math.round(v * 1000) / 10}%`;
+const jewelText = (g) => `${CR.jewelName(g.t, g.lv)} · ${CR.JEWELS[g.t].label} ${pct1(CR.JEWELS[g.t].values[g.lv - 1])}`;
+
+export function workshopCard(app) {
+  const s = app.state;
+  const now = Date.now();
+  const c = s.craft || {};
+  const jewels = Object.values(c.jewels || {}).reduce((a, b) => a + b, 0);
+  const f = CR.activeFood(s, now);
+  return h('div', { class: 'card', dataset: { screen: 'workshopCard' } },
+    h('div', { class: 'kv' }, h('span', { class: 'card-title' }, ico('V09'), h('b', { style: { color: 'var(--text)' } }, '제작소 · 보옥 · 마부 · 음식')), h('b', null, `보옥 ${jewels}개`)),
+    h('div', { class: 'kv' }, '재료', h('b', null, `달빛 약초 ${c.herb || 0} · 야수 고기 ${c.meat || 0}`)),
+    h('div', { class: 'kv' }, '버프 음식', h('b', null, f ? `${CR.FOODS[f.id].name} · ${Math.ceil((f.until - now) / 60000)}분 남음` : '없음')),
+    h('div', { class: 'btn-row' }, button('제작소 열기', { cls: 'btn btn-primary', onClick: () => openWorkshop(app) })));
+}
+
+export function openWorkshop(app, tab = 'jewel', focusItem = null) {
+  let pick = null;   // { itemId, idx } while choosing a jewel for a socket
+  const m = openModal({ id: 'workshop', title: '제작소', body: h('div'), kind: 'full', onClose: () => app.renderPanel && app.renderPanel() });
+  const seg = () => h('div', { class: 'seg', role: 'tablist', 'aria-label': '제작소' }, [['jewel', '보옥'], ['enchant', '마부'], ['food', '버프 음식']].map(([k, t]) =>
+    h('button', { type: 'button', role: 'tab', 'aria-selected': String(tab === k), 'aria-pressed': String(tab === k), onClick: () => { tab = k; pick = null; render(); } }, t)));
+  const act = async (p) => { const r = fail(await p); if (r.ok) render(); return r; };
+
+  const jewelTab = (s) => {
+    const items = [];
+    for (const k of EQ_SLOTS) { const it = s.equipped[k] && s.inventory.find((i) => i.id === s.equipped[k]); if (it && CR.socketCount(it)) items.push([k, it]); }
+    if (focusItem) { const it = s.inventory.find((i) => i.id === focusItem); if (it && CR.socketCount(it) && !items.some(([, x]) => x.id === it.id)) items.unshift([null, it]); }
+    const rows = items.length ? items.map(([k, it]) => h('div', { class: 'card ws-item' },
+      h('div', { class: 'kv' }, h('span', { class: 'card-title' }, img(itemIcon(it.look), '', 'emblem'), h('b', { style: { color: 'var(--text)' } }, `${k ? SLOT_NAMES[k] + ' · ' : ''}${it.name}`)), h('span', { class: `rar r-${it.rarity}` }, RARITY[it.rarity].name)),
+      h('div', { class: 'ws-sockets' }, Array.from({ length: CR.socketCount(it) }, (_, i) => {
+        const g = it.gems && it.gems[i];
+        const sel = pick && pick.itemId === it.id && pick.idx === i;
+        return g ? button(jewelText(g), { cls: 'btn small-btn jewel-' + g.t, ariaLabel: `${jewelText(g)} 빼기`, busy: true, onClick: () => act(app.game.unsocketJewel(it.id, i)) })
+          : button(sel ? '보옥을 고르세요 ↓' : `빈 홈 ${i + 1} +`, { cls: 'btn small-btn' + (sel ? ' btn-primary' : ''), onClick: () => { pick = sel ? null : { itemId: it.id, idx: i }; render(); } });
+      })))) : [h('p', { class: 'muted' }, '홈이 있는 장비를 끼고 있지 않아요. 영웅 1칸 · 전설 2칸 · 신화 3칸.')];
+    const bag = Object.entries(s.craft.jewels || {}).filter(([, n]) => n > 0).map(([k, n]) => { const [t, lv] = k.split(':'); return { t, lv: Number(lv), n }; })
+      .sort((a, b) => CR.JEWEL_TYPES.indexOf(a.t) - CR.JEWEL_TYPES.indexOf(b.t) || b.lv - a.lv);
+    const bagRows = bag.length ? bag.map((j) => h('div', { class: 'mp-row' },
+      h('div', { class: 'mp-name' }, h('b', { class: 'jewel-' + j.t }, `${CR.jewelName(j.t, j.lv)} ×${j.n}`), h('span', { class: 'muted small' }, `${CR.JEWELS[j.t].label} ${pct1(CR.JEWELS[j.t].values[j.lv - 1])}`)),
+      pick ? button('끼우기', { cls: 'btn btn-primary', busy: true, onClick: async () => { const r = await act(app.game.socketJewel(pick.itemId, pick.idx, j.t, j.lv)); if (r.ok) { pick = null; render(); } } })
+        : button(j.lv >= CR.MAX_JEWEL_LV ? '최대' : `합성 3→1`, { cls: 'btn', disabled: j.n < 3 || j.lv >= CR.MAX_JEWEL_LV, busy: true, onClick: () => act(app.game.combineJewel(j.t, j.lv)) }))) : [h('p', { class: 'muted' }, '가방이 비었어요. 쐐기 던전(시간 내), 월드 보스(B 이상), 보옥 원정에서 얻어요.')];
+    return [h('p', { class: 'modal-desc' }, '장비 홈에 보옥을 끼우면 능력치가 올라요. 빼기는 무료, 장비를 분해하면 보옥은 가방으로 돌아와요. 같은 보옥 3개로 다음 단계 1개를 만들어요(최대 5단계).'),
+      h('div', { class: 'section-title' }, '장착 장비의 홈'), ...rows,
+      h('div', { class: 'section-title' }, pick ? '끼울 보옥 고르기' : '보옥 가방'), ...bagRows,
+      h('p', { class: 'muted small' }, `단계별 효과: ${CR.JEWEL_TYPES.map((t) => `${CR.JEWELS[t].name}(${CR.JEWELS[t].label}) ${CR.JEWELS[t].values.map((v) => pct1(v).slice(1)).join('/')}`).join(' · ')}`)];
+  };
+
+  const enchantTab = (s) => {
+    const C = CR.ENCHANT.cost;
+    if (!CR.enchantOpen(s)) return [h('p', { class: 'muted' }, '폐광 파수꾼을 처치하면 마부가 열려요.')];
+    const total = CR.ENCHANT.options.reduce((a, o) => a + o.w, 0);
+    return [h('p', { class: 'modal-desc' }, `장비 슬롯마다 추가 옵션 1줄을 붙여요. 슬롯 강화처럼 장비를 바꿔도 그대로예요. 다시 굴리면 새 옵션으로 바뀌어요(잠금 없음). 비용: 강화 광석 ${C.ore} · 각성석 ${C.awakenStone}.`),
+      h('div', { class: 'kv' }, '보유', h('b', null, `강화 광석 ${fmt(s.wallet.ore)} · 각성석 ${s.wallet.awakenStone || 0}`)),
+      ...EQ_SLOTS.map((k) => { const e = s.craft.enchant[k]; return h('div', { class: 'mp-row', dataset: { slot: k } },
+        h('div', { class: 'mp-name' }, h('b', null, SLOT_NAMES[k]), h('span', { class: e ? 'okc small' : 'muted small' }, e ? `${CR.enchantLabel(e)} ${pct1(e.value)}` : '마부 없음')),
+        button(e ? '다시 굴리기' : '마부', { cls: 'btn' + (e ? '' : ' btn-primary'), disabled: s.wallet.ore < C.ore || (s.wallet.awakenStone || 0) < C.awakenStone, busy: true, onClick: () => act(app.game.enchantSlot(k)) })); }),
+      h('p', { class: 'muted small' }, '옵션 확률·범위: ' + CR.ENCHANT.options.map((o) => `${o.label} ${Math.round(o.w / total * 100)}% (${pct1(o.min).slice(1)}~${pct1(o.max).slice(1)})`).join(' · '))];
+  };
+
+  const foodTab = (s) => {
+    const now = Date.now();
+    const f = CR.activeFood(s, now);
+    return [h('p', { class: 'modal-desc' }, `원정에서 모은 재료로 음식을 만들어요. ${CR.FOOD_MIN}분 동안 효과, 한 번에 하나만(새로 먹으면 바뀌어요).`),
+      h('div', { class: 'kv' }, '재료', h('b', null, `달빛 약초 ${s.craft.herb || 0} · 야수 고기 ${s.craft.meat || 0}`)),
+      h('div', { class: 'kv' }, '지금 효과', h('b', null, f ? `${CR.FOODS[f.id].name} (${CR.FOODS[f.id].desc}) · ${Math.ceil((f.until - now) / 60000)}분` : '없음')),
+      ...Object.entries(CR.FOODS).map(([id, x]) => h('div', { class: 'mp-row' },
+        h('div', { class: 'mp-name' }, h('b', null, `${x.name} · ${x.desc}`), h('span', { class: 'muted small' }, `약초 ${x.cost.herb} · 고기 ${x.cost.meat}`)),
+        button('만들어 먹기', { cls: 'btn btn-primary', disabled: (s.craft.herb || 0) < x.cost.herb || (s.craft.meat || 0) < x.cost.meat, busy: true, onClick: async () => { const r = await act(app.game.cookFood(id)); if (r.ok) toast(`${x.name} · ${x.desc} ${CR.FOOD_MIN}분`, 'good'); } })))];
+  };
+
+  const render = () => {
+    const s = app.state;
+    const content = tab === 'jewel' ? jewelTab(s) : tab === 'enchant' ? enchantTab(s) : foodTab(s);
+    m.setBody(h('div', { dataset: { screen: 'workshop', tab } }, seg(), ...content));
+  };
+  render();
+  return m;
+}
+export const v8Tiles = (app) => [{ id: 'workshop', ic: 'equipment', em: 'V09', t: '제작소', s: '보옥 · 마부 · 음식', on: () => openWorkshop(app) }];

@@ -7,6 +7,7 @@ import * as V4 from './v4.js';
 import * as V5 from './v5.js';
 import * as V6 from './v6.js';
 import * as V8 from './v8.js';
+import { jewelName, socketCount } from '../core/crafting.js';
 import { MONSTERS } from '../data/content.js';
 const MONSTERS_NAME = (id) => (MONSTERS[id] ? MONSTERS[id].name : id);
 import { classPortrait, itemIcon, portrait, skillIcon, spriteMeta } from '../render/assets.js';
@@ -227,7 +228,9 @@ export function openCompare(app, id) {
       h('div', { class: 'btn-row', style: { alignItems: 'stretch' } }, col(cur || (eq ? null : null), eq ? '장착 중' : '현재 장착'), h('div', { style: { alignSelf: 'center', flex: 'none' } }, icon('compare', 22)), col(it, eq ? '이 장비' : '선택')),
       h('p', { class: 'muted', dataset: { note: 'slot-enhance' }, style: { margin: '8px 0 0' } }, lv
         ? `${SLOT_NAMES[target]} 슬롯 강화 +${lv} (기본 능력치 +${lv * 5}%)가 두 장비 모두에 적용된 값입니다. 장비를 바꿔도 강화 단계는 슬롯에 남습니다.`
-        : `강화는 ${SLOT_NAMES[target]} 슬롯에 붙습니다. 장비를 바꿔도 강화 단계가 유지됩니다.`));
+        : `강화는 ${SLOT_NAMES[target]} 슬롯에 붙습니다. 장비를 바꿔도 강화 단계가 유지됩니다.`),
+      socketCount(it) ? h('div', { class: 'card', dataset: { note: 'sockets' }, style: { marginTop: '8px' } }, h('div', { class: 'kv' }, `보옥 홈 ${socketCount(it)}칸`,
+        h('b', null, Array.from({ length: socketCount(it) }, (_, i) => (it.gems && it.gems[i] ? jewelName(it.gems[i].t, it.gems[i].lv) : '빈 홈')).join(' · ')))) : null);
     m.setBody(body);
     const lockBtn = button(it.locked ? '잠금 해제' : '잠금', { cls: 'btn', busy: true, onClick: async () => { fail(await app.game.setLock(it.id, !it.locked)); render(); } });
     const actions = [
@@ -235,6 +238,7 @@ export function openCompare(app, id) {
         : slots.length > 1 ? h('div', { class: 'btn-row' }, slots.map((k) => button(`${SLOT_NAMES[k]}에 장착`, { cls: 'btn btn-primary', busy: true, onClick: async () => { const r = fail(await app.game.equip(it.id, k)); if (r.ok) { toast(`${it.name} 장착`, 'good'); render(); } } })))
         : button('장착', { cls: 'btn btn-primary', busy: true, onClick: async () => { const r = fail(await app.game.equip(it.id)); if (r.ok) { toast(`${it.name} 장착`, 'good'); render(); } } }),
       h('div', { class: 'btn-row' }, button(`${SLOT_NAMES[target]} 강화 +${lv}`, { cls: 'btn btn-gold', onClick: () => openEnhance(app, target) }), lockBtn),
+      socketCount(it) ? button('보옥 홈 관리', { cls: 'btn', onClick: () => V8.openWorkshop(app, 'jewel', it.id) }) : null,
     ];
     m.setActions(actions);
   };
@@ -471,6 +475,8 @@ export function dungeonPanel(app) {
   sc.appendChild(V4.raidCard(app));
   sc.appendChild(h('div', { class: 'section-title' }, '원정'));
   sc.appendChild(V8.expeditionCard(app));
+  sc.appendChild(h('div', { class: 'section-title' }, '제작·강화'));
+  sc.appendChild(V8.workshopCard(app));
   sc.appendChild(h('p', { class: 'muted' }, `던전은 입장할 때 입장권 1장을 먼저 사용합니다. 시간 안에 실패하면 보상 30%만 받고, 전투 중 앱이 꺼지면 다음 실행 때 입장권을 돌려드립니다.`));
   root.appendChild(sc);
   return root;
@@ -483,7 +489,7 @@ export function menuTiles(app) {
   const tier = prog.tierOf(s);
   const cl = tier < 3 ? prog.promotionChecklist(s) : null;
   const promoHot = !!cl && (cl.canChoose || cl.canTrial || cl.canPromote);
-  const extra = [...V4.v4Tiles(app), ...V5.v5Tiles(app), ...V6.v6Tiles(app)];
+  const extra = [...V4.v4Tiles(app), ...V5.v5Tiles(app), ...V6.v6Tiles(app), ...V8.v8Tiles(app)];
   const att = attendanceStatus(s, Date.now());
   return [
     ...extra,

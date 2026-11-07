@@ -1,6 +1,7 @@
 // Spending and inventory operations. All functions mutate the given state and return
 // a result; callers run them on a cloned state inside a save transaction so a failed
 // save leaves the live state untouched (see game.js `transact`).
+import { returnJewels } from './crafting.js';
 import { BALANCE } from '../data/balance.js';
 import { playerStats } from './stats.js';
 import { trackItem } from './meta.js';
@@ -209,6 +210,7 @@ export function dismantle(state, ids) {
   const q = dismantleQuote(state, ids);
   if (!q.count) return { ok: false, reason: q.blocked.length ? 'protected' : 'none', quote: q };
   const remove = new Set(q.items.map((i) => i.id));
+  q.jewelsReturned = returnJewels(state, q.items);   // v8: socketed 보옥 go back to the bag
   state.inventory = state.inventory.filter((i) => !remove.has(i.id));
   state.wallet.ore += q.ore;
   state.progression.counters.dismantled += q.count;

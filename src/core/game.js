@@ -34,6 +34,7 @@ import * as stages from './stages.js';
 import * as mplus from './mplus.js';
 import * as expedition from './expedition.js';
 import * as worldboss from './worldboss.js';
+import * as craft from './crafting.js';
 import { PASS } from '../data/meta.js';
 import { deepClone, makeRng, uid } from './util.js';
 
@@ -214,6 +215,12 @@ export class Game {
     this.emit('session', this.session);
     return { ok: true };
   }
+  // ---------- 제작·강화 확장 (보옥 · 마부 · 버프 음식) ----------
+  socketJewel(itemId, idx, t, lv) { return this.transact('jewel', (s) => craft.socket(s, itemId, idx, t, lv)); }
+  unsocketJewel(itemId, idx) { return this.transact('jewel', (s) => craft.unsocket(s, itemId, idx)); }
+  combineJewel(t, lv) { return this.transact('jewel', (s) => craft.combine(s, t, lv)); }
+  enchantSlot(slot) { return this.transact('enchant', (s) => craft.enchantRoll(s, slot, this.rng)); }
+  cookFood(id) { return this.transact('cook', (s) => craft.cook(s, id, this.now())); }
   // ---------- 원정 파견 ----------
   sendExpedition(expId, petId) { return this.transact('expSend', (s) => expedition.send(s, expId, petId, this.now())); }
   claimExpedition(slot) { return this.transact('expClaim', (s) => expedition.claim(s, slot, this.now())); }

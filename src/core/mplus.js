@@ -13,6 +13,7 @@ import { kstDayIndex } from './util.js';
 import { kstWeekIndex } from './raid.js';
 import { markTx } from './state.js';
 import { makeItem, rollRarity, rollSlot } from './items.js';
+import { rollJewel } from './crafting.js';
 
 export const MPLUS = Object.freeze({
   unlockBoss: 'B03', minKey: 2, maxKey: 30, runsPerDay: 3,
@@ -142,6 +143,7 @@ export function finishRun(state, runId, outcome, now, rng) {
   if (!timed) rarity = LOWER[rarity];
   const lvl = enemyLevel(state);
   res.items.push(makeItem(state, { slot: rollSlot(rng), rarity, level: lvl, rng, source: 'mplus' }));
+  if (timed) res.jewels = [rollJewel(state, rng, Math.min(3, 1 + Math.floor(key / 6)))];   // v8 보옥
   if (timed && delta >= 3) res.items.push(makeItem(state, { slot: rollSlot(rng), rarity: rollRarity(rng, rarityTable(key)), level: lvl, rng, source: 'mplus' }));
   return res;
 }
