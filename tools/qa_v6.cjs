@@ -101,7 +101,7 @@ const metrics = (p) => p.evaluate(() => ({ over: document.documentElement.scroll
     await shot('craftResult');
     const cr = await p.evaluate(() => __asteria.game.state.inventory.some((i) => i.rarity === 'mythic' && i.source === 'craft'));
     ok(`mythic crafted ${tag}`, cr);
-    await p.evaluate(() => { document.querySelectorAll('.modal-overlay').forEach((m) => m.remove()); document.getElementById('app').inert = false; __asteria.app.setTab('growth'); });
+    await p.evaluate(() => { document.querySelectorAll('.modal-overlay').forEach((m) => m.remove()); document.getElementById('app').inert = false; __asteria.app.setTab('battle'); });
     // battle with the companion
     await p.waitForTimeout(3500);
     await p.screenshot({ path: `${out}battle_pet_${tag}.png` });

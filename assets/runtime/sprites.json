@@ -224,7 +224,9 @@
   },
   "gpt_b/fx_projectiles.png": "GPT package B",
   "gpt_i/map_*.png": "GPT package I",
-  "gpt_c/mon_act_*.png": "GPT package C — monster idle/attack/hit/dead"
+  "gpt_c/mon_act_*.png": "GPT package C — monster idle/attack/hit/dead",
+  "gpt_d/boss_act_*.png": "GPT package D — boss idle/windup/heavy/enrage",
+  "gpt_e/pets_act_*.png": "GPT package E — companion idle/attack/happy"
  },
  "monsters": {
   "M01": {
@@ -3427,7 +3429,82 @@
     10349,
     1522
    ],
-   "status": "RUNTIME_STATIC_SPRITE"
+   "status": "RUNTIME_STATIC_SPRITE",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/boss_B01_idle.webp",
+     "size": [
+      303,
+      249
+     ],
+     "pivot": [
+      146.9,
+      244.5
+     ],
+     "bodyHeightPx": 240.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "windup": {
+     "file": "assets/runtime/boss_B01_windup.webp",
+     "size": [
+      280,
+      252
+     ],
+     "pivot": [
+      129.3,
+      247.0
+     ],
+     "bodyHeightPx": 243.2,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "heavy": {
+     "file": "assets/runtime/boss_B01_heavy.webp",
+     "size": [
+      417,
+      229
+     ],
+     "pivot": [
+      310.7,
+      224.0
+     ],
+     "bodyHeightPx": 220.2,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "enrage": {
+     "file": "assets/runtime/boss_B01_enrage.webp",
+     "size": [
+      323,
+      257
+     ],
+     "pivot": [
+      155.2,
+      252.2
+     ],
+     "bodyHeightPx": 248.3,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_d/boss_act_B01.png"
   },
   "B02": {
    "id": "B02",
@@ -3472,7 +3549,82 @@
     5951,
     5315
    ],
-   "status": "RUNTIME_STATIC_SPRITE"
+   "status": "RUNTIME_STATIC_SPRITE",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/boss_B02_idle.webp",
+     "size": [
+      278,
+      394
+     ],
+     "pivot": [
+      153.6,
+      386.5
+     ],
+     "bodyHeightPx": 380.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "windup": {
+     "file": "assets/runtime/boss_B02_windup.webp",
+     "size": [
+      412,
+      394
+     ],
+     "pivot": [
+      184.1,
+      386.5
+     ],
+     "bodyHeightPx": 380.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "heavy": {
+     "file": "assets/runtime/boss_B02_heavy.webp",
+     "size": [
+      513,
+      392
+     ],
+     "pivot": [
+      301.2,
+      384.6
+     ],
+     "bodyHeightPx": 377.2,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "enrage": {
+     "file": "assets/runtime/boss_B02_enrage.webp",
+     "size": [
+      369,
+      404
+     ],
+     "pivot": [
+      185.7,
+      397.6
+     ],
+     "bodyHeightPx": 391.1,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_d/boss_act_B02.png"
   },
   "B03": {
    "id": "B03",
@@ -3517,7 +3669,82 @@
     1700,
     5127
    ],
-   "status": "RUNTIME_STATIC_SPRITE"
+   "status": "RUNTIME_STATIC_SPRITE",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/boss_B03_idle.webp",
+     "size": [
+      315,
+      381
+     ],
+     "pivot": [
+      172.9,
+      374.5
+     ],
+     "bodyHeightPx": 370.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "windup": {
+     "file": "assets/runtime/boss_B03_windup.webp",
+     "size": [
+      374,
+      394
+     ],
+     "pivot": [
+      146.6,
+      386.4
+     ],
+     "bodyHeightPx": 380.9,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "heavy": {
+     "file": "assets/runtime/boss_B03_heavy.webp",
+     "size": [
+      593,
+      352
+     ],
+     "pivot": [
+      313.1,
+      344.5
+     ],
+     "bodyHeightPx": 339.1,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "enrage": {
+     "file": "assets/runtime/boss_B03_enrage.webp",
+     "size": [
+      342,
+      389
+     ],
+     "pivot": [
+      183.9,
+      382.7
+     ],
+     "bodyHeightPx": 377.3,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_d/boss_act_B03.png"
   },
   "B04": {
    "id": "B04",
@@ -3610,7 +3837,82 @@
     3
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "source": "generated"
+   "source": "generated",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/boss_B04_idle.webp",
+     "size": [
+      337,
+      310
+     ],
+     "pivot": [
+      202.5,
+      304.5
+     ],
+     "bodyHeightPx": 300.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "windup": {
+     "file": "assets/runtime/boss_B04_windup.webp",
+     "size": [
+      375,
+      313
+     ],
+     "pivot": [
+      188.6,
+      307.5
+     ],
+     "bodyHeightPx": 303.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "heavy": {
+     "file": "assets/runtime/boss_B04_heavy.webp",
+     "size": [
+      487,
+      242
+     ],
+     "pivot": [
+      401.1,
+      235.8
+     ],
+     "bodyHeightPx": 231.3,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "enrage": {
+     "file": "assets/runtime/boss_B04_enrage.webp",
+     "size": [
+      376,
+      310
+     ],
+     "pivot": [
+      222.3,
+      304.5
+     ],
+     "bodyHeightPx": 300.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_d/boss_act_B04.png"
   },
   "B05": {
    "id": "B05",
@@ -3737,7 +4039,82 @@
     1
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "source": "generated"
+   "source": "generated",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/boss_B05_idle.webp",
+     "size": [
+      358,
+      393
+     ],
+     "pivot": [
+      178.6,
+      386.6
+     ],
+     "bodyHeightPx": 380.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "windup": {
+     "file": "assets/runtime/boss_B05_windup.webp",
+     "size": [
+      406,
+      413
+     ],
+     "pivot": [
+      183.4,
+      406.5
+     ],
+     "bodyHeightPx": 400.8,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "heavy": {
+     "file": "assets/runtime/boss_B05_heavy.webp",
+     "size": [
+      593,
+      317
+     ],
+     "pivot": [
+      369.1,
+      308.9
+     ],
+     "bodyHeightPx": 302.3,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "enrage": {
+     "file": "assets/runtime/boss_B05_enrage.webp",
+     "size": [
+      358,
+      393
+     ],
+     "pivot": [
+      179.1,
+      385.7
+     ],
+     "bodyHeightPx": 379.1,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_d/boss_act_B05.png"
   },
   "B06": {
    "id": "B06",
@@ -3876,7 +4253,82 @@
     21
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "source": "generated"
+   "source": "generated",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/boss_B06_idle.webp",
+     "size": [
+      279,
+      393
+     ],
+     "pivot": [
+      134.2,
+      385.4
+     ],
+     "bodyHeightPx": 380.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "windup": {
+     "file": "assets/runtime/boss_B06_windup.webp",
+     "size": [
+      352,
+      391
+     ],
+     "pivot": [
+      128.3,
+      382.7
+     ],
+     "bodyHeightPx": 377.3,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "heavy": {
+     "file": "assets/runtime/boss_B06_heavy.webp",
+     "size": [
+      536,
+      385
+     ],
+     "pivot": [
+      335.0,
+      376.4
+     ],
+     "bodyHeightPx": 371.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "enrage": {
+     "file": "assets/runtime/boss_B06_enrage.webp",
+     "size": [
+      380,
+      392
+     ],
+     "pivot": [
+      184.1,
+      384.5
+     ],
+     "bodyHeightPx": 379.1,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_d/boss_act_B06.png"
   },
   "B07": {
    "id": "B07",
@@ -4112,7 +4564,82 @@
     1
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "source": "generated"
+   "source": "generated",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/boss_B07_idle.webp",
+     "size": [
+      433,
+      373
+     ],
+     "pivot": [
+      212.6,
+      365.4
+     ],
+     "bodyHeightPx": 360.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "windup": {
+     "file": "assets/runtime/boss_B07_windup.webp",
+     "size": [
+      450,
+      370
+     ],
+     "pivot": [
+      205.3,
+      363.6
+     ],
+     "bodyHeightPx": 358.2,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "heavy": {
+     "file": "assets/runtime/boss_B07_heavy.webp",
+     "size": [
+      588,
+      362
+     ],
+     "pivot": [
+      358.7,
+      354.6
+     ],
+     "bodyHeightPx": 349.2,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "enrage": {
+     "file": "assets/runtime/boss_B07_enrage.webp",
+     "size": [
+      458,
+      384
+     ],
+     "pivot": [
+      232.8,
+      377.1
+     ],
+     "bodyHeightPx": 371.7,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_d/boss_act_B07.png"
   },
   "B08": {
    "id": "B08",
@@ -4299,7 +4826,82 @@
     14
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "source": "generated"
+   "source": "generated",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/boss_B08_idle.webp",
+     "size": [
+      409,
+      393
+     ],
+     "pivot": [
+      224.6,
+      385.5
+     ],
+     "bodyHeightPx": 380.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "windup": {
+     "file": "assets/runtime/boss_B08_windup.webp",
+     "size": [
+      406,
+      395
+     ],
+     "pivot": [
+      161.1,
+      387.3
+     ],
+     "bodyHeightPx": 375.4,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "heavy": {
+     "file": "assets/runtime/boss_B08_heavy.webp",
+     "size": [
+      594,
+      334
+     ],
+     "pivot": [
+      335.9,
+      327.1
+     ],
+     "bodyHeightPx": 321.7,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "enrage": {
+     "file": "assets/runtime/boss_B08_enrage.webp",
+     "size": [
+      545,
+      360
+     ],
+     "pivot": [
+      290.9,
+      353.6
+     ],
+     "bodyHeightPx": 348.1,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_d/boss_act_B08.png"
   },
   "B09": {
    "id": "B09",
@@ -4465,7 +5067,82 @@
     1
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "source": "generated"
+   "source": "generated",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/boss_B09_idle.webp",
+     "size": [
+      425,
+      395
+     ],
+     "pivot": [
+      216.8,
+      387.6
+     ],
+     "bodyHeightPx": 380.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "windup": {
+     "file": "assets/runtime/boss_B09_windup.webp",
+     "size": [
+      408,
+      393
+     ],
+     "pivot": [
+      160.1,
+      386.6
+     ],
+     "bodyHeightPx": 377.2,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "heavy": {
+     "file": "assets/runtime/boss_B09_heavy.webp",
+     "size": [
+      616,
+      354
+     ],
+     "pivot": [
+      371.5,
+      346.9
+     ],
+     "bodyHeightPx": 340.3,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "enrage": {
+     "file": "assets/runtime/boss_B09_enrage.webp",
+     "size": [
+      486,
+      400
+     ],
+     "pivot": [
+      218.4,
+      392.3
+     ],
+     "bodyHeightPx": 386.6,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_d/boss_act_B09.png"
   },
   "B10": {
    "id": "B10",
@@ -4641,7 +5318,82 @@
     9
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "source": "generated"
+   "source": "generated",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/boss_B10_idle.webp",
+     "size": [
+      367,
+      391
+     ],
+     "pivot": [
+      181.4,
+      384.6
+     ],
+     "bodyHeightPx": 380.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "windup": {
+     "file": "assets/runtime/boss_B10_windup.webp",
+     "size": [
+      398,
+      387
+     ],
+     "pivot": [
+      195.9,
+      380.0
+     ],
+     "bodyHeightPx": 374.5,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "heavy": {
+     "file": "assets/runtime/boss_B10_heavy.webp",
+     "size": [
+      596,
+      370
+     ],
+     "pivot": [
+      327.0,
+      362.6
+     ],
+     "bodyHeightPx": 357.2,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "enrage": {
+     "file": "assets/runtime/boss_B10_enrage.webp",
+     "size": [
+      377,
+      390
+     ],
+     "pivot": [
+      185.4,
+      382.7
+     ],
+     "bodyHeightPx": 377.3,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_d/boss_act_B10.png"
   },
   "TOWER": {
    "id": "TOWER",
@@ -4695,7 +5447,82 @@
     1
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "source": "generated"
+   "source": "generated",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/boss_TOWER_idle.webp",
+     "size": [
+      354,
+      393
+     ],
+     "pivot": [
+      186.0,
+      385.5
+     ],
+     "bodyHeightPx": 380.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "windup": {
+     "file": "assets/runtime/boss_TOWER_windup.webp",
+     "size": [
+      449,
+      383
+     ],
+     "pivot": [
+      205.9,
+      376.4
+     ],
+     "bodyHeightPx": 371.8,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "heavy": {
+     "file": "assets/runtime/boss_TOWER_heavy.webp",
+     "size": [
+      539,
+      382
+     ],
+     "pivot": [
+      257.0,
+      374.5
+     ],
+     "bodyHeightPx": 369.1,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "enrage": {
+     "file": "assets/runtime/boss_TOWER_enrage.webp",
+     "size": [
+      385,
+      397
+     ],
+     "pivot": [
+      194.5,
+      390.0
+     ],
+     "bodyHeightPx": 384.6,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_d/boss_act_guardian.png"
   }
  },
  "hero": {
@@ -21471,7 +22298,64 @@
     1
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "source": "generated/pets_6.png"
+   "source": "generated/pets_6.png",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/pet_P01_idle.webp",
+     "size": [
+      153,
+      117
+     ],
+     "pivot": [
+      90.7,
+      114.4
+     ],
+     "bodyHeightPx": 112.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "attack": {
+     "file": "assets/runtime/pet_P01_attack.webp",
+     "size": [
+      175,
+      86
+     ],
+     "pivot": [
+      93.6,
+      82.8
+     ],
+     "bodyHeightPx": 80.4,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "happy": {
+     "file": "assets/runtime/pet_P01_happy.webp",
+     "size": [
+      144,
+      122
+     ],
+     "pivot": [
+      96.4,
+      118.4
+     ],
+     "bodyHeightPx": 116.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_e/pets_act_1.png row 1"
   },
   "P02": {
    "id": "P02",
@@ -21533,7 +22417,64 @@
     1
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "source": "generated/pets_6.png"
+   "source": "generated/pets_6.png",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/pet_P02_idle.webp",
+     "size": [
+      121,
+      145
+     ],
+     "pivot": [
+      71.1,
+      142.3
+     ],
+     "bodyHeightPx": 104.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "attack": {
+     "file": "assets/runtime/pet_P02_attack.webp",
+     "size": [
+      152,
+      81
+     ],
+     "pivot": [
+      33.9,
+      78.3
+     ],
+     "bodyHeightPx": 76.2,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "happy": {
+     "file": "assets/runtime/pet_P02_happy.webp",
+     "size": [
+      128,
+      101
+     ],
+     "pivot": [
+      68.4,
+      98.4
+     ],
+     "bodyHeightPx": 96.3,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_e/pets_act_1.png row 2"
   },
   "P03": {
    "id": "P03",
@@ -21621,7 +22562,64 @@
     4
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "source": "generated/pets_6.png"
+   "source": "generated/pets_6.png",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/pet_P03_idle.webp",
+     "size": [
+      104,
+      106
+     ],
+     "pivot": [
+      66.6,
+      102.7
+     ],
+     "bodyHeightPx": 100.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "attack": {
+     "file": "assets/runtime/pet_P03_attack.webp",
+     "size": [
+      128,
+      97
+     ],
+     "pivot": [
+      62.2,
+      93.2
+     ],
+     "bodyHeightPx": 90.5,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "happy": {
+     "file": "assets/runtime/pet_P03_happy.webp",
+     "size": [
+      118,
+      111
+     ],
+     "pivot": [
+      54.3,
+      107.8
+     ],
+     "bodyHeightPx": 105.1,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_e/pets_act_2.png row 1"
   },
   "P04": {
    "id": "P04",
@@ -21702,7 +22700,64 @@
     1
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "source": "generated/pets_6.png"
+   "source": "generated/pets_6.png",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/pet_P04_idle.webp",
+     "size": [
+      95,
+      125
+     ],
+     "pivot": [
+      46.8,
+      122.9
+     ],
+     "bodyHeightPx": 120.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "attack": {
+     "file": "assets/runtime/pet_P04_attack.webp",
+     "size": [
+      140,
+      96
+     ],
+     "pivot": [
+      103.7,
+      93.0
+     ],
+     "bodyHeightPx": 90.5,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "happy": {
+     "file": "assets/runtime/pet_P04_happy.webp",
+     "size": [
+      93,
+      127
+     ],
+     "pivot": [
+      40.9,
+      125.1
+     ],
+     "bodyHeightPx": 122.9,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_e/pets_act_2.png row 2"
   },
   "P05": {
    "id": "P05",
@@ -21792,7 +22847,64 @@
     1
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "source": "generated/pets_6.png"
+   "source": "generated/pets_6.png",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/pet_P05_idle.webp",
+     "size": [
+      115,
+      101
+     ],
+     "pivot": [
+      63.8,
+      98.3
+     ],
+     "bodyHeightPx": 96.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "attack": {
+     "file": "assets/runtime/pet_P05_attack.webp",
+     "size": [
+      151,
+      85
+     ],
+     "pivot": [
+      118.2,
+      81.8
+     ],
+     "bodyHeightPx": 79.6,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "happy": {
+     "file": "assets/runtime/pet_P05_happy.webp",
+     "size": [
+      116,
+      111
+     ],
+     "pivot": [
+      57.8,
+      108.6
+     ],
+     "bodyHeightPx": 106.3,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_e/pets_act_3.png row 1"
   },
   "P06": {
    "id": "P06",
@@ -21882,7 +22994,64 @@
     1
    ],
    "status": "RUNTIME_STATIC_SPRITE",
-   "source": "generated/pets_6.png"
+   "source": "generated/pets_6.png",
+   "frames": {
+    "idle": {
+     "file": "assets/runtime/pet_P06_idle.webp",
+     "size": [
+      87,
+      104
+     ],
+     "pivot": [
+      48.7,
+      102.1
+     ],
+     "bodyHeightPx": 100.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "attack": {
+     "file": "assets/runtime/pet_P06_attack.webp",
+     "size": [
+      118,
+      70
+     ],
+     "pivot": [
+      10.3,
+      67.8
+     ],
+     "bodyHeightPx": 66.1,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    },
+    "happy": {
+     "file": "assets/runtime/pet_P06_happy.webp",
+     "size": [
+      100,
+      109
+     ],
+     "pivot": [
+      57.4,
+      106.8
+     ],
+     "bodyHeightPx": 105.0,
+     "touchesCellEdge": {
+      "left": false,
+      "right": false,
+      "top": false,
+      "bottom": false
+     }
+    }
+   },
+   "framesSource": "gpt_e/pets_act_3.png row 2"
   }
  },
  "fx": {

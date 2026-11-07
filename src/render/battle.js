@@ -557,6 +557,7 @@ export class BattleRenderer {
 
     this.drawDim(battle);
     this.drawHero(battle, HERO_X * sx, gy, branch, s, victory);
+    this.victory = victory;
     this.drawPet(battle, HERO_X * sx, gy, s, now);
 
     // fx & numbers
@@ -619,8 +620,16 @@ export class BattleRenderer {
     const pet = battle.heroCfg && battle.heroCfg.pet;
     this.petPos = null;
     if (!pet) return;
-    const m = petMeta(pet.id);
-    if (!m) return;
+    const base = petMeta(pet.id);
+    if (!base) return;
+    // GPT E frames: attack right after its hit, happy on victory, idle otherwise
+    let m = base;
+    if (base.frames) {
+      const act = this.petHitAt && now - this.petHitAt < 260 ? 'attack' : this.victory ? 'happy' : 'idle';
+      const fr = base.frames[act] || base.frames.idle;
+      if (fr && ready(fr.file)) m = fr; else if (fr) loadImage(fr.file).catch(() => {});
+      if (m === base && base.frames.idle && ready(base.frames.idle.file)) m = base.frames.idle;
+    }
     const img = ready(m.file);
     if (!img) { loadImage(m.file).catch(() => {}); return; }
     const ctx = this.ctx;
@@ -629,7 +638,7 @@ export class BattleRenderer {
     const bob = motion ? Math.sin(now / 420) * 3 : 0;
     const lunge = motion && this.petHitAt && now - this.petHitAt < 220 ? 8 * Math.sin(((now - this.petHitAt) / 220) * Math.PI) : 0;
     const x = hx + 62 * this.fit * this.figScale + lunge;
-    const y = gy - (m.flying ? 70 : 2) * this.fit * this.figScale + (m.flying ? bob : bob * 0.3);
+    const y = gy - (base.flying ? 70 : 2) * this.fit * this.figScale + (base.flying ? bob : bob * 0.3);
     const sc = scaledImage(img, d.w * this.dpr, d.h * this.dpr, m.file);
     ctx.save();
     ctx.globalAlpha = battle.hero.dead ? 0.5 : 1;
@@ -745,7 +754,9 @@ export class BattleRenderer {
     let meta = base;
     if (!isTrial && m && m.frames) {
       const kb0 = this.kb.get(e.uid);
-      const act = e.state === 'dying' ? 'dead' : e.state === 'attack' ? 'attack'
+      const act = m.frames.windup   // GPT D boss boards: idle / windup / heavy / enrage
+        ? (e.state === 'attack' ? 'heavy' : e.state === 'telegraph' && e.pending && e.pending.heavy ? 'windup' : e.enraged ? 'enrage' : 'idle')
+        : e.state === 'dying' ? 'dead' : e.state === 'attack' ? 'attack'
         : t < e.flashUntil + 60 || (kb0 && now - kb0.at < 200) ? 'hit' : 'idle';
       const fr = m.frames[act];
       if (fr && ready(fr.file)) meta = fr;

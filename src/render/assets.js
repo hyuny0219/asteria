@@ -124,7 +124,7 @@ export async function preloadFor({ region, boss, branch, cls = 'warrior', tier =
   if (boss) list.push(spriteFile(bosses ? bosses[boss] : { id: boss }));
   // rift / tower / dungeons draw monsters from other regions
   if (allMonsters && monsters) for (const m of Object.values(monsters)) list.push(...spriteFiles(m));
-  if (pet && meta.pets && meta.pets[pet]) list.push(meta.pets[pet].file);
+  if (pet && meta.pets && meta.pets[pet]) { list.push(meta.pets[pet].file); if (meta.pets[pet].frames) for (const f of Object.values(meta.pets[pet].frames)) list.push(f.file); }
   if (bg && meta.backgrounds[bg]) list.push(meta.backgrounds[bg].file);
   if (meta.fx) for (const f of Object.values(meta.fx)) list.push(f.file);   // GPT B projectiles / hits (~220 KB)
   await Promise.all(list.filter(Boolean).map(loadImage));
