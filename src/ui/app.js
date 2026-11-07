@@ -153,6 +153,7 @@ export class App {
       const notable = r.loot ? r.loot.items.filter((i) => i.rarity !== 'common' && i.rarity !== 'uncommon') : [];
       if (notable.length) this.announce(`${RARITY[notable[0].rarity].name} 장비 획득: ${notable[0].name}`);
       if (notable.length) toast(`장비 획득 · ${notable.map((i) => `${RARITY[i.rarity].name} ${RARITY[i.rarity].mark} ${i.name}`).join(', ')}`, 'good', 1800);
+      if (r.supplyEq || r.supplySk) toast(`사냥 보급 · ${[r.supplyEq ? '장비 뽑기권 +1' : '', r.supplySk ? '스킬 뽑기권 +1' : ''].filter(Boolean).join(', ')}`, 'good', 1800);
       if (r.token) toast(`시련의 증표 +1 (${this.state.wallet.token}/${BALANCE.promotion.tokensRequired})`, 'good', 1800);
       if (r.expRes && r.expRes.toPending && !this._pendingToast) { this._pendingToast = true; toast(`Lv ${this.state.player.level}: 승급 전까지 경험치는 보관됩니다.`, 'info', 3500); }
     });

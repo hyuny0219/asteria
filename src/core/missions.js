@@ -53,5 +53,6 @@ export function claimMissionBonus(state, now) {
   const b = BALANCE.missions.bonus;
   state.wallet.gem += b.gem;
   state.wallet.eqTicket += b.eqTicket;
+  state.wallet.skTicket += b.skTicket || 0;
   return { ok: true, reward: { ...b } };
 }

@@ -80,9 +80,9 @@ export const BALANCE = Object.freeze({
   },
   // 스테이지 지도 (v7): first-clear rewards (once per stage) and star time targets
   stages: {
-    gem: 5, milestoneGem: 10,              // stages 5 and 10 are milestones
+    gem: 10, milestoneGem: 25,             // stages 5 and 10 are milestones (v8: ×2 / ×2.5)
     ore: 3, orePerRegion: 2, goldKills: 10, // gold = 10 kills at that stage's level
-    bossGem: 30, bossGemPerRegion: 10, bossOre: 20, bossOrePerRegion: 10, bossGoldKills: 30,
+    bossGem: 50, bossGemPerRegion: 15, bossOre: 20, bossOrePerRegion: 10, bossGoldKills: 30,
     starSec: 30,                           // 3★: 10 kills within 30 s of combat time, no death (at-level ≈ 14–22 s)
     bossStarSec: 45,                       // 3★ boss: win within 45 s
   },
@@ -166,7 +166,10 @@ export const BALANCE = Object.freeze({
       pity: 100,                 // rune guaranteed on the 100th draw without one
     },
   },
-  missions: { gem: 20, bonus: { gem: 50, eqTicket: 1 } },
+  missions: { gem: 40, bonus: { gem: 100, eqTicket: 3, skTicket: 2 } },   // v8: ×2 + skill tickets
+  // v8 사냥 보급: foreground farm kills only (offline stays gem/ticket-free). At ~0.5 kill/s
+  // ≈ 45 gems + 3.6 장비 뽑기권 + 1.8 스킬 뽑기권 per hour of active hunting.
+  supply: { gemEvery: 200, gem: 5, eqEvery: 500, skEvery: 1000, eliteGemChance: 0.15, eliteGem: 3, fieldBossGem: 30, fieldBossEqTicket: 2 },
   save: { checkpointSec: 20, schemaVersion: 3 },
   summon: { enabled: true, paidEnabled: false, adEnabled: false },
 });

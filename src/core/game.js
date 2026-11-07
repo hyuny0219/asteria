@@ -274,7 +274,15 @@ export class Game {
       missions.track(s, 'kills', 1, this.now());
       meta.trackKill(s, e.id);
       meta.trackPassKill(s, this.now());
-      if (e.fieldBoss) { s.wallet.gem += 20; s.progression.counters.fieldBosses++; r.gem = 20; }
+      const SP = BALANCE.supply;
+      if (e.fieldBoss) { s.wallet.gem += SP.fieldBossGem; s.wallet.eqTicket += SP.fieldBossEqTicket; s.progression.counters.fieldBosses++; r.gem = SP.fieldBossGem; r.eqTicket = SP.fieldBossEqTicket; }
+      else if (e.elite && this.rng() < SP.eliteGemChance) { s.wallet.gem += SP.eliteGem; r.gem = SP.eliteGem; }
+      // 사냥 보급: every N foreground kills → gems / draw tickets
+      s.supply ||= { kills: 0 };
+      const sk = ++s.supply.kills;
+      if (sk % SP.gemEvery === 0) { s.wallet.gem += SP.gem; r.supplyGem = SP.gem; }
+      if (sk % SP.eqEvery === 0) { s.wallet.eqTicket += 1; r.supplyEq = 1; }
+      if (sk % SP.skEvery === 0) { s.wallet.skTicket += 1; r.supplySk = 1; }
       s.wallet.gold += r.gold;
       const expRes = prog.gainExp(s, r.exp);
       const loot = this.rollLoot(e);

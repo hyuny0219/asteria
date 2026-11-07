@@ -1,5 +1,5 @@
 {
- "startedAt": "2026-11-07T06:44:44.339Z",
+ "startedAt": "2026-11-07T06:52:22.028Z",
  "base": "http://localhost:8235/",
  "viewports": [
   [
@@ -3374,8 +3374,8 @@
    "name": "reload keeps the same pending claim",
    "pass": true,
    "detail": {
-    "first": "claim_mw61ifcf_od2282",
-    "after": "claim_mw61ifcf_od2282"
+    "first": "claim_mw61s7nb_c2kale",
+    "after": "claim_mw61s7nb_c2kale"
    }
   },
   {
@@ -3454,10 +3454,10 @@
    "name": "hidden → visible does not replay ticks",
    "pass": true,
    "detail": {
-    "k0": 2,
+    "k0": 1,
     "k1": {
-     "kills": 2,
-     "acc": 0,
+     "kills": 1,
+     "acc": 49.89999999999998,
      "mode": "FARM"
     }
    }
@@ -3552,7 +3552,7 @@
   }
  ],
  "errors": [],
- "finishedAt": "2026-11-07T06:47:12.910Z",
+ "finishedAt": "2026-11-07T06:54:49.574Z",
  "summary": {
   "screenChecks": 141,
   "screenPass": 141,

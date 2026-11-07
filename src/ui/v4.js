@@ -175,10 +175,14 @@ export function openMissions(app) {
     const b = BALANCE.missions.bonus;
     m.setBody(h('div', { dataset: { screen: 'missions' } },
       h('p', { class: 'modal-desc' }, '매일 00:00(한국 시간)에 새로 바뀝니다. 다섯 개를 모두 받으면 추가 보상이 있어요.'), rows,
-      h('div', { class: 'card', style: { marginTop: '8px' } }, h('div', { class: 'kv' }, '모두 완료 보상', h('b', null, `보석 ${b.gem} · 장비 뽑기권 ${b.eqTicket}`)))));
+      h('div', { class: 'card', style: { marginTop: '8px' } }, h('div', { class: 'kv' }, '모두 완료 보상', h('b', null, `보석 ${b.gem} · 장비 뽑기권 ${b.eqTicket} · 스킬 뽑기권 ${b.skTicket}`)),
+        // 사냥 보급 진행 (v8)
+        (() => { const SP = BALANCE.supply, k = (app.state.supply && app.state.supply.kills) || 0;
+          return h('div', { class: 'kv', style: { marginTop: '6px' } }, '사냥 보급', h('span', { class: 'muted small' },
+            `보석 ${SP.gem}: ${k % SP.gemEvery}/${SP.gemEvery} · 장비권: ${k % SP.eqEvery}/${SP.eqEvery} · 스킬권: ${k % SP.skEvery}/${SP.skEvery} 처치`)); })())));
     m.setActions([button(st.bonusClaimed ? '오늘 보상 완료' : st.canBonus ? '모두 완료 보상 받기' : `${st.list.filter((x) => x.claimed).length}/5 받음`, { cls: 'btn btn-primary', disabled: !st.canBonus, busy: true, onClick: async () => {
       const r = fail(await app.game.claimMissionBonus());
-      if (r.ok) { toast(`보석 +${r.reward.gem} · 장비 뽑기권 +${r.reward.eqTicket}`, 'good'); render(); }
+      if (r.ok) { toast(`보석 +${r.reward.gem} · 장비 뽑기권 +${r.reward.eqTicket}${r.reward.skTicket ? ` · 스킬 뽑기권 +${r.reward.skTicket}` : ''}`, 'good'); render(); }
     } })]);
   };
   const m = openModal({ id: 'missions', title: '일일 미션', body: h('div'), actions: [] });
