@@ -20,7 +20,9 @@ const clsName = (c) => (c ? CLASSES[c].name : '공용');
 export function legendLine(it) {
   const L = G.legendText(it);
   if (!L) return null;
+  const em = { warrior: 'L00', mage: 'L01', archer: 'L02', rogue: 'L03' }[L.cls] || 'L04';   // GPT L emblems
   return h('div', { class: 'legend-line', dataset: { legend: it.legend.id } },
+    img(skillIcon(em), '', 'lg-em'),
     h('span', { class: 'lg-tag' }, it.rarity === 'mythic' ? '신화 고유' : '전설 고유'),
     h('b', null, L.name), h('span', null, L.text), L.cls ? h('span', { class: 'lg-cls' }, clsName(L.cls)) : null);
 }
@@ -29,6 +31,7 @@ export function legendLine(it) {
 export function compareActions(app, it, rerender) {
   const s = app.state;
   const worn = Object.values(s.equipped).includes(it.id);
+  const row0 = [button(it.level >= s.player.level ? `Lv ${it.level} · 최대` : `레벨 올리기 · Lv ${it.level}`, { cls: 'btn', dataset: { act: 'itemlevel' }, disabled: it.level >= s.player.level, onClick: () => openItemLevel(app, it.id, rerender) })];
   const row = [
     button('재련', { cls: 'btn', dataset: { act: 'reforge' }, disabled: !(it.options || []).some((o) => !o.unique), onClick: () => openReforge(app, it.id, rerender) }),
     button('등급 올리기', { cls: 'btn', dataset: { act: 'rarityup' }, disabled: !RARITY_UP.next[it.rarity], onClick: () => openRarityUp(app, it.id, rerender) }),
@@ -38,7 +41,7 @@ export function compareActions(app, it, rerender) {
     row2.push(button('효과 이식', { cls: 'btn', dataset: { act: 'imprint' }, disabled: !Object.keys(s.gearPlus.vault).length, onClick: () => openImprint(app, it.id, rerender) }));
     if (it.legend) row2.push(button('효과 추출(분해)', { cls: 'btn', dataset: { act: 'extract' }, disabled: worn || it.locked, onClick: () => confirmExtract(app, it.id, rerender) }));
   }
-  return [h('div', { class: 'btn-row' }, row), row2.length ? h('div', { class: 'btn-row' }, row2) : null];
+  return [h('div', { class: 'btn-row' }, row0), h('div', { class: 'btn-row' }, row), row2.length ? h('div', { class: 'btn-row' }, row2) : null];
 }
 
 // ---------- 추출 ----------
@@ -47,7 +50,7 @@ function confirmExtract(app, id, after) {
   const q = G.extractQuote(s, id);
   if (!q.ok) { fail(q); return; }
   const L = G.legendText(q.item);
-  const m = openModal({ id: 'extract', title: '고유 효과 추출', kind: 'center', body: h('div', { dataset: { screen: 'extract' } },
+  const m = openModal({ id: 'extract', title: '고유 효과 추출', kind: 'center', body: h('div', { dataset: { screen: 'extract' } }, img(skillIcon('L05'), '', 'modal-em'),
     h('p', null, `${q.item.name}을(를) 분해하고 고유 효과를 보관함에 넣습니다. 장비는 사라집니다(박힌 보옥은 돌려받음).`),
     h('div', { class: 'card' }, h('div', { class: 'kv' }, '효과', h('b', null, `${L.name}`)), h('p', { class: 'muted small', style: { margin: '2px 0 0' } }, UNIQUES[q.item.legend.id].text(q.item.legend.v)),
       h('div', { class: 'kv' }, '보관함', h('b', null, q.current ? (q.upgrade ? '더 좋은 수치로 갱신' : '이미 같거나 더 좋은 수치 보유') : '새로 수집')),
@@ -67,7 +70,7 @@ function openImprint(app, id, after) {
   const c = G.imprintCost(it);
   const list = Object.entries(s.gearPlus.vault).sort((a, b) => (UNIQUES[a[0]].cls === s.player.cls ? -1 : 0) - (UNIQUES[b[0]].cls === s.player.cls ? -1 : 0));
   const mul = it.rarity === 'mythic' ? MYTHIC_MUL : 1;
-  const m = openModal({ id: 'imprint', title: '고유 효과 이식', body: h('div', { dataset: { screen: 'imprint' } },
+  const m = openModal({ id: 'imprint', title: '고유 효과 이식', body: h('div', { dataset: { screen: 'imprint' } }, img(skillIcon('L06'), '', 'modal-em'),
     h('p', { class: 'modal-desc' }, `${it.name}의 고유 효과를 바꿉니다. 지금 효과는 사라져요(먼저 추출하면 보관됨). 비용: 강화 광석 ${c.ore} · 골드 ${fmt(c.gold)}`),
     it.legend ? h('div', { class: 'card' }, h('div', { class: 'muted small' }, '지금 효과'), legendLine(it)) : null,
     list.map(([uid, v]) => {
@@ -83,6 +86,34 @@ function openImprint(app, id, after) {
 }
 
 // ---------- 재련 ----------
+function openItemLevel(app, id, after) {
+  const m = openModal({ id: 'itemlevel', title: '장비 레벨 올리기', body: h('div'), actions: [] });
+  const render = () => {
+    const s = app.state;
+    const it = s.inventory.find((i) => i.id === id);
+    if (!it) { m.close(); return; }
+    const q1 = G.levelUpQuote(s, it, 1), q10 = G.levelUpQuote(s, it, 10), qm = G.levelUpQuote(s, it, 'max');
+    const capped = it.level >= s.player.level;
+    const can = (q) => q.steps > 0 && s.wallet.ore >= q.ore && s.wallet.gold >= q.gold;
+    const go = (steps) => async () => { const r = fail(await app.game.levelUpItem(id, steps)); if (r.ok) { toast(`${it.name} Lv ${r.from} → ${r.to}`, 'good'); render(); if (after) after(); } };
+    m.setBody(h('div', { dataset: { screen: 'itemlevel' } },
+      img(skillIcon('L08'), '', 'modal-em'),
+      h('p', { class: 'modal-desc' }, `강화 광석과 골드로 장비 레벨을 내 레벨(Lv ${s.player.level})까지 올려요. 레벨이 오르면 기본 능력치가 올라가고, 옵션·고유 효과·보옥·슬롯 강화는 그대로예요.`),
+      h('div', { class: 'card' },
+        h('div', { class: 'kv' }, '장비', h('b', null, `${rarityLabel(it.rarity)} ${it.name}`)),
+        h('div', { class: 'kv' }, '지금 레벨', h('b', null, capped ? `Lv ${it.level} (최대)` : `Lv ${it.level} / ${s.player.level}`)),
+        h('div', { class: 'kv' }, '보유', h('b', null, `강화 광석 ${fmt(s.wallet.ore)} · 골드 ${fmt(s.wallet.gold)}`))),
+      capped ? h('p', { class: 'muted small' }, '내 레벨까지 올렸어요. 레벨이 오르면 더 올릴 수 있어요.') :
+        h('div', { class: 'card' }, [['+1', q1], ['+10', q10], ['최대', qm]].map(([t, q]) =>
+          h('div', { class: 'kv' }, `${t}${q.steps ? ` → Lv ${q.to}` : ''}`, h('b', null, q.steps ? `광석 ${fmt(q.ore)} · 골드 ${fmt(q.gold)}` : '재료 부족'))))));
+    m.setActions(capped ? [button('닫기', { cls: 'btn', onClick: () => m.close() })] : [
+      button('+1', { cls: 'btn', busy: true, disabled: !can(q1), onClick: go(1) }),
+      button('+10', { cls: 'btn', busy: true, disabled: !can(q10), onClick: go(10) }),
+      button('최대', { cls: 'btn btn-primary', busy: true, disabled: !qm.steps, onClick: go('max') })]);
+  };
+  render();
+}
+
 function openReforge(app, id, after) {
   let sel = null;
   const m = openModal({ id: 'reforge', title: '재련', body: h('div'), actions: [] });
@@ -93,6 +124,7 @@ function openReforge(app, id, after) {
     const c = G.reforgeCost(it);
     if (sel === null) sel = it.options.findIndex((o) => !o.unique);
     m.setBody(h('div', { dataset: { screen: 'reforge' } },
+      img(skillIcon('L08'), '', 'modal-em'),
       h('p', { class: 'modal-desc' }, '바꿀 옵션 하나를 고르면 그 줄만 새로 굴립니다. 다른 줄은 그대로이고, 다른 줄과 겹치는 옵션은 나오지 않아요. 재련할수록 비용이 올라가요(광석 +50%씩).'),
       sel >= 0 ? h('p', { class: 'muted small', dataset: { note: 'odds' } }, (() => { const n = OPT_KEYS.length - it.options.filter((o, i) => i !== sel && !o.unique).length; return `확률: 옵션 ${n}종 중 하나가 각 ${fmtPct(1 / n, 1)}, 수치는 옵션 범위 안에서 균등.`; })()) : null,
       h('div', { class: 'opt-pick', role: 'radiogroup', 'aria-label': '재련할 옵션' }, it.options.map((o, i) => h('button', { type: 'button', role: 'radio', class: 'opt-row', 'aria-checked': String(sel === i), disabled: !!o.unique, onClick: () => { sel = i; render(); } }, optLabel(o)))),
@@ -120,6 +152,7 @@ function openRarityUp(app, id, after) {
     const q = G.rarityUpQuote(s, id, [...picked]);
     const cost = { ore: RARITY_UP.ore[to] || 0, star: RARITY_UP.starShard[to] || 0 };
     m.setBody(h('div', { dataset: { screen: 'rarityup' } },
+      img(skillIcon('L09'), '', 'modal-em'),
       h('p', { class: 'modal-desc' }, `같은 부위·같은 등급 장비 2개를 재료로 ${it.name}을(를) ${to ? RARITY[to].name : '-'} 등급으로 올립니다. 옵션은 그대로 + 1줄 추가, 레벨은 셋 중 가장 높은 값. 재료는 사라져요(잠금·장착 제외).`),
       h('div', { class: 'card' }, h('div', { class: 'kv' }, '본체', h('b', null, `${rarityLabel(it.rarity)} → ${to ? rarityLabel(to) : '최고 등급'}`)),
         h('div', { class: 'kv' }, '비용', h('b', null, `강화 광석 ${fmt(cost.ore)}${cost.star ? ` · 별의 파편 ${cost.star}` : ''}`)),
@@ -174,7 +207,7 @@ export function awakenCard(app) {
             if (cur === i) return;
             const r = fail(await app.game.setAwaken(id, i));
             if (r.ok) toast(`${SKILLS[id].name} 각성: ${o.name}${r.paid ? ` (보석 ${r.paid})` : ''}`, 'good');
-          } }, h('b', null, `${i ? 'B' : 'A'} · ${o.name}`), h('span', null, o.desc))))
+          } }, h('b', null, img(skillIcon(i ? 'L11' : 'L10'), '', 'awk-em'), `${i ? 'B' : 'A'} · ${o.name}`), h('span', null, o.desc))))
             : h('div', { class: 'muted small' }, `Lv ${AWAKEN.needLevel}에 각성 · ${AWAKENINGS[id].map((o, i) => `${i ? 'B' : 'A'} ${o.name}`).join(' / ')}`)));
     }));
 }
@@ -212,4 +245,4 @@ function renameLoadout(app, i) {
   setTimeout(() => input.focus(), 50);
 }
 
-export const v10Tiles = (app) => [{ id: 'legendCodex', ic: 'star', em: 'V13', t: '고유 효과', s: `수집 ${Object.keys(app.state.gearPlus.vault).length}/${Object.keys(UNIQUES).length}`, on: () => openLegendCodex(app) }];
+export const v10Tiles = (app) => [{ id: 'legendCodex', ic: 'star', em: 'L07', t: '고유 효과', s: `수집 ${Object.keys(app.state.gearPlus.vault).length}/${Object.keys(UNIQUES).length}`, on: () => openLegendCodex(app) }];

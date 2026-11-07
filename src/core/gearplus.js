@@ -1,6 +1,6 @@
 // v10 장비·스킬 확장: 전설 고유 효과(+추출·이식), 스킬 각성, 장비·스킬 프리셋, 재련·등급 올리기.
 // DOM-free; every mutation runs inside Game.transact.
-import { AWAKEN, AWAKENINGS, EXTRACT, IMPRINT, LOADOUT_DEFAULT_MAP, LOADOUT_NAMES, MYTHIC_MUL, RARITY_UP, REFORGE, UNIQUES } from '../data/gearplus.js';
+import { AWAKEN, AWAKENINGS, EXTRACT, IMPRINT, ITEM_LEVEL, LOADOUT_DEFAULT_MAP, LOADOUT_NAMES, MYTHIC_MUL, RARITY_UP, REFORGE, UNIQUES } from '../data/gearplus.js';
 import { BALANCE } from '../data/balance.js';
 import { SKILLS } from '../data/content.js';
 import { lookFor, MYTHIC_UNIQUE_KEYS, rollLegend, rollOneOption } from './items.js';
@@ -209,6 +209,35 @@ export function reforge(state, itemId, optIdx, rng) {
   it.options[optIdx] = nu;
   it.reforges = (it.reforges || 0) + 1;
   return { ok: true, prev, next: nu, cost: c };
+}
+
+// ---------- 레벨 맞추기 ----------
+export const itemLevelCap = (state) => state.player.level;
+export function levelStepCost(it, L) { return { ore: Math.ceil(ITEM_LEVEL.ore[it.rarity] * (1 + L / 25)), gold: ITEM_LEVEL.gold[it.rarity] * L }; }
+// steps: a number, or 'max' = as many as the wallet allows (never above the hero's level)
+export function levelUpQuote(state, it, steps) {
+  const cap = itemLevelCap(state);
+  let lv = it.level, ore = 0, gold = 0, n = 0;
+  const want = steps === 'max' ? Infinity : steps;
+  while (n < want && lv < cap) {
+    const c = levelStepCost(it, lv);
+    if (steps === 'max' && (ore + c.ore > state.wallet.ore || gold + c.gold > state.wallet.gold)) break;
+    ore += c.ore; gold += c.gold; lv++; n++;
+  }
+  return { from: it.level, to: lv, steps: n, ore, gold, cap };
+}
+export function levelUpItem(state, itemId, steps) {
+  const it = find(state, itemId);
+  if (!it) return { ok: false, reason: 'missing' };
+  if (it.level >= itemLevelCap(state)) return { ok: false, reason: 'item-cap' };
+  const q = levelUpQuote(state, it, steps);
+  if (!q.steps) return { ok: false, reason: state.wallet.ore < levelStepCost(it, it.level).ore ? 'ore' : 'gold' };
+  if (state.wallet.ore < q.ore) return { ok: false, reason: 'ore' };
+  if (state.wallet.gold < q.gold) return { ok: false, reason: 'gold' };
+  state.wallet.ore -= q.ore;
+  state.wallet.gold -= q.gold;
+  it.level = q.to;
+  return { ok: true, ...q };
 }
 
 // ---------- 등급 올리기 ----------

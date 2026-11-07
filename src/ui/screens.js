@@ -42,6 +42,7 @@ const STAT_INFO = {
   speed: { name: '공격 속도', fmt: (s) => s.aspd.toFixed(2) + '/초' },
 };
 const reasonText = {
+  'item-cap': '내 레벨까지 올렸어요',
   'no-legend': '고유 효과가 없습니다', 'same': '이미 같은 상태입니다', rarity: '전설·신화 장비에만 이식할 수 있습니다', awaken: '각성 정보가 없습니다', 'awaken-level': '스킬 Lv 10부터 각성할 수 있습니다', loadout: '저장된 프리셋이 없습니다', option: '바꿀 수 있는 옵션이 아닙니다', 'max-rarity': '이미 최고 등급입니다', materials: '같은 부위·같은 등급 장비 2개를 골라 주세요', starShard: '별의 파편이 부족합니다', awakenStone: '각성석이 부족합니다',
   expired: '보관 기간이 지난 우편입니다', 'coupon-unknown': '없는 쿠폰 번호입니다', 'coupon-expired': '사용 기간이 끝난 쿠폰입니다', 'coupon-used': '이미 사용한 쿠폰입니다', 'coupon-empty': '쿠폰 번호를 입력해 주세요',
   gold: '골드가 부족합니다', ore: '강화 광석이 부족합니다', cap: '상한에 도달했습니다', max: '최대 강화(+10)입니다',

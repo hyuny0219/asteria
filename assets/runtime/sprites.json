@@ -233,7 +233,8 @@
   "gpt_j/icons_gear_high2.png": "GPT package J1 — helmet/armor/necklace epic+ icons",
   "gpt_j/elena_poses_fix.png": "GPT package J2 — Elena 8 key poses (alpha, tome glow kept)",
   "gpt_j3/*_cycle.png": "GPT J3 — walk 4 + basic attack 4 frames (Serin, Lyra, Elena, Nox)",
-  "gpt_j4/*_cycle.png": "GPT J4 — walk 4 + attack 4 frames for 16 tier-2/3 forms"
+  "gpt_j4/*_cycle.png": "GPT J4 — walk 4 + attack 4 frames for 16 tier-2/3 forms",
+  "gpt_l/icons_v10.png": "GPT package L — v10 legend / awaken / forge icons"
  },
  "monsters": {
   "M01": {
@@ -26019,6 +26020,138 @@
    ],
    "status": "RUNTIME_ICON",
    "source": "gpt_f/icons_skills_fix.png"
+  },
+  "L00": {
+   "id": "L00",
+   "name": "legend_warrior",
+   "file": "assets/runtime/skill_L00.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_l/icons_v10.png"
+  },
+  "L01": {
+   "id": "L01",
+   "name": "legend_mage",
+   "file": "assets/runtime/skill_L01.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_l/icons_v10.png"
+  },
+  "L02": {
+   "id": "L02",
+   "name": "legend_archer",
+   "file": "assets/runtime/skill_L02.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_l/icons_v10.png"
+  },
+  "L03": {
+   "id": "L03",
+   "name": "legend_rogue",
+   "file": "assets/runtime/skill_L03.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_l/icons_v10.png"
+  },
+  "L04": {
+   "id": "L04",
+   "name": "legend_common",
+   "file": "assets/runtime/skill_L04.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_l/icons_v10.png"
+  },
+  "L05": {
+   "id": "L05",
+   "name": "extract",
+   "file": "assets/runtime/skill_L05.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_l/icons_v10.png"
+  },
+  "L06": {
+   "id": "L06",
+   "name": "imprint",
+   "file": "assets/runtime/skill_L06.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_l/icons_v10.png"
+  },
+  "L07": {
+   "id": "L07",
+   "name": "vault",
+   "file": "assets/runtime/skill_L07.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_l/icons_v10.png"
+  },
+  "L08": {
+   "id": "L08",
+   "name": "reforge",
+   "file": "assets/runtime/skill_L08.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_l/icons_v10.png"
+  },
+  "L09": {
+   "id": "L09",
+   "name": "rarityup",
+   "file": "assets/runtime/skill_L09.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_l/icons_v10.png"
+  },
+  "L10": {
+   "id": "L10",
+   "name": "awaken_a",
+   "file": "assets/runtime/skill_L10.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_l/icons_v10.png"
+  },
+  "L11": {
+   "id": "L11",
+   "name": "awaken_b",
+   "file": "assets/runtime/skill_L11.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_l/icons_v10.png"
   }
  },
  "backgrounds": {

@@ -93,6 +93,12 @@ export const AWAKENINGS = Object.freeze({
 
 // 재련: reroll one option. ore × (1 + 0.5 × times reforged), gold = goldPerLevel × item level × (1 + times)
 export const REFORGE = Object.freeze({ ore: { common: 10, uncommon: 20, rare: 40, epic: 80, legendary: 150, mythic: 250 }, growth: 0.5, goldPerLevel: 400 });
+// 레벨 맞추기: raise an item's level (up to the hero's level). Cost of one step L → L+1:
+// ore = ceil(ore[rarity] × (1 + L/25)), gold = gold[rarity] × L.
+export const ITEM_LEVEL = Object.freeze({
+  ore: { common: 1, uncommon: 1, rare: 2, epic: 3, legendary: 5, mythic: 8 },
+  gold: { common: 20, uncommon: 30, rare: 50, epic: 80, legendary: 120, mythic: 180 },
+});
 // 등급 올리기: 3 of the same slot & rarity (1 base + 2 materials) → next rarity
 export const RARITY_UP = Object.freeze({
   next: { common: 'uncommon', uncommon: 'rare', rare: 'epic', epic: 'legendary', legendary: 'mythic' },

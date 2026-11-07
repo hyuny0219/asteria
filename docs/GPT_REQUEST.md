@@ -231,7 +231,7 @@ B01은 지금 그림의 오른쪽 윤곽이 잘려 있으니 **몸 전체가 보
 ```
 
 
-## L. v10 장비·스킬 (선택, 2026-11-07)
+## L. v10 장비·스킬 — ✅ 완료 (assets/source/gpt_l, tools/extract_gpt_l.py)
 
 전설 고유 효과·스킬 각성·재련·등급 올리기·프리셋에 전용 그림이 없어 글자 줄과 기존 아이콘을 씁니다. 없어도 동작에는 문제 없습니다.
 요청서·참고그림 묶음: `gpt_request_L_v10.zip` (요청문 + icons_gear_high.png · icons_skills_fix.png 참고).

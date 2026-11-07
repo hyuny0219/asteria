@@ -251,6 +251,7 @@ export class Game {
   renameLoadout(idx, name) { return this.transact('loadoutName', (s) => gear.renameLoadout(s, idx, name)); }
   applyLoadout(idx) { return this.transact('loadoutApply', (s) => gear.applyLoadout(s, idx, prog.unlockedSkills(s))); }
   setLoadoutAuto(on, map = null) { return this.transact('loadoutAuto', (s) => gear.setLoadoutAuto(s, on, map)); }
+  levelUpItem(id, steps) { return this.transact('itemLevel', (s) => gear.levelUpItem(s, id, steps)); }
   reforge(id, optIdx) { return this.transact('reforge', (s) => gear.reforge(s, id, optIdx, this.rng)); }
   rarityUp(baseId, matIds) { return this.transact('rarityUp', (s) => gear.rarityUp(s, baseId, matIds, this.rng)); }
   claimAllExpeditions() { return this.transact('expClaim', (s) => expedition.claimAll(s, this.now())); }
