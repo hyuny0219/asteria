@@ -176,7 +176,7 @@ B01은 지금 그림의 오른쪽 윤곽이 잘려 있으니 **몸 전체가 보
 
 첨부: `refs_J.zip` (items_24.png · icons_gear_high.png(F 결과) · elena_poses.png(현재))
 
-### J1. 투구·갑옷·목걸이 고등급 아이콘 8개
+### J1. 투구·갑옷·목걸이 고등급 아이콘 8개 — ✅ 완료 (assets/source/gpt_j, tools/extract_gpt_j.py · 선배가 두 번째 안 선택)
 
 ```
 [공통 조건] + 첨부한 icons_gear_high.png(F)와 같은 화풍·크기·보석 테마로 이어서 그려 주세요.

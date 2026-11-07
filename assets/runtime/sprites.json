@@ -229,7 +229,8 @@
   "gpt_e/pets_act_*.png": "GPT package E — companion idle/attack/happy",
   "gpt_f/icons_*.png": "GPT package F — high-rarity gear, 4 skill fixes, talent & rift emblems",
   "gpt_g/bg_*.png": "GPT package G — vault / library / trial hall / rift backgrounds",
-  "gpt_h/serin_poses_fix.png": "GPT package H — Serin 8 key poses (thrust fixed, alpha)"
+  "gpt_h/serin_poses_fix.png": "GPT package H — Serin 8 key poses (thrust fixed, alpha)",
+  "gpt_j/icons_gear_high2.png": "GPT package J1 — helmet/armor/necklace epic+ icons"
  },
  "monsters": {
   "M01": {
@@ -20502,6 +20503,142 @@
    ],
    "status": "RUNTIME_ICON",
    "source": "gpt_f/icons_gear_high.png"
+  },
+  "I71": {
+   "id": "I71",
+   "name": "helmet_epic",
+   "file": "assets/runtime/item_71.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    52,
+    68,
+    280,
+    387
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_j/icons_gear_high2.png"
+  },
+  "I72": {
+   "id": "I72",
+   "name": "helmet_legendary",
+   "file": "assets/runtime/item_72.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    38,
+    12,
+    317,
+    453
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_j/icons_gear_high2.png"
+  },
+  "I73": {
+   "id": "I73",
+   "name": "helmet_mythic",
+   "file": "assets/runtime/item_73.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    33,
+    12,
+    330,
+    451
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_j/icons_gear_high2.png"
+  },
+  "I74": {
+   "id": "I74",
+   "name": "armor_epic",
+   "file": "assets/runtime/item_74.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    17,
+    67,
+    353,
+    390
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_j/icons_gear_high2.png"
+  },
+  "I75": {
+   "id": "I75",
+   "name": "armor_legendary",
+   "file": "assets/runtime/item_75.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    11,
+    49,
+    365,
+    408
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_j/icons_gear_high2.png"
+  },
+  "I76": {
+   "id": "I76",
+   "name": "armor_mythic",
+   "file": "assets/runtime/item_76.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    14,
+    49,
+    358,
+    430
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_j/icons_gear_high2.png"
+  },
+  "I77": {
+   "id": "I77",
+   "name": "necklace_epic",
+   "file": "assets/runtime/item_77.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    32,
+    61,
+    318,
+    368
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_j/icons_gear_high2.png"
+  },
+  "I78": {
+   "id": "I78",
+   "name": "necklace_legendary",
+   "file": "assets/runtime/item_78.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    18,
+    61,
+    339,
+    377
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_j/icons_gear_high2.png"
   }
  },
  "skills": {
