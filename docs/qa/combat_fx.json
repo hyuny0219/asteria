@@ -33,11 +33,11 @@
    "pass": true,
    "m": {
     "frames": 180,
-    "avgMs": 0.22,
-    "p95Ms": 0.3,
-    "maxParts": 76,
-    "fx": 1,
-    "steps": "123123123123123123123123",
+    "avgMs": 0.28,
+    "p95Ms": 0.9,
+    "maxParts": 88,
+    "fx": 0,
+    "steps": "12312312121",
     "cues": "hit,hit2,finisher,crit,skill,boom"
    },
    "errs": []
@@ -71,12 +71,12 @@
    "pass": true,
    "m": {
     "frames": 180,
-    "avgMs": 0.23,
+    "avgMs": 0.24,
     "p95Ms": 0.4,
     "maxParts": 160,
     "fx": 1,
     "steps": "123121212",
-    "cues": "hit,hit2,finisher,skill,boom"
+    "cues": "hit,hit2,finisher,crit,skill,boom"
    },
    "errs": []
   },
@@ -108,13 +108,13 @@
    "name": "perf_archer",
    "pass": true,
    "m": {
-    "frames": 180,
-    "avgMs": 0.23,
-    "p95Ms": 0.4,
-    "maxParts": 218,
+    "frames": 181,
+    "avgMs": 0.24,
+    "p95Ms": 0.5,
+    "maxParts": 226,
     "fx": 0,
     "steps": "123121212",
-    "cues": "crit,finisher,hit,hit2,skill,boom"
+    "cues": "crit,hit2,finisher,hit,skill,boom"
    },
    "errs": []
   },
@@ -151,9 +151,9 @@
    "pass": true,
    "m": {
     "frames": 181,
-    "avgMs": 0.22,
+    "avgMs": 0.25,
     "p95Ms": 0.4,
-    "maxParts": 152,
+    "maxParts": 167,
     "fx": 0,
     "steps": "1231231212",
     "cues": "hit,hit2,finisher,crit,skill,,boom"
@@ -211,42 +211,42 @@
   {
    "cls": "warrior",
    "frames": 180,
-   "avgMs": 0.22,
-   "p95Ms": 0.3,
-   "maxParts": 76,
-   "fx": 1,
-   "steps": "123123123123123123123123",
+   "avgMs": 0.28,
+   "p95Ms": 0.9,
+   "maxParts": 88,
+   "fx": 0,
+   "steps": "12312312121",
    "cues": "hit,hit2,finisher,crit,skill,boom",
    "errs": []
   },
   {
    "cls": "mage",
    "frames": 180,
-   "avgMs": 0.23,
+   "avgMs": 0.24,
    "p95Ms": 0.4,
    "maxParts": 160,
    "fx": 1,
    "steps": "123121212",
-   "cues": "hit,hit2,finisher,skill,boom",
+   "cues": "hit,hit2,finisher,crit,skill,boom",
    "errs": []
   },
   {
    "cls": "archer",
-   "frames": 180,
-   "avgMs": 0.23,
-   "p95Ms": 0.4,
-   "maxParts": 218,
+   "frames": 181,
+   "avgMs": 0.24,
+   "p95Ms": 0.5,
+   "maxParts": 226,
    "fx": 0,
    "steps": "123121212",
-   "cues": "crit,finisher,hit,hit2,skill,boom",
+   "cues": "crit,hit2,finisher,hit,skill,boom",
    "errs": []
   },
   {
    "cls": "rogue",
    "frames": 181,
-   "avgMs": 0.22,
+   "avgMs": 0.25,
    "p95Ms": 0.4,
-   "maxParts": 152,
+   "maxParts": 167,
    "fx": 0,
    "steps": "1231231212",
    "cues": "hit,hit2,finisher,crit,skill,,boom",
