@@ -11,6 +11,7 @@ export const ICONS = {
  "info": "<path d=\"M12 11V18 M12 6V7 M12 2A10 10 0 1 1 11.99 2\"/>",
  "lock": "<path d=\"M7 10V7A5 5 0 0 1 17 7V10 M5 10H19V21H5Z M12 14V17\"/>",
  "battle": "<path d=\"M4 4L14 14 M4 4V8 M4 4H8 M20 4L10 14 M20 4V8 M20 4H16 M7 17L11 13 M17 17L13 13 M5 19L8 16 M19 19L16 16\"/>",
+ "mail": "<path d=\"M3 6H21V18H3Z M3 6L12 13L21 6\"/>",
  "map": "<path d=\"M3 6L9 3L15 6L21 3V18L15 21L9 18L3 21Z M9 3V18 M15 6V21\"/>",
  "menu": "<path d=\"M4 5H20 M4 12H20 M4 19H20\"/>",
  "save": "<path d=\"M4 3H17L21 7V21H3V3Z M7 3V9H16V3 M7 21V14H17V21\"/>",

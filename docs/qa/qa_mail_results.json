@@ -1,0 +1,149 @@
+[
+ {
+  "name": "390 operator mail delivered",
+  "pass": true,
+  "extra": {
+   "n": 2
+  }
+ },
+ {
+  "name": "390 header mail badge visible",
+  "pass": true
+ },
+ {
+  "name": "390 mailbox no horizontal overflow",
+  "pass": true
+ },
+ {
+  "name": "390 unknown coupon message",
+  "pass": true
+ },
+ {
+  "name": "390 coupon → mail",
+  "pass": true
+ },
+ {
+  "name": "390 coupon used once",
+  "pass": true
+ },
+ {
+  "name": "390 claim all granted",
+  "pass": true,
+  "extra": {
+   "gained": 3800
+  }
+ },
+ {
+  "name": "390 badge hidden after claiming",
+  "pass": true
+ },
+ {
+  "name": "390 menu tile",
+  "pass": true
+ },
+ {
+  "name": "390 no page errors",
+  "pass": true,
+  "extra": {
+   "errs": []
+  }
+ },
+ {
+  "name": "360 operator mail delivered",
+  "pass": true,
+  "extra": {
+   "n": 2
+  }
+ },
+ {
+  "name": "360 header mail badge visible",
+  "pass": true
+ },
+ {
+  "name": "360 mailbox no horizontal overflow",
+  "pass": true
+ },
+ {
+  "name": "360 unknown coupon message",
+  "pass": true
+ },
+ {
+  "name": "360 coupon → mail",
+  "pass": true
+ },
+ {
+  "name": "360 coupon used once",
+  "pass": true
+ },
+ {
+  "name": "360 claim all granted",
+  "pass": true,
+  "extra": {
+   "gained": 3800
+  }
+ },
+ {
+  "name": "360 badge hidden after claiming",
+  "pass": true
+ },
+ {
+  "name": "360 menu tile",
+  "pass": true
+ },
+ {
+  "name": "360 no page errors",
+  "pass": true,
+  "extra": {
+   "errs": []
+  }
+ },
+ {
+  "name": "412 operator mail delivered",
+  "pass": true,
+  "extra": {
+   "n": 2
+  }
+ },
+ {
+  "name": "412 header mail badge visible",
+  "pass": true
+ },
+ {
+  "name": "412 mailbox no horizontal overflow",
+  "pass": true
+ },
+ {
+  "name": "412 unknown coupon message",
+  "pass": true
+ },
+ {
+  "name": "412 coupon → mail",
+  "pass": true
+ },
+ {
+  "name": "412 coupon used once",
+  "pass": true
+ },
+ {
+  "name": "412 claim all granted",
+  "pass": true,
+  "extra": {
+   "gained": 3800
+  }
+ },
+ {
+  "name": "412 badge hidden after claiming",
+  "pass": true
+ },
+ {
+  "name": "412 menu tile",
+  "pass": true
+ },
+ {
+  "name": "412 no page errors",
+  "pass": true,
+  "extra": {
+   "errs": []
+  }
+ }
+]

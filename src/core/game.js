@@ -35,6 +35,7 @@ import * as mplus from './mplus.js';
 import * as expedition from './expedition.js';
 import * as worldboss from './worldboss.js';
 import * as craft from './crafting.js';
+import * as mail from './mail.js';
 import { PASS } from '../data/meta.js';
 import { deepClone, makeRng, uid } from './util.js';
 
@@ -90,6 +91,7 @@ export class Game {
     mplus.refreshMplus(this.state, this.now());
     expedition.refreshExpedition(this.state, this.now());
     worldboss.refreshWorldBoss(this.state, this.now());
+    mail.refreshMail(this.state, this.now());   // 운영 우편 배달 · 만료 정리 (saved with the housekeeping)
     const mpRefund = mplus.recoverRun(this.state);
     if (mpRefund) this.notices.push({ type: 'mplusRefund', ...mpRefund });
     const refund = dun.recoverPendingRun(this.state);
@@ -225,6 +227,21 @@ export class Game {
   sendExpedition(expId, petId) { return this.transact('expSend', (s) => expedition.send(s, expId, petId, this.now())); }
   sendExpeditionAuto() { return this.transact('expSend', (s) => expedition.sendAuto(s, this.now())); }
   claimExpedition(slot) { return this.transact('expClaim', (s) => expedition.claim(s, slot, this.now())); }
+  // 우편함 · 쿠폰 (mail.js)
+  async refreshMail() {
+    if (!this.state) return { ok: false, reason: 'noState' };
+    const now = this.now();
+    const probe = mail.refreshMail(deepClone(this.state), now);   // dry run: save only when something changes
+    if (!probe.added && !probe.expired && !probe.removed) return { ok: true, noop: true };
+    return this.transact('mailRefresh', (s) => ({ ok: true, ...mail.refreshMail(s, now) }));
+  }
+  claimMail(id) { return this.transact('mailClaim', (s) => mail.claimMail(s, id, this.now())); }
+  claimAllMail() { return this.transact('mailClaim', (s) => mail.claimAllMail(s, this.now())); }
+  async redeemCoupon(code) {
+    if (!mail.normalizeCoupon(code)) return { ok: false, reason: 'coupon-empty' };
+    const hash = await mail.hashCoupon(code);
+    return this.transact('coupon', (s) => mail.redeemCouponHash(s, hash, this.now()));
+  }
   claimAllExpeditions() { return this.transact('expClaim', (s) => expedition.claimAll(s, this.now())); }
   claimMplusVault() { return this.transact('mplusVault', (s) => mplus.claimVault(s, this.now())); }
   riftPick(id) { return this.transact('riftPick', (s) => rift.pickBlessing(s, id)); }

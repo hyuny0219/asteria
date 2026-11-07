@@ -618,3 +618,25 @@ input.text { width: 100%; min-height: 36px; background: var(--panel); border: 1p
 .quest-badge { z-index: 2; }
 .quest-card .quest-titlerow { display: none; }
 .quest-card.no-scene .quest-titlerow { display: flex; padding-top: 10px; }
+
+/* ---- 우편함 · 쿠폰 (v9) ---- */
+.mail-btn { position: relative; color: var(--gold); width: 32px; }
+.mail-btn[hidden] { display: none; }
+.mail-btn .mail-n { position: absolute; top: 1px; right: -2px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px; background: var(--danger); color: #fff; font-size: 11px; font-weight: 800; line-height: 16px; text-align: center; }
+.coupon-card b { display: block; margin-bottom: 6px; }
+.coupon-line { display: flex; gap: 8px; }
+.coupon-input { flex: 1; min-width: 0; min-height: 44px; padding: 0 12px; border-radius: var(--radius-btn); border: 1px solid var(--ibord); background: var(--panel-2); color: var(--text); font-size: 16px; letter-spacing: .06em; text-transform: uppercase; }
+.coupon-line .coupon-go { flex: none; width: auto; min-width: 72px; }
+.mail-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 12px 0 6px; }
+.mail-head .mail-all { width: auto; min-height: 36px; padding: 0 14px; }
+.mail-row { padding: 10px 12px; }
+.mail-row.got { opacity: .62; }
+.mail-top { display: flex; gap: 10px; align-items: center; }
+.mail-ico { width: 34px; height: 34px; flex: none; }
+.mail-txt { display: flex; flex-direction: column; min-width: 0; }
+.mail-txt b { font-size: 15px; }
+.mail-body { margin: 6px 0; font-size: 13px; color: var(--muted); }
+.mail-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 8px; }
+.mail-chip { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 12px; background: var(--panel-2); border: 1px solid var(--border); font-size: 12px; }
+.mail-chip img { width: 18px; height: 18px; }
+.mail-chip b { color: var(--gold); }

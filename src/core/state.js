@@ -9,6 +9,7 @@ import { defaultMplus } from './mplus.js';
 import { defaultExpedition } from './expedition.js';
 import { defaultWorldBoss } from './worldboss.js';
 import { defaultCraft } from './crafting.js';
+import { defaultMail } from './mail.js';
 
 export const SCHEMA_VERSION = 8;
 
@@ -48,6 +49,7 @@ export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0, cls = 'wa
     mplus: defaultMplus(),
     expedition: defaultExpedition(),     // 원정 파견 (expedition.js)
     craft: defaultCraft(),                // 제작 재료 · 보옥 가방 · 마부(슬롯) · 버프 음식 (crafting.js)
+    mail: defaultMail(),                  // 우편함 · 운영 우편 배달 기록 · 쿠폰 사용 기록 (mail.js)
     worldBoss: defaultWorldBoss(),        // 월드 보스 기록 + 희귀 정예 도감 (worldboss.js)   // 스테이지 지도 (schema 7): best stars, first-clear claimed, auto-advance
     notices: {},            // one-time notices shown after load: { slotEnhance: { refund, levels } }
     skills: {

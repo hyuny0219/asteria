@@ -8,6 +8,7 @@ import * as V5 from './v5.js';
 import * as V6 from './v6.js';
 import * as V8 from './v8.js';
 import * as WBM from '../core/worldboss.js';
+import * as MAILUI from './mail.js';
 import { jewelName, socketCount } from '../core/crafting.js';
 import { MONSTERS } from '../data/content.js';
 const MONSTERS_NAME = (id) => (MONSTERS[id] ? MONSTERS[id].name : id);
@@ -40,6 +41,7 @@ const STAT_INFO = {
   speed: { name: '공격 속도', fmt: (s) => s.aspd.toFixed(2) + '/초' },
 };
 const reasonText = {
+  expired: '보관 기간이 지난 우편입니다', 'coupon-unknown': '없는 쿠폰 번호입니다', 'coupon-expired': '사용 기간이 끝난 쿠폰입니다', 'coupon-used': '이미 사용한 쿠폰입니다', 'coupon-empty': '쿠폰 번호를 입력해 주세요',
   gold: '골드가 부족합니다', ore: '강화 광석이 부족합니다', cap: '상한에 도달했습니다', max: '최대 강화(+10)입니다',
   protected: '잠금·장착 장비는 분해할 수 없습니다', none: '선택한 장비가 없습니다', tickets: '입장권이 없습니다', 'no-record': '최고 기록이 없어 소탕할 수 없습니다',
   pending: '진행 중인 도전이 있습니다', stage: '도전할 수 없는 단계입니다', locked: '아직 열리지 않았습니다', wave: '웨이브 10에 먼저 도달해야 합니다',
@@ -562,6 +564,7 @@ export function menuTiles(app) {
   const extra = [...V4.v4Tiles(app), ...V5.v5Tiles(app), ...V6.v6Tiles(app), ...V8.v8Tiles(app)];
   const att = attendanceStatus(s, Date.now());
   return [
+    MAILUI.mailTile(app),
     ...extra,
     { id: 'attendance', ic: 'check', t: '출석', s: att.claimedToday ? `오늘 완료 · ${att.count}일` : `${att.index + 1}일차 받기`, dot: att.canClaim, on: () => openAttendance(app) },
     { id: 'promotion', ic: 'star', t: '승급', s: tier >= 3 ? `${prog.tierName(s)} · 최종` : cl.canChoose || cl.canPromote ? `${cl.tier}차 승급 가능` : cl.canTrial ? '시련 도전 가능' : `${cl.tier}차 · Lv ${[0, 30, 60, 90][cl.tier]}`, dot: promoHot,

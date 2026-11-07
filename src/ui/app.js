@@ -16,6 +16,7 @@ import * as V5 from './v5.js';
 import { BLESSINGS, CURSES } from '../core/rift.js';
 import { AFFIXES, MPLUS } from '../core/mplus.js';
 import * as V8 from './v8.js';
+import * as MAILUI from './mail.js';
 
 export const TABS = [
   { id: 'battle', label: '전투', icon: 'battle' },
@@ -61,7 +62,9 @@ export class App {
     E.me = h('button', { type: 'button', class: 'me', 'aria-label': '프로필', onClick: () => S.openProfile ? S.openProfile(this) : S.openSettings(this) },
       E.face, h('div', { class: 'who' }, E.name, E.sub, h('span', { class: 'lvbar', 'aria-hidden': 'true' }, E.lvbar)));
     E.fsBtn = h('button', { type: 'button', class: 'icon-btn fs-btn', 'aria-label': '전체 화면', onClick: () => this.toggleFullscreen() });
-    app.appendChild(h('header', { class: 'status' }, E.me, h('div', { class: 'wallet' }, E.gold, E.ore, E.saveDot, E.fsBtn)));
+    E.mailN = h('span', { class: 'mail-n' }, '');
+    E.mailBtn = h('button', { type: 'button', class: 'icon-btn mail-btn', 'aria-label': '우편함', hidden: true, onClick: () => MAILUI.openMailbox(this) }, icon('mail', 20), E.mailN);
+    app.appendChild(h('header', { class: 'status' }, E.me, h('div', { class: 'wallet' }, E.gold, E.ore, E.mailBtn, E.saveDot, E.fsBtn)));
     FS.onChange(() => { this.renderFsBtn(); setTimeout(() => this.renderer && this.renderer.resize(), 120); });
     window.addEventListener('resize', () => this.renderFsBtn());
     E.banner = h('div', { class: 'banner-host' });
@@ -533,6 +536,8 @@ export class App {
     E.sub.textContent = `Lv ${p.level} · ${prog.tierName(s) || CLASSES[p.cls || 'warrior'].name}${p.pendingExp ? ' · 보관 EXP ' + fmt(p.pendingExp) : ''}`;
     E.gold.querySelector('.v').textContent = fmt(s.wallet.gold);
     E.ore.querySelector('.v').textContent = fmt(s.wallet.ore);
+    const mailN = MAILUI.mailCount(s);
+    if (E.mailBtn) { E.mailBtn.hidden = !mailN; E.mailN.textContent = mailN > 9 ? '9+' : String(mailN); E.mailBtn.setAttribute('aria-label', `우편함 · 받을 우편 ${mailN}통`); }
     const m = this.game.mode;
     let pv = 0;
     if (m === 'BOSS') { E.where.textContent = BOSSES[this.game.session.bossId].name; E.prog.textContent = '보스전'; }

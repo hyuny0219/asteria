@@ -17,6 +17,7 @@
 - 그림: 4클래스 기본·승급 24종 8 키 포즈(GPT A01·A02), 몬스터·보스·배경·아이콘 생성 그림(`docs/KNOWN_ISSUES.md`)
 - 전투 Canvas2D, UI DOM/SVG, Vanilla JS(ES 모듈, 빌드 도구·외부 의존성 없음), 폰트 Noto Sans KR(WOFF2 서브셋, OFL)
 - 비도트 성인 여성 다크 판타지 일러스트. 도트·치비·픽셀 폰트·정수 확대는 사용하지 않습니다.
+- **우편함 · 쿠폰**: 운영 우편(기간·1회 배달), 30일 보관·모두 받기, 쿠폰 입력(해시 저장·프로필당 1회, 보상은 우편으로) — `docs/DESIGN_V9_MAIL.md`
 - 실제 광고·결제·캐릭터 가챠·호감도는 없습니다(뽑기는 게임 내 재화만).
 
 ## 실행
@@ -52,6 +53,8 @@ node tools/qa_v8.cjs 8123                        # v8 콘텐츠(쐐기·원정·
 node tools/mplus_sim.mjs <snap dir>               # 쐐기 단계별 시간 내/초과/실패 (balance_sim_v4 --snap 저장본)
 node tools/qa_stage_stable.cjs 8123              # 스테이지 탭이 전투 중에 튀지 않는지(고른 지역·칸 유지)
 node tools/qa_combat_fx.cjs 8123                 # 콤보·치명타·스킬 이펙트·궁극기 컷인 캡처(docs/qa/screens/fx_*.png)·프레임 비용
+node tools/qa_mail.cjs 8123                      # 우편함·쿠폰 × 3해상도 (docs/qa/screens/v9_mail_*.png)
+node tools/make_coupon.mjs SEONBAE               # 새 쿠폰 코드 → src/data/coupons.js에 넣을 해시 출력
 python3 tools/extract_gpt_b.py                  # GPT B 투사체·타격 → fx_*.webp
 python3 tools/extract_gpt_c.py                  # GPT C 몬스터 대기·공격·피격·쓰러짐 → mon_M##_<act>.webp
 python3 tools/extract_gpt_d.py                  # GPT D 보스 대기·예고·강공·광폭화 → boss_<id>_<act>.webp

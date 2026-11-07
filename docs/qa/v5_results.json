@@ -30,9 +30,9 @@
   "pass": true,
   "info": {
    "choices": [
-    "b_steal",
-    "b_atk2",
-    "b_cdr"
+    "b_atk",
+    "b_regen",
+    "b_thorns"
    ]
   }
  },
@@ -82,9 +82,9 @@
   "pass": true,
   "info": {
    "choices": [
-    "b_hp",
-    "b_ult",
-    "b_thorns"
+    "b_evade",
+    "b_heal",
+    "b_atk2"
    ]
   }
  },
