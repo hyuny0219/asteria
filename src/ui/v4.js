@@ -15,7 +15,7 @@ import { rarityLabel } from '../core/items.js';
 import { fmt, fmtFull, fmtPct } from '../core/util.js';
 import { sfx } from '../platform/audio.js';
 import { button, closeAllModals, h, icon, img, modalOpen, openModal, toast } from './dom.js';
-import { fail, go, openBoss, openWorld, rewardTiles } from './screens.js';
+import { costChip, fail, go, openBoss, openWorld, rewardTiles } from './screens.js';
 
 const reduce = (app) => app.state.settings.reduceMotion;
 const curIcon = (k) => img(itemIcon(CURRENCY_ICONS[k]), '');
@@ -122,7 +122,8 @@ export function openGacha(app, tab = 'eq') {
         showDrawResults(app, isEq, r, () => render());
         render();
       } });
-      b.append(h('b', null, `${n}회 뽑기`), h('small', null, q.ok ? cost : `보석 ${fmtFull(q.shortGem)} 부족`));
+      b.append(h('b', null, `${n}회 뽑기`), h('small', { class: 'draw-cost' }, q.tickets ? costChip(isEq ? 'eqTicket' : 'skTicket', q.tickets) : null, q.tickets && q.gem ? ' + ' : null,
+        q.gem ? costChip('gem', q.gem, !q.ok) : null, q.ok ? null : h('span', { class: 'short' }, ` ${fmtFull(q.shortGem)} 부족`)));
       return b;
     };
     m.setBody(h('div', { dataset: { screen: isEq ? 'gacha' : 'gachaskill' } },

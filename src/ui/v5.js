@@ -10,7 +10,7 @@ import * as RF from '../core/rift.js';
 import { fmt, fmtFull, fmtPct } from '../core/util.js';
 import { sfx } from '../platform/audio.js';
 import { button, h, img, openModal, toast } from './dom.js';
-import { fail, rewardTiles } from './screens.js';
+import { costChip, fail, rewardTiles } from './screens.js';
 
 // placeholder icon ids (swap when the v5 emblem board lands)
 // Interim per-tree icons (existing skill/rune icons) until tree emblems are drawn.
@@ -75,12 +75,13 @@ export function openTalents(app, treeId = null) {
       h('p', { class: 'small', style: { margin: '6px 0' } }, h('b', null, td.name), ` · ${td.theme}`),
       h('div', { class: 'tal-tree' }, rows));
     const actions = [
-      button(cost ? `초기화 · 골드 ${fmt(cost)}` : '초기화 · 오늘 무료', { cls: 'btn', disabled: T.pointsSpent(s) === 0, onClick: () => {
+      button(cost ? '초기화' : '초기화 · 오늘 무료', { cls: 'btn' + (cost ? ' with-cost' : ''), disabled: T.pointsSpent(s) === 0 || (cost && s.wallet.gold < cost), onClick: () => {
         const cm = openModal({ id: 'talentRespec', title: '특성을 초기화할까요?', kind: 'center', desc: `${t.active === 0 ? '사냥용' : '보스용'} 프리셋의 특성 ${T.pointsSpent(s)}점을 모두 돌려받습니다. ${cost ? `골드 ${fmtFull(cost)}가 듭니다.` : '오늘 1회 무료입니다.'} 다른 프리셋은 그대로예요.`, actions: [
           button('초기화', { cls: 'btn btn-primary', busy: true, onClick: async () => { const r = fail(await g.talentRespec()); if (r.ok) { cm.close(); render(); } } }),
           button('취소', { cls: 'btn', onClick: () => cm.close() })] });
       } }),
       button('닫기', { cls: 'btn', onClick: () => m.close() })];
+    if (cost) actions[0].append(' ', costChip('gold', cost, s.wallet.gold < cost));
     if (!m) m = openModal({ id: 'talents', title: '특성', body, actions }); else { m.setBody(body); m.setActions(actions); }
   };
   render();

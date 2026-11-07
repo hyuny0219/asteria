@@ -30,7 +30,7 @@ export function mplusCard(app) {
     h('div', { class: 'kv' }, '오늘 보상', h('b', null, `${left}/${MP.MPLUS.runsPerDay}회 남음 · 주간 최고 +${m.weekBest || 0}`)),
     m.vault ? h('div', { class: 'kv' }, h('span', { class: 'okc' }, '주간 금고 도착'), h('b', null, `지난주 +${m.vault.best}`)) : null,
     h('div', { class: 'btn-row' },
-      button('쐐기 던전', { cls: 'btn btn-primary', disabled: app.game.mode !== 'FARM', onClick: () => openMplus(app) }),
+      button(MP.rewardedLeft(s, Date.now()) > 0 ? '쐐기 던전' : '오늘 횟수 모두 사용', { cls: 'btn btn-primary', disabled: MP.rewardedLeft(s, Date.now()) <= 0 || app.game.mode !== 'FARM', onClick: () => openMplus(app) }),
       m.vault ? button('금고 열기', { cls: 'btn', busy: true, onClick: () => claimVault(app) }) : null));
 }
 
@@ -56,7 +56,7 @@ export function openMplus(app) {
   const left = MP.rewardedLeft(s, now);
   const rows = Object.entries(MP.MPLUS.dungeons).map(([id, d]) => h('div', { class: 'mp-row' },
     h('div', { class: 'mp-name' }, h('b', null, d.name), h('span', { class: 'muted small' }, `최고 +${m.best[id] || 0} · 시간 내 +${m.bestTimed[id] || 0}`)),
-    button(`+${key} 도전`, { cls: 'btn btn-primary', busy: true, disabled: app.game.mode !== 'FARM', onClick: async () => { const r = fail(await app.game.startMplus(id)); if (r.ok) modal.close(); } })));
+    button(left > 0 ? `+${key} 도전` : '오늘 횟수 모두 사용', { cls: 'btn btn-primary', busy: true, disabled: left <= 0 || app.game.mode !== 'FARM', onClick: async () => { const r = fail(await app.game.startMplus(id)); if (r.ok) modal.close(); } })));
   const body = h('div', { dataset: { screen: 'mplusPick' } },
     h('p', { class: 'modal-desc' }, `적 ${MP.MPLUS.trash}마리를 쓰러뜨리면 던전 보스가 나와요. ${MP.MPLUS.timeSec}초 안에 보스까지 잡으면 열쇠가 오르고, 남은 시간이 ${MP.MPLUS.plus2 * 100}% 이상이면 +2, ${MP.MPLUS.plus3 * 100}% 이상이면 +3. 시간을 넘겨 끝내면 열쇠는 그대로, 실패·포기하면 1단계 내려가요(최소 +${MP.MPLUS.minKey}).`),
     h('div', { class: 'card' },

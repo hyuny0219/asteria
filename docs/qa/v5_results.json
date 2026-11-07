@@ -30,9 +30,9 @@
   "pass": true,
   "info": {
    "choices": [
-    "b_atk2",
-    "b_cdmg",
-    "b_def"
+    "b_atk",
+    "b_def",
+    "b_evade"
    ]
   }
  },
@@ -82,9 +82,9 @@
   "pass": true,
   "info": {
    "choices": [
-    "b_regen",
-    "b_thorns",
-    "b_echo"
+    "b_cdmg",
+    "b_glass",
+    "b_greed"
    ]
   }
  },

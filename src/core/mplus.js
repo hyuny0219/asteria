@@ -80,8 +80,9 @@ export function beginRun(state, dungeon, runId, now) {
   if (!MPLUS.dungeons[dungeon]) return { ok: false, reason: 'dungeon' };
   const m = refreshMplus(state, now);
   if (m.run) return { ok: false, reason: 'pending' };
-  const rewarded = m.runsToday < MPLUS.runsPerDay;
-  if (rewarded) m.runsToday += 1;
+  if (m.runsToday >= MPLUS.runsPerDay) return { ok: false, reason: 'tries' };
+  const rewarded = true;
+  m.runsToday += 1;
   m.runs += 1;
   m.run = { id: runId, dungeon, key: m.key, affixes: affixesFor(now), rewarded, startedAt: now };
   return { ok: true, run: m.run };

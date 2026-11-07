@@ -37,9 +37,7 @@ test('쐐기: 3 rewarded runs a day, crash refunds the try, weekly vault next we
   const rng = makeRng(4);
   for (let i = 0; i < 3; i++) { MP.beginRun(s, 'quarry', 'a' + i, T0); MP.finishRun(s, 'a' + i, { win: true, timeSec: 85 }, T0, rng); }
   assert.equal(MP.rewardedLeft(s, T0), 0);
-  MP.beginRun(s, 'quarry', 'a4', T0);
-  const r = MP.finishRun(s, 'a4', { win: true, timeSec: 85 }, T0, rng);
-  assert.equal(r.rewarded, false); assert.deepEqual(r.items, []); assert.equal(r.reward.gem, undefined);
+  assert.equal(MP.beginRun(s, 'quarry', 'a4', T0).reason, 'tries');   // 4th run of the day is blocked
   // crash
   const s2 = open(newGame(T0));
   MP.beginRun(s2, 'gold', 'c1', T0);

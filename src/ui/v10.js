@@ -9,7 +9,7 @@ import { itemIcon, skillIcon } from '../render/assets.js';
 import { rarityLabel } from '../core/items.js';
 import { sfx } from '../platform/audio.js';
 import { button, h, img, openModal, toast } from './dom.js';
-import { fail } from './screens.js';
+import { costChip, fail } from './screens.js';
 
 const OPT_KEYS = Object.keys(BALANCE.equipment.options);
 const PCT = new Set(['atkPct', 'critChance', 'critDmg', 'aspd', 'hpPct', 'defPct', 'cdr', 'ultCharge', 'goldPct']);
@@ -203,11 +203,12 @@ export function awakenCard(app) {
       return h('div', { class: 'awk-row' + (cur !== undefined && ok ? ' on' : ''), dataset: { key: 'awk-' + id } },
         h('span', { class: 'awk-ic' + (cur !== undefined && ok ? ' awk-' + (cur ? 'b' : 'a') : '') }, img(skillIcon(SKILLS[id].icon), '')),
         h('div', { class: 'awk-body' }, h('div', { class: 't' }, `${SKILLS[id].name} · Lv ${lv}`),
-          ok ? h('div', { class: 'awk-opts' }, AWAKENINGS[id].map((o, i) => h('button', { type: 'button', class: 'awk-opt', 'aria-pressed': String(cur === i), dataset: { awk: `${id}:${i}` }, onClick: async () => {
+          ok ? h('div', { class: 'awk-opts' }, AWAKENINGS[id].map((o, i) => h('button', { type: 'button', class: 'awk-opt', 'aria-pressed': String(cur === i), disabled: cur !== undefined && cur !== i && st.free <= 0 && s.wallet.gem < st.gem, dataset: { awk: `${id}:${i}` }, onClick: async () => {
             if (cur === i) return;
             const r = fail(await app.game.setAwaken(id, i));
             if (r.ok) toast(`${SKILLS[id].name} 각성: ${o.name}${r.paid ? ` (보석 ${r.paid})` : ''}`, 'good');
-          } }, h('b', null, img(skillIcon(i ? 'L11' : 'L10'), '', 'awk-em'), `${i ? 'B' : 'A'} · ${o.name}`), h('span', null, o.desc))))
+          } }, h('b', null, img(skillIcon(i ? 'L11' : 'L10'), '', 'awk-em'), `${i ? 'B' : 'A'} · ${o.name}`), h('span', null, o.desc),
+            cur !== undefined && cur !== i ? (st.free > 0 ? h('span', { class: 'awk-cost free' }, '오늘 무료 변경') : costChip('gem', st.gem, s.wallet.gem < st.gem)) : null)))
             : h('div', { class: 'muted small' }, `Lv ${AWAKEN.needLevel}에 각성 · ${AWAKENINGS[id].map((o, i) => `${i ? 'B' : 'A'} ${o.name}`).join(' / ')}`)));
     }));
 }

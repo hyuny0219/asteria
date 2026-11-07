@@ -50,8 +50,14 @@ const reasonText = {
   pending: '진행 중인 도전이 있습니다', stage: '도전할 수 없는 단계입니다', locked: '아직 열리지 않았습니다', wave: '웨이브 10에 먼저 도달해야 합니다',
   region: '지역이 아직 열리지 않았습니다', mode: '지금은 할 수 없습니다 (다른 전투 진행 중)', save: '저장하지 못해 취소되었습니다', busy: '처리 중입니다',
   conditions: '조건이 충족되지 않았습니다', conflict: '다른 탭이 저장 권한을 가지고 있습니다', 'switch-dev-only': '분기 재전환은 개발 설정에서만 가능합니다',
-  'locked-slot': '승급 후 열리는 슬롯입니다', books: '스킬북이 부족합니다', gem: '보석이 부족합니다', tries: '이번 주 레이드 횟수를 모두 사용했습니다', 'class-locked': '클래스는 처음에만 고를 수 있습니다', 'same-class': '지금 클래스와 같습니다', 'class-ticket': '클래스 전환권이 없습니다 (상점에서 구매)', limit: '구매 한도에 도달했습니다', branch: '이 클래스의 갈래가 아닙니다', points: '남은 능력치 포인트가 없습니다', count: '뽑기 횟수가 올바르지 않습니다', 'locked-skill': '아직 배우지 않은 스킬입니다', duplicate: '이미 처리되었습니다', full: '보관함에 빈 칸이 없습니다', 'already-best': '이미 주 스탯 기준 최고 장비를 착용 중입니다', missing: '장비를 찾을 수 없습니다', empty: '빈 슬롯입니다',
+  'locked-slot': '승급 후 열리는 슬롯입니다', books: '스킬북이 부족합니다', gem: '보석이 부족합니다', tries: '남은 횟수를 모두 사용했습니다', 'class-locked': '클래스는 처음에만 고를 수 있습니다', 'same-class': '지금 클래스와 같습니다', 'class-ticket': '클래스 전환권이 없습니다 (상점에서 구매)', limit: '구매 한도에 도달했습니다', branch: '이 클래스의 갈래가 아닙니다', points: '남은 능력치 포인트가 없습니다', count: '뽑기 횟수가 올바르지 않습니다', 'locked-skill': '아직 배우지 않은 스킬입니다', duplicate: '이미 처리되었습니다', full: '보관함에 빈 칸이 없습니다', 'already-best': '이미 주 스탯 기준 최고 장비를 착용 중입니다', missing: '장비를 찾을 수 없습니다', empty: '빈 슬롯입니다',
 };
+// Cost chip: currency icon + amount (선배: 보석을 쓸 때 아이콘과 양을 보이게)
+const COST_ICON = { gem: 'gem', gold: 'gold', ore: 'ore', eqTicket: 'chest', skTicket: 'goldChest', ticket: 'ticket' };
+export function costChip(kind, amount, short = false) {
+  return h('span', { class: 'cost-chip' + (short ? ' short' : ''), 'aria-label': `${({ gem: '보석', gold: '골드', ore: '강화 광석', eqTicket: '장비 뽑기권', skTicket: '스킬 뽑기권', ticket: '입장권' })[kind] || kind} ${fmtFull(amount)}` },
+    img(itemIcon(CURRENCY_ICONS[COST_ICON[kind] || kind]), ''), h('b', null, fmtFull(amount)));
+}
 export const why = (r) => (r && r.reason ? reasonText[r.reason] || r.reason : '');
 export function fail(r) { if (r && !r.ok && r.reason !== 'save' && r.reason !== 'conflict') toast(why(r), 'error'); return r; }
 const curIcon = (k) => img(itemIcon(CURRENCY_ICONS[k]), '');

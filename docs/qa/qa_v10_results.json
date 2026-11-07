@@ -48,7 +48,7 @@
   "name": "390x844 reforge rerolls one line",
   "pass": true,
   "extra": {
-   "o": "[{\"k\":\"cdr\",\"v\":0.042},{\"k\":\"atkPct\",\"v\":0.033},{\"k\":\"defPct\",\"v\":0.064},{\"k\":\"critChance\",\"v\":0.018}]",
+   "o": "[{\"k\":\"hpPct\",\"v\":0.076},{\"k\":\"atkPct\",\"v\":0.033},{\"k\":\"defPct\",\"v\":0.064},{\"k\":\"critChance\",\"v\":0.018}]",
    "n": 1
   }
  },
@@ -198,7 +198,7 @@
   "name": "360x700 reforge rerolls one line",
   "pass": true,
   "extra": {
-   "o": "[{\"k\":\"cdr\",\"v\":0.025},{\"k\":\"atkPct\",\"v\":0.033},{\"k\":\"defPct\",\"v\":0.064},{\"k\":\"critChance\",\"v\":0.018}]",
+   "o": "[{\"k\":\"aspd\",\"v\":0.033},{\"k\":\"atkPct\",\"v\":0.033},{\"k\":\"defPct\",\"v\":0.064},{\"k\":\"critChance\",\"v\":0.018}]",
    "n": 1
   }
  },
@@ -348,7 +348,7 @@
   "name": "412x915 reforge rerolls one line",
   "pass": true,
   "extra": {
-   "o": "[{\"k\":\"aspd\",\"v\":0.026},{\"k\":\"atkPct\",\"v\":0.033},{\"k\":\"defPct\",\"v\":0.064},{\"k\":\"critChance\",\"v\":0.018}]",
+   "o": "[{\"k\":\"aspd\",\"v\":0.037},{\"k\":\"atkPct\",\"v\":0.033},{\"k\":\"defPct\",\"v\":0.064},{\"k\":\"critChance\",\"v\":0.018}]",
    "n": 1
   }
  },
