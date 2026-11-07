@@ -128,34 +128,61 @@ export function expeditionCard(app) {
 
 export function openExpedition(app) {
   let timer = null;
+  let pickFor = null;   // expedition id whose "동료 바꾸기" list is open
   const m = openModal({ id: 'expedition', title: '원정 파견', body: h('div'), kind: 'full', onClose: () => clearInterval(timer) });
+  const diff = (x) => (x.hours <= 2 ? '쉬움' : x.hours <= 4 ? '보통' : '어려움');
   const render = () => {
     const s = app.state;
     const now = Date.now();
     const e = EX.refreshExpedition(s, now);
     const busy = EX.busyPets(s);
     const pets = Object.keys(s.pets.owned);
-    const freeSlot = e.slots.some((x) => !x);
-    const slotRows = e.slots.map((x, i) => x
-      ? h('div', { class: 'mp-row' },
-        h('div', { class: 'mp-name' }, h('b', null, `${x.exp.name} · ${x.exp.hours}시간`), h('span', { class: 'muted small' }, `${EX.petName(x.pet)} · ${rwTxt(x.exp.type, x.exp.amount)} · 성공 ${Math.round(x.chance * 100)}%`),
-          now < x.endAt ? h('span', { class: 'small', dataset: { end: x.endAt } }, `남은 시간 ${hm(x.endAt - now)}`) : h('span', { class: 'okc small' }, '완료')),
-        button(now < x.endAt ? '진행 중' : '받기', { cls: 'btn' + (now < x.endAt ? '' : ' btn-primary'), disabled: now < x.endAt, busy: true, onClick: async () => { const r = fail(await app.game.claimExpedition(i)); if (r.ok) { showExpResults(app, [r]); render(); } } }))
-      : h('div', { class: 'mp-row muted' }, h('div', { class: 'mp-name' }, h('span', null, `빈 슬롯 ${i + 1}`))));
-    const board = e.board.map((x) => h('div', { class: 'card exp-card' },
-      h('div', { class: 'kv' }, h('b', { style: { color: 'var(--text)' } }, `${x.name} · ${x.hours}시간`), h('b', null, rwTxt(x.type, x.amount))),
-      h('div', { class: 'muted small' }, `권장 동료 점수 ${x.req} (레벨 + 별 5점씩) · 대성공 시 2배 · 실패해도 30%`),
-      h('div', { class: 'exp-pets' }, pets.map((pid) => {
-        const ch = EX.successChance(s, pid, x);
-        return button(`${PETS[pid].name} ${Math.round(ch.success * 100)}%`, { cls: 'btn small-btn', disabled: busy.has(pid) || !freeSlot, busy: true, ariaLabel: `${PETS[pid].name} 보내기, 성공 ${Math.round(ch.success * 100)}%`,
-          onClick: async () => { const r = fail(await app.game.sendExpedition(x.id, pid)); if (r.ok) render(); } });
-      }))));
+    const freePets = pets.filter((p) => !busy.has(p));
+    const freeSlots = e.slots.filter((x) => !x).length;
     const ready = EX.readyCount(s, now);
+    const running = e.slots.map((x, i) => [x, i]).filter(([x]) => x);
+    const canAuto = freeSlots > 0 && freePets.length > 0 && e.board.length > 0;
+    // 1) 한눈에: 칸 · 쉬는 동료 · 큰 버튼 두 개
+    const top = h('div', { class: 'card exp-top' },
+      h('div', { class: 'kv' }, '파견 칸', h('b', null, `${running.length}/${EX.EXPEDITION.slots} 사용 중`)),
+      h('div', { class: 'kv' }, '쉬는 동료', h('b', null, freePets.length ? freePets.map(EX.petName).join(', ') : '없음 (모두 원정 중)')),
+      h('div', { class: 'btn-row' },
+        ready ? button(`보상 받기 (${ready})`, { cls: 'btn btn-primary', busy: true, onClick: async () => { const r = fail(await app.game.claimAllExpeditions()); if (r.ok) { showExpResults(app, r.results); render(); } } }) : null,
+        button(canAuto ? '자동 파견' : freePets.length ? (freeSlots ? '보낼 원정 없음' : '파견 칸이 가득 참') : '쉬는 동료 없음', { cls: 'btn' + (ready ? '' : ' btn-primary'), disabled: !canAuto, busy: true,
+          onClick: async () => { const r = fail(await app.game.sendExpeditionAuto()); if (r.ok) { toast(`${r.sent.length}곳에 원정을 보냈어요`, 'good'); render(); } } })),
+      h('p', { class: 'muted small', style: { margin: '6px 0 0' } }, '자동 파견: 쉬는 동료를 성공률이 좋은 원정에 알아서 보내요. 동료 한 마리는 원정 하나만 갈 수 있어요.'));
+    // 2) 진행 중 (진행 막대)
+    const runRows = running.map(([x, i]) => {
+      const done = now >= x.endAt, p = Math.min(1, (now - x.startAt) / (x.endAt - x.startAt));
+      return h('div', { class: 'card exp-run' },
+        h('div', { class: 'kv' }, h('b', { style: { color: 'var(--text)' } }, `${x.exp.name}`), h('b', null, rwTxt(x.exp.type, x.exp.amount))),
+        h('div', { class: 'muted small' }, `${EX.petName(x.pet)} · 성공 ${Math.round(x.chance * 100)}%`),
+        h('div', { class: 'exp-bar' }, h('i', { style: { width: Math.round(p * 100) + '%' } })),
+        done ? button('받기', { cls: 'btn btn-primary', busy: true, onClick: async () => { const r = fail(await app.game.claimExpedition(i)); if (r.ok) { showExpResults(app, [r]); render(); } } })
+          : h('div', { class: 'small', dataset: { end: x.endAt } }, `남은 시간 ${hm(x.endAt - now)}`));
+    });
+    // 3) 오늘의 원정: 보상 크게, 버튼 하나 (가장 성공률 높은 쉬는 동료가 감)
+    const board = e.board.map((x) => {
+      const best = EX.bestPetFor(s, x, busy);
+      const why = !freeSlots ? '파견 칸이 가득 참' : !best ? '쉬는 동료 없음' : null;
+      const send = async (pid) => { const r = fail(await app.game.sendExpedition(x.id, pid)); if (r.ok) { pickFor = null; render(); } };
+      return h('div', { class: 'card exp-card' },
+        h('div', { class: 'kv' }, h('b', { style: { color: 'var(--text)' } }, `${x.name}`), h('b', { class: 'exp-reward' }, rwTxt(x.type, x.amount))),
+        h('div', { class: 'muted small' }, `${x.hours}시간 · 난이도 ${diff(x)}${best ? ` · ${EX.petName(best.pet)} 보내면 성공 ${Math.round(best.chance * 100)}%` : ''}`),
+        h('div', { class: 'btn-row' },
+          button(why || `${best ? EX.petName(best.pet) : ''} 보내기`, { cls: 'btn btn-primary', disabled: !!why, busy: true, onClick: () => send(best.pet) }),
+          freePets.length > 1 && !why ? button(pickFor === x.id ? '닫기' : '동료 바꾸기', { cls: 'btn', onClick: () => { pickFor = pickFor === x.id ? null : x.id; render(); } }) : null),
+        pickFor === x.id ? h('div', { class: 'exp-pets' }, freePets.map((pid) => {
+          const ch = EX.successChance(s, pid, x).success;
+          return button(`${EX.petName(pid)} · 성공 ${Math.round(ch * 100)}%`, { cls: 'btn small-btn', busy: true, onClick: () => send(pid) });
+        })) : null);
+    });
     m.setBody(h('div', { dataset: { screen: 'expeditionList' } },
-      h('p', { class: 'modal-desc' }, `동료를 원정에 보내면 실제 시간으로 진행돼요(앱을 꺼도). 원정 중에도 동료는 전투를 계속 도와요. 보유: 달빛 약초 ${s.craft.herb} · 야수 고기 ${s.craft.meat} · 동료 먹이 ${s.pets.food}`),
-      h('div', { class: 'section-title' }, `진행 중 ${e.slots.filter(Boolean).length}/${EX.EXPEDITION.slots}`), slotRows,
-      ready > 1 ? button(`모두 받기 (${ready})`, { cls: 'btn btn-primary', busy: true, onClick: async () => { const r = fail(await app.game.claimAllExpeditions()); if (r.ok) { showExpResults(app, r.results); render(); } } }) : null,
-      h('div', { class: 'section-title' }, `오늘의 원정 ${e.board.length}개`), board.length ? board : h('p', { class: 'muted' }, '오늘 원정을 모두 보냈어요. 00:00(KST)에 새 목록이 와요.')));
+      top,
+      running.length ? h('div', { class: 'section-title' }, '진행 중') : null, ...runRows,
+      h('div', { class: 'section-title' }, `오늘의 원정 ${e.board.length}개 · 00:00 갱신`),
+      board.length ? board : h('p', { class: 'muted' }, '오늘 원정을 모두 보냈어요. 00:00(KST)에 새 목록이 와요.'),
+      h('p', { class: 'muted small' }, `원정은 앱을 꺼도 실제 시간으로 진행되고, 원정 중인 동료도 전투는 계속 도와요. 동료 레벨·별이 높을수록 성공률이 올라요. 대성공이면 보상 2배, 실패해도 30%. 보유 재료: 달빛 약초 ${s.craft.herb} · 야수 고기 ${s.craft.meat} · 동료 먹이 ${s.pets.food}`)));
   };
   render();
   timer = setInterval(() => {

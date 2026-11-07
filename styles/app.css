@@ -576,3 +576,10 @@ input.text { width: 100%; min-height: 36px; background: var(--panel); border: 1p
 .jewel-ruby { color: #E2566B; } .jewel-sapphire { color: #5C8DF0; } .jewel-emerald { color: #3FBF7F; }
 .jewel-topaz { color: #E0A93A; } .jewel-amethyst { color: #A877E8; }
 [data-screen="workshop"] .seg { margin-bottom: 10px; }
+/* 원정 파견 (쉬운 조작) */
+.exp-top .btn-row { margin-top: 8px; }
+.exp-run .exp-bar { height: 6px; border-radius: 3px; background: rgba(255,255,255,.08); margin: 6px 0; overflow: hidden; }
+.exp-run .exp-bar i { display: block; height: 100%; background: var(--gold); }
+.exp-card .exp-reward { color: var(--gold); font-size: 15px; }
+.exp-card .btn-row { margin-top: 8px; }
+.exp-pets { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }

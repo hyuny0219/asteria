@@ -59,6 +59,44 @@ export function successChance(state, petId, exp) {
   return { success: Math.max(C.min, Math.min(C.max, C.base + C.perPoint * diff)), great: Math.max(0, Math.min(EXPEDITION.great.max, EXPEDITION.great.perPoint * diff)) };
 }
 
+// 자동 파견 / 추천: best free companion for an expedition (highest success), and a greedy plan
+// that fills free slots — each free companion (strongest first) takes the expedition with the
+// best expected value (success × hours) among those it clears at ≥ 60 %, else its safest one.
+export function bestPetFor(state, exp, exclude = new Set()) {
+  let best = null;
+  for (const pid of Object.keys(state.pets.owned || {})) {
+    if (exclude.has(pid)) continue;
+    const ch = successChance(state, pid, exp).success;
+    if (!best || ch > best.chance) best = { pet: pid, chance: ch };
+  }
+  return best;
+}
+export function autoPlan(state, now) {
+  const e = refreshExpedition(state, now);
+  const taken = new Set(busyPets(state));
+  let free = e.slots.filter((x) => !x).length;
+  const board = e.board.slice();
+  const pets = Object.keys(state.pets.owned || {}).filter((p) => !taken.has(p)).sort((a, b) => petScore(state, b) - petScore(state, a));
+  const plan = [];
+  for (const pid of pets) {
+    if (!free || !board.length) break;
+    const opts = board.map((x) => ({ x, c: successChance(state, pid, x).success }));
+    const good = opts.filter((o) => o.c >= 0.6);
+    const pick = (good.length ? good.sort((a, b) => b.c * b.x.hours - a.c * a.x.hours) : opts.sort((a, b) => b.c - a.c))[0];
+    plan.push({ expId: pick.x.id, petId: pid });
+    board.splice(board.indexOf(pick.x), 1);
+    free--;
+  }
+  return plan;
+}
+export function sendAuto(state, now) {
+  const plan = autoPlan(state, now);
+  if (!plan.length) return { ok: false, reason: busyPets(state).size >= Object.keys(state.pets.owned || {}).length ? 'no-pet' : 'slots' };
+  const sent = [];
+  for (const p of plan) { const r = send(state, p.expId, p.petId, now); if (r.ok) sent.push(p); }
+  return { ok: sent.length > 0, sent };
+}
+
 export const busyPets = (state) => new Set((state.expedition ? state.expedition.slots : []).filter(Boolean).map((x) => x.pet));
 
 export function send(state, expId, petId, now) {

@@ -69,10 +69,17 @@ const shot = (p, name, vp) => p.screenshot({ path: path.join(OUT, `v8_${name}_${
     await p.click('[data-screen="expedition"] .btn-primary');
     await p.waitForTimeout(400);
     ok(await p.locator('[data-screen="expeditionList"] .exp-card').count() === 5, `${vp[0]} board of 5`);
-    await p.click('[data-screen="expeditionList"] .exp-card .exp-pets .btn >> nth=0');
+    // one-tap send (best free companion) on the first card
+    await p.click('[data-screen="expeditionList"] .exp-card .btn-primary >> nth=0');
     await p.waitForTimeout(500);
     const sent = await p.evaluate(() => __asteria.game.state.expedition.slots.filter(Boolean).length);
     ok(sent === 1, `${vp[0]} sent one expedition`);
+    ok(await p.evaluate(() => __asteria.game.state.expedition.slots.find(Boolean).pet === 'P01'), `${vp[0]} one-tap send used the strongest free companion`);
+    // 자동 파견 sends the remaining free companion, then the button explains why it is off
+    await p.click('[data-screen="expeditionList"] .exp-top .btn:has-text("자동 파견")');
+    await p.waitForTimeout(500);
+    ok(await p.evaluate(() => __asteria.game.state.expedition.slots.filter(Boolean).length === 2), `${vp[0]} auto dispatch filled the other companion`);
+    ok(await p.locator('[data-screen="expeditionList"] .exp-top .btn:has-text("쉬는 동료 없음")').count() === 1, `${vp[0]} auto button explains no free companion`);
     ok(!(await overflowX(p)), `${vp[0]} expedition modal no horizontal overflow`);
     await shot(p, 'expedition', vp);
     // finish it by moving its end time
@@ -80,10 +87,10 @@ const shot = (p, name, vp) => p.screenshot({ path: path.join(OUT, `v8_${name}_${
     await p.evaluate(() => { document.querySelectorAll('.modal-overlay').forEach((o) => o.remove()); document.getElementById('app').inert = false; __asteria.app.renderPanel(); });
     await p.click('[data-screen="expedition"] .btn-primary');
     await p.waitForTimeout(500);
-    const btn = p.locator('[data-screen="expeditionList"] .mp-row .btn-primary').first();
+    const btn = p.locator('[data-screen="expeditionList"] .exp-top .btn-primary:has-text("보상 받기")').first();
     await btn.click();
     await p.waitForSelector('[data-screen="expResult"]', { timeout: 5000 });
-    ok(await p.evaluate(() => __asteria.game.state.expedition.done === 1), `${vp[0]} expedition claimed`);
+    ok(await p.evaluate(() => __asteria.game.state.expedition.done === 2), `${vp[0]} expeditions claimed (모두 받기)`);
     await shot(p, 'expedition_result', vp);
     await p.evaluate(() => { document.querySelectorAll('.modal-overlay').forEach((o) => o.remove()); document.getElementById('app').inert = false; });
     // ---- 희귀 정예 (spawn in farm, codex tab) ----

@@ -223,6 +223,7 @@ export class Game {
   cookFood(id) { return this.transact('cook', (s) => craft.cook(s, id, this.now())); }
   // ---------- 원정 파견 ----------
   sendExpedition(expId, petId) { return this.transact('expSend', (s) => expedition.send(s, expId, petId, this.now())); }
+  sendExpeditionAuto() { return this.transact('expSend', (s) => expedition.sendAuto(s, this.now())); }
   claimExpedition(slot) { return this.transact('expClaim', (s) => expedition.claim(s, slot, this.now())); }
   claimAllExpeditions() { return this.transact('expClaim', (s) => expedition.claimAll(s, this.now())); }
   claimMplusVault() { return this.transact('mplusVault', (s) => mplus.claimVault(s, this.now())); }
