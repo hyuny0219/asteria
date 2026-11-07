@@ -1,0 +1,215 @@
+// v10 UI: 전설 고유 효과(표시·추출·이식·수집), 재련, 등급 올리기, 스킬 각성, 장비·스킬 프리셋.
+import { AWAKEN, AWAKENINGS, EXTRACT, LOADOUT_KINDS, MYTHIC_MUL, RARITY_UP, UNIQUES } from '../data/gearplus.js';
+import { CLASSES, OPTION_NAMES, RARITY, SKILLS, SLOT_NAMES } from '../data/content.js';
+import { BALANCE } from '../data/balance.js';
+import * as G from '../core/gearplus.js';
+import * as prog from '../core/progression.js';
+import { fmt, fmtPct } from '../core/util.js';
+import { itemIcon, skillIcon } from '../render/assets.js';
+import { rarityLabel } from '../core/items.js';
+import { sfx } from '../platform/audio.js';
+import { button, h, img, openModal, toast } from './dom.js';
+import { fail } from './screens.js';
+
+const OPT_KEYS = Object.keys(BALANCE.equipment.options);
+const PCT = new Set(['atkPct', 'critChance', 'critDmg', 'aspd', 'hpPct', 'defPct', 'cdr', 'ultCharge', 'goldPct']);
+const optLabel = (o) => (o.unique ? `고유 · ${OPTION_NAMES[o.k] || o.k}` : `${OPTION_NAMES[o.k] || o.k} +${PCT.has(o.k) ? fmtPct(o.v, 1) : o.v}`);
+const clsName = (c) => (c ? CLASSES[c].name : '공용');
+
+// ---------- 고유 효과 line (compare / tiles) ----------
+export function legendLine(it) {
+  const L = G.legendText(it);
+  if (!L) return null;
+  return h('div', { class: 'legend-line', dataset: { legend: it.legend.id } },
+    h('span', { class: 'lg-tag' }, it.rarity === 'mythic' ? '신화 고유' : '전설 고유'),
+    h('b', null, L.name), h('span', null, L.text), L.cls ? h('span', { class: 'lg-cls' }, clsName(L.cls)) : null);
+}
+
+// buttons added under the compare window
+export function compareActions(app, it, rerender) {
+  const s = app.state;
+  const worn = Object.values(s.equipped).includes(it.id);
+  const row = [
+    button('재련', { cls: 'btn', dataset: { act: 'reforge' }, disabled: !(it.options || []).some((o) => !o.unique), onClick: () => openReforge(app, it.id, rerender) }),
+    button('등급 올리기', { cls: 'btn', dataset: { act: 'rarityup' }, disabled: !RARITY_UP.next[it.rarity], onClick: () => openRarityUp(app, it.id, rerender) }),
+  ];
+  const row2 = [];
+  if (it.rarity === 'legendary' || it.rarity === 'mythic') {
+    row2.push(button('효과 이식', { cls: 'btn', dataset: { act: 'imprint' }, disabled: !Object.keys(s.gearPlus.vault).length, onClick: () => openImprint(app, it.id, rerender) }));
+    if (it.legend) row2.push(button('효과 추출(분해)', { cls: 'btn', dataset: { act: 'extract' }, disabled: worn || it.locked, onClick: () => confirmExtract(app, it.id, rerender) }));
+  }
+  return [h('div', { class: 'btn-row' }, row), row2.length ? h('div', { class: 'btn-row' }, row2) : null];
+}
+
+// ---------- 추출 ----------
+function confirmExtract(app, id, after) {
+  const s = app.state;
+  const q = G.extractQuote(s, id);
+  if (!q.ok) { fail(q); return; }
+  const L = G.legendText(q.item);
+  const m = openModal({ id: 'extract', title: '고유 효과 추출', kind: 'center', body: h('div', { dataset: { screen: 'extract' } },
+    h('p', null, `${q.item.name}을(를) 분해하고 고유 효과를 보관함에 넣습니다. 장비는 사라집니다(박힌 보옥은 돌려받음).`),
+    h('div', { class: 'card' }, h('div', { class: 'kv' }, '효과', h('b', null, `${L.name}`)), h('p', { class: 'muted small', style: { margin: '2px 0 0' } }, UNIQUES[q.item.legend.id].text(q.item.legend.v)),
+      h('div', { class: 'kv' }, '보관함', h('b', null, q.current ? (q.upgrade ? '더 좋은 수치로 갱신' : '이미 같거나 더 좋은 수치 보유') : '새로 수집')),
+      h('div', { class: 'kv' }, '비용', h('b', null, `강화 광석 ${EXTRACT.ore} · 각성석 ${EXTRACT.awakenStone} (보유 ${fmt(s.wallet.ore)} · ${s.wallet.awakenStone || 0})`))),
+    h('p', { class: 'muted small' }, '보관함의 효과는 몇 번이든 다른 전설·신화 장비에 이식할 수 있어요(신화는 수치 ×1.25).')),
+  actions: [button('취소', { cls: 'btn', onClick: () => m.close() }), button('추출', { cls: 'btn btn-primary', busy: true, onClick: async () => {
+    const r = fail(await app.game.extractLegend(id));
+    if (r.ok) { m.close(); toast(`${UNIQUES[r.id].name} 보관${r.improved ? ' · 수치 갱신' : ''}`, 'good'); if (app.state.settings.sound) sfx('bell'); if (after) after(); }
+  } })] });
+}
+
+// ---------- 이식 ----------
+function openImprint(app, id, after) {
+  const s = app.state;
+  const it = s.inventory.find((i) => i.id === id);
+  if (!it) return;
+  const c = G.imprintCost(it);
+  const list = Object.entries(s.gearPlus.vault).sort((a, b) => (UNIQUES[a[0]].cls === s.player.cls ? -1 : 0) - (UNIQUES[b[0]].cls === s.player.cls ? -1 : 0));
+  const mul = it.rarity === 'mythic' ? MYTHIC_MUL : 1;
+  const m = openModal({ id: 'imprint', title: '고유 효과 이식', body: h('div', { dataset: { screen: 'imprint' } },
+    h('p', { class: 'modal-desc' }, `${it.name}의 고유 효과를 바꿉니다. 지금 효과는 사라져요(먼저 추출하면 보관됨). 비용: 강화 광석 ${c.ore} · 골드 ${fmt(c.gold)}`),
+    it.legend ? h('div', { class: 'card' }, h('div', { class: 'muted small' }, '지금 효과'), legendLine(it)) : null,
+    list.map(([uid, v]) => {
+      const U = UNIQUES[uid];
+      return h('div', { class: 'card vault-row', dataset: { uid } },
+        h('div', { class: 'kv' }, h('b', { style: { color: 'var(--text)' } }, U.name), h('span', { class: 'lg-cls' }, clsName(U.cls))),
+        h('p', { class: 'muted small', style: { margin: '2px 0 6px' } }, U.text(v * mul)),
+        button('이 효과로 바꾸기', { cls: 'btn btn-primary', busy: true, onClick: async () => {
+          const r = fail(await app.game.imprintLegend(id, uid));
+          if (r.ok) { m.close(); toast(`${U.name} 이식`, 'good'); if (after) after(); }
+        } }));
+    })) });
+}
+
+// ---------- 재련 ----------
+function openReforge(app, id, after) {
+  let sel = null;
+  const m = openModal({ id: 'reforge', title: '재련', body: h('div'), actions: [] });
+  const render = () => {
+    const s = app.state;
+    const it = s.inventory.find((i) => i.id === id);
+    if (!it) { m.close(); return; }
+    const c = G.reforgeCost(it);
+    if (sel === null) sel = it.options.findIndex((o) => !o.unique);
+    m.setBody(h('div', { dataset: { screen: 'reforge' } },
+      h('p', { class: 'modal-desc' }, '바꿀 옵션 하나를 고르면 그 줄만 새로 굴립니다. 다른 줄은 그대로이고, 다른 줄과 겹치는 옵션은 나오지 않아요. 재련할수록 비용이 올라가요(광석 +50%씩).'),
+      sel >= 0 ? h('p', { class: 'muted small', dataset: { note: 'odds' } }, (() => { const n = OPT_KEYS.length - it.options.filter((o, i) => i !== sel && !o.unique).length; return `확률: 옵션 ${n}종 중 하나가 각 ${fmtPct(1 / n, 1)}, 수치는 옵션 범위 안에서 균등.`; })()) : null,
+      h('div', { class: 'opt-pick', role: 'radiogroup', 'aria-label': '재련할 옵션' }, it.options.map((o, i) => h('button', { type: 'button', role: 'radio', class: 'opt-row', 'aria-checked': String(sel === i), disabled: !!o.unique, onClick: () => { sel = i; render(); } }, optLabel(o)))),
+      h('div', { class: 'card' }, h('div', { class: 'kv' }, '비용', h('b', null, `강화 광석 ${fmt(c.ore)} · 골드 ${fmt(c.gold)}`)), h('div', { class: 'kv' }, '보유', h('b', null, `${fmt(s.wallet.ore)} · ${fmt(s.wallet.gold)}`)),
+        h('div', { class: 'kv' }, '재련 횟수', h('b', null, `${it.reforges || 0}회`)))));
+    m.setActions([button('닫기', { cls: 'btn', onClick: () => m.close() }), button('재련', { cls: 'btn btn-primary', busy: true, disabled: sel < 0 || s.wallet.ore < c.ore || s.wallet.gold < c.gold, onClick: async () => {
+      const r = fail(await app.game.reforge(id, sel));
+      if (r.ok) { toast(`${optLabel(r.prev)} → ${optLabel(r.next)}`, 'good', 2600); render(); if (after) after(); }
+    } })]);
+  };
+  render();
+}
+
+// ---------- 등급 올리기 ----------
+function openRarityUp(app, id, after) {
+  const picked = new Set();
+  const m = openModal({ id: 'rarityup', title: '등급 올리기', body: h('div'), actions: [] });
+  const render = () => {
+    const s = app.state;
+    const it = s.inventory.find((i) => i.id === id);
+    if (!it) { m.close(); return; }
+    const to = RARITY_UP.next[it.rarity];
+    const cands = G.rarityUpCandidates(s, it).sort((a, b) => a.level - b.level);
+    for (const x of [...picked]) if (!cands.find((c) => c.id === x)) picked.delete(x);
+    const q = G.rarityUpQuote(s, id, [...picked]);
+    const cost = { ore: RARITY_UP.ore[to] || 0, star: RARITY_UP.starShard[to] || 0 };
+    m.setBody(h('div', { dataset: { screen: 'rarityup' } },
+      h('p', { class: 'modal-desc' }, `같은 부위·같은 등급 장비 2개를 재료로 ${it.name}을(를) ${to ? RARITY[to].name : '-'} 등급으로 올립니다. 옵션은 그대로 + 1줄 추가, 레벨은 셋 중 가장 높은 값. 재료는 사라져요(잠금·장착 제외).`),
+      h('div', { class: 'card' }, h('div', { class: 'kv' }, '본체', h('b', null, `${rarityLabel(it.rarity)} → ${to ? rarityLabel(to) : '최고 등급'}`)),
+        h('div', { class: 'kv' }, '비용', h('b', null, `강화 광석 ${fmt(cost.ore)}${cost.star ? ` · 별의 파편 ${cost.star}` : ''}`)),
+        to === 'legendary' ? h('p', { class: 'muted small', style: { margin: '2px 0 0' } }, '전설이 되면 고유 효과가 하나 붙어요.') : null),
+      h('div', { class: 'section-title' }, `재료 선택 ${picked.size}/2`),
+      cands.length ? h('div', { class: 'mat-grid' }, cands.map((c) => h('button', { type: 'button', class: 'mat' + (picked.has(c.id) ? ' on' : ''), 'aria-pressed': String(picked.has(c.id)), dataset: { mat: c.id },
+        onClick: () => { if (picked.has(c.id)) picked.delete(c.id); else if (picked.size < 2) picked.add(c.id); render(); } },
+        img(itemIcon(c.look), ''), h('span', null, `Lv ${c.level}`)))) : h('p', { class: 'muted' }, `같은 부위의 ${RARITY[it.rarity].name} 장비가 더 필요해요(잠금·장착 제외).`)));
+    m.setActions([button('닫기', { cls: 'btn', onClick: () => m.close() }), button('등급 올리기', { cls: 'btn btn-primary', busy: true, disabled: !q.ok, onClick: async () => {
+      const r = fail(await app.game.rarityUp(id, [...picked]));
+      if (r.ok) { m.close(); toast(`${r.item.name} · ${RARITY[r.to].name} 등급!`, 'good', 2600); if (app.state.settings.sound) sfx('bell'); if (after) after(); }
+    } })]);
+  };
+  render();
+}
+
+// ---------- 고유 효과 수집 (도감) ----------
+export function openLegendCodex(app) {
+  const s = app.state;
+  const ids = Object.keys(UNIQUES);
+  const got = ids.filter((k) => s.gearPlus.vault[k]).length;
+  const groups = [s.player.cls || 'warrior', ...Object.keys(CLASSES).filter((c) => c !== (s.player.cls || 'warrior')), null];
+  openModal({ id: 'legendCodex', title: '고유 효과 보관함', body: h('div', { dataset: { screen: 'legendCodex' } },
+    h('p', { class: 'modal-desc' }, `수집 ${got}/${ids.length}. 전설·신화 장비를 "효과 추출"로 분해하면 여기에 모이고, 다른 전설·신화 장비에 몇 번이든 이식할 수 있어요. 같은 효과는 더 좋은 수치만 남아요.`),
+    h('p', { class: 'muted small', dataset: { note: 'odds' } }, `확률: 전설·신화 장비가 나올 때 고유 효과 1개가 붙습니다 — 70% 내 직업 효과 6종 중 하나(각 약 11.7%), 30% 공용 효과 6종 중 하나(각 5%). 수치는 범위 안에서 균등, 신화는 ×${MYTHIC_MUL}.`),
+    groups.map((c) => h('div', null, h('div', { class: 'section-title' }, clsName(c)),
+      ids.filter((k) => UNIQUES[k].cls === c).map((k) => {
+        const v = s.gearPlus.vault[k];
+        const U = UNIQUES[k];
+        return h('div', { class: 'card vault-row' + (v ? '' : ' unknown'), dataset: { uid: k } },
+          h('div', { class: 'kv' }, h('b', { style: { color: v ? 'var(--text)' : 'var(--muted)' } }, U.name), h('span', { class: 'muted small' }, v ? '보관 중' : '미수집')),
+          h('p', { class: 'muted small', style: { margin: 0 } }, v ? U.text(v) : `미수집 · 최대 수치 예: ${U.text(U.range[1])}`));
+      })))) });
+}
+
+// ---------- 스킬 각성 (skills tab) ----------
+export function awakenCard(app) {
+  const s = app.state;
+  const ids = prog.unlockedSkills(s).filter((id) => AWAKENINGS[id]);
+  const st = G.awakenStatus(s, Date.now());
+  return h('div', { class: 'card', dataset: { screen: 'awaken' }, style: { marginTop: '8px' } },
+    h('h3', null, '스킬 각성'),
+    h('p', { class: 'muted small', style: { margin: '0 0 6px' } }, `스킬 Lv ${AWAKEN.needLevel}이 되면 각성 두 갈래 중 하나를 고릅니다. 첫 선택은 무료, 바꾸기는 하루 1번 무료(오늘 ${st.free}번 남음), 그다음은 보석 ${AWAKEN.changeGem}.`),
+    ids.map((id) => {
+      const lv = prog.skillLevel(s, id);
+      const cur = (s.skills.awaken || {})[id];
+      const ok = lv >= AWAKEN.needLevel;
+      return h('div', { class: 'awk-row' + (cur !== undefined && ok ? ' on' : ''), dataset: { key: 'awk-' + id } },
+        h('span', { class: 'awk-ic' + (cur !== undefined && ok ? ' awk-' + (cur ? 'b' : 'a') : '') }, img(skillIcon(SKILLS[id].icon), '')),
+        h('div', { class: 'awk-body' }, h('div', { class: 't' }, `${SKILLS[id].name} · Lv ${lv}`),
+          ok ? h('div', { class: 'awk-opts' }, AWAKENINGS[id].map((o, i) => h('button', { type: 'button', class: 'awk-opt', 'aria-pressed': String(cur === i), dataset: { awk: `${id}:${i}` }, onClick: async () => {
+            if (cur === i) return;
+            const r = fail(await app.game.setAwaken(id, i));
+            if (r.ok) toast(`${SKILLS[id].name} 각성: ${o.name}${r.paid ? ` (보석 ${r.paid})` : ''}`, 'good');
+          } }, h('b', null, `${i ? 'B' : 'A'} · ${o.name}`), h('span', null, o.desc))))
+            : h('div', { class: 'muted small' }, `Lv ${AWAKEN.needLevel}에 각성 · ${AWAKENINGS[id].map((o, i) => `${i ? 'B' : 'A'} ${o.name}`).join(' / ')}`)));
+    }));
+}
+
+// ---------- 프리셋 (equipment tab) ----------
+export function loadoutCard(app) {
+  const s = app.state;
+  const L = s.loadouts;
+  const card = h('div', { class: 'card loadout-card', dataset: { screen: 'loadouts' }, style: { marginTop: '8px' } },
+    h('div', { class: 'kv' }, h('h3', { style: { margin: 0 } }, '프리셋 (장비 + 스킬 + 각인)'), h('span', { class: 'muted small' }, L.auto ? '자동 교체 켜짐' : '')),
+    h('div', { class: 'lo-grid' }, L.list.map((p, i) => {
+      const r = p.saved ? G.resolveLoadout(s, p) : null;
+      const n = r ? Object.values(r.equipped).filter(Boolean).length : 0;
+      return h('div', { class: 'lo-slot' + (L.current === i ? ' cur' : ''), dataset: { lo: String(i) } },
+        h('button', { type: 'button', class: 'lo-name', 'aria-label': `${p.name} 이름 바꾸기`, onClick: () => renameLoadout(app, i) }, h('b', null, p.name), ' ✎'),
+        h('span', { class: 'muted small' }, p.saved ? `장비 ${n}/8${r.missing.length ? ` · 없음 ${r.missing.length}` : ''}` : '비어 있음'),
+        button('저장', { cls: 'chip-btn', busy: true, dataset: { act: 'lo-save' }, onClick: async () => { const x = fail(await app.game.saveLoadout(i)); if (x.ok) toast(`지금 장비·스킬을 "${p.name}"에 저장`, 'good'); } }),
+        button('불러오기', { cls: 'chip-btn', busy: true, disabled: !p.saved, dataset: { act: 'lo-apply' }, onClick: async () => {
+          const x = fail(await app.game.applyLoadout(i));
+          if (x.ok) toast(x.missing.length ? `"${p.name}" 장착 · 없는 장비 ${x.missing.map((k) => SLOT_NAMES[k]).join(', ')}는 비워 둠` : `"${p.name}" 장착`, x.missing.length ? 'info' : 'good', 2600);
+        } }));
+    })),
+    h('label', { class: 'switch-row' }, h('span', null, '전투 종류에 맞춰 자동 교체'), h('input', { type: 'checkbox', checked: L.auto, onChange: async (e) => fail(await app.game.setLoadoutAuto(e.target.checked)) })),
+    L.auto ? h('div', { class: 'lo-map' }, Object.entries(LOADOUT_KINDS).map(([k, label]) => h('div', { class: 'kv' }, label,
+      h('select', { 'aria-label': `${label} 프리셋`, dataset: { kind: k }, onChange: async (e) => fail(await app.game.setLoadoutAuto(true, { [k]: Number(e.target.value) })) },
+        [[-1, '지금 장비'], ...L.list.map((p, i) => [i, p.name])].map(([v, t]) => h('option', { value: String(v), selected: L.map[k] === v }, t)))))) : null,
+    h('p', { class: 'muted small', style: { margin: '4px 0 0' } }, '자동 교체는 그 전투에서만 프리셋을 씁니다(장착 중인 장비는 그대로). 분해·이식으로 없어진 장비 칸은 비어 있게 됩니다.'));
+  return card;
+}
+function renameLoadout(app, i) {
+  const s = app.state;
+  const input = h('input', { type: 'text', class: 'text', maxlength: '8', value: s.loadouts.list[i].name, 'aria-label': '프리셋 이름' });
+  const m = openModal({ id: 'loName', title: '프리셋 이름', kind: 'center', body: h('div', null, input, h('p', { class: 'muted small' }, '최대 8글자')),
+    actions: [button('취소', { cls: 'btn', onClick: () => m.close() }), button('저장', { cls: 'btn btn-primary', busy: true, onClick: async () => { const r = fail(await app.game.renameLoadout(i, input.value)); if (r.ok) m.close(); } })] });
+  setTimeout(() => input.focus(), 50);
+}
+
+export const v10Tiles = (app) => [{ id: 'legendCodex', ic: 'star', em: 'V13', t: '고유 효과', s: `수집 ${Object.keys(app.state.gearPlus.vault).length}/${Object.keys(UNIQUES).length}`, on: () => openLegendCodex(app) }];

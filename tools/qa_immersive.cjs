@@ -105,7 +105,7 @@ async function start(p, kind) {
     });
     await p.click('text=층 바로 도전');
     await p.waitForTimeout(900);
-    const st = await p.evaluate(() => ({ immersive: document.getElementById('app').classList.contains('immersive'), mode: __asteria.game.mode, floor: __asteria.game.session && __asteria.game.session.floor, flips: window.__flips, iris: window.__iris, banner: !!document.querySelector('.imm-banner') }));
+    const st = await p.evaluate(() => ({ immersive: document.getElementById('app').classList.contains('immersive'), mode: __asteria.game.mode, floor: __asteria.game.session && __asteria.game.session.floor, flips: window.__flips, iris: window.__iris, banner: !!document.querySelector('.imm-floorcap') }));
     await p.screenshot({ path: out + 'immersive_tower_chain_390x844.png' });
     const ok = st.immersive && st.mode === 'DUNGEON' && st.floor === floor1 + 1 && !st.flips.includes(false) && st.iris === 0 && errs.length === 0;
     results.push({ kind: 'tower-chain', pass: ok, st, errs });

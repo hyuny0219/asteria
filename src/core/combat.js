@@ -8,6 +8,7 @@
 // / 'defeat' into state changes.
 import { BALANCE, curve } from '../data/balance.js';
 import { BOSSES, MONSTERS, SKILLS, TRIALS, ULT_IDS } from '../data/content.js';
+const NO_MODS = Object.freeze({});
 import { clamp } from './util.js';
 
 const C = BALANCE.combat;
@@ -113,6 +114,9 @@ export class Battle {
 
   get ultId() { return this.heroCfg.ult || 'starSlash'; }
   get caps() { return (this.heroCfg.stats && this.heroCfg.stats.caps) || {}; }
+  // v10 skill mods (전설 고유 효과 + 스킬 각성): per skill id, '*' = whole kit
+  modsFor(id) { const sm = this.heroCfg.stats && this.heroCfg.stats.skillMods; return (sm && id && sm[id]) || NO_MODS; }
+  get gmods() { return this.modsFor('*'); }
   get curse() { return this.kind === 'rift' ? this.cfg.rift.curse : null; }
 
   setHero(h, reset = false) {
@@ -360,6 +364,7 @@ export class Battle {
     const low = this.hero.hp / this.hero.maxHp <= bs.below;
     if (this.caps.cap_berserk && low) mul += 0.5;
     else if (this.heroCfg.branch === 'berserker' && low) mul += bs.atkMul;
+    if (this.gmods.lowHpAtk && this.hero.hp / this.hero.maxHp <= 0.5) mul += this.gmods.lowHpAtk;
     return st.atk * mul;
   }
 
@@ -369,12 +374,14 @@ export class Battle {
     let c = sk.coef * (1 + BALANCE.skills.levelBonusPerLevel * (lvl - 1));
     if (isUlt(id)) { const tier = this.heroCfg.tier || (this.heroCfg.branch ? 1 : 0); if (tier >= 3) c *= 2; else if (tier >= 2) c *= 1.5; }
     if (this.caps.cap_beast2 && (id === 'a_beast' || id === 'a_pack')) c *= 2;
+    const m = this.modsFor(id);
+    if (m.coefMul) c *= m.coefMul;
     return c;
   }
   cooldownMs(id) {
     let cdr = this.heroCfg.stats.cdr || 0;
     if (this.hero.buffs.mythCdr) cdr = 1 - (1 - cdr) * 0.5;
-    return SKILLS[id].cd * 1000 * (1 - Math.min(0.7, cdr));
+    return SKILLS[id].cd * 1000 * (1 - Math.min(0.7, cdr)) * (this.modsFor(id).cdMul || 1);
   }
 
   chooseAction() {
@@ -437,6 +444,7 @@ export class Battle {
         h.action = { ...a, start: t, dur: 1100, impactAt: t + 700, hit: false };
         this.events.push({ type: 'ultStart', skill: a.skill, t });
         if (this.heroCfg.stats.mythUltCdr) h.buffs.mythCdr = { until: t + 5000 };
+        if (this.gmods.ultInvuln) h.buffs.invuln = { until: t + this.gmods.ultInvuln * 1000 };   // 수호의 맹세
       }
       h.nextAttackAt = Math.max(h.nextAttackAt, t + h.action.dur);
     }
@@ -459,21 +467,27 @@ export class Battle {
     if (ac.kind === 'attack') { targets = front ? [front] : []; }
     else {
       sk = SKILLS[ac.skill];
-      if (sk.kind === 'buff') { h.buffs[sk.buff.stat] = { mul: sk.buff.mul, until: this.t + sk.buff.sec * 1000 }; this.events.push({ type: 'buff', skill: ac.skill, t: this.t }); return; }
-      if (sk.kind === 'shield') { h.shield = { amount: Math.floor(h.maxHp * sk.shield.pct), until: this.t + sk.shield.sec * 1000 }; this.events.push({ type: 'buff', skill: ac.skill, shield: true, t: this.t }); return; }
+      const md = this.modsFor(ac.skill);
+      if (sk.kind === 'buff') { h.buffs[sk.buff.stat] = { mul: sk.buff.mul + (md.buffMulAdd || 0), until: this.t + (sk.buff.sec + (md.buffSecAdd || 0)) * 1000 }; this.events.push({ type: 'buff', skill: ac.skill, t: this.t }); return; }
+      if (sk.kind === 'shield') { h.shield = { amount: Math.floor(h.maxHp * (sk.shield.pct + (md.shieldAdd || 0))), until: this.t + sk.shield.sec * 1000 }; if (md.heal) this.heal(h.maxHp * md.heal); this.events.push({ type: 'buff', skill: ac.skill, shield: true, t: this.t }); return; }
       if (sk.kind === 'evade') {
-        h.buffs.evade = { until: this.t + sk.evade.sec * 1000 };
+        h.buffs.evade = { until: this.t + (sk.evade.sec + (md.evadeAdd || 0)) * 1000 };
         if (sk.evade.nextCrit) h.buffs.nextCrit = { until: this.t + 6000 };
         if (this.caps.cap_shadowCrit) h.buffs.critStacks = { n: 3, until: this.t + 8000 };
+        if (md.critStacks) h.buffs.critStacks = { n: Math.max(md.critStacks, (h.buffs.critStacks && h.buffs.critStacks.n) || 0), until: this.t + 8000 };
         this.events.push({ type: 'buff', skill: ac.skill, evade: true, t: this.t });
         return;
       }
       coef = this.skillCoef(ac.skill);
       hits = sk.hits || 1;
       if (this.caps.cap_rainPlus && ac.skill === 'a_rain') hits = Math.ceil(hits * 1.5);
+      if (md.hitsAdd) hits = Math.max(1, hits + md.hitsAdd);
+      if (md.toAll && sk.target === 'single') sk = { ...sk, target: 'all' };
+      if (md.critBonusAdd) sk = { ...sk, critBonus: (sk.critBonus || 0) + md.critBonusAdd };
+      if (md.execute) sk = { ...sk, executeBelow: Math.max(sk.executeBelow || 0, md.execute) };
       targets = this.targetsFor(sk, front);
-      if (sk.guard) h.buffs.guard = { reduce: sk.guard.reduce, until: this.t + (sk.guard.sec + (this.caps.cap_counter2 && !this.heroCfg.skills.equipped.includes('guardCounter') ? 1 : 0)) * 1000 };
-      if (sk.evadeSec) h.buffs.evade = { until: this.t + sk.evadeSec * 1000 };
+      if (sk.guard) h.buffs.guard = { reduce: sk.guard.reduce, until: this.t + (sk.guard.sec + (md.guardAdd || 0) + (this.caps.cap_counter2 && !this.heroCfg.skills.equipped.includes('guardCounter') ? 1 : 0)) * 1000 };
+      if (sk.evadeSec) h.buffs.evade = { until: this.t + (sk.evadeSec + (md.evadeAdd || 0)) * 1000 };
     }
     const atk = this.heroAtk();
     let kills = 0;
@@ -485,7 +499,9 @@ export class Battle {
       else if (h.buffs.critStacks && h.buffs.critStacks.n > 0) { crit = true; if (--h.buffs.critStacks.n <= 0) delete h.buffs.critStacks; }
       let cc = c;
       if (sk && sk.executeBelow && e.hp / e.maxHp <= sk.executeBelow) cc *= 2;
+      if (e.boss && this.gmods.bossMul) cc *= 1 + this.gmods.bossMul;   // 거인 사냥꾼
       const dmg = damageFormula(atk, cc, e.defense, e.level, crit, this.rng(), st.critMul);
+      if (crit && this.gmods.critGauge) this.addGauge(this.gmods.critGauge);   // 집중
       const killed = this.dealDamage(e, dmg, { crit, action: ac.kind, skill: ac.skill || null, ranged });
       if (killed) kills++;
       if (st.combo && this.rng() < st.combo && e.state !== 'dying') {
@@ -502,14 +518,23 @@ export class Battle {
       for (let i = 0; i < hits; i++) for (const e of targets) hitOne(e, coef, (sk && sk.critBonus) || 0);
     }
     if (sk) {
+      const md = this.modsFor(ac.skill);
+      const stun = (sk.stunSec || 0) + (md.stunAdd || 0);
+      const slow = md.slow || sk.slow;
+      const lvMul = 1 + BALANCE.skills.levelBonusPerLevel * (this.heroCfg.skillLevel(ac.skill) - 1);
       for (const e of targets) {
         if (e.state === 'dying') continue;
-        if (sk.stunSec && !e.boss) e.stunUntil = Math.max(e.stunUntil, this.t + sk.stunSec * 1000);
-        else if (sk.stunSec && e.boss) e.stunUntil = Math.max(e.stunUntil, this.t + sk.stunSec * 400);     // bosses resist
-        if (sk.slow) { e.slowUntil = this.t + sk.slow.sec * 1000; e.slowMul = sk.slow.mul; }
-        if (sk.dot) e.dots.push({ coef: (this.caps.cap_dot2 ? 2 : 1) * sk.dot.coefPerSec * (1 + BALANCE.skills.levelBonusPerLevel * (this.heroCfg.skillLevel(ac.skill) - 1)), until: this.t + sk.dot.sec * 1000, nextAt: this.t + 1000, skill: ac.skill });
+        if (stun > 0 && !e.boss) e.stunUntil = Math.max(e.stunUntil, this.t + stun * 1000);
+        else if (stun > 0 && e.boss) e.stunUntil = Math.max(e.stunUntil, this.t + stun * 400);     // bosses resist
+        if (slow) { e.slowUntil = this.t + slow.sec * 1000; e.slowMul = slow.mul; }
+        if (sk.dot) e.dots.push({ coef: (this.caps.cap_dot2 ? 2 : 1) * (md.dotMul || 1) * sk.dot.coefPerSec * lvMul, until: this.t + sk.dot.sec * 1000, nextAt: this.t + 1000, skill: ac.skill });
+        if (md.dotAdd) e.dots.push({ coef: (this.caps.cap_dot2 ? 2 : 1) * md.dotAdd.coefPerSec * lvMul, until: this.t + md.dotAdd.sec * 1000, nextAt: this.t + 1000, skill: ac.skill });
       }
       if (sk.heal) this.heal(h.maxHp * sk.heal);
+      if (md.heal) this.heal(h.maxHp * md.heal);
+      if (md.castShield) h.shield = { amount: Math.max((h.shield && h.shield.amount) || 0, Math.floor(h.maxHp * md.castShield)), until: this.t + 4000 };
+      // 쌍화염 · 쌍찌르기: the same skill again 300 ms later at × echo (front target, or all for area skills)
+      if (md.echo && !h.echo) h.echo = { at: this.t + 300, coef: coef * md.echo, skill: ac.skill, single: sk.target !== 'all', critBonus: sk.critBonus || 0 };
       if (this.caps.cap_beast2 && (ac.skill === 'a_beast' || ac.skill === 'a_pack')) this.heal(h.maxHp * 0.02);
     }
     // 이중 유성: the meteor falls again 400 ms later at 60%
@@ -525,9 +550,10 @@ export class Battle {
   resolveEcho(e) {
     const st = this.heroCfg.stats;
     const atk = this.heroAtk();
-    for (const t of this.alive().filter((x) => x.state !== 'approach' || x.x < 400)) {
-      const crit = this.rng() < st.crit;
-      this.dealDamage(t, damageFormula(atk, e.coef, t.defense, t.level, crit, this.rng(), st.critMul), { crit, action: 'ult', skill: e.skill });
+    const list = e.single ? [this.front()].filter((x) => x && x.state !== 'dying') : this.alive().filter((x) => x.state !== 'approach' || x.x < 400);
+    for (const t of list) {
+      const crit = this.rng() < Math.min(1, st.crit + (e.critBonus || 0));
+      this.dealDamage(t, damageFormula(atk, e.coef, t.defense, t.level, crit, this.rng(), st.critMul), { crit, action: e.single || !isUlt(e.skill) ? 'skill' : 'ult', skill: e.skill });
     }
   }
 
@@ -572,6 +598,8 @@ export class Battle {
     this.kills++;
     this.events.push({ type: 'kill', enemy: { uid: e.uid, id: e.id, level: e.level, elite: e.elite, boss: e.boss, fieldBoss: !!e.fieldBoss, trial: !!e.trial, rare: e.rare || null }, t: this.t });
     if (this.heroCfg.stats.mythHeal && this.rng() < 0.1) this.heal(this.hero.maxHp * 0.2);
+    const kc = this.gmods.killCdrMs;   // 전장의 흐름
+    if (kc) for (const k of Object.keys(this.hero.cds)) this.hero.cds[k] = Math.max(this.t, this.hero.cds[k] - kc);
     if (this.kind === 'boss' || this.kind === 'trial' || this.kind === 'raid' || this.kind === 'world') { if (e.boss) this.finish('victory'); }
     if ((this.kind === 'dungeon' || this.kind === 'tower' || this.kind === 'rift') && this.kills >= this.killTarget) this.finish('victory');
     if (this.mp) { if (e.boss) this.finish('victory'); else if (this.mp.aff.has('bursting')) this.affixHit(0.03, 'bursting'); }
@@ -619,7 +647,8 @@ export class Battle {
   enemyHits(e, mult, heavy) {
     const h = this.hero;
     const st = this.heroCfg.stats;
-    // evade: skill window (100%) or passive chance
+    // evade: skill window (100%) or passive chance; 수호의 맹세: invulnerable after an ult
+    if (h.buffs.invuln && this.t < h.buffs.invuln.until) { this.events.push({ type: 'miss', by: 'enemy', target: 'hero', source: e.uid, heavy, invuln: true, t: this.t }); return; }
     if (h.buffs.evade || (st.evade && this.rng() < st.evade)) {
       this.events.push({ type: 'miss', by: 'enemy', target: 'hero', source: e.uid, heavy, t: this.t });
       return;
@@ -648,6 +677,8 @@ export class Battle {
       const crit = this.rng() < st.crit;
       const cd = damageFormula(this.heroAtk(), this.skillCoef('guardCounter') * (this.caps.cap_counter2 ? 2 : 1), e.defense, e.level, crit, this.rng(), st.critMul);
       if (this.dealDamage(e, cd, { crit, action: 'counter', skill: 'guardCounter' })) this.addGauge(C.ultCharge.perKill);
+      const cm = this.modsFor('guardCounter');
+      if (cm.heal) this.heal(h.maxHp * cm.heal);
     }
     if (h.hp <= 0) this.heroDown();
   }

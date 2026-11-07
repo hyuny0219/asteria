@@ -1,0 +1,452 @@
+[
+ {
+  "name": "390x844 legendary items carry 고유 효과",
+  "pass": true,
+  "extra": {
+   "sk": "strike",
+   "legends": [
+    "it1",
+    "it2"
+   ],
+   "helmets": [
+    "it3",
+    "it4",
+    "it5"
+   ]
+  }
+ },
+ {
+  "name": "390x844 compare: 재련·등급·추출·이식 buttons",
+  "pass": true
+ },
+ {
+  "name": "390x844 compare no overflow",
+  "pass": true
+ },
+ {
+  "name": "390x844 extract → vault",
+  "pass": true,
+  "extra": {
+   "gone": true,
+   "vault": 1,
+   "stone": 4
+  }
+ },
+ {
+  "name": "390x844 고유 효과 보관함 1/36",
+  "pass": true,
+  "extra": {
+   "n": 1,
+   "o": false
+  }
+ },
+ {
+  "name": "390x844 imprint applied",
+  "pass": true
+ },
+ {
+  "name": "390x844 reforge rerolls one line",
+  "pass": true,
+  "extra": {
+   "o": "[{\"k\":\"goldPct\",\"v\":0.04},{\"k\":\"atkPct\",\"v\":0.033},{\"k\":\"defPct\",\"v\":0.064},{\"k\":\"critChance\",\"v\":0.018}]",
+   "n": 1
+  }
+ },
+ {
+  "name": "390x844 reforge no overflow",
+  "pass": true
+ },
+ {
+  "name": "390x844 rarity up no overflow",
+  "pass": true
+ },
+ {
+  "name": "390x844 rarity up rare→epic",
+  "pass": true,
+  "extra": {
+   "r": "epic",
+   "lv": 12,
+   "n": 3,
+   "mats": 0
+  }
+ },
+ {
+  "name": "390x844 awakening B chosen (free)",
+  "pass": true
+ },
+ {
+  "name": "390x844 first change free today",
+  "pass": true,
+  "extra": {
+   "a": 0,
+   "gem": 500
+  }
+ },
+ {
+  "name": "390x844 second change costs 50 gems",
+  "pass": true,
+  "extra": {
+   "a": 1,
+   "gem": 450
+  }
+ },
+ {
+  "name": "390x844 awakened icon border",
+  "pass": true
+ },
+ {
+  "name": "390x844 skills no overflow",
+  "pass": true
+ },
+ {
+  "name": "390x844 preset save → apply",
+  "pass": true
+ },
+ {
+  "name": "390x844 missing gear → empty slot + notice",
+  "pass": true,
+  "extra": {
+   "w": null,
+   "toast": "\"사냥\" 장착|\"사냥\" 장착 · 없는 장비 무기는 비워 둠"
+  }
+ },
+ {
+  "name": "390x844 auto swap mapping saved",
+  "pass": true,
+  "extra": {
+   "map": {
+    "farm": 0,
+    "dungeon": 0,
+    "boss": 0,
+    "raid": 1,
+    "world": 1,
+    "tower": 1,
+    "trial": 1,
+    "mplus": 2,
+    "rift": 2
+   }
+  }
+ },
+ {
+  "name": "390x844 presets no overflow",
+  "pass": true
+ },
+ {
+  "name": "390x844 menu tile 고유 효과",
+  "pass": true
+ },
+ {
+  "name": "390x844 no ad-blocker class names",
+  "pass": true,
+  "extra": {
+   "bad": []
+  }
+ },
+ {
+  "name": "390x844 no page errors",
+  "pass": true,
+  "extra": {
+   "errs": []
+  }
+ },
+ {
+  "name": "360x700 legendary items carry 고유 효과",
+  "pass": true,
+  "extra": {
+   "sk": "strike",
+   "legends": [
+    "it1",
+    "it2"
+   ],
+   "helmets": [
+    "it3",
+    "it4",
+    "it5"
+   ]
+  }
+ },
+ {
+  "name": "360x700 compare: 재련·등급·추출·이식 buttons",
+  "pass": true
+ },
+ {
+  "name": "360x700 compare no overflow",
+  "pass": true
+ },
+ {
+  "name": "360x700 extract → vault",
+  "pass": true,
+  "extra": {
+   "gone": true,
+   "vault": 1,
+   "stone": 4
+  }
+ },
+ {
+  "name": "360x700 고유 효과 보관함 1/36",
+  "pass": true,
+  "extra": {
+   "n": 1,
+   "o": false
+  }
+ },
+ {
+  "name": "360x700 imprint applied",
+  "pass": true
+ },
+ {
+  "name": "360x700 reforge rerolls one line",
+  "pass": true,
+  "extra": {
+   "o": "[{\"k\":\"ultCharge\",\"v\":0.107},{\"k\":\"atkPct\",\"v\":0.033},{\"k\":\"defPct\",\"v\":0.064},{\"k\":\"critChance\",\"v\":0.018}]",
+   "n": 1
+  }
+ },
+ {
+  "name": "360x700 reforge no overflow",
+  "pass": true
+ },
+ {
+  "name": "360x700 rarity up no overflow",
+  "pass": true
+ },
+ {
+  "name": "360x700 rarity up rare→epic",
+  "pass": true,
+  "extra": {
+   "r": "epic",
+   "lv": 12,
+   "n": 3,
+   "mats": 0
+  }
+ },
+ {
+  "name": "360x700 awakening B chosen (free)",
+  "pass": true
+ },
+ {
+  "name": "360x700 first change free today",
+  "pass": true,
+  "extra": {
+   "a": 0,
+   "gem": 500
+  }
+ },
+ {
+  "name": "360x700 second change costs 50 gems",
+  "pass": true,
+  "extra": {
+   "a": 1,
+   "gem": 450
+  }
+ },
+ {
+  "name": "360x700 awakened icon border",
+  "pass": true
+ },
+ {
+  "name": "360x700 skills no overflow",
+  "pass": true
+ },
+ {
+  "name": "360x700 preset save → apply",
+  "pass": true
+ },
+ {
+  "name": "360x700 missing gear → empty slot + notice",
+  "pass": true,
+  "extra": {
+   "w": null,
+   "toast": "\"사냥\" 장착|\"사냥\" 장착 · 없는 장비 무기는 비워 둠"
+  }
+ },
+ {
+  "name": "360x700 auto swap mapping saved",
+  "pass": true,
+  "extra": {
+   "map": {
+    "farm": 0,
+    "dungeon": 0,
+    "boss": 0,
+    "raid": 1,
+    "world": 1,
+    "tower": 1,
+    "trial": 1,
+    "mplus": 2,
+    "rift": 2
+   }
+  }
+ },
+ {
+  "name": "360x700 presets no overflow",
+  "pass": true
+ },
+ {
+  "name": "360x700 menu tile 고유 효과",
+  "pass": true
+ },
+ {
+  "name": "360x700 no ad-blocker class names",
+  "pass": true,
+  "extra": {
+   "bad": []
+  }
+ },
+ {
+  "name": "360x700 no page errors",
+  "pass": true,
+  "extra": {
+   "errs": []
+  }
+ },
+ {
+  "name": "412x915 legendary items carry 고유 효과",
+  "pass": true,
+  "extra": {
+   "sk": "strike",
+   "legends": [
+    "it1",
+    "it2"
+   ],
+   "helmets": [
+    "it3",
+    "it4",
+    "it5"
+   ]
+  }
+ },
+ {
+  "name": "412x915 compare: 재련·등급·추출·이식 buttons",
+  "pass": true
+ },
+ {
+  "name": "412x915 compare no overflow",
+  "pass": true
+ },
+ {
+  "name": "412x915 extract → vault",
+  "pass": true,
+  "extra": {
+   "gone": true,
+   "vault": 1,
+   "stone": 4
+  }
+ },
+ {
+  "name": "412x915 고유 효과 보관함 1/36",
+  "pass": true,
+  "extra": {
+   "n": 1,
+   "o": false
+  }
+ },
+ {
+  "name": "412x915 imprint applied",
+  "pass": true
+ },
+ {
+  "name": "412x915 reforge rerolls one line",
+  "pass": true,
+  "extra": {
+   "o": "[{\"k\":\"critDmg\",\"v\":0.08},{\"k\":\"atkPct\",\"v\":0.033},{\"k\":\"defPct\",\"v\":0.064},{\"k\":\"critChance\",\"v\":0.018}]",
+   "n": 1
+  }
+ },
+ {
+  "name": "412x915 reforge no overflow",
+  "pass": true
+ },
+ {
+  "name": "412x915 rarity up no overflow",
+  "pass": true
+ },
+ {
+  "name": "412x915 rarity up rare→epic",
+  "pass": true,
+  "extra": {
+   "r": "epic",
+   "lv": 12,
+   "n": 3,
+   "mats": 0
+  }
+ },
+ {
+  "name": "412x915 awakening B chosen (free)",
+  "pass": true
+ },
+ {
+  "name": "412x915 first change free today",
+  "pass": true,
+  "extra": {
+   "a": 0,
+   "gem": 500
+  }
+ },
+ {
+  "name": "412x915 second change costs 50 gems",
+  "pass": true,
+  "extra": {
+   "a": 1,
+   "gem": 450
+  }
+ },
+ {
+  "name": "412x915 awakened icon border",
+  "pass": true
+ },
+ {
+  "name": "412x915 skills no overflow",
+  "pass": true
+ },
+ {
+  "name": "412x915 preset save → apply",
+  "pass": true
+ },
+ {
+  "name": "412x915 missing gear → empty slot + notice",
+  "pass": true,
+  "extra": {
+   "w": null,
+   "toast": "\"사냥\" 장착|\"사냥\" 장착 · 없는 장비 무기는 비워 둠"
+  }
+ },
+ {
+  "name": "412x915 auto swap mapping saved",
+  "pass": true,
+  "extra": {
+   "map": {
+    "farm": 0,
+    "dungeon": 0,
+    "boss": 0,
+    "raid": 1,
+    "world": 1,
+    "tower": 1,
+    "trial": 1,
+    "mplus": 2,
+    "rift": 2
+   }
+  }
+ },
+ {
+  "name": "412x915 presets no overflow",
+  "pass": true
+ },
+ {
+  "name": "412x915 menu tile 고유 효과",
+  "pass": true
+ },
+ {
+  "name": "412x915 no ad-blocker class names",
+  "pass": true,
+  "extra": {
+   "bad": []
+  }
+ },
+ {
+  "name": "412x915 no page errors",
+  "pass": true,
+  "extra": {
+   "errs": []
+  }
+ }
+]

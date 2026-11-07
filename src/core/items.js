@@ -1,5 +1,6 @@
 // Equipment generation and per-item stat calculation (6 rarities, options, sets, +15).
 import { BALANCE } from '../data/balance.js';
+import { UNIQUES, UNIQUE_CLASS_CHANCE } from '../data/gearplus.js';
 import { CLASS_WEAPON_LOOKS, HIGH_LOOKS, ITEM_LOOKS, LOOK4_SLOTS, RARITY, RARITY_LOOK4, SLOT_NAMES, SETS } from '../data/content.js';
 
 const EQ = BALANCE.equipment;
@@ -31,6 +32,16 @@ export function refreshLook(it) {
 
 export function normalizeSlot(slot) { return slot === 'accessory' ? 'necklace' : slot; }
 
+// One option roll (v10 재련 / 등급 올리기): a key not in `exclude`, value in its range.
+export function rollOneOption(rng, exclude = []) {
+  const pool = OPTION_KEYS.filter((k) => !exclude.includes(k));
+  if (!pool.length) return null;
+  const k = pool[Math.floor(rng() * pool.length)];
+  const [a, b] = EQ.options[k];
+  return { k, v: Math.round((a + (b - a) * rng()) * 1000) / 1000 };
+}
+export const MYTHIC_UNIQUE_KEYS = () => EQ.mythicUniques;
+
 function rollOptions(rarity, rng) {
   const n = EQ.optionCount[rarity] || 0;
   const pool = [...OPTION_KEYS];
@@ -52,6 +63,7 @@ export function makeItem(state, { slot, rarity, level, rng, source = 'drop', set
   const it = { id, slot, rarity, level, main, look: look.icon, name: look.name, locked: false, source, isNew: true, options: rollOptions(rarity, rng) };
   if (set && SETS[set] && ['helmet', 'armor', 'gloves', 'boots'].includes(slot)) { it.set = set; it.name = `${SETS[set].name}의 ${SLOT_NAMES[slot]}`; }
   if (look.iconPending) it.iconPending = true;
+  if (rarity === 'legendary' || rarity === 'mythic') it.legend = rollLegend(state && state.player ? state.player.cls : null, rng);   // v10 고유 효과
   return it;
 }
 
@@ -112,3 +124,13 @@ export function enhanceCost(lv) {
 export function enhanceChance(lv) { return lv >= EQ.enhanceMax ? 0 : EQ.enhanceSuccess[lv]; }
 // Dismantle value is rarity only — enhancement stays on the slot.
 export function dismantleValue(item) { return EQ.dismantle[item.rarity]; }
+
+// v10 전설 고유 효과: { id, v } — 70% the hero's class, 30% shared; v uniform in its range.
+export function rollLegend(cls, rng) {
+  const own = Object.keys(UNIQUES).filter((k) => UNIQUES[k].cls === cls);
+  const shared = Object.keys(UNIQUES).filter((k) => !UNIQUES[k].cls);
+  const pool = own.length && rng() < UNIQUE_CLASS_CHANCE ? own : shared;
+  const id = pool[Math.floor(rng() * pool.length)];
+  const [a, b] = UNIQUES[id].range;
+  return { id, v: Math.round((a + (b - a) * rng()) * 1000) / 1000 };
+}

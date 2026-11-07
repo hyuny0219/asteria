@@ -67,7 +67,7 @@ export class App {
     app.appendChild(h('header', { class: 'status' }, E.me, h('div', { class: 'wallet' }, E.gold, E.ore, E.mailBtn, E.saveDot, E.fsBtn)));
     FS.onChange(() => { this.renderFsBtn(); setTimeout(() => this.renderer && this.renderer.resize(), 120); });
     window.addEventListener('resize', () => this.renderFsBtn());
-    E.banner = h('div', { class: 'banner-host' });
+    E.banner = h('div', { class: 'notice-host' });
     app.appendChild(E.banner);
     // stage info lives on the battle as a top strip (saves a 40px row on short phones)
     E.where = h('span', { class: 'nm' }, '');
@@ -234,9 +234,9 @@ export class App {
   }
   flashBanner(text) {
     if (!text || !this.el.battle) return;
-    const old = this.el.battle.querySelector('.imm-banner');
+    const old = this.el.battle.querySelector('.imm-floorcap');
     if (old) old.remove();
-    const b = h('div', { class: 'imm-banner', 'aria-live': 'polite' }, text);
+    const b = h('div', { class: 'imm-floorcap', 'aria-live': 'polite' }, text);
     this.el.battle.appendChild(b);
     setTimeout(() => b.remove(), 1400);
   }
@@ -600,7 +600,7 @@ export class App {
     d.title = st.ok ? '저장됨' : '저장 실패: ' + (st.error || '');
     clear(this.el.banner);
     if (!st.ok) {
-      this.el.banner.appendChild(h('div', { class: 'banner', role: 'alert' }, icon('warning', 20), h('span', { style: { flex: 1 } }, '최근 진행이 저장되지 않았습니다.'),
+      this.el.banner.appendChild(h('div', { class: 'notice-bar', role: 'alert' }, icon('warning', 20), h('span', { style: { flex: 1 } }, '최근 진행이 저장되지 않았습니다.'),
         button('다시 저장', { cls: 'btn', busy: true, onClick: async () => { await this.game.checkpoint('retry'); } })));
     }
   }

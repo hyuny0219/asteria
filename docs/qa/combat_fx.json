@@ -32,13 +32,13 @@
    "name": "perf_warrior",
    "pass": true,
    "m": {
-    "frames": 181,
-    "avgMs": 0.23,
-    "p95Ms": 0.4,
+    "frames": 180,
+    "avgMs": 0.25,
+    "p95Ms": 0.3,
     "maxParts": 76,
     "fx": 0,
-    "steps": "1231231231231231212",
-    "cues": "hit,crit,finisher,hit2,skill,boom"
+    "steps": "123123123123123123123123",
+    "cues": "hit,hit2,finisher,crit,skill,boom"
    },
    "errs": []
   },
@@ -70,11 +70,11 @@
    "name": "perf_mage",
    "pass": true,
    "m": {
-    "frames": 181,
-    "avgMs": 0.35,
-    "p95Ms": 1.6,
-    "maxParts": 160,
-    "fx": 0,
+    "frames": 180,
+    "avgMs": 0.25,
+    "p95Ms": 0.5,
+    "maxParts": 159,
+    "fx": 1,
     "steps": "123121212",
     "cues": "hit,hit2,finisher,skill,boom"
    },
@@ -109,12 +109,12 @@
    "pass": true,
    "m": {
     "frames": 180,
-    "avgMs": 0.27,
+    "avgMs": 0.25,
     "p95Ms": 0.5,
-    "maxParts": 190,
+    "maxParts": 217,
     "fx": 0,
     "steps": "123121212",
-    "cues": "hit,hit2,finisher,skill,boom,crit"
+    "cues": "hit,hit2,finisher,skill,crit,boom"
    },
    "errs": []
   },
@@ -153,9 +153,9 @@
     "frames": 180,
     "avgMs": 0.23,
     "p95Ms": 0.4,
-    "maxParts": 145,
+    "maxParts": 140,
     "fx": 0,
-    "steps": "1231231231",
+    "steps": "123123123121231",
     "cues": "hit,hit2,finisher,crit,skill,,boom"
    },
    "errs": []
@@ -210,22 +210,22 @@
  "perf": [
   {
    "cls": "warrior",
-   "frames": 181,
-   "avgMs": 0.23,
-   "p95Ms": 0.4,
+   "frames": 180,
+   "avgMs": 0.25,
+   "p95Ms": 0.3,
    "maxParts": 76,
    "fx": 0,
-   "steps": "1231231231231231212",
-   "cues": "hit,crit,finisher,hit2,skill,boom",
+   "steps": "123123123123123123123123",
+   "cues": "hit,hit2,finisher,crit,skill,boom",
    "errs": []
   },
   {
    "cls": "mage",
-   "frames": 181,
-   "avgMs": 0.35,
-   "p95Ms": 1.6,
-   "maxParts": 160,
-   "fx": 0,
+   "frames": 180,
+   "avgMs": 0.25,
+   "p95Ms": 0.5,
+   "maxParts": 159,
+   "fx": 1,
    "steps": "123121212",
    "cues": "hit,hit2,finisher,skill,boom",
    "errs": []
@@ -233,12 +233,12 @@
   {
    "cls": "archer",
    "frames": 180,
-   "avgMs": 0.27,
+   "avgMs": 0.25,
    "p95Ms": 0.5,
-   "maxParts": 190,
+   "maxParts": 217,
    "fx": 0,
    "steps": "123121212",
-   "cues": "hit,hit2,finisher,skill,boom,crit",
+   "cues": "hit,hit2,finisher,skill,crit,boom",
    "errs": []
   },
   {
@@ -246,9 +246,9 @@
    "frames": 180,
    "avgMs": 0.23,
    "p95Ms": 0.4,
-   "maxParts": 145,
+   "maxParts": 140,
    "fx": 0,
-   "steps": "1231231231",
+   "steps": "123123123121231",
    "cues": "hit,hit2,finisher,crit,skill,,boom",
    "errs": []
   }

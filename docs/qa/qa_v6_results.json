@@ -20,7 +20,7 @@
   "pass": true,
   "info": {
    "owned": 4,
-   "active": "P04",
+   "active": "P02",
    "eggs": 0
   }
  },
@@ -61,7 +61,7 @@
   "pass": true,
   "info": {
    "equipped": "t_pioneer",
-   "status": "QA8666 「초원의 개척자」"
+   "status": "QA9514 「초원의 개척자」"
   }
  },
  {
@@ -105,7 +105,7 @@
   "name": "pet attacks in battle 390x844",
   "pass": true,
   "info": {
-   "hits": 3
+   "hits": 2
   }
  },
  {
@@ -144,7 +144,7 @@
   "pass": true,
   "info": {
    "owned": 4,
-   "active": "P02",
+   "active": "P01",
    "eggs": 0
   }
  },
@@ -185,7 +185,7 @@
   "pass": true,
   "info": {
    "equipped": "t_pioneer",
-   "status": "QA7419 「초원의 개척자」"
+   "status": "QA9802 「초원의 개척자」"
   }
  },
  {

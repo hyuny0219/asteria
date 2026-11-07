@@ -33,6 +33,7 @@ import * as meta from './meta.js';
 import * as stages from './stages.js';
 import * as mplus from './mplus.js';
 import * as expedition from './expedition.js';
+import * as gear from './gearplus.js';
 import * as worldboss from './worldboss.js';
 import * as craft from './crafting.js';
 import * as mail from './mail.js';
@@ -182,7 +183,7 @@ export class Game {
     if (run.choices) return { ok: false, reason: 'choice', choices: run.choices };
     const cfg = rift.floorConfig(this.state, run);
     this.session = { kind: 'rift', id: run.id, floor: run.floor, bg: cfg.bg, startedAt: this.now(), viewBefore: this.state.settings.battleView };
-    this.active = new Battle({ kind: 'rift', rng: this.rng, hero: this.sessionHero({ session: true, rift: { mods: rift.runMods(run), curse: run.curse } }), rift: { ...cfg, hpPct: run.hpPct } });
+    this.active = new Battle({ kind: 'rift', rng: this.rng, hero: this.sessionHero({ session: true, kind: 'rift', rift: { mods: rift.runMods(run), curse: run.curse } }), rift: { ...cfg, hpPct: run.hpPct } });
     this.acc = 0;
     this.setMode('DUNGEON');
     this.emit('session', this.session);
@@ -197,7 +198,7 @@ export class Game {
     const run = this.state.mplus.run;
     const cfg = mplus.runConfig(this.state, dungeon, run.key, run.affixes);
     this.session = { kind: 'mplus', id, dungeon, key: run.key, affixes: run.affixes, bg: cfg.bg, startedAt: this.now(), viewBefore: this.state.settings.battleView };
-    this.active = new Battle({ kind: 'mplus', rng: this.rng, hero: this.sessionHero(), mplus: cfg });
+    this.active = new Battle({ kind: 'mplus', rng: this.rng, hero: this.sessionHero({ session: true, kind: 'mplus' }), mplus: cfg });
     this.acc = 0;
     this.setMode('DUNGEON');
     this.emit('session', this.session);
@@ -210,7 +211,7 @@ export class Game {
     const r = await this.transact('worldBossEnter', (s) => worldboss.beginWorldBoss(s, id, this.now()));
     if (!r.ok) return r;
     const cfg = worldboss.battleConfig(this.state, this.now());
-    this.active = new Battle({ kind: 'world', rng: this.rng, hero: this.sessionHero(), world: cfg });
+    this.active = new Battle({ kind: 'world', rng: this.rng, hero: this.sessionHero({ session: true, kind: 'world' }), world: cfg });
     this.session = { kind: 'world', id, bossId: cfg.boss, bossHp: this.active.worldHp, startedAt: this.now(), viewBefore: this.state.settings.battleView };
     this.acc = 0;
     this.setMode('BOSS');
@@ -242,6 +243,16 @@ export class Game {
     const hash = await mail.hashCoupon(code);
     return this.transact('coupon', (s) => mail.redeemCouponHash(s, hash, this.now()));
   }
+  // ---------- v10 장비·스킬 확장 ----------
+  extractLegend(id) { return this.transact('extract', (s) => gear.extractLegend(s, id)); }
+  imprintLegend(id, uid) { return this.transact('imprint', (s) => gear.imprintLegend(s, id, uid)); }
+  setAwaken(skillId, pick) { return this.transact('awaken', (s) => gear.setAwaken(s, skillId, pick, this.now())); }
+  saveLoadout(idx, name = null) { return this.transact('loadoutSave', (s) => gear.saveLoadout(s, idx, name)); }
+  renameLoadout(idx, name) { return this.transact('loadoutName', (s) => gear.renameLoadout(s, idx, name)); }
+  applyLoadout(idx) { return this.transact('loadoutApply', (s) => gear.applyLoadout(s, idx, prog.unlockedSkills(s))); }
+  setLoadoutAuto(on, map = null) { return this.transact('loadoutAuto', (s) => gear.setLoadoutAuto(s, on, map)); }
+  reforge(id, optIdx) { return this.transact('reforge', (s) => gear.reforge(s, id, optIdx, this.rng)); }
+  rarityUp(baseId, matIds) { return this.transact('rarityUp', (s) => gear.rarityUp(s, baseId, matIds, this.rng)); }
   claimAllExpeditions() { return this.transact('expClaim', (s) => expedition.claimAll(s, this.now())); }
   claimMplusVault() { return this.transact('mplusVault', (s) => mplus.claimVault(s, this.now())); }
   riftPick(id) { return this.transact('riftPick', (s) => rift.pickBlessing(s, id)); }
@@ -260,7 +271,15 @@ export class Game {
     const cls = s.player.cls || 'warrior';
     const t = s.talents;
     const preset = opts.session && t && t.autoSwitch ? 1 : (t ? t.active : 0);
-    return { stats: playerStats(s, { preset, rift: opts.rift || null }), pet: s.pets ? meta.petPower(s) : null, skills: s.skills, branch: s.player.branch, cls, tier: prog.tierOf(s), ult: CLASS_SKILLS[cls].ult, range: CLASSES[cls].range, skillLevel: (id) => prog.skillLevel(s, id) };
+    // v10 프리셋 자동 교체: the battle uses the mapped loadout as a view — the worn gear is not changed
+    const L = gear.loadoutFor(s, opts.kind || (opts.session ? 'boss' : 'farm'));
+    let view = s;
+    if (L) {
+      const r = gear.resolveLoadout(s, L, prog.unlockedSkills(s));
+      const skills = r.skills.slice(0, s.skills.equipped.length).map((id, i) => (i < prog.slotCount(s) ? id : null));
+      view = { ...s, equipped: r.equipped, skills: { ...s.skills, equipped: skills, runes: s.skills.runes ? { ...s.skills.runes, equipped: r.runes.length ? r.runes : s.skills.runes.equipped } : s.skills.runes } };
+    }
+    return { stats: playerStats(view, { preset, rift: opts.rift || null }), pet: s.pets ? meta.petPower(s) : null, skills: view.skills, branch: s.player.branch, cls, tier: prog.tierOf(s), ult: CLASS_SKILLS[cls].ult, range: CLASSES[cls].range, skillLevel: (id) => prog.skillLevel(s, id), loadout: L ? L.name : null };
   }
   syncHero() {
     if (this.farm) this.farm.updateStats(this.heroCfg({}));
@@ -483,7 +502,7 @@ export class Game {
     if (!c.ok || this.mode !== 'FARM') return c.ok ? { ok: false, reason: 'mode' } : c;
     missions.track(this.state, 'boss', 1, this.now());
     this.session = { kind: 'boss', id: uid('boss'), bossId, startedAt: this.now(), viewBefore: this.state.settings.battleView };
-    this.active = new Battle({ kind: 'boss', rng: this.rng, hero: this.sessionHero(), boss: { id: bossId } });
+    this.active = new Battle({ kind: 'boss', rng: this.rng, hero: this.sessionHero({ session: true, kind: 'boss' }), boss: { id: bossId } });
     this.acc = 0;
     this.setMode('BOSS');
     this.emit('session', this.session);
@@ -494,7 +513,7 @@ export class Game {
     const cl = prog.promotionChecklist(this.state, tier);
     if (!cl.canTrial || this.mode !== 'FARM') return { ok: false, reason: cl.canTrial ? 'mode' : 'conditions' };
     this.session = { kind: 'trial', id: uid('trial'), tier, startedAt: this.now(), viewBefore: this.state.settings.battleView };
-    this.active = new Battle({ kind: 'trial', rng: this.rng, hero: this.sessionHero(), trial: { tier } });
+    this.active = new Battle({ kind: 'trial', rng: this.rng, hero: this.sessionHero({ session: true, kind: 'trial' }), trial: { tier } });
     this.acc = 0;
     this.setMode('PROMOTION_TRIAL');
     this.emit('session', this.session);
@@ -510,7 +529,7 @@ export class Game {
     const r = await this.transact('dungeonEnter', (s) => { const x = dun.beginRun(s, stage, runId, this.now(), type); if (x.ok) missions.track(s, 'dungeon', 1, this.now()); return x; });
     if (!r.ok) return r;
     this.session = { kind: 'dungeon', type, id: runId, stage, startedAt: this.now(), viewBefore: this.state.settings.battleView };
-    this.active = new Battle({ kind: 'dungeon', rng: this.rng, hero: this.sessionHero(), dungeon: dun.runConfig(type, stage) });
+    this.active = new Battle({ kind: 'dungeon', rng: this.rng, hero: this.sessionHero({ session: true, kind: 'dungeon' }), dungeon: dun.runConfig(type, stage) });
     this.acc = 0;
     this.setMode('DUNGEON');
     this.emit('session', this.session);
@@ -526,7 +545,7 @@ export class Game {
     if (!prog.towerOpen(this.state)) return { ok: false, reason: 'locked' };
     const floor = tower.nextFloor(this.state);
     this.session = { kind: 'tower', id: uid('tower'), floor, startedAt: this.now(), viewBefore: this.state.settings.battleView };
-    this.active = new Battle({ kind: 'tower', rng: this.rng, hero: this.sessionHero(), tower: tower.towerConfig(floor) });
+    this.active = new Battle({ kind: 'tower', rng: this.rng, hero: this.sessionHero({ session: true, kind: 'tower' }), tower: tower.towerConfig(floor) });
     this.acc = 0;
     this.setMode('DUNGEON');
     this.emit('session', this.session);
@@ -539,7 +558,7 @@ export class Game {
     const r = await this.transact('raidEnter', (s) => raid.beginRaid(s, this.now()));
     if (!r.ok) return r;
     this.session = { kind: 'raid', id, bossId: BALANCE.raid.boss, startedAt: this.now(), viewBefore: this.state.settings.battleView };
-    this.active = new Battle({ kind: 'raid', rng: this.rng, hero: this.sessionHero() });
+    this.active = new Battle({ kind: 'raid', rng: this.rng, hero: this.sessionHero({ session: true, kind: 'raid' }) });
     this.acc = 0;
     this.setMode('BOSS');
     this.emit('session', this.session);

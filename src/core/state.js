@@ -10,6 +10,7 @@ import { defaultExpedition } from './expedition.js';
 import { defaultWorldBoss } from './worldboss.js';
 import { defaultCraft } from './crafting.js';
 import { defaultMail } from './mail.js';
+import { backfillLegends, defaultGearPlus, defaultLoadouts } from './gearplus.js';
 
 export const SCHEMA_VERSION = 8;
 
@@ -50,6 +51,8 @@ export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0, cls = 'wa
     expedition: defaultExpedition(),     // 원정 파견 (expedition.js)
     craft: defaultCraft(),                // 제작 재료 · 보옥 가방 · 마부(슬롯) · 버프 음식 (crafting.js)
     mail: defaultMail(),                  // 우편함 · 운영 우편 배달 기록 · 쿠폰 사용 기록 (mail.js)
+    gearPlus: defaultGearPlus(),          // v10 고유 효과 보관함 · 각성 변경 기록 (gearplus.js)
+    loadouts: defaultLoadouts(),          // v10 장비·스킬 프리셋 3칸 + 자동 교체 (gearplus.js)
     worldBoss: defaultWorldBoss(),        // 월드 보스 기록 + 희귀 정예 도감 (worldboss.js)   // 스테이지 지도 (schema 7): best stars, first-clear claimed, auto-advance
     notices: {},            // one-time notices shown after load: { slotEnhance: { refund, levels } }
     skills: {
@@ -59,6 +62,7 @@ export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0, cls = 'wa
       levels: {},                                // skillId → 1..10 (missing = 1)
       books: {},                                 // skillId → skill books owned
       runes: { owned: {}, equipped: [null, null] },   // runeId → level 1..5
+      awaken: {},                                // v10 skillId → 0 (A) | 1 (B), skill Lv 10+
     },
     gacha: { eq: { draws: 0, pity: 0 }, sk: { draws: 0, pity: 0 } },
     missions: { day: null, progress: {}, claimed: {}, bonus: false },
@@ -230,6 +234,8 @@ export function migrate(s) {
   for (const k of Object.keys(d.player)) if (cur.player[k] === undefined) cur.player[k] = d.player[k];
   for (const k of Object.keys(d.slotEnhance)) { cur.slotEnhance[k] ||= 0; cur.slotEnhanceOre[k] ||= 0; }
   for (const k of Object.keys(d.craft)) if (cur.craft[k] === undefined) cur.craft[k] = d.craft[k];
+  for (const k of Object.keys(d.gearPlus)) if (cur.gearPlus[k] === undefined) cur.gearPlus[k] = d.gearPlus[k];
+  backfillLegends(cur);   // v10: legendary/mythic found before 고유 효과 get one (seeded by item id)
   return cur;
 }
 

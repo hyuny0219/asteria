@@ -238,8 +238,8 @@ button.item.empty { cursor: pointer; font: inherit; font-size: 13px; }
 .toast-error { border-color: var(--danger); }
 .toast-good { border-color: var(--gold); }
 .toast.out { opacity: 0; }
-.banner { margin: 6px var(--gutter) 0; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--danger); background: rgba(184,77,104,.15); font-size: 13px; display: flex; gap: 8px; align-items: center; }
-.banner button { width: auto; min-height: 36px; font-size: 13px; }
+.notice-bar { margin: 6px var(--gutter) 0; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--danger); background: rgba(184,77,104,.15); font-size: 13px; display: flex; gap: 8px; align-items: center; }
+.notice-bar button { width: auto; min-height: 36px; font-size: 13px; }
 textarea.io { width: 100%; min-height: 120px; background: var(--panel); border: 1px solid var(--ibord); border-radius: 8px; padding: 8px; font-size: 13px; }
 label.field { display: block; font-size: 13px; margin: 8px 0 4px; }
 input.text { width: 100%; min-height: 36px; background: var(--panel); border: 1px solid var(--ibord); border-radius: 6px; padding: 0 10px; }
@@ -480,9 +480,9 @@ input.text { width: 100%; min-height: 36px; background: var(--panel); border: 1p
 #app.immersive .session-bar .mini-btn { min-height: 36px; padding: 0 14px; background: rgba(16,13,24,.78); }
 #app.immersive .rift-chips { top: 74px; right: 8px; }
 /* floor/stage banner when chaining fights inside the immersive screen */
-.imm-banner { position: absolute; left: 50%; top: 38%; transform: translate(-50%, -50%); z-index: 4; padding: 8px 18px; border-radius: 20px; background: rgba(16,13,24,.78); border: 1px solid var(--gold); color: var(--gold); font-size: 18px; font-weight: 800; pointer-events: none; animation: immBanner 1.4s ease forwards; white-space: nowrap; }
-@keyframes immBanner { 0% { opacity: 0; transform: translate(-50%, -40%); } 15%, 75% { opacity: 1; transform: translate(-50%, -50%); } 100% { opacity: 0; transform: translate(-50%, -60%); } }
-@media (prefers-reduced-motion: reduce) { .imm-banner { animation: none; } }
+.imm-floorcap { position: absolute; left: 50%; top: 38%; transform: translate(-50%, -50%); z-index: 4; padding: 8px 18px; border-radius: 20px; background: rgba(16,13,24,.78); border: 1px solid var(--gold); color: var(--gold); font-size: 18px; font-weight: 800; pointer-events: none; animation: immFloorcap 1.4s ease forwards; white-space: nowrap; }
+@keyframes immFloorcap { 0% { opacity: 0; transform: translate(-50%, -40%); } 15%, 75% { opacity: 1; transform: translate(-50%, -50%); } 100% { opacity: 0; transform: translate(-50%, -60%); } }
+@media (prefers-reduced-motion: reduce) { .imm-floorcap { animation: none; } }
 
 /* ---------- v7 스테이지 지도 ---------- */
 .stage-wrap { display: flex; flex-direction: column; gap: 8px; }
@@ -640,3 +640,35 @@ input.text { width: 100%; min-height: 36px; background: var(--panel); border: 1p
 .mail-chip { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 12px; background: var(--panel-2); border: 1px solid var(--border); font-size: 12px; }
 .mail-chip img { width: 18px; height: 18px; }
 .mail-chip b { color: var(--gold); }
+
+/* ===== v10 장비·스킬: 고유 효과 · 재련 · 등급 올리기 · 각성 · 프리셋 ===== */
+.legend-line { margin: 6px 0 0; padding: 6px 8px; border-radius: 8px; border: 1px solid color-mix(in srgb, var(--r-legendary) 55%, transparent); background: color-mix(in srgb, var(--r-legendary) 10%, transparent); font-size: 12.5px; line-height: 1.4; display: flex; flex-wrap: wrap; gap: 2px 6px; min-width: 0; overflow-wrap: anywhere; }
+.legend-line b { color: var(--r-legendary); }
+.legend-line .lg-tag { font-size: 11px; font-weight: 800; color: var(--r-legendary); }
+.lg-cls { font-size: 11px; color: var(--muted); border: 1px solid var(--ibord); border-radius: 6px; padding: 0 5px; white-space: nowrap; }
+.vault-row.unknown { opacity: .62; }
+.vault-row .kv { gap: 6px; }
+.opt-pick { display: grid; gap: 6px; margin: 6px 0; }
+.opt-row { min-height: 40px; text-align: left; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--ibord); background: var(--panel-2); color: var(--text); font-size: 13px; cursor: pointer; overflow-wrap: anywhere; }
+.opt-row[aria-checked="true"] { border-color: var(--gold); box-shadow: inset 0 0 0 1px var(--gold); }
+.opt-row:disabled { opacity: .55; cursor: default; }
+.mat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 6px; }
+.mat { display: grid; justify-items: center; gap: 2px; padding: 4px; border-radius: 8px; border: 1px solid var(--ibord); background: var(--panel-2); color: var(--text); font-size: 11px; cursor: pointer; min-height: 44px; }
+.mat img { width: 40px; height: 40px; }
+.mat.on { border-color: var(--gold); box-shadow: inset 0 0 0 2px var(--gold); }
+.awk-row { display: flex; gap: 8px; align-items: flex-start; padding: 6px 0; border-top: 1px solid var(--ibord); min-width: 0; }
+.awk-row:first-of-type { border-top: 0; }
+.awk-ic img { width: 40px; height: 40px; border-radius: 8px; border: 2px solid transparent; }
+.awk-body { flex: 1; min-width: 0; }
+.awk-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 4px; }
+.awk-opt { text-align: left; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--ibord); background: var(--panel-2); color: var(--text); font-size: 12px; line-height: 1.35; cursor: pointer; display: grid; gap: 2px; min-width: 0; overflow-wrap: anywhere; min-height: 44px; }
+.awk-opt span { color: var(--muted); }
+.awk-opt[aria-pressed="true"] { border-color: var(--gold); box-shadow: inset 0 0 0 1px var(--gold); }
+img.awk-a, .awk-a img { border: 2px solid #e9c46a !important; border-radius: 8px; box-shadow: 0 0 6px rgba(233,196,106,.55); }
+img.awk-b, .awk-b img { border: 2px solid #b48cff !important; border-radius: 8px; box-shadow: 0 0 6px rgba(180,140,255,.55); }
+.lo-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin: 6px 0; }
+.lo-slot { display: grid; gap: 4px; padding: 6px; border-radius: 8px; border: 1px solid var(--ibord); background: var(--panel-2); min-width: 0; }
+.lo-slot.cur { border-color: var(--gold); }
+.lo-slot .chip-btn { padding: 0 6px; min-width: 0; }
+.lo-name { background: none; border: 0; color: var(--text); text-align: left; padding: 0; font-size: 13px; cursor: pointer; min-height: 36px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lo-map select { max-width: 50%; min-height: 36px; background: var(--panel-2); color: var(--text); border: 1px solid var(--ibord); border-radius: 8px; }

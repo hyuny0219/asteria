@@ -7,6 +7,7 @@ import * as V4 from './v4.js';
 import * as V5 from './v5.js';
 import * as V6 from './v6.js';
 import * as V8 from './v8.js';
+import * as V10 from './v10.js';
 import * as WBM from '../core/worldboss.js';
 import * as MAILUI from './mail.js';
 import { jewelName, socketCount } from '../core/crafting.js';
@@ -41,6 +42,7 @@ const STAT_INFO = {
   speed: { name: '공격 속도', fmt: (s) => s.aspd.toFixed(2) + '/초' },
 };
 const reasonText = {
+  'no-legend': '고유 효과가 없습니다', 'same': '이미 같은 상태입니다', rarity: '전설·신화 장비에만 이식할 수 있습니다', awaken: '각성 정보가 없습니다', 'awaken-level': '스킬 Lv 10부터 각성할 수 있습니다', loadout: '저장된 프리셋이 없습니다', option: '바꿀 수 있는 옵션이 아닙니다', 'max-rarity': '이미 최고 등급입니다', materials: '같은 부위·같은 등급 장비 2개를 골라 주세요', starShard: '별의 파편이 부족합니다', awakenStone: '각성석이 부족합니다',
   expired: '보관 기간이 지난 우편입니다', 'coupon-unknown': '없는 쿠폰 번호입니다', 'coupon-expired': '사용 기간이 끝난 쿠폰입니다', 'coupon-used': '이미 사용한 쿠폰입니다', 'coupon-empty': '쿠폰 번호를 입력해 주세요',
   gold: '골드가 부족합니다', ore: '강화 광석이 부족합니다', cap: '상한에 도달했습니다', max: '최대 강화(+10)입니다',
   protected: '잠금·장착 장비는 분해할 수 없습니다', none: '선택한 장비가 없습니다', tickets: '입장권이 없습니다', 'no-record': '최고 기록이 없어 소탕할 수 없습니다',
@@ -154,7 +156,7 @@ export function equipmentPanel(app) {
   root.appendChild(h('div', { class: 'panel-head' }, h('h2', null, '장비'), h('span', { class: 'muted num' }, `${s.inventory.length}/${cap}`), h('span', { class: 'spacer' }),
     button('추천 장착', { cls: 'chip-btn', busy: true, ariaLabel: '추천 장착 (주 스탯 기준)', onClick: async () => { const r = fail(await app.game.autoEquip()); if (r.ok) toast('주 스탯 기준으로 장착했습니다. (DPS 최적 계산 아님)', 'good'); } })));
   const sc = h('div', { class: 'panel-scroll' });
-  if (s.overflow.length) sc.appendChild(h('div', { class: 'banner', role: 'status' }, icon('warning', 20), h('span', { style: { flex: 1 } }, `임시 보관함 ${s.overflow.length}개`), button('확인', { cls: 'btn', onClick: () => openOverflow(app) })));
+  if (s.overflow.length) sc.appendChild(h('div', { class: 'notice-bar', role: 'status' }, icon('warning', 20), h('span', { style: { flex: 1 } }, `임시 보관함 ${s.overflow.length}개`), button('확인', { cls: 'btn', onClick: () => openOverflow(app) })));
   // equipped 8 slots (two ring slots)
   const eqGrid = h('div', { class: 'grid4', 'aria-label': '장착 장비 (슬롯 강화)' });
   for (const slot of Object.keys(s.equipped)) {
@@ -182,6 +184,7 @@ export function equipmentPanel(app) {
     root.appendChild(sc);
     return root;
   }
+  sc.appendChild(V10.loadoutCard(app));
   const filters = [['all', '전체'], ['weapon', '무기'], ['helmet', '투구'], ['armor', '갑옷'], ['gloves', '장갑'], ['boots', '신발'], ['necklace', '목걸이'], ['ring', '반지']];
   sc.appendChild(h('div', { class: 'tabs', role: 'group', 'aria-label': '부위 필터', style: { margin: '12px 0 8px' } },
     filters.map(([k, l]) => h('button', { type: 'button', class: 'tab', 'aria-pressed': String(app.eqFilter === k), onClick: () => { app.eqFilter = k; app.renderPanel(); } }, l))));
@@ -228,7 +231,7 @@ export function openCompare(app, id) {
     const lv = (s.slotEnhance || {})[target] || 0;
     const col = (x, title) => h('div', { class: 'card', style: { flex: 1, margin: 0 } }, h('p', { class: 'muted', style: { margin: 0 } }, title),
       x ? [img(itemIcon(x.look), '', ''), h('h3', null, x.name), h('div', { class: `rar r-${x.rarity}` }, rarityLabel(x.rarity) + ` · Lv ${x.level}`),
-        statLines(x, lv).map(([k, v, u]) => u ? h('p', { class: 'unique-line' }, `고유 · ${v}`) : h('div', { class: 'kv' }, k, h('b', null, typeof v === 'number' ? fmtFull(v) : v)))] : h('p', { class: 'muted' }, '비어 있음'));
+        statLines(x, lv).map(([k, v, u]) => u ? h('p', { class: 'unique-line' }, `고유 · ${v}`) : h('div', { class: 'kv' }, k, h('b', null, typeof v === 'number' ? fmtFull(v) : v))), V10.legendLine(x)] : h('p', { class: 'muted' }, '비어 있음'));
     const body = h('div', { dataset: { screen: 'compare' } },
       h('div', { class: 'btn-row', style: { alignItems: 'stretch' } }, col(cur || (eq ? null : null), eq ? '장착 중' : '현재 장착'), h('div', { style: { alignSelf: 'center', flex: 'none' } }, icon('compare', 22)), col(it, eq ? '이 장비' : '선택')),
       h('p', { class: 'muted', dataset: { note: 'slot-enhance' }, style: { margin: '8px 0 0' } }, lv
@@ -244,6 +247,7 @@ export function openCompare(app, id) {
         : button('장착', { cls: 'btn btn-primary', busy: true, onClick: async () => { const r = fail(await app.game.equip(it.id)); if (r.ok) { toast(`${it.name} 장착`, 'good'); render(); } } }),
       h('div', { class: 'btn-row' }, button(`${SLOT_NAMES[target]} 강화 +${lv}`, { cls: 'btn btn-gold', onClick: () => openEnhance(app, target) }), lockBtn),
       socketCount(it) ? button('보옥 홈 관리', { cls: 'btn', onClick: () => V8.openWorkshop(app, 'jewel', it.id) }) : null,
+      ...V10.compareActions(app, it, render),
     ];
     m.setActions(actions);
   };
@@ -362,6 +366,8 @@ export function openOverflow(app) {
 }
 
 // ======================= S05 skills panel / S06 detail =======================
+// v10 각성 아이콘 테두리 (A 금색 · B 보라)
+function awkCls(s, id) { const a = (s.skills.awaken || {})[id]; return a === undefined || prog.skillLevel(s, id) < 10 ? '' : a ? 'awk-b' : 'awk-a'; }
 export function skillsPanel(app) {
   const s = app.state;
   const root = h('div', { class: 'panel', dataset: { screen: 'skills' }, style: { height: '100%', margin: 0 } });
@@ -383,11 +389,11 @@ export function skillsPanel(app) {
     const locked = i >= slots;
     const unlockText = i === 3 ? '1차 승급(Lv 30)에서 열려요.' : '2차 승급(Lv 60)에서 열려요.';
     sc.appendChild(h('div', { class: 'skill-line' },
-      locked ? h('span', { class: 'skill locked', style: { width: '44px', height: '44px' } }, icon('lock', 18)) : id ? img(skillIcon(SKILLS[id].icon), '') : h('span', { class: 'skill empty', style: { width: '44px', height: '44px' } }),
+      locked ? h('span', { class: 'skill locked', style: { width: '44px', height: '44px' } }, icon('lock', 18)) : id ? img(skillIcon(SKILLS[id].icon), '', awkCls(s, id)) : h('span', { class: 'skill empty', style: { width: '44px', height: '44px' } }),
       h('div', null, h('div', { class: 't' }, `${i + 1}번 · ${locked ? '승급 해금' : id ? SKILLS[id].name : '비어 있음'}`), locked ? h('div', { class: 'muted' }, unlockText) : id ? lvLine(id) : null),
       locked ? button('조건', { cls: 'chip-btn', onClick: () => openQuest(app) }) : button('변경', { cls: 'chip-btn', onClick: () => openSkillPicker(app, i) })));
   }
-  sc.appendChild(h('div', { class: 'skill-line' }, img(skillIcon(SKILLS[ult].icon), ''),
+  sc.appendChild(h('div', { class: 'skill-line' }, img(skillIcon(SKILLS[ult].icon), '', awkCls(s, ult)),
     h('div', null, h('div', { class: 't' }, `궁극기 · ${SKILLS[ult].name}`), lvLine(ult)),
     button('상세', { cls: 'chip-btn', onClick: () => openSkillDetail(app, ult) })));
   sc.appendChild(h('div', { class: 'setting-block' }, h('span', null, '궁극기 자동 사용'), h('div', { class: 'seg', role: 'group', 'aria-label': '궁극기 자동 사용' },
@@ -408,6 +414,7 @@ export function skillsPanel(app) {
       } })));
   }
   sc.appendChild(h('p', { class: 'muted' }, `레벨당 피해 +${Math.round(BALANCE.skills.levelBonusPerLevel * 100)}%. 스킬북은 스킬북 서고 던전·스킬 뽑기·보스에서 얻어요.`));
+  sc.appendChild(V10.awakenCard(app));
   sc.appendChild(V4.runesCard(app));
   const cs = CLASSES[s.player.cls || 'warrior'];
   const br = s.player.branch ? BRANCHES[s.player.branch] : null;
@@ -561,7 +568,7 @@ export function menuTiles(app) {
   const tier = prog.tierOf(s);
   const cl = tier < 3 ? prog.promotionChecklist(s) : null;
   const promoHot = !!cl && (cl.canChoose || cl.canTrial || cl.canPromote);
-  const extra = [...V4.v4Tiles(app), ...V5.v5Tiles(app), ...V6.v6Tiles(app), ...V8.v8Tiles(app)];
+  const extra = [...V4.v4Tiles(app), ...V5.v5Tiles(app), ...V6.v6Tiles(app), ...V8.v8Tiles(app), ...V10.v10Tiles(app)];
   const att = attendanceStatus(s, Date.now());
   return [
     MAILUI.mailTile(app),

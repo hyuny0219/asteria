@@ -11,6 +11,7 @@ import { talentEffects } from './talents.js';
 import { rebirthMultipliers, farmMultipliers as rebirthFarm } from './rebirth.js';
 import { metaBonus } from './meta.js';
 import { enchantBonus, foodBonus, jewelBonus } from './crafting.js';
+import { skillMods as gearSkillMods } from './gearplus.js';
 
 const P = BALANCE.player;
 const U = BALANCE.upgrade;
@@ -95,6 +96,9 @@ export function playerStats(state, opts = {}) {
   // v8 마부(슬롯) · 버프 음식(30분)
   add(enchantBonus(state));
   add(foodBonus(state, opts.now !== undefined ? opts.now : Date.now()));
+  // v10 전설 고유 효과 · 스킬 각성 (skill mods; '*' may carry plain % stats)
+  const sm = gearSkillMods(state);
+  if (sm['*'] && sm['*'].pct) add(sm['*'].pct);
   // talents (preset), rift blessings/curse
   const tal = state.talents ? talentEffects(state, opts.preset !== undefined ? opts.preset : state.talents.active) : { pct: {}, caps: {} };
   add(tal.pct);
@@ -123,7 +127,7 @@ export function playerStats(state, opts = {}) {
     evade: Math.min(C.evadeCap, evade), cdr: Math.min(C.cdrCap, cdr),
     ultCharge: pct.ultCharge, goldPct: pct.goldPct, lifesteal: pct.lifesteal, combo: Math.min(0.8, pct.combo), dmgTaken: Math.min(0.5, pct.dmgTaken),
     expPct: pct.expPct, offlinePct: pct.offlinePct, dropPct: pct.dropPct, thorns: pct.thorns, regen: pct.regen, caps: tal.caps,
-    rebirth: rebirthFarm(state),
+    rebirth: rebirthFarm(state), skillMods: sm,
     mythUltCdr: pct.mythUltCdr > 0, mythHeal: pct.mythHeal > 0,
     rawCrit, equipBonus, capped: { crit: rawCrit > C.critChanceCap, aspd: aspd >= C.attackSpeedCap },
   };

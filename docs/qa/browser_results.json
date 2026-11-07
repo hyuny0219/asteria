@@ -1,6 +1,6 @@
 {
- "startedAt": "2026-11-07T11:36:25.201Z",
- "base": "http://localhost:8250/",
+ "startedAt": "2026-11-07T12:31:41.535Z",
+ "base": "http://localhost:8260/",
  "viewports": [
   [
    390,
@@ -87,7 +87,8 @@
    ],
    "brokenImg": [],
    "screens": [
-    "inventory"
+    "inventory",
+    "loadouts"
    ],
    "tiny": [
     "2"
@@ -110,6 +111,7 @@
    "brokenImg": [],
    "screens": [
     "inventory",
+    "loadouts",
     "compare",
     "compare"
    ],
@@ -134,6 +136,7 @@
    "brokenImg": [],
    "screens": [
     "inventory",
+    "loadouts",
     "enhance",
     "enhance"
    ],
@@ -158,6 +161,7 @@
    "brokenImg": [],
    "screens": [
     "inventory",
+    "loadouts",
     "enhance",
     "enhance"
    ],
@@ -183,6 +187,7 @@
    "brokenImg": [],
    "screens": [
     "inventory",
+    "loadouts",
     "dismantle",
     "dismantle"
    ],
@@ -207,6 +212,7 @@
    "brokenImg": [],
    "screens": [
     "inventory",
+    "loadouts",
     "overflow",
     "overflow"
    ],
@@ -228,6 +234,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "awaken",
     "runes"
    ],
    "tiny": [
@@ -248,6 +255,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "awaken",
     "runes",
     "skilldetail",
     "skilldetail"
@@ -310,7 +318,8 @@
    ],
    "tiny": [
     "2",
-    "✓"
+    "✓",
+    "★★★"
    ],
    "errors": []
   },
@@ -1016,6 +1025,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "awaken",
     "runes",
     "growth",
     "main",
@@ -1042,6 +1052,7 @@
    "brokenImg": [],
    "screens": [
     "inventory",
+    "loadouts",
     "growth",
     "main",
     "statpoints"
@@ -1340,7 +1351,8 @@
    ],
    "brokenImg": [],
    "screens": [
-    "inventory"
+    "inventory",
+    "loadouts"
    ],
    "tiny": [
     "2"
@@ -1363,6 +1375,7 @@
    "brokenImg": [],
    "screens": [
     "inventory",
+    "loadouts",
     "compare",
     "compare"
    ],
@@ -1387,6 +1400,7 @@
    "brokenImg": [],
    "screens": [
     "inventory",
+    "loadouts",
     "enhance",
     "enhance"
    ],
@@ -1411,6 +1425,7 @@
    "brokenImg": [],
    "screens": [
     "inventory",
+    "loadouts",
     "enhance",
     "enhance"
    ],
@@ -1436,6 +1451,7 @@
    "brokenImg": [],
    "screens": [
     "inventory",
+    "loadouts",
     "dismantle",
     "dismantle"
    ],
@@ -1460,6 +1476,7 @@
    "brokenImg": [],
    "screens": [
     "inventory",
+    "loadouts",
     "overflow",
     "overflow"
    ],
@@ -1481,6 +1498,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "awaken",
     "runes"
    ],
    "tiny": [
@@ -1501,6 +1519,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "awaken",
     "runes",
     "skilldetail",
     "skilldetail"
@@ -2269,6 +2288,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "awaken",
     "runes",
     "growth",
     "main",
@@ -2295,6 +2315,7 @@
    "brokenImg": [],
    "screens": [
     "inventory",
+    "loadouts",
     "growth",
     "main",
     "statpoints"
@@ -2592,7 +2613,8 @@
    ],
    "brokenImg": [],
    "screens": [
-    "inventory"
+    "inventory",
+    "loadouts"
    ],
    "tiny": [
     "2"
@@ -2614,6 +2636,7 @@
    "brokenImg": [],
    "screens": [
     "inventory",
+    "loadouts",
     "compare",
     "compare"
    ],
@@ -2637,6 +2660,7 @@
    "brokenImg": [],
    "screens": [
     "inventory",
+    "loadouts",
     "enhance",
     "enhance"
    ],
@@ -2660,6 +2684,7 @@
    "brokenImg": [],
    "screens": [
     "inventory",
+    "loadouts",
     "enhance",
     "enhance"
    ],
@@ -2683,6 +2708,7 @@
    "brokenImg": [],
    "screens": [
     "inventory",
+    "loadouts",
     "dismantle",
     "dismantle"
    ],
@@ -2706,6 +2732,7 @@
    "brokenImg": [],
    "screens": [
     "inventory",
+    "loadouts",
     "overflow",
     "overflow"
    ],
@@ -2727,6 +2754,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "awaken",
     "runes"
    ],
    "tiny": [
@@ -2747,6 +2775,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "awaken",
     "runes",
     "skilldetail",
     "skilldetail"
@@ -3515,6 +3544,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "awaken",
     "runes",
     "growth",
     "main",
@@ -3540,6 +3570,7 @@
    "brokenImg": [],
    "screens": [
     "inventory",
+    "loadouts",
     "growth",
     "main",
     "statpoints"
@@ -3836,8 +3867,8 @@
    "name": "reload keeps the same pending claim",
    "pass": true,
    "detail": {
-    "first": "claim_mw6bxj5d_1c9klun",
-    "after": "claim_mw6bxj5d_1c9klun"
+    "first": "claim_mw6dwm21_1iil9qi",
+    "after": "claim_mw6dwm21_1iil9qi"
    }
   },
   {
@@ -3919,7 +3950,7 @@
     "k0": 1,
     "k1": {
      "kills": 1,
-     "acc": 0,
+     "acc": 0.10000000000002274,
      "mode": "FARM"
     }
    }
@@ -4014,7 +4045,7 @@
   }
  ],
  "errors": [],
- "finishedAt": "2026-11-07T11:38:55.201Z",
+ "finishedAt": "2026-11-07T12:34:12.349Z",
  "summary": {
   "screenChecks": 141,
   "screenPass": 141,
