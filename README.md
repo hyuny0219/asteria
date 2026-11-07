@@ -18,6 +18,7 @@
 - 전투 Canvas2D, UI DOM/SVG, Vanilla JS(ES 모듈, 빌드 도구·외부 의존성 없음), 폰트 Noto Sans KR(WOFF2 서브셋, OFL)
 - 비도트 성인 여성 다크 판타지 일러스트. 도트·치비·픽셀 폰트·정수 확대는 사용하지 않습니다.
 - **우편함 · 쿠폰**: 운영 우편(기간·1회 배달), 30일 보관·모두 받기, 쿠폰 입력(해시 저장·프로필당 1회, 보상은 우편으로) — `docs/DESIGN_V9_MAIL.md`
+- **장비·스킬 v10**: 전설 고유 효과 36종(추출·보관함·이식), 스킬 각성 A/B(Lv 10), 장비·스킬 프리셋 3칸(전투 종류별 자동 교체), 재련·등급 올리기 — `docs/DESIGN_V10_GEAR.md`
 - 실제 광고·결제·캐릭터 가챠·호감도는 없습니다(뽑기는 게임 내 재화만).
 
 ## 실행
@@ -54,6 +55,7 @@ node tools/mplus_sim.mjs <snap dir>               # 쐐기 단계별 시간 내/
 node tools/qa_stage_stable.cjs 8123              # 스테이지 탭이 전투 중에 튀지 않는지(고른 지역·칸 유지)
 node tools/qa_combat_fx.cjs 8123                 # 콤보·치명타·스킬 이펙트·궁극기 컷인 캡처(docs/qa/screens/fx_*.png)·프레임 비용
 node tools/qa_mail.cjs 8123                      # 우편함·쿠폰 × 3해상도 (docs/qa/screens/v9_mail_*.png)
+node tools/qa_v10.cjs 8123                       # 고유 효과·추출·이식·재련·등급 올리기·각성·프리셋 × 3해상도 (docs/qa/screens/v10_*.png)
 node tools/make_coupon.mjs SEONBAE               # 새 쿠폰 코드 → src/data/coupons.js에 넣을 해시 출력
 python3 tools/extract_gpt_b.py                  # GPT B 투사체·타격 → fx_*.webp
 python3 tools/extract_gpt_c.py                  # GPT C 몬스터 대기·공격·피격·쓰러짐 → mon_M##_<act>.webp

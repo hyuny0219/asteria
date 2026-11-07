@@ -188,3 +188,9 @@
 | 칩 → 지도 → 클리어 스테이지 선택 → 사냥 이동(칩 `2-3`), 모험 탭 → 지도, 보스 노드 재도전, 잠긴 지역 버튼 비활성, 자동 진행 토글 | PASS | `tools/qa_v7.cjs` |
 | 브라우저에서 진행 중 스테이지 실제 클리어 → 보석 지급 1회 + 토스트(저장 후) + 다음 스테이지 | PASS | `tools/qa_v7.cjs` live first clear |
 | 전체 회귀 | PASS | npm test 96/96, browser_qa 141/141 화면(42종)·흐름 34/34, qa_immersive 14/14, qa_login 10/10, qa_v5 14/14, qa_v6 32/32, qa_a01·a02 오류 없음, qa_combat_fx 38/38(치명타 캡처 대기 25→45초, 확률 의존) |
+
+## v10 장비·스킬 (2026-11-07)
+- `npm test` 136/136 PASS (tests/gearplus.test.mjs 8개 추가)
+- `tools/qa_v10.cjs` 66/66 PASS × 360·390·412 (가로 넘침 0, 광고 차단 단어 클래스 0, 페이지 오류 0)
+- browser_qa 141/141 화면 · 34/34 흐름, qa_v5 / qa_v6 / qa_v7 42/42 / qa_v8 105/105 / qa_mail 30/30 / qa_immersive 14/14 / qa_combat_fx 38/38 PASS
+- balance_sim_v4: 첫 Lv100 평균 9.44일(기준 9.84일) — `docs/qa/balance_v10.txt`
