@@ -492,17 +492,17 @@ function advDecorate(card, key, override = {}) {
   }
   const bg = m.bg && bgMeta(m.bg);
   const locked = card.classList.contains('locked-card');
-  const banner = h('div', { class: 'adv-banner', style: bg ? { backgroundImage: `url(${bg.file})` } : {} },
-    h('div', { class: 'adv-shade' }),
-    h('div', { class: 'adv-head' },
-      h('span', { class: 'adv-kind' }, m.kind),
-      h('b', { class: 'adv-title' }, override.title || title),
-      h('span', { class: 'adv-gets' }, locked ? '' : `얻는 것 · ${m.gets}`)),
-    badge ? h('span', { class: 'adv-badge' + (locked ? ' lock' : '') }, badge) : null);
+  const banner = h('div', { class: 'quest-scene', style: bg ? { backgroundImage: `url(${bg.file})` } : {} },
+    h('div', { class: 'quest-shade' }),
+    h('div', { class: 'quest-head' },
+      h('span', { class: 'quest-kind' }, m.kind),
+      h('b', { class: 'quest-title' }, override.title || title),
+      h('span', { class: 'quest-gets' }, locked ? '' : `얻는 것 · ${m.gets}`)),
+    badge ? h('span', { class: 'quest-badge' + (locked ? ' lock' : '') }, badge) : null);
   // the creature you meet there, standing on the right of the banner
   const fm = m.fig && (spriteMeta().bosses[m.fig] || spriteMeta().monsters[m.fig] || (spriteMeta().pets || {})[m.fig]);
-  if (fm) banner.insertBefore(img(fm.file, '', 'adv-fig' + (m.figFlip ? ' flip' : '')), banner.children[1]);
-  card.classList.add('adv-card', 'adv-' + m.accent);
+  if (fm) banner.insertBefore(img(fm.file, '', 'quest-fig' + (m.figFlip ? ' flip' : '')), banner.children[1]);
+  card.classList.add('quest-card', 'quest-' + m.accent);
   card.insertBefore(banner, card.firstChild);
   return card;
 }
@@ -526,10 +526,10 @@ export function dungeonPanel(app) {
   const tab = app.advTab || 'dungeon';
   const root = h('div', { class: 'panel', dataset: { screen: 'dungeon' }, style: { height: '100%', margin: 0 } });
   root.appendChild(h('div', { class: 'panel-head' }, h('h2', null, '모험'), h('span', { class: 'spacer' }), h('span', { class: 'muted small' }, '입장권 매일 00:00 +3')));
-  const tabs = h('div', { class: 'adv-tabs', role: 'tablist', 'aria-label': '모험 분류' }, ADV_TABS.map(([id, t, sub]) =>
-    h('button', { type: 'button', role: 'tab', 'aria-selected': String(tab === id), dataset: { advtab: id }, onClick: () => { app.advTab = id; app.renderPanel(); } },
+  const tabs = h('div', { class: 'quest-tabs', role: 'tablist', 'aria-label': '모험 분류' }, ADV_TABS.map(([id, t, sub]) =>
+    h('button', { type: 'button', role: 'tab', 'aria-selected': String(tab === id), dataset: { qtab: id }, onClick: () => { app.advTab = id; app.renderPanel(); } },
       h('b', null, t), h('span', null, sub))));
-  root.appendChild(h('div', { class: 'adv-tabs-wrap' }, tabs));
+  root.appendChild(h('div', { class: 'quest-tabs-wrap' }, tabs));
   const sc = h('div', { class: 'panel-scroll' });
   const add = (card, key) => { if (card) sc.appendChild(advDecorate(card, key)); };
   if (tab === 'dungeon') {
