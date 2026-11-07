@@ -30,9 +30,9 @@
   "pass": true,
   "info": {
    "choices": [
-    "b_aspd",
-    "b_ult",
-    "b_cdr"
+    "b_combo",
+    "b_evade",
+    "b_ult"
    ]
   }
  },
@@ -82,9 +82,9 @@
   "pass": true,
   "info": {
    "choices": [
-    "b_crit",
-    "b_guard",
-    "b_def"
+    "b_cdr",
+    "b_def",
+    "b_hp"
    ]
   }
  },

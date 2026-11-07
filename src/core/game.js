@@ -33,6 +33,7 @@ import * as meta from './meta.js';
 import * as stages from './stages.js';
 import * as mplus from './mplus.js';
 import * as expedition from './expedition.js';
+import * as worldboss from './worldboss.js';
 import { PASS } from '../data/meta.js';
 import { deepClone, makeRng, uid } from './util.js';
 
@@ -87,6 +88,7 @@ export class Game {
     eco.applyAutoStats(this.state);
     mplus.refreshMplus(this.state, this.now());
     expedition.refreshExpedition(this.state, this.now());
+    worldboss.refreshWorldBoss(this.state, this.now());
     const mpRefund = mplus.recoverRun(this.state);
     if (mpRefund) this.notices.push({ type: 'mplusRefund', ...mpRefund });
     const refund = dun.recoverPendingRun(this.state);
@@ -197,6 +199,20 @@ export class Game {
     this.setMode('DUNGEON');
     this.emit('session', this.session);
     return { ok: true, key: run.key };
+  }
+  // ---------- 월드 보스 ----------
+  async startWorldBoss() {
+    if (this.mode !== 'FARM') return { ok: false, reason: 'mode' };
+    const id = uid('wb');
+    const r = await this.transact('worldBossEnter', (s) => worldboss.beginWorldBoss(s, id, this.now()));
+    if (!r.ok) return r;
+    const cfg = worldboss.battleConfig(this.state, this.now());
+    this.active = new Battle({ kind: 'world', rng: this.rng, hero: this.sessionHero(), world: cfg });
+    this.session = { kind: 'world', id, bossId: cfg.boss, bossHp: this.active.worldHp, startedAt: this.now(), viewBefore: this.state.settings.battleView };
+    this.acc = 0;
+    this.setMode('BOSS');
+    this.emit('session', this.session);
+    return { ok: true };
   }
   // ---------- 원정 파견 ----------
   sendExpedition(expId, petId) { return this.transact('expSend', (s) => expedition.send(s, expId, petId, this.now())); }
@@ -312,6 +328,12 @@ export class Game {
       s.wallet.gold += r.gold;
       const expRes = prog.gainExp(s, r.exp);
       const loot = this.rollLoot(e);
+      if (e.rare) {   // 희귀 정예: gems + a rare-or-better piece, codex, title at 10/10
+        const rr = worldboss.onRareKill(s, e.rare, e.level, this.rng);
+        const added = eco.addItems(s, [rr.item]);
+        loot.items = loot.items.concat(added.stored, added.overflowed);
+        r.rare = { id: e.rare, gem: rr.gem, item: rr.item, first: rr.first, title: rr.title };
+      }
       const tok = prog.onTokenKill(s, e.level);
       s.progression.counters.kills++;
       // wave progress
@@ -325,6 +347,8 @@ export class Game {
         const run = this.stageRun();
         this.queueStageClear(p.region, p.wave, { deaths: run.deaths, timeSec: run.ms / 1000 });
         this.run = null;
+        const rare = this.farm === this.active && worldboss.rollRare(p.region, this.rng);
+        if (rare) this.farm.spawnRare(rare, waveLevel(p.region, p.wave));
         if (p.holdKills > 0) { /* holding after a retreat */ }
         else if (p.wave < 10 && p.autoAdvance !== false) { p.wave++; advanced = true; }
         p.maxWave[p.region] = Math.max(p.maxWave[p.region] || 1, p.wave);
@@ -341,7 +365,7 @@ export class Game {
       }
       const vf = this.verifier.onKill(p.region, p.wave, e.level, this.active.t);
       if (vf && !this.sameFarm(p.verifiedFarm, vf)) { p.verifiedFarm = vf; this.emit('farmVerified', vf); }
-      this.emit('reward', { gold: r.gold, exp: r.exp, expRes, loot, token: tok, advanced, enemy: e });
+      this.emit('reward', { gold: r.gold, exp: r.exp, expRes, loot, token: tok, advanced, enemy: e, supplyEq: r.supplyEq, supplySk: r.supplySk, rare: r.rare });
       if (expRes.levels) { this.syncHero(); this.emit('levelUp', { level: s.player.level }); this.checkpoint('levelUp'); }
       if (e.fieldBoss) this.checkpoint('fieldBoss');
       if (loot.items.length) this.checkpoint('loot');
@@ -565,6 +589,12 @@ export class Game {
           if ((fr.cleared || 0) >= 10) { s.pets.eggs += 1; fr.petEgg = 1; }
         }
         return { ...fr, kills: ev.kills, timeSec: Math.round(ev.t / 1000), reason: ev.reason };
+      });
+    } else if (sess.kind === 'world') {
+      r = await this.transact('worldBossResult', (s) => {
+        const fr = worldboss.finishWorldBoss(s, sess.id, ev.damage || 0, sess.bossHp, this.rng);
+        if (fr.ok) fr.overflowed = eco.addItems(s, fr.items).overflowed;
+        return { ...fr, win: true, timeSec: Math.round(ev.t / 1000), reason: ev.reason };
       });
     } else if (sess.kind === 'mplus') {
       r = await this.transact('mplusResult', (s) => {

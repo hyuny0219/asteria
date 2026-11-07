@@ -27,6 +27,7 @@ export const TITLES = Object.freeze({
   t_tamer: { name: '정령의 벗', bonus: { hpPct: 0.015 } },
   t_legend: { name: '아스테리아의 전설', bonus: { atkPct: 0.025, hpPct: 0.025 } },
   t_season: { name: '시즌의 별', bonus: { atkPct: 0.015, goldPct: 0.02 } },
+  t_rarehunter: { name: '희귀 정예 사냥꾼', bonus: { dropPct: 0.03, critChance: 0.01 } },
 });
 
 // ---------- 업적 (~30) ----------

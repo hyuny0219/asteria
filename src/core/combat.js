@@ -93,12 +93,19 @@ export class Battle {
       : o.kind === 'tower' ? T.tower.timeSec * 1000
       : o.kind === 'raid' ? T.raid.timeSec * 1000
       : o.kind === 'rift' ? o.rift.timeSec * 1000
-      : o.kind === 'mplus' ? o.mplus.hardSec * 1000 : Infinity;
+      : o.kind === 'mplus' ? o.mplus.hardSec * 1000
+      : o.kind === 'world' ? o.world.timeSec * 1000 : Infinity;
     this.secondWindUsed = false;
     this.respawnAt = null;
     this.setHero(o.hero, true);
     if (o.kind === 'boss') this.spawnBoss(BOSSES[o.boss.id]);
     if (o.kind === 'raid') this.spawnBoss(BOSSES[T.raid.boss], { raid: true });
+    if (o.kind === 'world') {   // 월드 보스: score fight, boss HP × hpMul at the hero's level
+      const e = this.addEnemy(BOSSES[o.world.boss], o.world.level, { boss: true });
+      e.maxHp = e.hp = Math.floor(e.hp * o.world.hpMul);
+      e.world = true;
+      this.worldHp = e.maxHp;
+    }
     if (o.kind === 'trial') { const tier = (o.trial && o.trial.tier) || 1; this.spawnBoss({ ...TRIALS[tier], isTrial: true, tier }); }
     // rift: HP carries over between floors
     if (o.kind === 'rift' && o.rift.hpPct !== undefined) this.hero.hp = Math.max(1, Math.floor(this.hero.maxHp * o.rift.hpPct));
@@ -137,6 +144,17 @@ export class Battle {
     const id = ids[this.rng.int(0, ids.length - 1)];
     const elite = f.eliteAllowed() && this.rng() < M.elite.chance;
     this.addEnemy(MONSTERS[id], level, { elite });
+  }
+  // 희귀 정예: a named elite joins the farm field (one at a time, never with a field boss)
+  spawnRare(rare, level) {
+    if (this.kind !== 'farm' || this.enemies.some((e) => e.fieldBoss || e.rare)) return null;
+    const def = MONSTERS[rare.base];
+    const e = this.addEnemy({ ...def, name: rare.name }, level + 2, { elite: true });
+    e.maxHp = e.hp = Math.floor(e.hp * 5);
+    e.atk = Math.floor(e.atk * 1.3);
+    e.rare = rare.id;
+    this.events.push({ type: 'rareElite', enemy: e.uid, name: rare.name, rare: rare.id, t: this.t });
+    return e;
   }
   // Field boss joins the farm field (does not end the battle when killed).
   spawnFieldBoss(level) {
@@ -250,7 +268,7 @@ export class Battle {
     }
     if (t >= this.timeLimitMs) {
       // raid: the time limit is the end of a scored run, not a loss
-      this.finish(this.kind === 'raid' ? 'victory' : 'defeat', 'timeout');
+      this.finish(this.kind === 'raid' || this.kind === 'world' ? 'victory' : 'defeat', 'timeout');
       return;
     }
     if (this.mp && this.mp.aff.has('quaking') && t >= this.mp.quakeAt) {
@@ -552,9 +570,9 @@ export class Battle {
     e.state = 'dying';
     e.dieAt = this.t + 420;
     this.kills++;
-    this.events.push({ type: 'kill', enemy: { uid: e.uid, id: e.id, level: e.level, elite: e.elite, boss: e.boss, fieldBoss: !!e.fieldBoss, trial: !!e.trial }, t: this.t });
+    this.events.push({ type: 'kill', enemy: { uid: e.uid, id: e.id, level: e.level, elite: e.elite, boss: e.boss, fieldBoss: !!e.fieldBoss, trial: !!e.trial, rare: e.rare || null }, t: this.t });
     if (this.heroCfg.stats.mythHeal && this.rng() < 0.1) this.heal(this.hero.maxHp * 0.2);
-    if (this.kind === 'boss' || this.kind === 'trial' || this.kind === 'raid') { if (e.boss) this.finish('victory'); }
+    if (this.kind === 'boss' || this.kind === 'trial' || this.kind === 'raid' || this.kind === 'world') { if (e.boss) this.finish('victory'); }
     if ((this.kind === 'dungeon' || this.kind === 'tower' || this.kind === 'rift') && this.kills >= this.killTarget) this.finish('victory');
     if (this.mp) { if (e.boss) this.finish('victory'); else if (this.mp.aff.has('bursting')) this.affixHit(0.03, 'bursting'); }
   }
@@ -639,7 +657,7 @@ export class Battle {
     h.hp = 0; h.dead = true; h.action = null;
     this.events.push({ type: 'heroDown', t: this.t });
     if (this.kind === 'farm') this.respawnAt = this.t + C.respawnDelaySec * 1000;
-    else this.finish(this.kind === 'raid' ? 'victory' : 'defeat', 'hp');   // raid: score still counts
+    else this.finish(this.kind === 'raid' || this.kind === 'world' ? 'victory' : 'defeat', 'hp');   // raid / world boss: score still counts
   }
 
   respawn() {

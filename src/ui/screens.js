@@ -464,6 +464,7 @@ export function dungeonPanel(app) {
   sc.appendChild(h('div', { class: 'section-title' }, '던전'));
   for (const t of ['quarry', 'gold', 'books']) sc.appendChild(V4.dungeonCard(app, t));
   sc.appendChild(h('div', { class: 'section-title' }, '도전'));
+  sc.appendChild(V8.worldBossCard(app));
   sc.appendChild(V8.mplusCard(app));
   sc.appendChild(V4.towerCard(app));
   sc.appendChild(V5.riftCard(app));
@@ -616,6 +617,7 @@ export function openResult(app, r) {
   if (r.kind === 'rift') return V5.openRiftResult(app, r, back);
   if (r.kind === 'raid') return V4.openRaidResult(app, r, back, itemRewards);
   if (r.kind === 'mplus') return V8.openMplusResult(app, r, back);
+  if (r.kind === 'world') return V8.openWorldBossResult(app, r, back);
   if (r.kind === 'dungeon') {
     const tiles = [];
     if (r.ore) tiles.push({ icon: itemIcon(CURRENCY_ICONS.ore), value: '+' + r.ore, label: '강화 광석' });

@@ -810,7 +810,7 @@ export class BattleRenderer {
       const ef = isTrial ? 'grayscale(1) brightness(1.35)' : e.def.tint ? `hue-rotate(${e.def.tint}deg) saturate(1.15)` : '';
       let sc = scaledImage(img, d.w * this.dpr, d.h * this.dpr, meta.file, ef);
       if (e.enraged) sc = outlined(sc, '#F0506E', meta.file + d.w + ef + 'rage');
-      else if (e.elite) sc = outlined(sc, e.fieldBoss ? '#F2A04A' : '#EDBD68', meta.file + d.w + ef + (e.fieldBoss ? 'fb' : ''));
+      else if (e.elite) sc = outlined(sc, e.rare ? '#C38BFF' : e.fieldBoss ? '#F2A04A' : '#EDBD68', meta.file + d.w + ef + (e.rare ? 'rare' : e.fieldBoss ? 'fb' : ''));
       ctx.save();
       ctx.globalAlpha = alpha;
       ctx.translate(x + dx, gy + dy);
@@ -844,7 +844,7 @@ export class BattleRenderer {
     if (e.elite) {
       ctx.fillStyle = '#EDBD68';
       ctx.beginPath(); ctx.moveTo(x - bw / 2 - 8, top + 2.5); ctx.lineTo(x - bw / 2 - 4, top - 1.5); ctx.lineTo(x - bw / 2, top + 2.5); ctx.lineTo(x - bw / 2 - 4, top + 6.5); ctx.fill();
-      this.text(e.fieldBoss ? '필드 보스' : '정예', x, top - 6, 12, e.fieldBoss ? '#F2A04A' : '#EDBD68', 'center', 700, true);
+      this.text(e.rare ? `희귀 · ${e.name}` : e.fieldBoss ? '필드 보스' : '정예', x, top - 6, 12, e.rare ? '#C38BFF' : e.fieldBoss ? '#F2A04A' : '#EDBD68', 'center', 700, true);
     }
   }
 
@@ -1380,7 +1380,7 @@ export class BattleRenderer {
     const x = 12, w = W - 24, y = this.topInset;
     this.text(boss.name, x, y + 12, 13, '#F5EDF0', 'left', 700, true);
     const left = battle.timeLeftMs();
-    if (left !== null) this.text(Math.ceil(left / 1000) + '초', W - 12, y + 12, 13, left < 15000 ? '#FF9DB2' : '#D8B675', 'right', 700, true);
+    if (left !== null && battle.kind !== 'mplus') this.text(Math.ceil(left / 1000) + '초', W - 12, y + 12, 13, left < 15000 ? '#FF9DB2' : '#D8B675', 'right', 700, true);
     this.bar(x, y + 18, w, 7, boss.hp / boss.maxHp, '#C9455F');
   }
   drawLabel(text) { this.text(text, 12, this.cssH - 60, 14, '#C8BAC9', 'left', 500, true); }

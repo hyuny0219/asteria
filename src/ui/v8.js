@@ -3,6 +3,8 @@ import { CURRENCY_ICONS, RARITY } from '../data/content.js';
 import { itemIcon, skillIcon } from '../render/assets.js';
 import * as MP from '../core/mplus.js';
 import * as EX from '../core/expedition.js';
+import * as WBm from '../core/worldboss.js';
+import { BOSSES } from '../data/content.js';
 import { PETS } from '../data/meta.js';
 import { fmt } from '../core/util.js';
 import { sfx } from '../platform/audio.js';
@@ -169,3 +171,39 @@ function showExpResults(app, results) {
   const rm = openModal({ id: 'expResult', title: '원정 결과', kind: 'center', body: h('div', { dataset: { screen: 'expResult' } }, lines), actions: [button('확인', { cls: 'btn btn-primary', onClick: () => rm.close() })] });
 }
 export const expeditionDot = (s) => EX.expeditionOpen(s) && (EX.readyCount(s, Date.now()) > 0 || (s.expedition && s.expedition.slots.some((x) => !x) && (s.expedition.board || []).length > 0));
+
+// ======================= 월드 보스 =======================
+const hhmm = (ms) => { const d = new Date(ms + 9 * 3600000); return `${String(d.getUTCHours()).padStart(2, '0')}:${String(d.getUTCMinutes()).padStart(2, '0')}`; };
+export function worldBossCard(app) {
+  const s = app.state;
+  const now = Date.now();
+  if (!WBm.worldBossOpen(s)) return h('div', { class: 'card locked-card', dataset: { screen: 'worldBoss' } }, h('div', { class: 'kv' }, h('b', { style: { color: 'var(--text)' } }, '월드 보스'), h('span', { class: 'muted' }, '잠김')), h('p', { class: 'muted', style: { margin: 0 } }, '폐광 파수꾼 처치 시 열림'));
+  const c = WBm.canChallenge(s, now);
+  const boss = BOSSES[WBm.worldBossId(now)];
+  const win = WBm.currentWindow(now);
+  const status = c.ok ? `지금 열림 · ${String(win.hour).padStart(2, '0')}:00~${String(win.hour + 1).padStart(2, '0')}:00` : c.reason === 'used' ? `이번 시간 도전 완료 · 다음 ${hhmm(c.next.start)}` : `다음 ${c.next ? hhmm(c.next.start) : ''}`;
+  return h('div', { class: 'card' + (c.ok ? ' hot-card' : ''), dataset: { screen: 'worldBoss' } },
+    h('div', { class: 'kv' }, h('span', { class: 'card-title' }, ico('V15'), h('b', { style: { color: 'var(--text)' } }, `월드 보스 · ${boss.name}`)), h('b', null, c.ok ? '도전 가능' : '대기')),
+    h('div', { class: 'kv' }, '시간대(매일)', h('b', null, '12시 · 18시 · 21시 (각 1시간, 1회)')),
+    h('div', { class: 'kv' }, '상태', h('b', null, status)),
+    h('div', { class: 'kv' }, '최고 기록', h('b', null, s.worldBoss.best ? `${s.worldBoss.bestGrade} · 피해 ${fmt(s.worldBoss.best)}` : '없음')),
+    h('p', { class: 'muted', style: { margin: '2px 0 6px' } }, `${WBm.WB.timeSec}초 동안 준 피해로 등급(D~S). 보석·광석, B 이상 장비 뽑기권, A·S는 장비 확정. 보스는 요일마다 바뀌어요.`),
+    button(c.ok ? '월드 보스 도전' : c.reason === 'used' ? '다음 시간대에 도전' : '시간대가 아니에요', { cls: 'btn btn-primary', disabled: !c.ok || app.game.mode !== 'FARM', busy: true, onClick: async () => fail(await app.game.startWorldBoss()) }));
+}
+
+export function openWorldBossResult(app, r, back) {
+  const tiles = [{ icon: itemIcon(CURRENCY_ICONS.gem), value: '+' + r.reward.gem, label: '보석' }, { icon: itemIcon(CURRENCY_ICONS.ore), value: '+' + r.reward.ore, label: '강화 광석' }];
+  if (r.reward.eqTicket) tiles.push({ icon: itemIcon(CURRENCY_ICONS.chest), value: '+' + r.reward.eqTicket, label: '장비 뽑기권' });
+  if (r.reward.skTicket) tiles.push({ icon: itemIcon(CURRENCY_ICONS.goldChest), value: '+' + r.reward.skTicket, label: '스킬 뽑기권' });
+  tiles.push(...itemRewards(r.items || []));
+  if (app.state.settings.sound) sfx('bell');
+  const m = openModal({ id: 'worldBossResult', title: `월드 보스 · ${r.grade} 등급`, dismissible: false,
+    body: h('div', { dataset: { screen: 'worldBossResult' }, class: 'reveal' },
+      h('p', null, `피해 ${fmt(r.damage)} · 보스 체력의 ${Math.round(r.share * 100)}%`),
+      h('p', { class: 'muted small' }, `등급 기준: ${WBm.WB.grades.filter(([g]) => g !== 'D').map(([g, t]) => `${g} ${Math.round(t * 100)}%`).join(' · ')}`),
+      rewardTiles(tiles),
+      r.overflowed && r.overflowed.length ? h('p', { class: 'warn' }, `보관함이 가득 차 ${r.overflowed.length}개는 임시 보관함에 들어갔습니다.`) : null),
+    actions: [button('확인', { cls: 'btn btn-primary', onClick: () => { m.close(); back(); app.setTab('dungeon'); } })] });
+  return m;
+}
+export const worldBossDot = (s) => WBm.canChallenge(s, Date.now()).ok;

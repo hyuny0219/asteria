@@ -1,7 +1,8 @@
 // v5 part 2 screens: 도감, 업적·칭호, 무료 시즌 패스, 동료, 신화 제작.
 // Every grant goes through game.transact; reveals start only after r.ok.
 import { ACHIEVEMENTS, CODEX, CODEX_MONSTERS, CRAFT, PASS, PETS, PET_RULES, TITLES } from '../data/meta.js';
-import { BOSSES, CURRENCY_ICONS, MONSTERS, RARITY, SLOT_NAMES } from '../data/content.js';
+import { BOSSES, CURRENCY_ICONS, MONSTERS, RARITY, REGION_BY_ID, SLOT_NAMES } from '../data/content.js';
+import * as WBm from '../core/worldboss.js';
 import { itemIcon, petImage, skillIcon, spriteMeta } from '../render/assets.js';
 import * as M from '../core/meta.js';
 import { rarityLabel } from '../core/items.js';
@@ -48,7 +49,8 @@ export function openCodex(app, tab = 'monster') {
     const s = app.state;
     const tabs = h('div', { class: 'seg', role: 'tablist', 'aria-label': '도감 종류' },
       h('button', { type: 'button', role: 'tab', 'aria-selected': String(tab === 'monster'), 'aria-pressed': String(tab === 'monster'), onClick: () => { tab = 'monster'; render(); } }, '몬스터'),
-      h('button', { type: 'button', role: 'tab', 'aria-selected': String(tab === 'item'), 'aria-pressed': String(tab === 'item'), onClick: () => { tab = 'item'; render(); } }, '장비'));
+      h('button', { type: 'button', role: 'tab', 'aria-selected': String(tab === 'item'), 'aria-pressed': String(tab === 'item'), onClick: () => { tab = 'item'; render(); } }, '장비'),
+      h('button', { type: 'button', role: 'tab', 'aria-selected': String(tab === 'rare'), 'aria-pressed': String(tab === 'rare'), onClick: () => { tab = 'rare'; render(); } }, '희귀 정예'));
     const bonus = M.codexBonus(s);
     let list;
     if (tab === 'monster') {
@@ -67,6 +69,19 @@ export function openCodex(app, tab = 'monster') {
           h('span', { class: 'muted' }, next ? `${fmtFull(k)}/${fmtFull(next)}` : `${fmtFull(k)} · 완료`),
           h('span', { class: 'cb' }, `${STAT_KO[stat]} +${fmtPct(CODEX.perTier, 2)}/단계`));
       }));
+    } else if (tab === 'rare') {
+      // v8 희귀 정예: one named elite per region (appears on stage clears while hunting)
+      const got = (s.worldBoss && s.worldBoss.rares) || {};
+      list = h('div', {}, h('div', { class: 'codex-grid' }, Object.entries(WBm.RARES).map(([reg, r]) => {
+        const k = got[r.id] || 0;
+        const file = spriteOf(r.base);
+        return h('div', { class: 'codex-cell rare-cell' + (k ? '' : ' unseen'), 'aria-label': `${k ? r.name : '미발견'} ${k}회 처치` },
+          file ? img(file, '', 'cimg') : h('span', { class: 'cimg' }),
+          h('b', null, k ? r.name : '???'),
+          h('span', { class: 'muted' }, `${(REGION_BY_ID[reg] || {}).name || reg}`),
+          h('span', { class: 'cb' }, k ? `${k}회 처치` : '미발견'));
+      })),
+      h('p', { class: 'muted', style: { margin: '6px 0 0' } }, `사냥 중 스테이지를 깰 때 ${Math.round(WBm.RARE_RULES.chance * 100)}% 확률로 그 지역의 희귀 정예가 나타나요. 처치하면 보석 ${WBm.RARE_RULES.gem} + 희귀 이상 장비 확정. ${WBm.rareCount(s)}/${Object.keys(WBm.RARES).length} 발견 · 모두 잡으면 칭호 「희귀 정예 사냥꾼」.`));
     } else {
       const rar = Object.keys(RARITY);
       list = h('div', { class: 'codex-table', role: 'table', 'aria-label': '장비 도감' },

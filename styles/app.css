@@ -567,3 +567,6 @@ input.text { width: 100%; min-height: 36px; background: var(--panel); border: 1p
 .exp-card { margin: 6px 0; }
 .exp-pets { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
 .exp-pets .btn.small-btn { flex: 0 1 auto; width: auto; min-height: 34px; padding: 4px 10px; font-size: 12px; }
+/* ---- v8: 월드 보스 / 희귀 정예 ---- */
+.card.hot-card { border-color: rgba(237,189,104,.55); box-shadow: 0 0 0 1px rgba(237,189,104,.25) inset; }
+.codex-cell.rare-cell b { color: #C38BFF; }
