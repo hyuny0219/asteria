@@ -27,7 +27,7 @@ async function stageChecks(p, tag) {
     s.stages.stars['meadow-boss'] = 2; s.stages.claimed['meadow-boss'] = true;
     for (let n = 1; n <= 5; n++) { s.stages.stars['desert-' + n] = n % 2 ? 3 : 2; s.stages.claimed['desert-' + n] = true; }
     return { ok: true }; }`);
-  await p.evaluate(() => { __qaClose(); __asteria.app.setTab('dungeon'); });
+  await p.evaluate(() => { __qaClose(); __asteria.app.setTab('battle'); });   // region chip lives on the battle tab
   await p.waitForTimeout(300);
   // open from the region chip on the battle strip
   await p.click('.where-btn');

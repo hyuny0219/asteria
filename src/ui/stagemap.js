@@ -152,7 +152,7 @@ export function stagePanel(app) {
   const root = h('div', { class: 'panel', dataset: { screen: 'main' }, style: { height: '100%', margin: 0 } });
   root.appendChild(h('div', { class: 'panel-head' }, h('h2', null, '스테이지')));
   const sc = h('div', { class: 'panel-scroll stage-panel' });
-  sc.appendChild(buildStage(app, app.stageUi, () => app.renderPanel(), () => app.renderPanel()));
+  sc.appendChild(buildStage(app, app.stageUi, () => app.renderPanel(), () => app.setTab('battle')));   // 사냥 시작 → 전투 탭
   root.appendChild(sc);
   return root;
 }

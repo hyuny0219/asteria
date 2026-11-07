@@ -16,6 +16,7 @@ import * as V5 from './v5.js';
 import { BLESSINGS, CURSES } from '../core/rift.js';
 
 export const TABS = [
+  { id: 'battle', label: '전투', icon: 'battle' },
   { id: 'stage', label: '스테이지', icon: 'map' },
   { id: 'equipment', label: '장비', icon: 'equipment' },
   { id: 'skills', label: '스킬', icon: 'skill' },
@@ -101,6 +102,13 @@ export class App {
     E.panel.addEventListener('pointerdown', () => { this.pointerDown = true; });
     window.addEventListener('pointerup', () => { this.pointerDown = false; });
     window.addEventListener('pointercancel', () => { this.pointerDown = false; });
+    // page tabs: slim live strip instead of the battle (tap → back to the battle tab)
+    E.miniTxt = h('b', null, '');
+    E.miniSub = h('span', { class: 'ms' }, '');
+    E.miniBar = h('i', { style: { width: '0%' } });
+    E.mini = h('button', { type: 'button', class: 'mini-battle', 'aria-label': '전투 화면으로', onClick: () => this.setTab('battle') },
+      icon('battle', 16), h('span', { class: 'mt' }, E.miniTxt, E.miniSub), h('span', { class: 'mb', 'aria-hidden': 'true' }, E.miniBar), h('span', { class: 'go' }, '전투 ›'));
+    app.insertBefore(E.mini, E.battle);
     app.appendChild(h('div', { class: 'lower' }, E.goal, E.panel));
     // nav 56
     E.nav = h('nav', { class: 'nav', 'aria-label': '주 메뉴' });
@@ -121,7 +129,7 @@ export class App {
     E.canvas.addEventListener('pointerdown', () => { if (this.renderer) this.renderer.skipCutin(); });
     this.bindGame();
     this.buildSkills();
-    this.setTab('stage');
+    this.setTab('battle');
     this.applyView();
     this.applyA11y();
     this.renderFsBtn();
@@ -359,7 +367,12 @@ export class App {
   }
 
   setTab(id) {
+    const wasBattle = this.tab === 'battle';
     this.tab = id;
+    // 전투 탭 = 전투 전체 화면, 나머지 탭 = 전체 화면 페이지 + 얇은 전투 상태줄
+    this.root.classList.toggle('tab-battle', id === 'battle');
+    this.root.classList.toggle('tab-page', id !== 'battle');
+    if (id === 'battle' && !wasBattle && this.renderer) requestAnimationFrame(() => this.renderer.resize());
     this.structural = true;
     for (const [k, b] of Object.entries(this.navBtns)) { if (k === id) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); }
     this.panelDirty = true;
@@ -375,6 +388,8 @@ export class App {
     const top = scroll ? scroll.scrollTop : 0;
     const keepFocus = document.activeElement && this.el.panel.contains(document.activeElement) ? document.activeElement.dataset.key : null;
     clear(this.el.panel);
+    if (this.tab === 'battle') this.el.goal.dataset.screen = 'main'; else delete this.el.goal.dataset.screen;   // 전투 탭 = 홈 화면
+    if (this.tab === 'battle') { this.renderGoal(); return; }
     const map = { stage: S.stagePanel, growth: S.growthPanel, equipment: S.equipmentPanel, skills: S.skillsPanel, dungeon: S.dungeonPanel, menu: S.menuPanel };
     this.el.panel.appendChild(map[this.tab](this));
     const ns = this.el.panel.querySelector('.panel-scroll');
@@ -443,7 +458,8 @@ export class App {
     const b = g.active;
     const s = g.state;
     const view = this.forcedBattleView ? 'battle' : s.settings.battleView;
-    if (view === 'battle') {
+    const hidden = this.tab !== 'battle' && !this.root.classList.contains('immersive');   // page tab: battle is off-screen
+    if (view === 'battle' && !hidden) {
       const region = REGION_BY_ID[s.progression.region];
       const sess = g.session;
       const SB = { quarry: ['mine', null], gold: ['desert', 40], books: ['cathedral', null], tower: ['tower', null], raid: ['void', null], rift: [(sess && sess.bg) || 'void', null] };
@@ -506,6 +522,9 @@ export class App {
     else if (m === 'PROMOTION_TRIAL') { E.where.textContent = (this.game.session && this.game.session.tier === 3) ? '영웅의 시련' : '교관 시련'; E.prog.textContent = '승급 시련'; }
     else { E.where.textContent = region.name; E.prog.textContent = stageLabel(region.id, s.progression.wave); pv = s.progression.waveKills / BALANCE.combat.waveKillTarget; }
     E.progBar.style.width = Math.round(Math.min(1, pv) * 100) + '%';
+    E.miniTxt.textContent = `${E.where.textContent} ${E.prog.textContent}`;
+    E.miniSub.textContent = m === 'DEFEAT' ? '재정비 중' : m === 'FARM' ? `처치 ${s.progression.waveKills}/${BALANCE.combat.waveKillTarget}` : '전투 중';
+    E.miniBar.style.width = E.progBar.style.width;
     E.worldBtn.disabled = m !== 'FARM' && m !== 'DEFEAT';
     const need = expToNext(p.level);
     E.lvbar.style.width = need ? Math.min(100, (p.exp / need) * 100).toFixed(1) + '%' : '0%';

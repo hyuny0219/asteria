@@ -1,6 +1,6 @@
 {
- "startedAt": "2026-11-06T17:08:26.531Z",
- "base": "http://localhost:8232/",
+ "startedAt": "2026-11-07T00:08:23.368Z",
+ "base": "http://localhost:8233/",
  "viewports": [
   [
    390,
@@ -43,18 +43,10 @@
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [
-    "tab locked",
-    "SMALL",
-    "tab locked",
-    "SMALL",
-    "tab locked"
-   ],
+   "wide": [],
    "brokenImg": [],
    "screens": [
-    "main",
-    "world",
-    "stagemap"
+    "main"
    ],
    "tiny": [],
    "errors": []
@@ -1150,18 +1142,10 @@
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [
-    "tab locked",
-    "tab locked",
-    "SMALL",
-    "tab locked",
-    "SMALL"
-   ],
+   "wide": [],
    "brokenImg": [],
    "screens": [
-    "main",
-    "world",
-    "stagemap"
+    "main"
    ],
    "tiny": [],
    "errors": []
@@ -2257,18 +2241,10 @@
    "over": false,
    "modalOver": false,
    "small": [],
-   "wide": [
-    "tab locked",
-    "SMALL",
-    "tab locked",
-    "SMALL",
-    "tab locked"
-   ],
+   "wide": [],
    "brokenImg": [],
    "screens": [
-    "main",
-    "world",
-    "stagemap"
+    "main"
    ],
    "tiny": [],
    "errors": []
@@ -3399,8 +3375,8 @@
    "name": "reload keeps the same pending claim",
    "pass": true,
    "detail": {
-    "first": "claim_mw58cork_dynmhx",
-    "after": "claim_mw58cork_dynmhx"
+    "first": "claim_mw5ncoiw_15owedq",
+    "after": "claim_mw5ncoiw_15owedq"
    }
   },
   {
@@ -3577,7 +3553,7 @@
   }
  ],
  "errors": [],
- "finishedAt": "2026-11-06T17:10:56.577Z",
+ "finishedAt": "2026-11-07T00:10:49.710Z",
  "summary": {
   "screenChecks": 141,
   "screenPass": 141,

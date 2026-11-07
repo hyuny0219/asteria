@@ -65,7 +65,7 @@ export function go(app, action) {
   if (action === 'pets') return V6.openPets(app);
   if (action === 'pass') return V6.openPass(app);
   if (action === 'achievements') return V6.openAchievements(app);
-  if (action === 'farm') return app.setTab('stage');
+  if (action === 'farm') return app.setTab('battle');
   if (action === 'mine') return openWorld(app, 'mine');
   if (action.startsWith('boss:')) return openBoss(app, action.slice(5));
 }
@@ -171,7 +171,7 @@ export function equipmentPanel(app) {
     // S19 empty state
     sc.appendChild(h('div', { class: 'card', style: { marginTop: '12px', textAlign: 'center' } }, img(itemIcon('I21'), '', ''),
       h('h3', null, '아직 장비가 없습니다'), h('p', { class: 'muted' }, '사냥 중 처치한 적이 5% 확률로 장비를 떨어뜨립니다. 보스를 처음 처치하면 희귀 무기를 확정으로 얻습니다.'),
-      button('자동 사냥 계속하기', { cls: 'btn btn-primary', onClick: () => app.setTab('stage') })));
+      button('자동 사냥 계속하기', { cls: 'btn btn-primary', onClick: () => app.setTab('battle') })));
     root.appendChild(sc);
     return root;
   }

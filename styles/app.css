@@ -535,3 +535,23 @@ input.text { width: 100%; min-height: 36px; background: var(--panel); border: 1p
 .stage-detail .btn { margin-top: 8px; }
 .stage-map.art .stage-title { left: 6px; top: 6px; padding: 3px 8px; font-size: 12px; max-width: 46%; }
 .stage-map.art .stage-title b { font-size: 13px; }
+
+/* ---- 전투 탭 / 페이지 탭 분리 (선배 요청: 전투와 메뉴를 한 화면에 두지 않음) ---- */
+.nav { grid-template-columns: repeat(6, 1fr); }
+.nav button { font-size: 12px; }
+.mini-battle { display: none; flex: none; align-items: center; gap: 8px; height: 40px; margin: 0; padding: 0 var(--gutter); border: 0; border-bottom: 1px solid var(--border); background: linear-gradient(90deg, #221a30, #17121F); color: inherit; cursor: pointer; text-align: left; position: relative; }
+.mini-battle .ico { color: var(--gold); flex: none; }
+.mini-battle .mt { flex: 1; min-width: 0; display: flex; gap: 8px; align-items: baseline; white-space: nowrap; overflow: hidden; }
+.mini-battle .mt b { font-size: 13px; overflow: hidden; text-overflow: ellipsis; }
+.mini-battle .mt .ms { font-size: 12px; color: var(--muted); }
+.mini-battle .go { flex: none; font-size: 12px; font-weight: 800; color: var(--gold); }
+.mini-battle .mb { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: rgba(255,255,255,.06); }
+.mini-battle .mb i { display: block; height: 100%; background: var(--gold); transition: width .3s; }
+#app.tab-page .mini-battle { display: flex; }
+#app.tab-page .battle, #app.tab-page .skills { display: none; }
+#app.tab-battle .battle { flex: 1 1 auto; min-height: 0; }
+#app.tab-battle .lower { flex: none; min-height: 0; padding-bottom: 8px; }
+#app.tab-battle .panel { display: none; }
+#app.immersive .mini-battle { display: none !important; }
+#app.immersive.tab-page .battle { display: block; }
+#app.immersive.tab-page .skills { display: flex; }
