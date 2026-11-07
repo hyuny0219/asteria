@@ -230,7 +230,8 @@
   "gpt_f/icons_*.png": "GPT package F — high-rarity gear, 4 skill fixes, talent & rift emblems",
   "gpt_g/bg_*.png": "GPT package G — vault / library / trial hall / rift backgrounds",
   "gpt_h/serin_poses_fix.png": "GPT package H — Serin 8 key poses (thrust fixed, alpha)",
-  "gpt_j/icons_gear_high2.png": "GPT package J1 — helmet/armor/necklace epic+ icons"
+  "gpt_j/icons_gear_high2.png": "GPT package J1 — helmet/armor/necklace epic+ icons",
+  "gpt_j/elena_poses_fix.png": "GPT package J2 — Elena 8 key poses (alpha, tome glow kept)"
  },
  "monsters": {
   "M01": {
@@ -7527,19 +7528,15 @@
     384,
     512
    ],
-   "trimOffset": [
-    41,
-    20
-   ],
    "size": [
-    190,
-    291
+    191,
+    290
    ],
-   "scale": 0.6034,
+   "scale": 0.6481,
    "bodyHeightPx": 280.0,
    "pivot": [
-    94.7,
-    287.2
+    95.6,
+    284.5
    ],
    "hitbox": [
     3.6,
@@ -7549,32 +7546,14 @@
    ],
    "flying": false,
    "mirrored": false,
-   "droppedBleedComponents": [
-    1,
-    4,
-    2,
-    6,
-    1,
-    1,
-    2,
-    2,
-    5,
-    1,
-    1,
-    1,
-    1,
-    2,
-    2,
-    2,
-    1,
-    2,
-    1,
-    1,
-    1,
-    2
-   ],
    "status": "RUNTIME_KEY_POSE",
-   "source": "handoff_v4/classes/elena_poses.png"
+   "source": "gpt_j/elena_poses_fix.png",
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   }
   },
   "pose_mage_step": {
    "id": "pose_mage_step",
@@ -7587,19 +7566,15 @@
     384,
     512
    ],
-   "trimOffset": [
-    417,
-    20
-   ],
    "size": [
-    199,
-    291
+    190,
+    287
    ],
-   "scale": 0.6034,
-   "bodyHeightPx": 278.8,
+   "scale": 0.6481,
+   "bodyHeightPx": 278.7,
    "pivot": [
-    82.1,
-    286.6
+    85.4,
+    282.6
    ],
    "hitbox": [
     3.6,
@@ -7609,28 +7584,14 @@
    ],
    "flying": false,
    "mirrored": false,
-   "droppedBleedComponents": [
-    1,
-    1,
-    1,
-    1,
-    2,
-    1,
-    2,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    4,
-    5,
-    2,
-    1
-   ],
    "status": "RUNTIME_KEY_POSE",
-   "source": "handoff_v4/classes/elena_poses.png"
+   "source": "gpt_j/elena_poses_fix.png",
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   }
   },
   "pose_mage_anticipation": {
    "id": "pose_mage_anticipation",
@@ -7643,19 +7604,15 @@
     384,
     512
    ],
-   "trimOffset": [
-    791,
-    21
-   ],
    "size": [
-    197,
-    291
+    191,
+    288
    ],
-   "scale": 0.6034,
-   "bodyHeightPx": 277.6,
+   "scale": 0.6481,
+   "bodyHeightPx": 278.7,
    "pivot": [
-    95.4,
-    286.0
+    95.6,
+    283.2
    ],
    "hitbox": [
     4.2,
@@ -7665,38 +7622,14 @@
    ],
    "flying": false,
    "mirrored": false,
-   "droppedBleedComponents": [
-    1,
-    10,
-    7,
-    4,
-    2,
-    5,
-    3,
-    2,
-    1,
-    1,
-    1,
-    1,
-    4,
-    2,
-    2,
-    2,
-    1,
-    1,
-    1,
-    1,
-    5,
-    1,
-    2,
-    1,
-    1,
-    1,
-    1,
-    1
-   ],
    "status": "RUNTIME_KEY_POSE",
-   "source": "handoff_v4/classes/elena_poses.png"
+   "source": "gpt_j/elena_poses_fix.png",
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   }
   },
   "pose_mage_thrust": {
    "id": "pose_mage_thrust",
@@ -7709,19 +7642,15 @@
     384,
     512
    ],
-   "trimOffset": [
-    1168,
-    26
-   ],
    "size": [
-    205,
-    287
+    229,
+    288
    ],
-   "scale": 0.6034,
-   "bodyHeightPx": 273.4,
+   "scale": 0.6481,
+   "bodyHeightPx": 278.1,
    "pivot": [
-    96.1,
-    283.0
+    95.9,
+    282.6
    ],
    "hitbox": [
     3.6,
@@ -7731,37 +7660,14 @@
    ],
    "flying": false,
    "mirrored": false,
-   "droppedBleedComponents": [
-    5,
-    2,
-    1,
-    3,
-    3,
-    2,
-    4,
-    1,
-    2,
-    4,
-    2,
-    2,
-    2,
-    4,
-    6,
-    1,
-    1,
-    2,
-    1,
-    3,
-    3,
-    1,
-    1,
-    1,
-    1,
-    1,
-    2
-   ],
    "status": "RUNTIME_KEY_POSE",
-   "source": "handoff_v4/classes/elena_poses.png"
+   "source": "gpt_j/elena_poses_fix.png",
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   }
   },
   "pose_mage_recovery": {
    "id": "pose_mage_recovery",
@@ -7774,19 +7680,15 @@
     384,
     512
    ],
-   "trimOffset": [
-    36,
-    527
-   ],
    "size": [
     199,
     294
    ],
-   "scale": 0.6034,
-   "bodyHeightPx": 283.0,
+   "scale": 0.6481,
+   "bodyHeightPx": 285.2,
    "pivot": [
-    94.1,
-    290.3
+    98.8,
+    289.1
    ],
    "hitbox": [
     3.6,
@@ -7796,22 +7698,14 @@
    ],
    "flying": false,
    "mirrored": false,
-   "droppedBleedComponents": [
-    2,
-    1,
-    3,
-    2,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1
-   ],
    "status": "RUNTIME_KEY_POSE",
-   "source": "handoff_v4/classes/elena_poses.png"
+   "source": "gpt_j/elena_poses_fix.png",
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   }
   },
   "pose_mage_hit": {
    "id": "pose_mage_hit",
@@ -7824,19 +7718,15 @@
     384,
     512
    ],
-   "trimOffset": [
-    405,
-    533
-   ],
    "size": [
-    212,
-    291
+    211,
+    290
    ],
-   "scale": 0.6034,
-   "bodyHeightPx": 276.4,
+   "scale": 0.6481,
+   "bodyHeightPx": 280.6,
    "pivot": [
-    103.4,
-    286.0
+    106.6,
+    284.5
    ],
    "hitbox": [
     3.6,
@@ -7846,31 +7736,14 @@
    ],
    "flying": false,
    "mirrored": false,
-   "droppedBleedComponents": [
-    1,
-    2,
-    2,
-    2,
-    1,
-    2,
-    1,
-    1,
-    1,
-    1,
-    2,
-    5,
-    1,
-    1,
-    1,
-    2,
-    1,
-    1,
-    1,
-    2,
-    2
-   ],
    "status": "RUNTIME_KEY_POSE",
-   "source": "handoff_v4/classes/elena_poses.png"
+   "source": "gpt_j/elena_poses_fix.png",
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   }
   },
   "pose_mage_cast": {
    "id": "pose_mage_cast",
@@ -7883,18 +7756,14 @@
     384,
     512
    ],
-   "trimOffset": [
-    781,
-    528
-   ],
    "size": [
-    209,
+    206,
     294
    ],
-   "scale": 0.6034,
-   "bodyHeightPx": 280.0,
+   "scale": 0.6481,
+   "bodyHeightPx": 285.2,
    "pivot": [
-    100.9,
+    102.7,
     289.1
    ],
    "hitbox": [
@@ -7905,32 +7774,14 @@
    ],
    "flying": false,
    "mirrored": false,
-   "droppedBleedComponents": [
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    4,
-    3,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    20,
-    2,
-    1,
-    2,
-    1,
-    1,
-    1
-   ],
    "status": "RUNTIME_KEY_POSE",
-   "source": "handoff_v4/classes/elena_poses.png"
+   "source": "gpt_j/elena_poses_fix.png",
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   }
   },
   "pose_mage_victory": {
    "id": "pose_mage_victory",
@@ -7943,19 +7794,15 @@
     384,
     512
    ],
-   "trimOffset": [
-    1170,
-    527
-   ],
    "size": [
-    208,
+    204,
     294
    ],
-   "scale": 0.6034,
-   "bodyHeightPx": 283.6,
+   "scale": 0.6481,
+   "bodyHeightPx": 285.2,
    "pivot": [
-    102.3,
-    290.3
+    101.4,
+    289.1
    ],
    "hitbox": [
     3.6,
@@ -7965,48 +7812,14 @@
    ],
    "flying": false,
    "mirrored": false,
-   "droppedBleedComponents": [
-    1,
-    2,
-    1,
-    1,
-    1,
-    1,
-    1,
-    4,
-    2,
-    4,
-    2,
-    1,
-    1,
-    1,
-    1,
-    2,
-    1,
-    1,
-    6,
-    2,
-    1,
-    2,
-    1,
-    3,
-    2,
-    1,
-    1,
-    1,
-    1,
-    3,
-    3,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    2
-   ],
    "status": "RUNTIME_KEY_POSE",
-   "source": "handoff_v4/classes/elena_poses.png"
+   "source": "gpt_j/elena_poses_fix.png",
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   }
   },
   "pose_archer_idle": {
    "id": "pose_archer_idle",
