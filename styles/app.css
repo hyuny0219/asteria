@@ -616,3 +616,5 @@ input.text { width: 100%; min-height: 36px; background: var(--panel); border: 1p
 .quest-fig.flip { transform: scaleX(-1); right: auto; left: 58%; }
 .quest-card.locked-card .quest-scene { filter: grayscale(.55) brightness(.9); }
 .quest-badge { z-index: 2; }
+.quest-card .quest-titlerow { display: none; }
+.quest-card.no-scene .quest-titlerow { display: flex; padding-top: 10px; }

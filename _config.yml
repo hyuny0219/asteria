@@ -1,0 +1,12 @@
+# GitHub Pages (deploy from branch): publish only what the game needs.
+# Source art boards, QA screenshots and dev tools stay in the repo but are not uploaded —
+# the full ~700 MB tree made Pages deploys time out ("syncing_files").
+exclude:
+  - assets/source
+  - docs
+  - tools
+  - tests
+  - README.md
+  - package.json
+  - "**/__pycache__"
+include: []

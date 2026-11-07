@@ -487,8 +487,8 @@ function advDecorate(card, key, override = {}) {
     const b = first.querySelector('b');
     title = b ? b.textContent : first.textContent;
     const kids = [...first.children];
-    if (kids.length > 1) badge = kids[kids.length - 1];
-    first.remove();
+    if (kids.length > 1) badge = kids[kids.length - 1].cloneNode(true);
+    first.classList.add('quest-titlerow');   // hidden while the art strip shows (kept as a fallback)
   }
   const bg = m.bg && bgMeta(m.bg);
   const locked = card.classList.contains('locked-card');
@@ -547,6 +547,8 @@ export function dungeonPanel(app) {
     add(V8.workshopCard(app), 'workshop');
   }
   root.appendChild(sc);
+  // if something (a content blocker, an old cached stylesheet) hides the art strip, show the plain title rows
+  requestAnimationFrame(() => { for (const c of sc.querySelectorAll('.quest-card')) { const sc2 = c.querySelector('.quest-scene'); if (!sc2 || sc2.offsetHeight < 20) c.classList.add('no-scene'); } });
   return root;
 }
 
