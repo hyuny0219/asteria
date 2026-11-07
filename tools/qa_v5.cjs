@@ -49,7 +49,7 @@ const ok = (name, pass, info = {}) => { results.push({ name, pass, info }); cons
     const rb = await p.evaluate(() => ({ lv: __asteria.game.state.player.level, n: __asteria.game.state.rebirth.count, tier: __asteria.game.state.player.tier }));
     ok(`${tag} rebirth applied after confirm`, rb.lv === 1 && rb.n === 1 && rb.tier === 1, rb);
     // rift
-    await p.evaluate(async () => { await __asteria.game.transact('qa', (s) => { s.player.level = 60; s.player.statsUpgrades.atk = 260; s.player.statsUpgrades.hp = 260; s.player.statsUpgrades.def = 120; return { ok: true }; }); __asteria.app.setTab('dungeon'); });
+    await p.evaluate(async () => { await __asteria.game.transact('qa', (s) => { s.player.level = 60; s.player.statsUpgrades.atk = 260; s.player.statsUpgrades.hp = 260; s.player.statsUpgrades.def = 120; return { ok: true }; }); (__asteria.app.advTab = 'challenge', __asteria.app.setTab('dungeon')); });
     await p.waitForTimeout(400);
     await p.evaluate(() => document.querySelector('[data-screen="rift"]').scrollIntoView());
     await p.screenshot({ path: `${out}rift_${tag}.png` });

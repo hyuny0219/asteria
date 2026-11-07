@@ -28,7 +28,7 @@ const shot = (p, name, vp) => p.screenshot({ path: path.join(OUT, `v8_${name}_${
   for (const vp of VPS) {
     const p = await fresh(b, vp);
     // locked card
-    await p.evaluate(() => __asteria.app.setTab('dungeon'));
+    await p.evaluate(() => (__asteria.app.advTab = 'challenge', __asteria.app.setTab('dungeon')));
     await p.waitForTimeout(300);
     ok(await p.locator('[data-screen="mplus"].locked-card').count() === 1, `${vp[0]} mplus locked before B03`);
     // open
@@ -61,7 +61,7 @@ const shot = (p, name, vp) => p.screenshot({ path: path.join(OUT, `v8_${name}_${
     await p.waitForTimeout(600);
     ok(await p.evaluate(() => __asteria.game.mode === 'FARM' && !document.getElementById('app').classList.contains('immersive')), `${vp[0]} back to farm`);
     // ---- 원정 파견 ----
-    await p.evaluate(() => __asteria.app.setTab('dungeon'));
+    await p.evaluate(() => (__asteria.app.advTab = 'idle', __asteria.app.setTab('dungeon')));
     ok(await p.locator('[data-screen="expedition"].locked-card').count() === 1, `${vp[0]} expedition locked without a companion`);
     await p.evaluate(() => __qaTx((s) => { s.pets.owned.P01 = { level: 12, stars: 2, shards: 0 }; s.pets.owned.P03 = { level: 3, stars: 1, shards: 0 }; s.pets.active = 'P01'; return { ok: true }; }));
     await p.evaluate(() => { __asteria.app.renderPanel(); });
@@ -109,7 +109,7 @@ const shot = (p, name, vp) => p.screenshot({ path: path.join(OUT, `v8_${name}_${
     await p.evaluate(() => { document.querySelectorAll('.modal-overlay').forEach((o) => o.remove()); document.getElementById('app').inert = false; });
     // ---- 제작소: 보옥 · 마부 · 음식 ----
     await p.evaluate(async () => { const I = await import('./src/core/items.js'); const E = await import('./src/core/economy.js'); const U = await import('./src/core/util.js'); return __qaTx((s) => { const it = I.makeItem(s, { slot: 'weapon', rarity: 'legendary', level: 45, rng: U.makeRng(7) }); s.inventory.push(it); E.equip(s, it.id); s.craft.jewels = { 'ruby:1': 4, 'sapphire:2': 1 }; s.craft.herb = 5; s.craft.meat = 5; s.wallet.ore += 1000; s.wallet.awakenStone = 2; return { ok: true }; }); });
-    await p.evaluate(() => { __asteria.app.setTab('dungeon'); __asteria.app.renderPanel(); });
+    await p.evaluate(() => { (__asteria.app.advTab = 'idle', __asteria.app.setTab('dungeon')); __asteria.app.renderPanel(); });
     await p.waitForTimeout(300);
     ok(await p.locator('[data-screen="workshopCard"]').count() === 1, `${vp[0]} workshop card`);
     await p.click('[data-screen="workshopCard"] .btn-primary');
@@ -153,7 +153,7 @@ const shot = (p, name, vp) => p.screenshot({ path: path.join(OUT, `v8_${name}_${
     await q.goto(BASE + '?autostart&nodaily');
     await q.waitForFunction(() => globalThis.__asteria?.app?.el && __asteria.game.mode === 'FARM', null, { timeout: 20000 });
     await q.evaluate(() => { document.querySelectorAll('.modal-overlay').forEach((o) => o.remove()); document.getElementById('app').inert = false; });
-    await q.evaluate(async () => { const g = __asteria.game; for (let i = 0; i < 60; i++) { const r = await g.transact('qa', (s) => { s.player.level = 45; s.progression.bossCleared.B03 = true; s.player.statsUpgrades.atk = 900; s.player.statsUpgrades.hp = 900; return { ok: true }; }); if (r.ok) break; await new Promise((r) => setTimeout(r, 50)); } __asteria.app.setTab('dungeon'); __asteria.app.renderPanel(); });
+    await q.evaluate(async () => { const g = __asteria.game; for (let i = 0; i < 60; i++) { const r = await g.transact('qa', (s) => { s.player.level = 45; s.progression.bossCleared.B03 = true; s.player.statsUpgrades.atk = 900; s.player.statsUpgrades.hp = 900; return { ok: true }; }); if (r.ok) break; await new Promise((r) => setTimeout(r, 50)); } (__asteria.app.advTab = 'challenge', __asteria.app.setTab('dungeon')); __asteria.app.renderPanel(); });
     await q.waitForTimeout(400);
     ok(await q.locator('[data-screen="worldBoss"].hot-card').count() === 1, `${vp[0]} world boss open at 18:20 KST`);
     await shot(q, 'worldboss_card', vp);

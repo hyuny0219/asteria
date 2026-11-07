@@ -30,9 +30,9 @@
   "pass": true,
   "info": {
    "choices": [
-    "b_thorns",
-    "b_crit",
-    "b_steal"
+    "b_steal",
+    "b_atk2",
+    "b_cdr"
    ]
   }
  },
@@ -82,9 +82,9 @@
   "pass": true,
   "info": {
    "choices": [
-    "b_evade",
-    "b_berserk",
-    "b_def"
+    "b_hp",
+    "b_ult",
+    "b_thorns"
    ]
   }
  },

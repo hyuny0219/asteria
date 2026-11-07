@@ -249,7 +249,7 @@ async function screensAt(browser, vp) {
   await v5('openRebirth');
   await check(page, 'rebirth', vp, '환생');
   await closeAll(page);
-  await page.evaluate(() => { window.__asteria.app.setTab('dungeon'); const r = document.querySelector('[data-screen="rift"]'); if (r) r.scrollIntoView(); });
+  await page.evaluate(() => { (window.__asteria.app.advTab = 'challenge', window.__asteria.app.setTab('dungeon')); const r = document.querySelector('[data-screen="rift"]'); if (r) r.scrollIntoView(); });
   await check(page, 'rift', vp, '균열 카드');
   // v5 part 2: 도감 / 업적·칭호 / 시즌 패스 / 동료 / 신화 제작
   const v6 = (fn, ...args) => page.evaluate(async ([fn, args]) => { const V = await import('./src/ui/v6.js'); V[fn](window.__asteria.app, ...args); }, [fn, args]);
@@ -282,7 +282,7 @@ async function screensAt(browser, vp) {
   await page.evaluate(() => window.__asteria.app.setTab('equipment'));
   await check(page, 'inventory', vp, '8부위 · 6등급');
   // tower / raid
-  await page.evaluate(async () => { await window.__qaTx((s) => { s.progression.bossCleared.B03 = true; s.player.level = 95; s.progression.bossCleared.B09 = true; return { ok: true }; }); window.__asteria.app.setTab('dungeon'); });
+  await page.evaluate(async () => { await window.__qaTx((s) => { s.progression.bossCleared.B03 = true; s.player.level = 95; s.progression.bossCleared.B09 = true; return { ok: true }; }); (window.__asteria.app.advTab = 'challenge', window.__asteria.app.setTab('dungeon')); });
   await check(page, 'tower', vp, '시련의 탑 · 레이드 카드');
   await page.evaluate(() => { window.__asteria.game.startTower(); });
   await ff(page, 3);

@@ -583,3 +583,29 @@ input.text { width: 100%; min-height: 36px; background: var(--panel); border: 1p
 .exp-card .exp-reward { color: var(--gold); font-size: 15px; }
 .exp-card .btn-row { margin-top: 8px; }
 .exp-pets { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+
+/* ---- 모험 탭 v9: 분류 탭 + 그림 배너 카드 ---- */
+.adv-tabs-wrap { padding: 0 var(--gutter) 8px; }
+.adv-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.adv-tabs button { display: flex; flex-direction: column; align-items: center; gap: 1px; min-height: 48px; padding: 6px 4px; border: 1px solid var(--border); border-radius: 12px; background: var(--panel); color: var(--muted); cursor: pointer; }
+.adv-tabs button b { font-size: 14px; color: var(--text); }
+.adv-tabs button span { font-size: 11px; }
+.adv-tabs button[aria-selected="true"] { border-color: var(--gold); background: linear-gradient(180deg, rgba(216,182,117,.18), rgba(216,182,117,.04)); }
+.adv-tabs button[aria-selected="true"] b { color: var(--gold); }
+.adv-card { --acc: var(--gold); position: relative; padding: 0 12px 10px; overflow: hidden; border-left: 4px solid var(--acc); margin-bottom: 10px; }
+.adv-banner { position: relative; height: 92px; margin: 0 -12px 8px; background-size: cover; background-position: center 60%; background-color: #241c30; display: flex; align-items: flex-end; }
+.adv-shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(14,11,20,.92) 0%, rgba(14,11,20,.55) 55%, rgba(14,11,20,.15) 100%), linear-gradient(0deg, rgba(14,11,20,.6), rgba(14,11,20,0) 60%); }
+.adv-head { position: relative; display: flex; flex-direction: column; gap: 2px; padding: 0 12px 10px; min-width: 0; max-width: 72%; }
+.adv-kind { align-self: flex-start; font-size: 11px; font-weight: 800; color: #160f1d; background: var(--acc); border-radius: 8px; padding: 1px 7px; }
+.adv-title { font-size: 18px; line-height: 1.2; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.8); }
+.adv-gets { font-size: 12px; color: #EDE3F5; text-shadow: 0 1px 2px rgba(0,0,0,.8); }
+.adv-badge { position: absolute; top: 8px; right: 8px; display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 800; color: var(--gold); background: rgba(14,11,20,.78); border: 1px solid rgba(216,182,117,.45); border-radius: 12px; padding: 3px 9px; }
+.adv-badge > * { color: inherit; font-weight: inherit; }
+.adv-badge img { width: 16px; height: 16px; }
+.adv-badge.lock { color: var(--muted); border-color: var(--border); }
+.adv-card.locked-card .adv-banner { filter: grayscale(.8) brightness(.7); }
+.adv-card .card-title .emblem { display: none; }
+.adv-ore { --acc: #E0954A; } .adv-gold { --acc: #F2C14E; } .adv-book { --acc: #5CC8D6; }
+.adv-boss { --acc: #F0506E; } .adv-key { --acc: #B98BFF; } .adv-tower { --acc: #D8B675; }
+.adv-rift { --acc: #A66BFF; } .adv-raid { --acc: #7B5CD6; } .adv-exp { --acc: #6FD08C; }
+.adv-craft { --acc: #E6A3C2; } .adv-hunt { --acc: #8FB7FF; }

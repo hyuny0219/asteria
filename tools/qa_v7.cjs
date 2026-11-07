@@ -58,7 +58,7 @@ async function stageChecks(p, tag) {
   const at = await p.evaluate(() => ({ r: __asteria.game.state.progression.region, w: __asteria.game.state.progression.wave, chip: document.querySelector('.where-btn').textContent, open: !!document.querySelector('[data-screen="stagemap"]') }));
   ok(`farm cleared stage ${tag}`, at.r === 'desert' && at.w === 3 && /2-3/.test(at.chip) && /받음/.test(d3), { ...at, d3: d3.slice(0, 60) });
   // map from the 모험 tab, meadow tab → boss node detail; locked region tab view
-  await p.evaluate(() => __asteria.app.setTab('dungeon'));
+  await p.evaluate(() => (__asteria.app.advTab = 'challenge', __asteria.app.setTab('dungeon')));
   await p.waitForTimeout(300);
   await p.click('text=스테이지 지도');
   await p.waitForSelector('[data-screen="stagemap"]');

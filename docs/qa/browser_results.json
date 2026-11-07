@@ -1,6 +1,6 @@
 {
- "startedAt": "2026-11-07T07:45:21.356Z",
- "base": "http://localhost:8240/",
+ "startedAt": "2026-11-07T09:57:18.514Z",
+ "base": "http://localhost:8241/",
  "viewports": [
   [
    390,
@@ -287,7 +287,8 @@
     "boss"
    ],
    "tiny": [
-    "✓"
+    "✓",
+    "★★★"
    ],
    "errors": []
   },
@@ -362,18 +363,16 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "growth",
     "main",
     "statpoints"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -392,20 +391,18 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "growth",
     "main",
     "statpoints",
     "offline",
     "offline"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -424,20 +421,18 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "growth",
     "main",
     "statpoints",
     "quest",
     "quest"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -456,17 +451,15 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "promotion",
     "promotion"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -485,17 +478,15 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "settings",
     "settings"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -514,17 +505,15 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "gacha",
     "gacha"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -543,19 +532,17 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "gacha",
     "gacha",
     "gachaResult",
     "gachaResult"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -574,17 +561,15 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "gacha",
     "gachaskill"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -603,19 +588,17 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "gacha",
     "gachaskill",
     "gachaResult",
     "gachaResult"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -634,17 +617,15 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "missions",
     "missions"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -663,17 +644,15 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "talents",
     "talents"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -692,17 +671,15 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "rebirth",
     "rebirth"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -718,18 +695,21 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
-    "raid",
-    "expedition",
-    "workshopCard"
+    "raid"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -745,20 +725,23 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "codex",
     "codex"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -774,20 +757,23 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "achievements",
     "achievements"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -803,20 +789,23 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "achievements",
     "titles"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -832,21 +821,22 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "pass",
     "pass"
    ],
    "tiny": [
-    "칭호"
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
    ],
    "errors": []
   },
@@ -863,20 +853,23 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "pets",
     "pets"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -892,20 +885,23 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "craft",
     "craft"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -921,20 +917,23 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "classpick",
     "classpick"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -950,21 +949,24 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "growth",
     "main",
     "statpoints"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -1024,21 +1026,24 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "growth",
     "main",
     "statpoints"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -1098,23 +1103,26 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "growth",
     "main",
     "statpoints",
     "promotion",
     "promotion"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -1130,23 +1138,26 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "growth",
     "main",
     "statpoints",
     "promoPlay",
     "promoPlay"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -1162,20 +1173,23 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "quest",
     "quest"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -1486,8 +1500,7 @@
     "boss"
    ],
    "tiny": [
-    "✓",
-    "★★★"
+    "✓"
    ],
    "errors": []
   },
@@ -1562,18 +1575,16 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "growth",
     "main",
     "statpoints"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -1592,20 +1603,18 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "growth",
     "main",
     "statpoints",
     "offline",
     "offline"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -1624,20 +1633,18 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "growth",
     "main",
     "statpoints",
     "quest",
     "quest"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -1656,17 +1663,15 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "promotion",
     "promotion"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -1685,17 +1690,15 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "settings",
     "settings"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -1714,17 +1717,15 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "gacha",
     "gacha"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -1743,19 +1744,17 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "gacha",
     "gacha",
     "gachaResult",
     "gachaResult"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -1774,17 +1773,15 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "gacha",
     "gachaskill"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -1803,19 +1800,17 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "gacha",
     "gachaskill",
     "gachaResult",
     "gachaResult"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -1834,17 +1829,15 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "missions",
     "missions"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -1863,17 +1856,15 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "talents",
     "talents"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -1892,17 +1883,15 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "rebirth",
     "rebirth"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -1918,18 +1907,21 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
-    "raid",
-    "expedition",
-    "workshopCard"
+    "raid"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -1945,20 +1937,23 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "codex",
     "codex"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -1974,20 +1969,23 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "achievements",
     "achievements"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -2003,20 +2001,23 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "achievements",
     "titles"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -2032,21 +2033,22 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "pass",
     "pass"
    ],
    "tiny": [
-    "칭호"
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
    ],
    "errors": []
   },
@@ -2063,20 +2065,23 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "pets",
     "pets"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -2092,20 +2097,23 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "craft",
     "craft"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -2121,20 +2129,23 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "classpick",
     "classpick"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -2150,21 +2161,24 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "growth",
     "main",
     "statpoints"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -2224,21 +2238,24 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "growth",
     "main",
     "statpoints"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -2298,23 +2315,26 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "growth",
     "main",
     "statpoints",
     "promotion",
     "promotion"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -2330,23 +2350,26 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "growth",
     "main",
     "statpoints",
     "promoPlay",
     "promoPlay"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -2362,20 +2385,23 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "quest",
     "quest"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -2754,18 +2780,16 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "growth",
     "main",
     "statpoints"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -2784,20 +2808,18 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "growth",
     "main",
     "statpoints",
     "offline",
     "offline"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -2816,20 +2838,18 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "growth",
     "main",
     "statpoints",
     "quest",
     "quest"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -2848,17 +2868,15 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "promotion",
     "promotion"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -2877,17 +2895,15 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "settings",
     "settings"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -2906,17 +2922,15 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "gacha",
     "gacha"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -2935,19 +2949,17 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "gacha",
     "gacha",
     "gachaResult",
     "gachaResult"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -2966,17 +2978,15 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "gacha",
     "gachaskill"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -2995,19 +3005,17 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "gacha",
     "gachaskill",
     "gachaResult",
     "gachaResult"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -3026,17 +3034,15 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "missions",
     "missions"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -3055,17 +3061,15 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "talents",
     "talents"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -3084,17 +3088,15 @@
     "dungeon-quarry",
     "dungeon-gold",
     "dungeon-books",
-    "worldBoss",
-    "mplus",
-    "tower",
-    "rift",
-    "raid",
-    "expedition",
-    "workshopCard",
     "rebirth",
     "rebirth"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "재료 던전 · 매일"
+   ],
    "errors": []
   },
   {
@@ -3110,18 +3112,21 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
-    "raid",
-    "expedition",
-    "workshopCard"
+    "raid"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -3137,20 +3142,23 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "codex",
     "codex"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -3166,20 +3174,23 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "achievements",
     "achievements"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -3195,20 +3206,23 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "achievements",
     "titles"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -3224,21 +3238,22 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "pass",
     "pass"
    ],
    "tiny": [
-    "칭호"
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
    ],
    "errors": []
   },
@@ -3255,20 +3270,23 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "pets",
     "pets"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -3284,20 +3302,23 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "craft",
     "craft"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -3313,20 +3334,23 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "classpick",
     "classpick"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -3342,21 +3366,24 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "growth",
     "main",
     "statpoints"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -3415,21 +3442,24 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "growth",
     "main",
     "statpoints"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -3489,23 +3519,26 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "growth",
     "main",
     "statpoints",
     "promotion",
     "promotion"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -3521,23 +3554,26 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "growth",
     "main",
     "statpoints",
     "promoPlay",
     "promoPlay"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -3553,20 +3589,23 @@
    "brokenImg": [],
    "screens": [
     "dungeon",
-    "dungeon-quarry",
-    "dungeon-gold",
-    "dungeon-books",
+    "hunt",
     "worldBoss",
     "mplus",
     "tower",
     "rift",
     "raid",
-    "expedition",
-    "workshopCard",
     "quest",
     "quest"
    ],
-   "tiny": [],
+   "tiny": [
+    "매일 재료",
+    "보스·탑·균열",
+    "방치·강화",
+    "사냥터",
+    "하루 3번 · 정해진 시간",
+    "열쇠 단계 · 하루 3회"
+   ],
    "errors": []
   },
   {
@@ -3675,8 +3714,8 @@
    "name": "reload keeps the same pending claim",
    "pass": true,
    "detail": {
-    "first": "claim_mw63oecq_37n7fl",
-    "after": "claim_mw63oecq_37n7fl"
+    "first": "claim_mw68e2fq_1othkwb",
+    "after": "claim_mw68e2fq_1othkwb"
    }
   },
   {
@@ -3758,7 +3797,7 @@
     "k0": 1,
     "k1": {
      "kills": 1,
-     "acc": 49.90000000000009,
+     "acc": 49.89999999999998,
      "mode": "FARM"
     }
    }
@@ -3853,7 +3892,7 @@
   }
  ],
  "errors": [],
- "finishedAt": "2026-11-07T07:47:54.210Z",
+ "finishedAt": "2026-11-07T09:59:48.661Z",
  "summary": {
   "screenChecks": 141,
   "screenPass": 141,

@@ -10,7 +10,7 @@ import * as V8 from './v8.js';
 import { jewelName, socketCount } from '../core/crafting.js';
 import { MONSTERS } from '../data/content.js';
 const MONSTERS_NAME = (id) => (MONSTERS[id] ? MONSTERS[id].name : id);
-import { classPortrait, itemIcon, portrait, skillIcon, spriteMeta } from '../render/assets.js';
+import { bgMeta, classPortrait, itemIcon, portrait, skillIcon, spriteMeta } from '../render/assets.js';
 import { dismantleQuote, enhanceQuote, isEquipped, quoteUpgrade, recommend, selectForDismantle, upgradeCost, upgradeRoom } from '../core/economy.js';
 import { autoGrowReserve } from '../core/autogrow.js';
 import { killRewards } from '../core/combat.js';
@@ -61,7 +61,9 @@ export function go(app, action) {
   if (action === 'quest') return openQuest(app);
   if (action === 'promotion') return openPromotion(app);
   if (action === 'trial' || action.startsWith('trial:')) return openQuest(app);
-  if (action === 'tower' || action.startsWith('dungeon:')) return app.setTab('dungeon');
+  if (action === 'tower' || action === 'rift' || action === 'raid' || action === 'mplus' || action === 'worldboss') { app.advTab = 'challenge'; return app.setTab('dungeon'); }
+  if (action.startsWith('dungeon:')) { app.advTab = 'dungeon'; return app.setTab('dungeon'); }
+  if (action === 'expedition' || action === 'workshop') { app.advTab = 'idle'; return app.setTab('dungeon'); }
   if (action === 'gacha') return V4.openGacha(app);
   if (action === 'missions') return V4.openMissions(app);
   if (action === 'pets') return V6.openPets(app);
@@ -459,25 +461,87 @@ function adventureHeader(app) {
   return wrap;
 }
 // ======================= S14 dungeon panel =======================
+// 모험 탭 (v9 redesign): 3 sub-tabs + every activity gets an art banner, a type chip,
+// "what you get" and its status, so the cards no longer look alike.
+const ADV = {
+  hunt: { bg: null, kind: '사냥터', accent: 'hunt', gets: '지역 보스 처치 → 다음 지역' },
+  'dungeon-quarry': { bg: 'mine', kind: '재료 던전 · 매일', accent: 'ore', gets: '강화 광석' },
+  'dungeon-gold': { bg: 'vault', kind: '재료 던전 · 매일', accent: 'gold', gets: '골드' },
+  'dungeon-books': { bg: 'library', kind: '재료 던전 · 매일', accent: 'book', gets: '스킬북' },
+  worldboss: { bg: 'volcano', kind: '하루 3번 · 정해진 시간', accent: 'boss', gets: '보석 · 광석 · 장비 뽑기권' },
+  mplus: { bg: 'castle', kind: '열쇠 단계 · 하루 3회', accent: 'key', gets: '보석 · 장비 · 보옥 · 주간 금고' },
+  tower: { bg: 'tower', kind: '무제한 · 층 오르기', accent: 'tower', gets: '보석 · 각성석 · 별의 파편' },
+  rift: { bg: 'rift', kind: '로그라이크 · 하루 2회', accent: 'rift', gets: '스킬북 · 보석 · 정수' },
+  raid: { bg: 'void', kind: '주간 · 3회', accent: 'raid', gets: '보석 · 별의 파편 · 전설 장비' },
+  expedition: { bg: 'meadow', kind: '방치 · 실제 시간', accent: 'exp', gets: '보석 · 뽑기권 · 재료' },
+  workshop: { bg: 'cathedral', kind: '제작 · 강화', accent: 'craft', gets: '보옥 · 마부 · 버프 음식' },
+};
+function advDecorate(card, key, override = {}) {
+  const m = { ...ADV[key], ...override };
+  if (!m || !card) return card;
+  const first = card.firstElementChild;
+  // title + right-side status come from the card's own first row
+  let title = '', badge = null;
+  if (first && first.classList.contains('kv')) {
+    const b = first.querySelector('b');
+    title = b ? b.textContent : first.textContent;
+    const kids = [...first.children];
+    if (kids.length > 1) badge = kids[kids.length - 1];
+    first.remove();
+  }
+  const bg = m.bg && bgMeta(m.bg);
+  const locked = card.classList.contains('locked-card');
+  const banner = h('div', { class: 'adv-banner', style: bg ? { backgroundImage: `url(${bg.file})` } : {} },
+    h('div', { class: 'adv-shade' }),
+    h('div', { class: 'adv-head' },
+      h('span', { class: 'adv-kind' }, m.kind),
+      h('b', { class: 'adv-title' }, override.title || title),
+      h('span', { class: 'adv-gets' }, locked ? '' : `얻는 것 · ${m.gets}`)),
+    badge ? h('span', { class: 'adv-badge' + (locked ? ' lock' : '') }, badge) : null);
+  card.classList.add('adv-card', 'adv-' + m.accent);
+  card.insertBefore(banner, card.firstChild);
+  return card;
+}
+function huntCard(app) {
+  const s = app.state;
+  const region = REGION_BY_ID[s.progression.region];
+  const boss = BOSSES[region.boss];
+  const can = app.game.canChallengeBoss(region.boss);
+  const cleared = s.progression.bossCleared[region.boss];
+  const card = h('div', { class: 'card', dataset: { screen: 'hunt' } },
+    h('div', { class: 'kv' }, h('b', null, `${region.name} · ${boss.name}`), h('b', null, cleared ? '처치 완료' : can.ok ? '도전 가능' : `${stageLabel(region.id, 10)} 필요`)),
+    h('div', { class: 'kv' }, '사냥 중', h('b', null, `스테이지 ${stageLabel(region.id, s.progression.wave)} · 최고 ${stageLabel(region.id, s.progression.maxWave[region.id] || 1)}`)),
+    h('div', { class: 'btn-row', style: { marginTop: '6px' } },
+      button('스테이지 지도', { cls: 'btn', onClick: () => openWorld(app) }),
+      button(cleared ? '보스 재도전' : '보스 도전', { cls: 'btn btn-primary', disabled: !can.ok || app.game.mode !== 'FARM', onClick: () => openBoss(app, region.boss) })));
+  return advDecorate(card, 'hunt', { bg: region.bg });
+}
+const ADV_TABS = [['dungeon', '던전', '매일 재료'], ['challenge', '도전', '보스·탑·균열'], ['idle', '원정·제작', '방치·강화']];
 export function dungeonPanel(app) {
   const s = app.state;
+  const tab = app.advTab || 'dungeon';
   const root = h('div', { class: 'panel', dataset: { screen: 'dungeon' }, style: { height: '100%', margin: 0 } });
   root.appendChild(h('div', { class: 'panel-head' }, h('h2', null, '모험'), h('span', { class: 'spacer' }), h('span', { class: 'muted small' }, '입장권 매일 00:00 +3')));
+  const tabs = h('div', { class: 'adv-tabs', role: 'tablist', 'aria-label': '모험 분류' }, ADV_TABS.map(([id, t, sub]) =>
+    h('button', { type: 'button', role: 'tab', 'aria-selected': String(tab === id), dataset: { advtab: id }, onClick: () => { app.advTab = id; app.renderPanel(); } },
+      h('b', null, t), h('span', null, sub))));
+  root.appendChild(h('div', { class: 'adv-tabs-wrap' }, tabs));
   const sc = h('div', { class: 'panel-scroll' });
-  sc.appendChild(adventureHeader(app));
-  sc.appendChild(h('div', { class: 'section-title' }, '던전'));
-  for (const t of ['quarry', 'gold', 'books']) sc.appendChild(V4.dungeonCard(app, t));
-  sc.appendChild(h('div', { class: 'section-title' }, '도전'));
-  sc.appendChild(V8.worldBossCard(app));
-  sc.appendChild(V8.mplusCard(app));
-  sc.appendChild(V4.towerCard(app));
-  sc.appendChild(V5.riftCard(app));
-  sc.appendChild(V4.raidCard(app));
-  sc.appendChild(h('div', { class: 'section-title' }, '원정'));
-  sc.appendChild(V8.expeditionCard(app));
-  sc.appendChild(h('div', { class: 'section-title' }, '제작·강화'));
-  sc.appendChild(V8.workshopCard(app));
-  sc.appendChild(h('p', { class: 'muted' }, `던전은 입장할 때 입장권 1장을 먼저 사용합니다. 시간 안에 실패하면 보상 30%만 받고, 전투 중 앱이 꺼지면 다음 실행 때 입장권을 돌려드립니다.`));
+  const add = (card, key) => { if (card) sc.appendChild(advDecorate(card, key)); };
+  if (tab === 'dungeon') {
+    for (const t of ['quarry', 'gold', 'books']) add(V4.dungeonCard(app, t), 'dungeon-' + t);
+    sc.appendChild(h('p', { class: 'muted small' }, '재료 던전은 입장할 때 입장권 1장을 씁니다. 한 번 깬 단계는 "소탕"으로 바로 보상을 받을 수 있어요. 시간 안에 실패하면 보상 30%, 전투 중 앱이 꺼지면 입장권을 돌려드려요.'));
+  } else if (tab === 'challenge') {
+    sc.appendChild(huntCard(app));
+    add(V8.worldBossCard(app), 'worldboss');
+    add(V8.mplusCard(app), 'mplus');
+    add(V4.towerCard(app), 'tower');
+    add(V5.riftCard(app), 'rift');
+    add(V4.raidCard(app), 'raid');
+  } else {
+    add(V8.expeditionCard(app), 'expedition');
+    add(V8.workshopCard(app), 'workshop');
+  }
   root.appendChild(sc);
   return root;
 }
