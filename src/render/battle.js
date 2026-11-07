@@ -439,7 +439,12 @@ export class BattleRenderer {
       }
     } else if (cls === 'archer') {
       const x0 = Math.min(...xs) - 30 * u, x1 = Math.max(...xs) + 40 * u;
-      for (let i = 0; i < 46; i++) {
+      // GPT B 화살비 그림: 5갈래 화살 묶음이 5번(타격 수) 내리꽂힘 + 가는 화살 입자
+      for (let w = 0; w < 5; w++) {
+        const x = xs.length ? xs[w % xs.length] + ((w * 37) % 50 - 25) * u : (x0 + x1) / 2;
+        this.pushFx({ kind: 'rainvolley', x, y0: this.topInset + 4, y1: gy, born: c + (430 + w * 110) / sp, dur: 520, fall: 260 / sp, h: 78 * u });
+      }
+      for (let i = 0; i < 26; i++) {
         const x = x0 + Math.random() * (x1 - x0), fall = gy - (this.topInset + 10);
         this.parts.spawn(c + (430 + Math.random() * 520) / sp, x + 60, this.topInset + 4, -200 * sp, (fall / 0.28) * sp * 0.8, 280 / sp + 60, 4.5, '#D9C7A3', PK.ARROW, 1200 * sp);
       }
@@ -709,6 +714,16 @@ export class BattleRenderer {
       ctx.rotate(rot);
       ctx.scale(scl, breathe * scl);
       ctx.drawImage(sc, -d.px, -d.py, d.w, d.h);
+      // key-pose crossfade: the previous pose fades out over 90 ms so switches don't snap
+      const cur = this._heroCur;
+      if (!cur || cur.file !== m.file) { this._heroPrev = cur ? { ...cur, at: t } : null; this._heroCur = { file: m.file, sc, d }; }
+      else { cur.sc = sc; cur.d = d; }
+      const pv = this._heroPrev;
+      if (motion && pv && t - pv.at < 90 && t >= pv.at) {
+        ctx.globalAlpha = alpha * (1 - (t - pv.at) / 90) * 0.85;
+        ctx.drawImage(pv.sc, -pv.d.px, -pv.d.py, pv.d.w, pv.d.h);
+        ctx.globalAlpha = alpha;
+      }
       if ((frames.static || (branch && frames.promo)) && ac && ac.kind === 'attack' && motion && !ranged) {
         // weapon trail for single-figure forms; the arc changes with the combo step
         const rel = t - ac.start, imp = ac.impactAt - ac.start;
@@ -803,6 +818,20 @@ export class BattleRenderer {
       ctx.scale(isTrial ? -sxx : sxx, sy);     // instructor projection faces the hero
       ctx.globalAlpha = alpha * (isTrial ? 0.72 : 1);
       ctx.drawImage(sc, -d.px, -d.py, d.w, d.h);
+      // action-frame crossfade (GPT C/D frames): previous frame fades out over 80 ms
+      if (base && base.frames && motion) {
+        const em = this.enemyFrames || (this.enemyFrames = new Map());
+        let rec = em.get(e.uid);
+        if (!rec) em.set(e.uid, rec = { file: meta.file, sc, d, prev: null, at: 0 });
+        else if (rec.file !== meta.file) { rec.prev = { sc: rec.sc, d: rec.d }; rec.at = t; rec.file = meta.file; }
+        rec.sc = sc; rec.d = d;
+        if (rec.prev && t - rec.at < 80) {
+          ctx.globalAlpha = alpha * (1 - (t - rec.at) / 80) * 0.8;
+          ctx.drawImage(rec.prev.sc, -rec.prev.d.px, -rec.prev.d.py, rec.prev.d.w, rec.prev.d.h);
+          ctx.globalAlpha = alpha;
+        }
+        if (em.size > 64) for (const k of em.keys()) { if (!battle.enemies.some((q) => q.uid === k)) em.delete(k); }
+      }
       // white hit flash (silhouette), strongest right at the hit
       if (t < e.flashUntil && e.state !== 'dying') { ctx.globalAlpha = alpha * Math.min(0.85, 0.35 + (e.flashUntil - t) / 160); ctx.drawImage(whiteOf(sc), -d.px, -d.py, d.w, d.h); }
       ctx.restore();
@@ -926,6 +955,16 @@ export class BattleRenderer {
           ctx.strokeStyle = '#FFF6DE'; ctx.lineWidth = 2; ctx.beginPath();
           for (let k = 0; k < 8; k++) { const a = (k / 8) * Math.PI * 2 + p; const rr = r * (k % 2 ? 0.7 : 1.15); ctx.moveTo(f.x, f.y); ctx.lineTo(f.x + Math.cos(a) * rr, f.y + Math.sin(a) * rr); }
           ctx.stroke();
+          break;
+        }
+        case 'rainvolley': {
+          const rs = fxSprite('rain');
+          const q = Math.min(1, (now - f.born) / f.fall);
+          if (rs && now >= f.born) {
+            const sc = f.h / rs.h, y = f.y0 + (f.y1 - f.y0) * (q * q);
+            ctx.globalAlpha = q < 1 ? 1 : Math.max(0, 1 - (now - f.born - f.fall) / Math.max(1, f.dur - f.fall));
+            ctx.drawImage(rs.img, f.x - rs.ax * rs.w * sc, y - rs.ay * rs.h * sc, rs.w * sc, rs.h * sc);
+          }
           break;
         }
         case 'spark': {

@@ -1,6 +1,6 @@
 {
- "startedAt": "2026-11-07T02:15:13.083Z",
- "base": "http://localhost:8234/",
+ "startedAt": "2026-11-07T06:44:44.339Z",
+ "base": "http://localhost:8235/",
  "viewports": [
   [
    390,
@@ -3374,8 +3374,8 @@
    "name": "reload keeps the same pending claim",
    "pass": true,
    "detail": {
-    "first": "claim_mw5rvs5t_1esvyu4",
-    "after": "claim_mw5rvs5t_1esvyu4"
+    "first": "claim_mw61ifcf_od2282",
+    "after": "claim_mw61ifcf_od2282"
    }
   },
   {
@@ -3454,9 +3454,9 @@
    "name": "hidden → visible does not replay ticks",
    "pass": true,
    "detail": {
-    "k0": 1,
+    "k0": 2,
     "k1": {
-     "kills": 1,
+     "kills": 2,
      "acc": 0,
      "mode": "FARM"
     }
@@ -3552,7 +3552,7 @@
   }
  ],
  "errors": [],
- "finishedAt": "2026-11-07T02:17:38.438Z",
+ "finishedAt": "2026-11-07T06:47:12.910Z",
  "summary": {
   "screenChecks": 141,
   "screenPass": 141,
