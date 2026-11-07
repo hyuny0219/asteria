@@ -227,7 +227,8 @@
   "gpt_c/mon_act_*.png": "GPT package C — monster idle/attack/hit/dead",
   "gpt_d/boss_act_*.png": "GPT package D — boss idle/windup/heavy/enrage",
   "gpt_e/pets_act_*.png": "GPT package E — companion idle/attack/happy",
-  "gpt_f/icons_*.png": "GPT package F — high-rarity gear, 4 skill fixes, talent & rift emblems"
+  "gpt_f/icons_*.png": "GPT package F — high-rarity gear, 4 skill fixes, talent & rift emblems",
+  "gpt_g/bg_*.png": "GPT package G — vault / library / trial hall / rift backgrounds"
  },
  "monsters": {
   "M01": {
@@ -22319,6 +22320,46 @@
    "groundRatio": 0.88,
    "status": "STATIC_SINGLE_LAYER_BACKGROUND",
    "source": "generated/bg_tower.png"
+  },
+  "vault": {
+   "file": "assets/runtime/bg_vault.webp",
+   "size": [
+    1024,
+    683
+   ],
+   "groundRatio": 0.84,
+   "status": "STATIC_SINGLE_LAYER_BACKGROUND",
+   "source": "gpt_g/bg_gold_vault.png"
+  },
+  "library": {
+   "file": "assets/runtime/bg_library.webp",
+   "size": [
+    1024,
+    683
+   ],
+   "groundRatio": 0.84,
+   "status": "STATIC_SINGLE_LAYER_BACKGROUND",
+   "source": "gpt_g/bg_book_library.png"
+  },
+  "trial": {
+   "file": "assets/runtime/bg_trial.webp",
+   "size": [
+    1024,
+    683
+   ],
+   "groundRatio": 0.86,
+   "status": "STATIC_SINGLE_LAYER_BACKGROUND",
+   "source": "gpt_g/bg_trial_hall.png"
+  },
+  "rift": {
+   "file": "assets/runtime/bg_rift.webp",
+   "size": [
+    1024,
+    683
+   ],
+   "groundRatio": 0.86,
+   "status": "STATIC_SINGLE_LAYER_BACKGROUND",
+   "source": "gpt_g/bg_rift.png"
   }
  },
  "portraits": {

@@ -203,7 +203,7 @@ export class App {
       this.forcedBattleView = true;
       this.applyView();
       this.setImmersive(true, sess);
-      preloadFor({ region: REGION_BY_ID[this.state.progression.region], boss: sess.bossId || null, branch: this.state.player.branch, cls: this.state.player.cls, tier: prog.tierOf(this.state), allMonsters: sess.kind === 'rift' || sess.kind === 'tower' || sess.kind === 'dungeon', bg: sess.kind === 'tower' ? 'tower' : sess.kind === 'raid' ? 'void' : sess.kind === 'rift' ? sess.bg : sess.kind === 'trial' ? 'cathedral' : sess.kind === 'dungeon' ? ({ quarry: 'mine', gold: 'desert', books: 'cathedral' }[sess.type] || 'mine') : null });
+      preloadFor({ region: REGION_BY_ID[this.state.progression.region], boss: sess.bossId || null, branch: this.state.player.branch, cls: this.state.player.cls, tier: prog.tierOf(this.state), allMonsters: sess.kind === 'rift' || sess.kind === 'tower' || sess.kind === 'dungeon', bg: sess.kind === 'tower' ? 'tower' : sess.kind === 'raid' ? 'void' : sess.kind === 'rift' ? 'rift' : sess.kind === 'trial' ? 'trial' : sess.kind === 'dungeon' ? ({ quarry: 'mine', gold: 'vault', books: 'library' }[sess.type] || 'mine') : null });
     } else if (this._chaining) {
       // going straight into the next fight (e.g. next tower floor): stay in the battle view
     } else {
@@ -462,9 +462,10 @@ export class App {
     if (view === 'battle' && !hidden) {
       const region = REGION_BY_ID[s.progression.region];
       const sess = g.session;
-      const SB = { quarry: ['mine', null], gold: ['desert', 40], books: ['cathedral', null], tower: ['tower', null], raid: ['void', null], rift: [(sess && sess.bg) || 'void', null] };
+      // GPT G: 금고 · 서고 · 시련장 · 균열 전용 배경
+      const SB = { quarry: ['mine', null], gold: ['vault', null], books: ['library', null], tower: ['tower', null], raid: ['void', null], rift: ['rift', null] };
       const sk = sess ? (sess.kind === 'dungeon' ? sess.type || 'quarry' : sess.kind) : null;
-      const [bg, bgTint] = g.mode === 'PROMOTION_TRIAL' ? ['cathedral', null] : SB[sk] || [region.bg, region.bgTint || null];
+      const [bg, bgTint] = g.mode === 'PROMOTION_TRIAL' ? ['trial', null] : SB[sk] || [region.bg, region.bgTint || null];
       const left = b.timeLeftMs ? b.timeLeftMs() : null;
       const DN = { quarry: '채석장', gold: '황금 금고', books: '스킬북 서고' };
       const label = sk === 'rift' ? `균열 ${sess.floor}층 · 처치 ${b.kills}/${b.killTarget} · ${Math.ceil((left || 0) / 1000)}초`
