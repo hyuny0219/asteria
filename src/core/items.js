@@ -1,6 +1,6 @@
 // Equipment generation and per-item stat calculation (6 rarities, options, sets, +15).
 import { BALANCE } from '../data/balance.js';
-import { CLASS_WEAPON_LOOKS, ITEM_LOOKS, LOOK4_SLOTS, RARITY, RARITY_LOOK4, SLOT_NAMES, SETS } from '../data/content.js';
+import { CLASS_WEAPON_LOOKS, HIGH_LOOKS, ITEM_LOOKS, LOOK4_SLOTS, RARITY, RARITY_LOOK4, SLOT_NAMES, SETS } from '../data/content.js';
 
 const EQ = BALANCE.equipment;
 const LOOK_INDEX = { common: 0, uncommon: 0, rare: 1, epic: 1, legendary: 2, mythic: 2 };
@@ -8,13 +8,20 @@ const OPTION_KEYS = Object.keys(EQ.options);
 
 const CLASS_WEAPON_INDEX = { common: 0, uncommon: 1, rare: 2, epic: 2, legendary: 2, mythic: 2 };
 export function lookFor(slot, rarity, cls = null) {
+  const key = slot === 'weapon' && cls && CLASS_WEAPON_LOOKS[cls] ? cls : slot;
+  if (HIGH_LOOKS[key] && HIGH_LOOKS[key][rarity]) return HIGH_LOOKS[key][rarity];
   if (slot === 'weapon' && cls && CLASS_WEAPON_LOOKS[cls]) return CLASS_WEAPON_LOOKS[cls][CLASS_WEAPON_INDEX[rarity] ?? 0];
   return LOOK4_SLOTS.includes(slot) ? ITEM_LOOKS[slot][RARITY_LOOK4[rarity] ?? 0] : ITEM_LOOKS[slot][LOOK_INDEX[rarity] ?? 0];
 }
 // Items saved before the gloves/boots/ring art existed carried borrowed icons (boots showed a helmet).
+// Weapons: the class is read back from the icon the item already carries.
+const WEAPON_CLASS_BY_ICON = Object.fromEntries(Object.entries(CLASS_WEAPON_LOOKS).flatMap(([c, ls]) => ls.map((l) => [l.icon, c]))
+  .concat(Object.entries(HIGH_LOOKS).filter(([k]) => CLASS_WEAPON_LOOKS[k]).flatMap(([c, r]) => Object.values(r).map((l) => [l.icon, c]))));
 export function refreshLook(it) {
-  if (!LOOK4_SLOTS.includes(it.slot)) return false;
-  const look = lookFor(it.slot, it.rarity);
+  const hiKey = it.slot === 'weapon' ? (WEAPON_CLASS_BY_ICON[it.look] || 'weapon') : it.slot;
+  const high = HIGH_LOOKS[hiKey] && HIGH_LOOKS[hiKey][it.rarity];
+  if (!LOOK4_SLOTS.includes(it.slot) && !high) return false;
+  const look = high || lookFor(it.slot, it.rarity);
   if (it.look === look.icon && !it.iconPending) return false;
   it.look = look.icon;
   if (!it.set) it.name = look.name;

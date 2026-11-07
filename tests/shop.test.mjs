@@ -70,6 +70,6 @@ test('old boots/gloves/ring items get their own icons on load (boots showed a he
   assert.equal(s.inventory[0].look, 'I30');
   assert.equal(s.inventory[0].iconPending, undefined);
   assert.equal(s.inventory[1].look, 'I05');
-  assert.equal(lookFor('ring', 'mythic').icon, 'I35');
+  assert.equal(lookFor('ring', 'mythic').icon, 'I57');   // GPT F: mythic ring has its own art (was I35)
   assert.equal(lookFor('gloves', 'common').icon, 'I24');
 });

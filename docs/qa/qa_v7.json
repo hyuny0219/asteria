@@ -1,5 +1,5 @@
 {
- "at": "2026-11-07T00:28:51.762Z",
+ "at": "2026-11-07T01:31:31.194Z",
  "pass": 42,
  "total": 42,
  "results": [
@@ -362,7 +362,7 @@
    "pass": true,
    "info": {
     "before": 5,
-    "after": 5,
+    "after": 6,
     "over": false,
     "small": [],
     "broken": []

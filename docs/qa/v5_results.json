@@ -30,9 +30,9 @@
   "pass": true,
   "info": {
    "choices": [
-    "b_greed",
-    "b_heal",
-    "b_crit"
+    "b_crit",
+    "b_regen",
+    "b_evade"
    ]
   }
  },
@@ -82,8 +82,8 @@
   "pass": true,
   "info": {
    "choices": [
-    "b_steal",
-    "b_evade",
+    "b_atk",
+    "b_crit",
     "b_greed"
    ]
   }

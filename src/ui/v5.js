@@ -14,8 +14,11 @@ import { fail, rewardTiles } from './screens.js';
 
 // placeholder icon ids (swap when the v5 emblem board lands)
 // Interim per-tree icons (existing skill/rune icons) until tree emblems are drawn.
-const TREE_ICON = { knight: SKILLS.shieldCharge.icon, berserker: SKILLS.berserkStrike.icon, wizard: SKILLS.m_meteor.icon, warlock: SKILLS.m_curse.icon,
-  ranger: SKILLS.a_aim.icon, hunter: SKILLS.a_beast.icon, assassin: SKILLS.r_stab.icon, trickster: SKILLS.r_illusion.icon, common: 'K30' };
+const TREE_ICON = TALENT_ICONS;   // GPT F emblems
+// GPT F rift blessing emblems: R00 공격 · R01 방어 · R02 속도/치명 · R03 회복 · R04 시간/충전 · R05 회피
+const BLESS_ICON = { b_atk: 'R00', b_atk2: 'R00', b_glass: 'R00', b_cdmg: 'R00', b_hp: 'R01', b_def: 'R01', b_guard: 'R01', b_thorns: 'R01',
+  b_crit: 'R02', b_aspd: 'R02', b_combo: 'R02', b_berserk: 'R02', b_echo: 'R02', b_steal: 'R03', b_regen: 'R03', b_heal: 'R03',
+  b_ult: 'R04', b_cdr: 'R04', b_greed: 'R04', b_evade: 'R05' };
 export const V5_ICONS = Object.freeze({ talents: 'V00', rebirth: 'V01', rift: 'V02', blessing: 'V03', curse: 'V12', essence: 'V14' });
 const ico = (id) => { try { return img(skillIcon(id), '', 'emblem'); } catch { return null; } };
 const curIcon = (k) => img(itemIcon(CURRENCY_ICONS[k]), '');
@@ -195,7 +198,7 @@ export function openBlessingPick(app) {
       m.close();
       if (app.state.settings.sound) sfx('bell');
       afterPick(app);
-    } }, h('span', { class: 'br' }, RNAME[b.r]), h('b', null, b.name), h('span', { class: 'ds' }, b.desc));
+    } }, h('span', { class: 'br' }, img(skillIcon(BLESS_ICON[id] || 'V03'), ''), RNAME[b.r]), h('b', null, b.name), h('span', { class: 'ds' }, b.desc));
   });
   const owned = run.blessings.map((id) => RF.BLESSINGS[id].name);
   const m = openModal({ id: 'riftBless', title: `${run.cleared}층 돌파 · 축복 선택`, dismissible: false, body: h('div', { dataset: { screen: 'riftBless' } },

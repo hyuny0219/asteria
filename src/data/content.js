@@ -243,6 +243,19 @@ export const CURRENCY_ICONS = Object.freeze({ gold: 'I12', gem: 'I13', ore: 'I14
   awakenStone: 'I36', starShard: 'I37', classTicket: 'I38', skillBook: 'I39', eqTicket: 'I18', skTicket: 'I19' });
 export const RARITY_LOOK4 = Object.freeze({ common: 0, uncommon: 1, rare: 2, epic: 3, legendary: 3, mythic: 3 });
 export const LOOK4_SLOTS = Object.freeze(['gloves', 'boots', 'ring']);
+// GPT F: own art for 영웅(epic) / 전설(legendary) / 신화(mythic). Key = slot, or class for class weapons
+// (weapon = 전사 검). Helmet/armor keep their 3 looks; necklace only has a mythic look.
+const hi = (base, n, names) => Object.freeze({ epic: { icon: 'I' + base, name: names[0] }, legendary: { icon: 'I' + (base + 1), name: names[1] }, mythic: { icon: 'I' + (base + 2), name: names[2] } });
+export const HIGH_LOOKS = Object.freeze({
+  gloves: hi(49, 0, ['자수정 건틀릿', '태양 금장 건틀릿', '진홍 장미 건틀릿']),
+  boots: hi(52, 0, ['자수정 장화', '태양 금장 장화', '진홍 장미 장화']),
+  ring: hi(55, 0, ['자수정 서약 반지', '태양 호박 반지', '진홍 장미 반지']),
+  mage: hi(58, 0, ['자수정 성좌 마도서', '태양 금장 마도서', '진홍 장미 마도서']),
+  archer: hi(61, 0, ['자수정 장궁', '태양 금장 장궁', '진홍 장미 장궁']),
+  rogue: hi(64, 0, ['자수정 쌍단검', '태양 금장 쌍단검', '진홍 장미 쌍단검']),
+  weapon: hi(67, 0, ['자수정 장검', '태양 금장 장검', '진홍 장미 검']),
+  necklace: Object.freeze({ mythic: { icon: 'I70', name: '진홍 장미 펜던트' } }),
+});
 
 export const TRIAL = Object.freeze({ id: 'T01', name: '교관 분신', sprite: 'hero', level: 30, telegraphMs: 500,
   heavy: { name: '서약의 일격', everySec: 7, telegraphMs: 900, mult: 2.2, shape: 'line' } });

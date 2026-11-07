@@ -226,7 +226,8 @@
   "gpt_i/map_*.png": "GPT package I",
   "gpt_c/mon_act_*.png": "GPT package C — monster idle/attack/hit/dead",
   "gpt_d/boss_act_*.png": "GPT package D — boss idle/windup/heavy/enrage",
-  "gpt_e/pets_act_*.png": "GPT package E — companion idle/attack/happy"
+  "gpt_e/pets_act_*.png": "GPT package E — companion idle/attack/happy",
+  "gpt_f/icons_*.png": "GPT package F — high-rarity gear, 4 skill fixes, talent & rift emblems"
  },
  "monsters": {
   "M01": {
@@ -20101,6 +20102,380 @@
    ],
    "status": "RUNTIME_ICON",
    "source": "handoff_v4/classes/class_weapons_9.png"
+  },
+  "I49": {
+   "id": "I49",
+   "name": "gloves_epic",
+   "file": "assets/runtime/item_49.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    33,
+    22,
+    190,
+    212
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_gear_high.png"
+  },
+  "I50": {
+   "id": "I50",
+   "name": "gloves_legendary",
+   "file": "assets/runtime/item_50.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    29,
+    22,
+    197,
+    212
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_gear_high.png"
+  },
+  "I51": {
+   "id": "I51",
+   "name": "gloves_mythic",
+   "file": "assets/runtime/item_51.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    30,
+    22,
+    195,
+    212
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_gear_high.png"
+  },
+  "I52": {
+   "id": "I52",
+   "name": "boots_epic",
+   "file": "assets/runtime/item_52.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    30,
+    25,
+    196,
+    206
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_gear_high.png"
+  },
+  "I53": {
+   "id": "I53",
+   "name": "boots_legendary",
+   "file": "assets/runtime/item_53.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    25,
+    24,
+    205,
+    208
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_gear_high.png"
+  },
+  "I54": {
+   "id": "I54",
+   "name": "boots_mythic",
+   "file": "assets/runtime/item_54.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    24,
+    22,
+    208,
+    212
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_gear_high.png"
+  },
+  "I55": {
+   "id": "I55",
+   "name": "ring_epic",
+   "file": "assets/runtime/item_55.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    37,
+    37,
+    181,
+    181
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_gear_high.png"
+  },
+  "I56": {
+   "id": "I56",
+   "name": "ring_legendary",
+   "file": "assets/runtime/item_56.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    38,
+    32,
+    179,
+    192
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_gear_high.png"
+  },
+  "I57": {
+   "id": "I57",
+   "name": "ring_mythic",
+   "file": "assets/runtime/item_57.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    32,
+    26,
+    192,
+    203
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_gear_high.png"
+  },
+  "I58": {
+   "id": "I58",
+   "name": "mage_epic",
+   "file": "assets/runtime/item_58.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    22,
+    26,
+    212,
+    203
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_gear_high.png"
+  },
+  "I59": {
+   "id": "I59",
+   "name": "mage_legendary",
+   "file": "assets/runtime/item_59.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    22,
+    26,
+    212,
+    203
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_gear_high.png"
+  },
+  "I60": {
+   "id": "I60",
+   "name": "mage_mythic",
+   "file": "assets/runtime/item_60.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    22,
+    25,
+    212,
+    205
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_gear_high.png"
+  },
+  "I61": {
+   "id": "I61",
+   "name": "archer_epic",
+   "file": "assets/runtime/item_61.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    50,
+    22,
+    155,
+    212
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_gear_high.png"
+  },
+  "I62": {
+   "id": "I62",
+   "name": "archer_legendary",
+   "file": "assets/runtime/item_62.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    46,
+    22,
+    163,
+    212
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_gear_high.png"
+  },
+  "I63": {
+   "id": "I63",
+   "name": "archer_mythic",
+   "file": "assets/runtime/item_63.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    47,
+    22,
+    161,
+    212
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_gear_high.png"
+  },
+  "I64": {
+   "id": "I64",
+   "name": "rogue_epic",
+   "file": "assets/runtime/item_64.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    43,
+    25,
+    169,
+    205
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_gear_high.png"
+  },
+  "I65": {
+   "id": "I65",
+   "name": "rogue_legendary",
+   "file": "assets/runtime/item_65.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    44,
+    23,
+    168,
+    209
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_gear_high.png"
+  },
+  "I66": {
+   "id": "I66",
+   "name": "rogue_mythic",
+   "file": "assets/runtime/item_66.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    36,
+    22,
+    183,
+    212
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_gear_high.png"
+  },
+  "I67": {
+   "id": "I67",
+   "name": "weapon_epic",
+   "file": "assets/runtime/item_67.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    40,
+    22,
+    176,
+    212
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_gear_high.png"
+  },
+  "I68": {
+   "id": "I68",
+   "name": "weapon_legendary",
+   "file": "assets/runtime/item_68.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    40,
+    22,
+    175,
+    212
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_gear_high.png"
+  },
+  "I69": {
+   "id": "I69",
+   "name": "weapon_mythic",
+   "file": "assets/runtime/item_69.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    35,
+    22,
+    185,
+    212
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_gear_high.png"
+  },
+  "I70": {
+   "id": "I70",
+   "name": "necklace_mythic",
+   "file": "assets/runtime/item_70.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    55,
+    22,
+    145,
+    212
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_gear_high.png"
   }
  },
  "skills": {
@@ -20300,19 +20675,19 @@
   "K01": {
    "id": "K01",
    "name": "m_frost",
-   "file": "assets/runtime/skill_K01.webp",
-   "sourceRect": [
-    364,
-    25,
-    307,
-    302
-   ],
+   "file": "assets/runtime/skill_K01_f.webp",
    "size": [
     96,
     96
    ],
+   "cellRect": [
+    22,
+    22,
+    212,
+    212
+   ],
    "status": "RUNTIME_ICON",
-   "source": "generated/skills_v4.png"
+   "source": "gpt_f/icons_skills_fix.png"
   },
   "K02": {
    "id": "K02",
@@ -20453,19 +20828,19 @@
   "K10": {
    "id": "K10",
    "name": "a_leap",
-   "file": "assets/runtime/skill_K10.webp",
-   "sourceRect": [
-    1377,
-    355,
-    308,
-    310
-   ],
+   "file": "assets/runtime/skill_K10_f.webp",
    "size": [
     96,
     96
    ],
+   "cellRect": [
+    22,
+    22,
+    211,
+    212
+   ],
    "status": "RUNTIME_ICON",
-   "source": "generated/skills_v4.png"
+   "source": "gpt_f/icons_skills_fix.png"
   },
   "K11": {
    "id": "K11",
@@ -20521,36 +20896,36 @@
   "K14": {
    "id": "K14",
    "name": "a_pack",
-   "file": "assets/runtime/skill_K14.webp",
-   "sourceRect": [
-    701,
-    694,
-    308,
-    311
-   ],
+   "file": "assets/runtime/skill_K14_f.webp",
    "size": [
     96,
     96
    ],
+   "cellRect": [
+    26,
+    22,
+    204,
+    212
+   ],
    "status": "RUNTIME_ICON",
-   "source": "generated/skills_v4.png"
+   "source": "gpt_f/icons_skills_fix.png"
   },
   "K15": {
    "id": "K15",
    "name": "a_rain",
-   "file": "assets/runtime/skill_K15.webp",
-   "sourceRect": [
-    1039,
-    719,
-    307,
-    285
-   ],
+   "file": "assets/runtime/skill_K15_f.webp",
    "size": [
     96,
     96
    ],
+   "cellRect": [
+    29,
+    22,
+    198,
+    212
+   ],
    "status": "RUNTIME_ICON",
-   "source": "generated/skills_v4.png"
+   "source": "gpt_f/icons_skills_fix.png"
   },
   "K16": {
    "id": "K16",
@@ -21571,6 +21946,261 @@
    ],
    "status": "RUNTIME_ICON",
    "source": "generated/icons_v5.png"
+  },
+  "T00": {
+   "id": "T00",
+   "name": "T00",
+   "file": "assets/runtime/skill_T00.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    32,
+    22,
+    192,
+    212
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_skills_fix.png"
+  },
+  "T01": {
+   "id": "T01",
+   "name": "T01",
+   "file": "assets/runtime/skill_T01.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    24,
+    22,
+    208,
+    212
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_skills_fix.png"
+  },
+  "T02": {
+   "id": "T02",
+   "name": "T02",
+   "file": "assets/runtime/skill_T02.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    22,
+    28,
+    212,
+    199
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_skills_fix.png"
+  },
+  "T03": {
+   "id": "T03",
+   "name": "T03",
+   "file": "assets/runtime/skill_T03.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    22,
+    28,
+    212,
+    199
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_skills_fix.png"
+  },
+  "T04": {
+   "id": "T04",
+   "name": "T04",
+   "file": "assets/runtime/skill_T04.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    22,
+    30,
+    212,
+    195
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_skills_fix.png"
+  },
+  "T05": {
+   "id": "T05",
+   "name": "T05",
+   "file": "assets/runtime/skill_T05.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    25,
+    22,
+    206,
+    212
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_skills_fix.png"
+  },
+  "T06": {
+   "id": "T06",
+   "name": "T06",
+   "file": "assets/runtime/skill_T06.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    32,
+    22,
+    192,
+    212
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_skills_fix.png"
+  },
+  "T07": {
+   "id": "T07",
+   "name": "T07",
+   "file": "assets/runtime/skill_T07.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    22,
+    42,
+    212,
+    171
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_skills_fix.png"
+  },
+  "T08": {
+   "id": "T08",
+   "name": "T08",
+   "file": "assets/runtime/skill_T08.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    22,
+    22,
+    212,
+    211
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_skills_fix.png"
+  },
+  "R00": {
+   "id": "R00",
+   "name": "R00",
+   "file": "assets/runtime/skill_R00.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    38,
+    22,
+    180,
+    212
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_skills_fix.png"
+  },
+  "R01": {
+   "id": "R01",
+   "name": "R01",
+   "file": "assets/runtime/skill_R01.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    22,
+    22,
+    212,
+    212
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_skills_fix.png"
+  },
+  "R02": {
+   "id": "R02",
+   "name": "R02",
+   "file": "assets/runtime/skill_R02.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    31,
+    22,
+    194,
+    212
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_skills_fix.png"
+  },
+  "R03": {
+   "id": "R03",
+   "name": "R03",
+   "file": "assets/runtime/skill_R03.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    32,
+    22,
+    191,
+    212
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_skills_fix.png"
+  },
+  "R04": {
+   "id": "R04",
+   "name": "R04",
+   "file": "assets/runtime/skill_R04.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    25,
+    22,
+    205,
+    212
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_skills_fix.png"
+  },
+  "R05": {
+   "id": "R05",
+   "name": "R05",
+   "file": "assets/runtime/skill_R05.webp",
+   "size": [
+    96,
+    96
+   ],
+   "cellRect": [
+    22,
+    22,
+    212,
+    211
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_f/icons_skills_fix.png"
   }
  },
  "backgrounds": {

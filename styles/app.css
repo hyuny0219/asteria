@@ -406,6 +406,7 @@ input.text { width: 100%; min-height: 36px; background: var(--panel); border: 1p
 .bless-list { display: flex; flex-direction: column; gap: 8px; }
 .bless { display: grid; grid-template-columns: 52px 1fr; grid-template-rows: auto auto; column-gap: 8px; text-align: left; padding: 10px; border-radius: 10px; border: 2px solid var(--border); background: var(--panel); cursor: pointer; color: inherit; min-height: 56px; }
 .bless .br { grid-row: 1 / span 2; align-self: center; font-size: 12px; font-weight: 800; text-align: center; }
+.bless .br img { display: block; width: 40px; height: 40px; margin: 0 auto 2px; }
 .bless b { font-size: 15px; }
 .bless .ds { font-size: 13px; color: var(--muted); }
 .bless.r-common { border-color: var(--r-common); } .bless.r-common .br { color: var(--r-common); }

@@ -99,4 +99,5 @@ export const TALENT_RULES = Object.freeze({
   presets: 2,
 });
 // Icon placeholders: swap when the talent emblem board arrives (keyed by tree id).
-export const TALENT_ICONS = Object.freeze({ knight: 'S1', berserker: 'S4', wizard: 'K07', warlock: 'K04', ranger: 'K08', hunter: 'K12', assassin: 'K16', trickster: 'K22', common: 'V00' });
+// GPT F talent emblems (T00..T08)
+export const TALENT_ICONS = Object.freeze({ knight: 'T00', berserker: 'T01', wizard: 'T02', warlock: 'T03', ranger: 'T04', hunter: 'T05', assassin: 'T06', trickster: 'T07', common: 'T08' });
