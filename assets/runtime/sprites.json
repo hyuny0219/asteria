@@ -232,7 +232,7 @@
   "gpt_h/serin_poses_fix.png": "GPT package H — Serin 8 key poses (thrust fixed, alpha)",
   "gpt_j/icons_gear_high2.png": "GPT package J1 — helmet/armor/necklace epic+ icons",
   "gpt_j/elena_poses_fix.png": "GPT package J2 — Elena 8 key poses (alpha, tome glow kept)",
-  "gpt_j3/*_cycle.png": "GPT J3 — walk 4 + basic attack 4 frames (Lyra, Elena, Nox)"
+  "gpt_j3/*_cycle.png": "GPT J3 — walk 4 + basic attack 4 frames (Serin, Lyra, Elena, Nox)"
  },
  "monsters": {
   "M01": {
@@ -17440,6 +17440,198 @@
    },
    "status": "RUNTIME_CYCLE_FRAME",
    "source": "gpt_j3/nox_cycle.png"
+  },
+  "cyc_warrior_walk1": {
+   "id": "cyc_warrior_walk1",
+   "cls": "warrior",
+   "pose": "walk1",
+   "file": "assets/runtime/hero_cyc_warrior_walk1.webp",
+   "size": [
+    203,
+    290
+   ],
+   "scale": 0.7311,
+   "bodyHeightPx": 280.0,
+   "pivot": [
+    122.1,
+    284.4
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/serin_cycle.png"
+  },
+  "cyc_warrior_walk2": {
+   "id": "cyc_warrior_walk2",
+   "cls": "warrior",
+   "pose": "walk2",
+   "file": "assets/runtime/hero_cyc_warrior_walk2.webp",
+   "size": [
+    180,
+    287
+   ],
+   "scale": 0.7311,
+   "bodyHeightPx": 277.8,
+   "pivot": [
+    103.4,
+    281.5
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/serin_cycle.png"
+  },
+  "cyc_warrior_walk3": {
+   "id": "cyc_warrior_walk3",
+   "cls": "warrior",
+   "pose": "walk3",
+   "file": "assets/runtime/hero_cyc_warrior_walk3.webp",
+   "size": [
+    206,
+    286
+   ],
+   "scale": 0.7311,
+   "bodyHeightPx": 275.6,
+   "pivot": [
+    131.7,
+    280.0
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/serin_cycle.png"
+  },
+  "cyc_warrior_walk4": {
+   "id": "cyc_warrior_walk4",
+   "cls": "warrior",
+   "pose": "walk4",
+   "file": "assets/runtime/hero_cyc_warrior_walk4.webp",
+   "size": [
+    154,
+    288
+   ],
+   "scale": 0.7311,
+   "bodyHeightPx": 277.1,
+   "pivot": [
+    93.2,
+    281.5
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/serin_cycle.png"
+  },
+  "cyc_warrior_atk1": {
+   "id": "cyc_warrior_atk1",
+   "cls": "warrior",
+   "pose": "atk1",
+   "file": "assets/runtime/hero_cyc_warrior_atk1.webp",
+   "size": [
+    211,
+    336
+   ],
+   "scale": 0.7311,
+   "bodyHeightPx": 326.1,
+   "pivot": [
+    133.3,
+    330.4
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/serin_cycle.png"
+  },
+  "cyc_warrior_atk2": {
+   "id": "cyc_warrior_atk2",
+   "cls": "warrior",
+   "pose": "atk2",
+   "file": "assets/runtime/hero_cyc_warrior_atk2.webp",
+   "size": [
+    241,
+    295
+   ],
+   "scale": 0.7311,
+   "bodyHeightPx": 283.7,
+   "pivot": [
+    123.9,
+    288.0
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/serin_cycle.png"
+  },
+  "cyc_warrior_atk3": {
+   "id": "cyc_warrior_atk3",
+   "cls": "warrior",
+   "pose": "atk3",
+   "file": "assets/runtime/hero_cyc_warrior_atk3.webp",
+   "size": [
+    270,
+    283
+   ],
+   "scale": 0.7311,
+   "bodyHeightPx": 273.4,
+   "pivot": [
+    147.4,
+    277.1
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/serin_cycle.png"
+  },
+  "cyc_warrior_atk4": {
+   "id": "cyc_warrior_atk4",
+   "cls": "warrior",
+   "pose": "atk4",
+   "file": "assets/runtime/hero_cyc_warrior_atk4.webp",
+   "size": [
+    210,
+    287
+   ],
+   "scale": 0.7311,
+   "bodyHeightPx": 276.3,
+   "pivot": [
+    121.9,
+    280.7
+   ],
+   "touchesCellEdge": {
+    "left": false,
+    "right": false,
+    "top": false,
+    "bottom": false
+   },
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_j3/serin_cycle.png"
   }
  },
  "items": {

@@ -75,7 +75,9 @@ export function heroFrames(branch, cls = 'warrior', tier = 1) {
     if (!promo && P('idle')) return { idle: P('idle'), step: P('step'), anticipation: P('anticipation'), thrust: P('thrust'), recovery: P('recovery'), hit: P('hit'), cast: P('cast'), victory: P('victory'), promo: null, cycle };
     return { idle: f, step: f, anticipation: f, thrust: f, recovery: f, hit: f, cast: f, victory: f, promo, static: true };
   }
-  return { idle: H.idle, step: H.step, anticipation: H.anticipation, thrust: H.thrust, recovery: H.recovery, hit: H.hit, cast: H.cast, victory: H.victory, promo: pk ? H[pk] : null };
+  const W = (k) => H[`cyc_warrior_${k}`];   // GPT J3 세린 걷기·베기 (base form only)
+  const cycle = !pk && W('walk1') ? { walk: [1, 2, 3, 4].map((i) => W('walk' + i)), atk: [1, 2, 3, 4].map((i) => W('atk' + i)) } : null;
+  return { idle: H.idle, step: H.step, anticipation: H.anticipation, thrust: H.thrust, recovery: H.recovery, hit: H.hit, cast: H.cast, victory: H.victory, promo: pk ? H[pk] : null, cycle };
 }
 // Class portraits: face (192), card (3:4), illustration (2:3). Warrior = Serin's key art.
 export function classPortrait(cls, kind) {
@@ -111,7 +113,7 @@ export function promoPortrait(branch, tier = 1) { const k = promoKey(branch, tie
 export async function preloadFor({ region, boss, branch, cls = 'warrior', tier = 1, bg = null, monsters = MONSTERS, bosses = BOSSES, pet = null, allMonsters = false }) {
   const art = CLASSES[cls] && CLASSES[cls].art;
   // Serin's 8 poses (also used by the instructor projection) + this class's figure
-  const list = Object.entries(meta.hero).filter(([k]) => !k.startsWith('promo_') && !k.startsWith('cls_') && !k.startsWith('pose_')).map(([, f]) => f.file);
+  const list = Object.entries(meta.hero).filter(([k]) => !k.startsWith('promo_') && !k.startsWith('cls_') && !k.startsWith('pose_') && !k.startsWith('cyc_')).map(([, f]) => f.file);
   if (art && meta.hero[art.base]) list.push(meta.hero[art.base].file);
   for (const [k, f] of Object.entries(meta.hero)) if (k.startsWith(`pose_${cls}_`) || k.startsWith(`cyc_${cls}_`)) list.push(f.file);
   const pf = promoFrame(branch, tier);

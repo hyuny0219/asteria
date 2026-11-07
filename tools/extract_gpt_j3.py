@@ -20,7 +20,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, 'assets/source/gpt_j3')
 OUT = os.path.join(ROOT, 'assets/runtime')
 META = os.path.join(OUT, 'sprites.json')
-SHEETS = {'archer': 'lyra_cycle.png', 'mage': 'elena_cycle.png', 'rogue': 'nox_cycle.png'}
+SHEETS = {'warrior': 'serin_cycle.png', 'archer': 'lyra_cycle.png', 'mage': 'elena_cycle.png', 'rogue': 'nox_cycle.png'}
 
 
 def main():
@@ -43,7 +43,7 @@ def main():
             if any(edge.values()):
                 print('  edge', cls, name, edge)
         print(cls, 'scale', round(scale, 3))
-    sprites.setdefault('sources', {})['gpt_j3/*_cycle.png'] = 'GPT J3 — walk 4 + basic attack 4 frames (Lyra, Elena, Nox)'
+    sprites.setdefault('sources', {})['gpt_j3/*_cycle.png'] = 'GPT J3 — walk 4 + basic attack 4 frames (Serin, Lyra, Elena, Nox)'
     text = json.dumps(sprites, ensure_ascii=False, indent=1)
     open(META, 'w').write(text)
 
