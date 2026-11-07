@@ -7,6 +7,7 @@ import * as V4 from './v4.js';
 import * as V5 from './v5.js';
 import * as V6 from './v6.js';
 import * as V8 from './v8.js';
+import * as WBM from '../core/worldboss.js';
 import { jewelName, socketCount } from '../core/crafting.js';
 import { MONSTERS } from '../data/content.js';
 const MONSTERS_NAME = (id) => (MONSTERS[id] ? MONSTERS[id].name : id);
@@ -465,14 +466,14 @@ function adventureHeader(app) {
 // "what you get" and its status, so the cards no longer look alike.
 const ADV = {
   hunt: { bg: null, kind: '사냥터', accent: 'hunt', gets: '지역 보스 처치 → 다음 지역' },
-  'dungeon-quarry': { bg: 'mine', kind: '재료 던전 · 매일', accent: 'ore', gets: '강화 광석' },
-  'dungeon-gold': { bg: 'vault', kind: '재료 던전 · 매일', accent: 'gold', gets: '골드' },
-  'dungeon-books': { bg: 'library', kind: '재료 던전 · 매일', accent: 'book', gets: '스킬북' },
+  'dungeon-quarry': { bg: 'mine', fig: 'M05', kind: '재료 던전 · 매일', accent: 'ore', gets: '강화 광석' },
+  'dungeon-gold': { bg: 'vault', fig: 'M04', kind: '재료 던전 · 매일', accent: 'gold', gets: '골드' },
+  'dungeon-books': { bg: 'library', fig: 'M10', kind: '재료 던전 · 매일', accent: 'book', gets: '스킬북' },
   worldboss: { bg: 'volcano', kind: '하루 3번 · 정해진 시간', accent: 'boss', gets: '보석 · 광석 · 장비 뽑기권' },
-  mplus: { bg: 'castle', kind: '열쇠 단계 · 하루 3회', accent: 'key', gets: '보석 · 장비 · 보옥 · 주간 금고' },
-  tower: { bg: 'tower', kind: '무제한 · 층 오르기', accent: 'tower', gets: '보석 · 각성석 · 별의 파편' },
-  rift: { bg: 'rift', kind: '로그라이크 · 하루 2회', accent: 'rift', gets: '스킬북 · 보석 · 정수' },
-  raid: { bg: 'void', kind: '주간 · 3회', accent: 'raid', gets: '보석 · 별의 파편 · 전설 장비' },
+  mplus: { bg: 'castle', fig: 'B08', kind: '열쇠 단계 · 하루 3회', accent: 'key', gets: '보석 · 장비 · 보옥 · 주간 금고' },
+  tower: { bg: 'tower', fig: 'TOWER', kind: '무제한 · 층 오르기', accent: 'tower', gets: '보석 · 각성석 · 별의 파편' },
+  rift: { bg: 'rift', fig: 'M19', kind: '로그라이크 · 하루 2회', accent: 'rift', gets: '스킬북 · 보석 · 정수' },
+  raid: { bg: 'void', fig: 'B10', kind: '주간 · 3회', accent: 'raid', gets: '보석 · 별의 파편 · 전설 장비' },
   expedition: { bg: 'meadow', kind: '방치 · 실제 시간', accent: 'exp', gets: '보석 · 뽑기권 · 재료' },
   workshop: { bg: 'cathedral', kind: '제작 · 강화', accent: 'craft', gets: '보옥 · 마부 · 버프 음식' },
 };
@@ -498,6 +499,9 @@ function advDecorate(card, key, override = {}) {
       h('b', { class: 'adv-title' }, override.title || title),
       h('span', { class: 'adv-gets' }, locked ? '' : `얻는 것 · ${m.gets}`)),
     badge ? h('span', { class: 'adv-badge' + (locked ? ' lock' : '') }, badge) : null);
+  // the creature you meet there, standing on the right of the banner
+  const fm = m.fig && (spriteMeta().bosses[m.fig] || spriteMeta().monsters[m.fig] || (spriteMeta().pets || {})[m.fig]);
+  if (fm) banner.insertBefore(img(fm.file, '', 'adv-fig' + (m.figFlip ? ' flip' : '')), banner.children[1]);
   card.classList.add('adv-card', 'adv-' + m.accent);
   card.insertBefore(banner, card.firstChild);
   return card;
@@ -514,7 +518,7 @@ function huntCard(app) {
     h('div', { class: 'btn-row', style: { marginTop: '6px' } },
       button('스테이지 지도', { cls: 'btn', onClick: () => openWorld(app) }),
       button(cleared ? '보스 재도전' : '보스 도전', { cls: 'btn btn-primary', disabled: !can.ok || app.game.mode !== 'FARM', onClick: () => openBoss(app, region.boss) })));
-  return advDecorate(card, 'hunt', { bg: region.bg });
+  return advDecorate(card, 'hunt', { bg: region.bg, fig: region.boss });
 }
 const ADV_TABS = [['dungeon', '던전', '매일 재료'], ['challenge', '도전', '보스·탑·균열'], ['idle', '원정·제작', '방치·강화']];
 export function dungeonPanel(app) {
@@ -533,13 +537,13 @@ export function dungeonPanel(app) {
     sc.appendChild(h('p', { class: 'muted small' }, '재료 던전은 입장할 때 입장권 1장을 씁니다. 한 번 깬 단계는 "소탕"으로 바로 보상을 받을 수 있어요. 시간 안에 실패하면 보상 30%, 전투 중 앱이 꺼지면 입장권을 돌려드려요.'));
   } else if (tab === 'challenge') {
     sc.appendChild(huntCard(app));
-    add(V8.worldBossCard(app), 'worldboss');
+    sc.appendChild(advDecorate(V8.worldBossCard(app), 'worldboss', { fig: WBM.worldBossId(Date.now()) }));
     add(V8.mplusCard(app), 'mplus');
     add(V4.towerCard(app), 'tower');
     add(V5.riftCard(app), 'rift');
     add(V4.raidCard(app), 'raid');
   } else {
-    add(V8.expeditionCard(app), 'expedition');
+    sc.appendChild(advDecorate(V8.expeditionCard(app), 'expedition', { fig: s.pets.active || Object.keys(s.pets.owned)[0], figFlip: true }));
     add(V8.workshopCard(app), 'workshop');
   }
   root.appendChild(sc);

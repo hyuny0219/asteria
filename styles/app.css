@@ -609,3 +609,10 @@ input.text { width: 100%; min-height: 36px; background: var(--panel); border: 1p
 .adv-boss { --acc: #F0506E; } .adv-key { --acc: #B98BFF; } .adv-tower { --acc: #D8B675; }
 .adv-rift { --acc: #A66BFF; } .adv-raid { --acc: #7B5CD6; } .adv-exp { --acc: #6FD08C; }
 .adv-craft { --acc: #E6A3C2; } .adv-hunt { --acc: #8FB7FF; }
+/* banner art: lighter shade so the picture reads on phones, creature on the right */
+.adv-banner { height: 108px; background-position: center 65%; }
+.adv-shade { background: linear-gradient(90deg, rgba(14,11,20,.78) 0%, rgba(14,11,20,.35) 45%, rgba(14,11,20,0) 75%), linear-gradient(0deg, rgba(14,11,20,.55), rgba(14,11,20,0) 55%); }
+.adv-fig { position: absolute; right: 6px; bottom: 2px; height: 96px; max-width: 42%; object-fit: contain; object-position: right bottom; filter: drop-shadow(0 2px 4px rgba(0,0,0,.7)); pointer-events: none; }
+.adv-fig.flip { transform: scaleX(-1); right: auto; left: 58%; }
+.adv-card.locked-card .adv-banner { filter: grayscale(.55) brightness(.9); }
+.adv-badge { z-index: 2; }
