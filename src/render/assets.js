@@ -55,6 +55,9 @@ export function promoPoses(branch, tier = 1) {
   if (!H[pre + 'idle']) return null;
   const out = { promo: null };
   for (const n of POSE_NAMES) out[n] = H[pre + n] || H[pre + 'idle'];
+  // GPT J4: walk 4 + basic attack 4 for tier-2/3 forms (cyc_<branch>_t<tier>_*)
+  const cp = `cyc_${branch}_t${t}_`;
+  if (t > 1 && H[cp + 'walk1']) out.cycle = { walk: [1, 2, 3, 4].map((i) => H[cp + 'walk' + i]), atk: [1, 2, 3, 4].map((i) => H[cp + 'atk' + i]) };
   return out;
 }
 export function heroFrames(branch, cls = 'warrior', tier = 1) {
@@ -120,6 +123,7 @@ export async function preloadFor({ region, boss, branch, cls = 'warrior', tier =
   if (pf) list.push(pf.file);
   const pp = promoPoses(branch, tier);
   if (pp) for (const n of POSE_NAMES) list.push(pp[n].file);
+  if (pp && pp.cycle) for (const f of [...pp.cycle.walk, ...pp.cycle.atk]) list.push(f.file);
   if (region) {
     const bg = meta.backgrounds[region.bg];
     if (bg) list.push(bg.file);
