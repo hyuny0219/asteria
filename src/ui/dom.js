@@ -35,6 +35,14 @@ export function icon(name, size = 24, label = null) {
   return span;
 }
 
+// GPT M skill grade frame: wraps an icon so the grade frame (rare..mythic) sits over its
+// edge (styles: .sgf). Common skills get no frame and the icon is returned as is.
+export function gradeFramed(el, grade) {
+  if (!grade || grade === 'common') return el;
+  return h('span', { class: `sgf sgf-${grade}` }, el);
+}
+export const GRADE_UP_ICON = 'assets/runtime/frame_sg_up.webp';
+
 export function img(src, alt = '', cls = '') {
   const el = document.createElement('img');
   el.src = src; el.alt = alt; el.decoding = 'async'; el.draggable = false;

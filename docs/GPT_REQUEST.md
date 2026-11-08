@@ -247,7 +247,10 @@ B01은 지금 그림의 오른쪽 윤곽이 잘려 있으니 **몸 전체가 보
 
 ---
 
-## M. v11 스킬 등급 테두리 (선택, 2026-11-08)
+## M. v11 스킬 등급 테두리 (선택, 2026-11-08) — ✅ 완료 (assets/source/gpt_m, tools/extract_gpt_m.py)
+
+받음: `skill_grade_frames.png` 1536×1024, 3×2(칸 512), 진짜 알파. 희귀·영웅·전설·신화 테두리는 `frame_sg_<grade>.webp`(160px, 가운데 투명 구멍 실측 `inner` l/t/r/b ≈ 0.13~0.87), 등급 상승 문장은 `frame_sg_up.webp` → `sprites.json` `gradeFrames`. 스킬 화면·스킬 바·스킬 뽑기 결과의 CSS 색 테두리를 이 그림으로 바꿨고(일반은 테두리 없음), 뽑기 결과의 '등급 상승!' 표시에 문장을 붙였습니다. 궁극기 버튼은 둥근 모양이라 그림 테두리 대신 등급 색 테두리를 씁니다.
+
 
 지금 스킬 등급은 아이콘 테두리 색(희귀 파랑·영웅 보라·전설 주황·신화 빨강)과 글자 태그로만 표시합니다. 없어도 동작에는 문제 없습니다.
 요청서·참고그림 묶음: `gpt_request_M_v11.zip` (요청문 + skills_8.png · icons_v10.png 참고).
@@ -261,19 +264,19 @@ B01은 지금 그림의 오른쪽 윤곽이 잘려 있으니 **몸 전체가 보
 파일명: skill_grade_frames.png
 ```
 
-## N. v12 탈것 · 날개 (2026-11-08) — N1 ✅ 일부 완료 (assets/source/gpt_n, tools/extract_gpt_n.py)
+## N. v12 탈것 · 날개 (2026-11-08) — ✅ N1~N6 완료 (assets/source/gpt_n, tools/extract_gpt_n.py)
 
-탈것 8종·날개 8종은 그림이 없어도 동작합니다(임시 도형). 그림이 들어오면 `python3 tools/extract_gpt_n.py`만 다시 돌리면 됩니다.
+탈것 8종·탄 자세 28종·날개 8종(펼침/내림)·아이콘 22종·탈것 화면 머리 그림이 모두 적용됐습니다. 임시 도형은 지웠습니다(그림을 읽는 동안에는 아무것도 그리지 않음). 그림을 바꾸면 `python3 tools/extract_gpt_n.py`만 다시 돌리면 됩니다.
 요청서·참고그림 묶음: `Nocturne_Request_N_mount_wing.zip` (요청문 + ref_forms_serin/elena/lyra/nox.png · ref_creature_style.png).
 
 | 요청 | 파일 | 상태 | 런타임 키 (`sprites.json` → `steeds`) |
 |---|---|---|---|
 | N1 탈것 1–4 | mounts_1.png(검은 군마·은빛 늑대), mounts_2.png(사막 도마뱀·설원 큰사슴) | ✅ 적용. 안장 위치는 그림에서 잼 | `mount_<id>_run1~4` + 안장 `sx, sy`, 발 `fx, fy` |
-| N2 탈것 5–8 | mounts_3.png(불꽃 해골마·그리폰), mounts_4.png(별빛 유니콘·심연의 악몽마) | 대기 — 임시 도형 | 같음. 받으면 `SEAT`에 1프레임 안장 좌표를 재서 추가 |
-| N3 탄 자세 | ride_serin / ride_elena / ride_lyra / ride_nox.png (칸 1–7 = 기본, 1차A, 2차A, 3차A, 1차B, 2차B, 3차B, 엉덩이 60%) | 대기 — 서 있는 그림을 안장 높이로 내려 그림 | `ride_<base|branch|branch_t2|branch_t3>_<cls>` + 엉덩이 `hx, hy` |
-| N4 날개 | wings_1.png(흑장미·천사·박쥐·나비 요정), wings_2.png(불사조·얼음·별자리·심연) — 1행 펼침, 2행 내림, 등 부착점 50%/45% | 대기 — 색 도형 날개 | `wing_<id>_up`, `wing_<id>_down` + 부착점 `ax, ay` |
-| N5 아이콘 | icons_mount_wing.png 6×4 (1–8 탈것, 9–16 날개, 17–22 문장·먹이·깃털·소환권) | 대기 — 원형 글자 아이콘(탈것 1–4는 달리기 1프레임) | `icon_mount_<id>`, `icon_wing_<id>`, `icon_steed_*` |
-| N6 배너(선택) | mount_banner.png | 대기 | 아직 쓰는 곳 없음 |
+| N2 탈것 5–8 | mounts_3.png(불꽃 해골마·그리폰), mounts_4.png(별빛 유니콘·심연의 악몽마) | ✅ 적용. `SEAT`에 1프레임 안장을 2배 확대 20px 격자로 재서 추가(악몽마는 갈기가 안장 위를 덮어 윤곽 맞춤 없이 잼) | 같음 |
+| N3 탄 자세 | ride_serin / ride_elena / ride_lyra / ride_nox.png (칸 1–7 = 기본, 1차A, 2차A, 3차A, 1차B, 2차B, 3차B) | ✅ 적용. 칸 순서 눈으로 확인(엘레나 2번 = 지팡이 위저드, 세린 2–4 = 방패 기사, 5–7 = 대검 버서커). 엉덩이 실측은 칸 위에서 57%(세린 58%) — 명세의 60%보다 조금 높음. 한 시트의 7칸은 자세·위치가 같아 시트마다 한 점(`HIP`). 리라 시트의 흰 안개는 알파 96~214 재매핑으로 지움. ride_nox_alt_whitebg.png는 안 씀 | `ride_<base|branch|branch_t2|branch_t3>_<cls>` + 엉덩이 `hx, hy`, `cellH` |
+| N4 날개 | wings_1.png(흑장미·천사·박쥐·나비 요정), wings_2.png(불사조·얼음·별자리·심연) — 1행 펼침, 2행 내림 | ✅ 적용. 부착점은 명세의 50%/45%가 아니라 그림 오른쪽 끝 어깨 장식(새 머리)에서 잼(가장 오른쪽 불투명 열 − 칸 폭 7%). 위·아래 프레임은 같은 배율로 저장(`ref`). 어두운 배경 안개 제거. wings_1_alt_whitebg.png는 안 씀 | `wing_<id>_up`, `wing_<id>_down` + 부착점 `ax, ay`, `ref` |
+| N5 아이콘 | icons_mount_wing.png 6×4 (1–8 탈것, 9–16 날개, 17–22 문장·먹이·깃털·소환권) | ✅ 적용(안개 제거). 메뉴 타일·목록·소환 결과·재화 칩·우편 보상 | `icon_mount_<id>`, `icon_wing_<id>`, `icon_steed_*` |
+| N6 머리 그림 | mount_banner.png (1774×887 RGB) | ✅ 탈것 화면 맨 위(`.steed-hero`, 960px webp) | `hero_mount` |
 
 요청문 원문 요약(형식은 N1과 같음):
 

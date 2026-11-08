@@ -15,7 +15,7 @@ import { rarityLabel } from '../core/items.js';
 import { GRADE_NAME } from '../data/skillgrade.js';
 import { fmt, fmtFull, fmtPct } from '../core/util.js';
 import { sfx } from '../platform/audio.js';
-import { button, closeAllModals, h, icon, img, modalOpen, openModal, toast } from './dom.js';
+import { button, closeAllModals, GRADE_UP_ICON, gradeFramed, h, icon, img, modalOpen, openModal, toast } from './dom.js';
 import { costChip, fail, go, openBoss, openWorld, rewardTiles } from './screens.js';
 
 const reduce = (app) => app.state.settings.reduceMotion;
@@ -152,14 +152,14 @@ function showDrawResults(app, isEq, r, after) {
     let pic, name, sub;
     if (isEq) { pic = img(itemIcon(x.item.look), ''); name = x.item.name; sub = rarityLabel(rar); }
     else if (x.kind === 'rune') { pic = RUNES[x.rune].icon ? img(skillIcon(RUNES[x.rune].icon), '') : icon('star', 30); name = `각인 · ${RUNES[x.rune].name}`; sub = x.capped ? '최대 레벨 · 보석 +100' : `Lv ${x.level}${x.dupe ? ' (중복)' : ' NEW'}`; }
-    else { pic = img(skillIcon(SKILLS[x.skill].icon), '', `sg-${rar}`); name = `${GRADE_NAME[rar]} ${SKILLS[x.skill].name}`; sub = x.upgraded ? `${GRADE_NAME[x.from]} → ${GRADE_NAME[rar]} · 스킬북 ×${x.books}` : `보유 ${GRADE_NAME[x.from]} 이상 · 스킬북 ×${x.books}`; }
+    else { pic = gradeFramed(img(skillIcon(SKILLS[x.skill].icon), ''), rar); name = `${GRADE_NAME[rar]} ${SKILLS[x.skill].name}`; sub = x.upgraded ? `${GRADE_NAME[x.from]} → ${GRADE_NAME[rar]} · 스킬북 ×${x.books}` : `보유 ${GRADE_NAME[x.from]} 이상 · 스킬북 ×${x.books}`; }
     return h('div', { class: `draw r-${rar}${top ? ' top' : ''}`, style: fast ? null : { animationDelay: `${150 + i * 70}ms` } },
       h('span', { class: `mk r-${rar}` }, isEq || x.kind === 'rune' ? (RARITY[rar] ? RARITY[rar].mark : '') : GRADE_NAME[rar]), pic, h('b', null, name), h('span', { class: 'muted' }, sub),
-      x.upgraded ? h('span', { class: 'tag up' }, '등급 상승!') : null, x.pity ? h('span', { class: 'tag' }, '천장') : null);
+      x.upgraded ? h('span', { class: 'tag up' }, img(GRADE_UP_ICON, '', 'sg-up-ico'), '등급 상승!') : null, x.pity ? h('span', { class: 'tag' }, '천장') : null);
   }));
   const ups = isEq ? [] : res.filter((x) => x.upgraded);
   const head = order(bestR) >= 4 ? h('p', { class: 'draw-best', role: 'status' }, `${RARITY[bestR].name} 등급 획득!`) : h('p', { class: 'muted', role: 'status' }, `최고 등급: ${RARITY[bestR] ? RARITY[bestR].name : ''}`);
-  const upLine = ups.length ? h('p', { class: 'draw-up', role: 'status' }, `스킬 등급 상승 ${ups.length}개 · ` + ups.map((x) => `${SKILLS[x.skill].name} ${GRADE_NAME[x.rarity]}`).join(', ')) : null;
+  const upLine = ups.length ? h('p', { class: 'draw-up', role: 'status' }, img(GRADE_UP_ICON, '', 'sg-up-ico'), `스킬 등급 상승 ${ups.length}개 · ` + ups.map((x) => `${SKILLS[x.skill].name} ${GRADE_NAME[x.rarity]}`).join(', ')) : null;
   const extra = [];
   if (r.overflowed && r.overflowed.length) extra.push(h('p', { class: 'warn' }, `보관함이 가득 차 ${r.overflowed.length}개는 임시 보관함에 들어갔습니다.`));
   if (r.converted && r.converted.length) extra.push(h('p', { class: 'warn' }, `임시 보관함도 가득 차 ${r.converted.length}개는 강화 광석으로 바뀌었습니다.`));

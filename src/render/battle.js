@@ -19,7 +19,6 @@ import { HERO_X } from '../core/combat.js';
 import { CLASSES, SKILLS } from '../data/content.js';
 import { bgMeta, fxSprite, classPortrait, enemyMeta, heroFrames, loadImage, outlined, petMeta, promoPortrait, ready, scaledImage, spriteMeta } from './assets.js';
 import { Particles, PK } from './particles.js';
-import { MOUNTS, WINGS } from '../data/steeds.js';
 import { fmt } from '../core/util.js';
 
 const LOGICAL_W = 390;
@@ -29,6 +28,10 @@ const FLIGHT = 150;        // ms a ranged projectile is shown travelling
 const COMBO_RESET = 2000;  // ms without a swing/hit → combo back to 1타 / counter cleared
 const FX_CAP = 64;
 // v12: seat height above the ground per mount, in hero heights (sets the mount's drawn size)
+// rider / wing sizes relative to the standing hero figure height (tuned on captures)
+const RIDE_CELL = 0.9;        // ride sheet cell height (seated figure + margin) vs standing figure
+const WING_SIZE = 0.88;       // wing sheet cell height vs standing figure
+const WING_BACK_X = 0.06, WING_BACK_Y = 0.68;   // standing: upper back, from the feet pivot
 const MOUNT_SEAT = { horse: 0.8, wolf: 0.7, lizard: 0.6, elk: 0.8, skelhorse: 0.8, griffin: 0.78, unicorn: 0.82, nightmare: 0.82 };
 
 // pose / lunge per combo step (melee values; ranged classes use a fraction)
@@ -734,19 +737,39 @@ export class BattleRenderer {
     // shadow
     ctx.fillStyle = 'rgba(0,0,0,0.35)';
     ctx.beginPath(); ctx.ellipse(x + dx, gy + 2, (riding ? 62 : 30) * this.fit * this.figScale, 6 * this.fit * this.figScale, 0, 0, Math.PI * 2); ctx.fill();
-    // v12 탈것: ridden only on travel legs (between phases / stages). The seated rider
-    // sits with the hips on the measured saddle seat; until ride_* art exists the idle
-    // figure is lowered so its legs hang over the flank.
+    // v12 탈것: ridden only on travel legs (between phases / stages). Mount first, then the
+    // seated rider (GPT N ride_* art, legs forward over the flank) with the measured hips on
+    // the measured saddle seat, then nothing else of the standing figure.
     let rideRaise = 0;
     if (riding) {
       dx += 22 * this.fit;   // room for the mount's hindquarters at the left edge
       const seat = this.drawMount(this.mountId, x + dx, gy, d.h, t, motion);
-      rideRaise = Math.max(0, seat - d.h * 0.42);
-      this.rideInfo = { seat, heroH: d.h, raise: rideRaise };   // QA
+      const rm = this.rideMeta();
+      const rimg = rm && ready(rm.file);
+      if (rm && !rimg) loadImage(rm.file);
+      if (rimg) {
+        // one scale per class sheet: cell height = RIDE_CELL x the standing figure height
+        const k = d.h * RIDE_CELL / (rm.h / (rm.hy - (rm.hipFromTop - 1) * 0)) ;
+        const rk = (d.h * RIDE_CELL) / rm.cellH;
+        const rw = rm.w * rk, rh = rm.h * rk;
+        const left = seat.x - rm.hx * rw, top = seat.y - rm.hy * rh;
+        // wings first: on the rider's upper back, behind the figure
+        if (this.wingId) this.drawWing(this.wingId, { x: seat.x + rw * 0.02, y: top + rh * 0.3, size: d.h * WING_SIZE * 0.92 }, t, motion, false);
+        ctx.save(); ctx.globalAlpha = alpha;
+        ctx.drawImage(scaledImage(rimg, rw * this.dpr, rh * this.dpr, rm.file, hf), left, top, rw, rh);
+        if (t < h.hitFxUntil) { ctx.globalAlpha = 0.45; ctx.drawImage(whiteOf(scaledImage(rimg, rw * this.dpr, rh * this.dpr, rm.file, hf)), left, top, rw, rh); }
+        ctx.restore();
+        rideRaise = Math.max(0, (gy - top) - d.py);
+        this.rideInfo = { seat: gy - seat.y, seatX: seat.x, heroH: d.h, raise: rideRaise, ride: rm.file, top, left, w: rw, h: rh };   // QA
+        this.drawHeroOverlays(h, battle, x, gy, d, rideRaise, motion);
+        return;
+      }
+      rideRaise = Math.max(0, (gy - seat.y) - d.h * 0.42);   // no ride art: lower the idle figure onto the saddle
+      this.rideInfo = { seat: gy - seat.y, heroH: d.h, raise: rideRaise };   // QA
       dy -= rideRaise;
     }
     // v12 날개: always behind the hero; slow flap at rest, fast while attacking
-    if (this.wingId && !h.dead) this.drawWing(this.wingId, x + dx, gy + dy, d, t, motion, !!(ac && !riding));
+    if (this.wingId && !h.dead) this.drawWing(this.wingId, { x: x + dx - d.w * WING_BACK_X, y: gy + dy - d.h * WING_BACK_Y, size: d.h * WING_SIZE }, t, motion, !!(ac && !riding));
     if (img) {
       const sc = scaledImage(img, d.w * this.dpr, d.h * this.dpr, m.file, hf);
       const gh = this.ghost || (this.ghost = { sc: null, d: null, x: 0, gy: 0 });
@@ -782,6 +805,12 @@ export class BattleRenderer {
       if (t < h.hitFxUntil && !h.dead) { ctx.globalAlpha = Math.min(0.55, 0.55 * (h.hitFxUntil - t) / 200); ctx.drawImage(whiteOf(sc), -d.px, -d.py, d.w, d.h); }
       ctx.restore();
     } else this.placeholder(x, gy, 46, 140 * this.fit, '세린');
+    this.drawHeroOverlays(h, battle, x, gy, d, rideRaise, motion);
+  }
+
+  // shield / guard bubble, HP bar and ult gauge above the hero (standing or riding)
+  drawHeroOverlays(h, battle, x, gy, d, rideRaise, motion) {
+    const ctx = this.ctx;
     // shield / guard bubbles while active
     const shieldOn = h.shield && battle.t < h.shield.until;
     if ((shieldOn || h.buffs.guard) && !h.dead) {
@@ -801,7 +830,19 @@ export class BattleRenderer {
     this.bar(x - bw / 2, Math.max(11, top + 7), bw, 3, h.gauge / 100, '#D8B675');
   }
 
-  // returns the seat height above the ground (css px)
+  // seated rider art for the current class / branch / tier (GPT N ride_*), or null
+  rideMeta() {
+    const sm = spriteMeta() && spriteMeta().steeds;
+    if (!sm) return null;
+    const cls = this.heroCls || 'warrior', b = this.heroBranch, tier = Math.min(3, Math.max(1, this.heroTier || 1));
+    for (let t = tier; b && t >= 1; t--) {
+      const e = sm[`ride_${t === 1 ? b : `${b}_t${t}`}_${cls}`];
+      if (e) return e;
+    }
+    return sm[`ride_base_${cls}`] || null;
+  }
+
+  // returns the saddle seat {x, y} (css px) of the frame drawn
   drawMount(id, x, gy, heroH, t, motion) {
     const ctx = this.ctx;
     const sm = spriteMeta() && spriteMeta().steeds;
@@ -817,69 +858,38 @@ export class BattleRenderer {
       const left = x - m0.sx * w, top = gy - m.fy * h;
       const sc = scaledImage(img, w * this.dpr, h * this.dpr, m.file, '');
       ctx.drawImage(sc, left, top, w, h);
-      return gy - (top + m.sy * h);
+      return { x: left + m.sx * w, y: top + m.sy * h };
     }
-    // placeholder: body, neck, head and 4 legs in the mount colour (until GPT N art)
-    const d = MOUNTS[id] || { color: '#555' };
-    const L = seatH * 1.5, bob = motion ? Math.sin(t / 70) * seatH * 0.03 : 0;
-    const by = gy - seatH * 0.72 + bob;
-    ctx.save();
-    ctx.fillStyle = d.color; ctx.strokeStyle = 'rgba(0,0,0,0.45)'; ctx.lineWidth = 2;
-    ctx.lineCap = 'round';
-    for (let i = 0; i < 4; i++) {
-      const lx = x + (i < 2 ? -L * 0.32 : L * 0.3) + (i % 2) * 6;
-      const sw = motion ? Math.sin(t / 90 + i * 1.6) * seatH * 0.18 : 0;
-      ctx.lineWidth = seatH * 0.09; ctx.strokeStyle = d.color;
-      ctx.beginPath(); ctx.moveTo(lx, by + seatH * 0.1); ctx.lineTo(lx + sw, gy); ctx.stroke();
-    }
-    ctx.lineWidth = 2; ctx.strokeStyle = 'rgba(0,0,0,0.45)';
-    ctx.beginPath(); ctx.ellipse(x, by, L * 0.5, seatH * 0.24, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(x + L * 0.38, by - seatH * 0.05); ctx.lineTo(x + L * 0.58, by - seatH * 0.45); ctx.lineTo(x + L * 0.5, by - seatH * 0.05); ctx.closePath(); ctx.fill(); ctx.stroke();
-    ctx.beginPath(); ctx.ellipse(x + L * 0.64, by - seatH * 0.46, seatH * 0.16, seatH * 0.09, 0.2, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = '#5A3A2A';
-    ctx.beginPath(); ctx.ellipse(x, by - seatH * 0.22, L * 0.14, seatH * 0.07, 0, 0, Math.PI * 2); ctx.fill();
-    ctx.restore();
-    return gy - (by - seatH * 0.26);
+    // art still loading: no stand-in shape, keep the rider at the nominal seat height
+    return { x, y: gy - seatH };
   }
 
-  // wing behind the hero's back; d = hero sprite dims at the current pose
-  drawWing(id, x, gy, d, t, motion, fast) {
+  // wings behind the hero's back. at = {x, y, size}: upper-back point and the wing sheet
+  // cell height (css px). GPT N art: up (spread) / down frames alternate, the shoulder
+  // ornament stays on the back point; slow at rest, fast while attacking.
+  drawWing(id, at, t, motion, fast) {
     const ctx = this.ctx;
     const sm = spriteMeta() && spriteMeta().steeds;
-    const period = fast ? 260 : 1500;
-    const ph = motion ? (Math.sin(t * Math.PI * 2 / period) + 1) / 2 : 1;   // 1 = up (spread)
-    const bx = x - d.w * 0.06, by = gy - d.h * 0.66;
-    const size = d.h * 0.78;
+    const period = fast ? 300 : 1400;
+    const sn = motion ? Math.sin(t * Math.PI * 2 / period) : 1;
+    const ph = Math.max(0, Math.min(1, 0.5 + sn * 2.2));   // 1 = up; short crossfade at each switch
+    const bx = at.x, by = at.y, size = at.size;
     const up = sm && sm[`wing_${id}_up`], dn = sm && sm[`wing_${id}_down`];
     const iu = up && ready(up.file), idn = dn && ready(dn.file);
     if (up && !iu) loadImage(up.file);
     if (dn && !idn) loadImage(dn.file);
     if (iu && idn) {
+      this.wingInfo = { x: bx, y: by, size, up: ph };   // QA
       for (const [m, img, a] of [[dn, idn, 1 - ph], [up, iu, ph]]) {
         if (a <= 0.02) continue;
-        const k = size / m.h, w = m.w * k, h = m.h * k;
-        ctx.save(); ctx.globalAlpha = Math.min(1, a * 1.15);
+        const k = size / (m.ref || m.h), w = m.w * k, h = m.h * k;
+        ctx.save(); ctx.globalAlpha = a;
         ctx.drawImage(scaledImage(img, w * this.dpr, h * this.dpr, m.file, ''), bx - m.ax * w, by - m.ay * h, w, h);
         ctx.restore();
       }
       return;
     }
-    // placeholder: two feathered blades in the wing colour, rotating with the flap
-    const def = WINGS[id] || { color: '#888' };
-    ctx.save();
-    ctx.translate(bx, by);
-    ctx.fillStyle = def.color; ctx.strokeStyle = 'rgba(255,240,220,0.7)'; ctx.lineWidth = 1.5;
-    for (const [side, al] of [[-1, 0.75], [1, 1]]) {
-      const ang = (0.25 + ph * 0.6) * (side < 0 ? 0.8 : 1);   // clockwise = wing tip up and back
-      ctx.save(); ctx.globalAlpha = al; ctx.rotate(ang); if (side < 0) ctx.translate(-size * 0.06, 0);
-      ctx.beginPath(); ctx.moveTo(0, 0);
-      ctx.bezierCurveTo(-size * 0.25, -size * 0.35, -size * 0.6, -size * 0.3, -size * 0.72, -size * 0.12);
-      ctx.bezierCurveTo(-size * 0.55, -size * 0.05, -size * 0.5, size * 0.05, -size * 0.6, size * 0.12);
-      ctx.bezierCurveTo(-size * 0.4, size * 0.12, -size * 0.3, size * 0.2, -size * 0.32, size * 0.3);
-      ctx.bezierCurveTo(-size * 0.15, size * 0.18, -size * 0.05, size * 0.1, 0, 0);
-      ctx.fill(); ctx.stroke(); ctx.restore();
-    }
-    ctx.restore();
+    // art still loading: nothing (no stand-in shape)
   }
 
   drawEnemy(e, battle, x, gy, s, now) {

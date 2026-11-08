@@ -1,5 +1,5 @@
 {
- "at": "2026-11-08T04:02:50.090Z",
+ "at": "2026-11-08T04:22:14.111Z",
  "pass": 50,
  "total": 50,
  "results": [
@@ -26,7 +26,7 @@
    "pass": true,
    "extra": {
     "s0": {
-     "scroll": 1.9920000000111757,
+     "scroll": 2.0160000000894067,
      "hp": 1587,
      "info": {
       "idx": 1,
@@ -37,7 +37,7 @@
      "alive": 0
     },
     "s1": {
-     "scroll": 109.97999999999999,
+     "scroll": 110.00400000002232,
      "traveling": true,
      "alive": 0,
      "act": null
@@ -127,15 +127,26 @@
    "pass": true
   },
   {
-   "name": "placeholder mount travel captured 390x844",
-   "pass": true
+   "name": "skelhorse travel: seated rider art on the saddle 390x844",
+   "pass": true,
+   "extra": {
+    "seat": 117.57695667244366,
+    "seatX": 118.86889497400345,
+    "heroH": 130.065,
+    "raise": 45.4545686724437,
+    "ride": "assets/runtime/steed_ride_base_warrior.webp",
+    "top": 341.5714313275563,
+    "left": 80.91618810400345,
+    "w": 67.89393,
+    "h": 93.6468
+   }
   },
   {
    "name": "reduce motion: travel background stays still 390x844",
    "pass": true,
    "extra": {
-    "rm0": 157.9560000000336,
-    "rm1": 157.9560000000336
+    "rm0": 170.23200000006705,
+    "rm1": 170.23200000006705
    }
   },
   {
@@ -171,7 +182,7 @@
    "pass": true,
    "extra": {
     "s0": {
-     "scroll": 1.8498461538152051,
+     "scroll": 1.849846153866786,
      "hp": 1587,
      "info": {
       "idx": 1,
@@ -182,7 +193,7 @@
      "alive": 0
     },
     "s1": {
-     "scroll": 101.55323076921012,
+     "scroll": 101.56430769234899,
      "traveling": true,
      "alive": 0,
      "act": null
@@ -304,7 +315,7 @@
    "pass": true,
    "extra": {
     "s0": {
-     "scroll": 2.117046153869766,
+     "scroll": 2.1043692307220057,
      "hp": 1587,
      "info": {
       "idx": 1,
@@ -315,7 +326,7 @@
      "alive": 0
     },
     "s1": {
-     "scroll": 116.23470769229588,
+     "scroll": 116.15864615382249,
      "traveling": true,
      "alive": 0,
      "act": null

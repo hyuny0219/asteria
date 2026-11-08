@@ -45,7 +45,17 @@ MOUNT_SHEETS = {
 }
 # saddle seat on frame 1, in source-cell pixels (cell 384x512). Measured: grid read +
 # top-contour snap (elk: first run under the antlers).
-SEAT = {'horse': (200, 226), 'wolf': (210, 207), 'lizard': (185, 278), 'elk': (180, 237)}
+SEAT = {'horse': (200, 226), 'wolf': (210, 207), 'lizard': (185, 278), 'elk': (180, 237),
+        # mounts_3/4: read on a 20px grid at 2x zoom = lowest point of the seat between
+        # pommel and cantle (the nightmare's mane hangs above the saddle, so no contour snap)
+        'skelhorse': (193, 239), 'griffin': (200, 219), 'unicorn': (210, 235), 'nightmare': (210, 241)}
+# rider hips (seat contact under the buttocks) in source-cell pixels (cell 384x512), read on
+# a 20px grid at 2x zoom of cell 1. All 7 cells of a sheet share the pose and position
+# (checked by overlaying the point on every cell), so one point per sheet.
+HIP = {'warrior': (200, 295), 'mage': (192, 290), 'archer': (185, 290), 'rogue': (190, 292)}
+# per-sheet alpha remap (lo, hi) for the soft backdrop haze: alpha <= lo -> 0, >= hi -> 255.
+# ride_lyra carries a pale glow at 16..96 around the figure.
+HAZE = {'ride_lyra.png': (96, 214), 'default': (56, 200)}
 WING_SHEETS = {'wings_1.png': ['rose', 'angel', 'bat', 'fairy'], 'wings_2.png': ['phoenix', 'ice', 'star', 'abyss']}
 RIDE_SHEETS = {'ride_serin.png': 'warrior', 'ride_elena.png': 'mage', 'ride_lyra.png': 'archer', 'ride_nox.png': 'rogue'}
 BRANCHES = {'warrior': ('knight', 'berserker'), 'mage': ('wizard', 'warlock'), 'archer': ('ranger', 'hunter'), 'rogue': ('assassin', 'trickster')}
@@ -67,6 +77,37 @@ def cells(path, cols, rows):
     return out, cw, ch
 
 
+def dehaze(cell, sheet, keep_ratio=0.002, grow=4):
+    """extract_assets.clean_alpha with per-sheet thresholds: remap alpha so the backdrop
+    haze goes to 0, keep the main body + detached parts (sparkles) that don't touch the
+    cell edge, and zero the colour under alpha 0 (no dark fringe on resize)."""
+    from scipy import ndimage
+    lo, hi = HAZE.get(sheet, HAZE['default'])
+    a = cell[:, :, 3].astype(np.float32)
+    rem = np.clip((a - lo) * 255.0 / (hi - lo), 0, 255)
+    solid = rem > 96
+    lab, n = ndimage.label(solid)
+    if n == 0:
+        return cell
+    areas = ndimage.sum(solid, lab, index=np.arange(1, n + 1))
+    big = areas.max()
+    keep = np.zeros_like(solid)
+    h, w = solid.shape
+    for i in range(1, n + 1):
+        if areas[i - 1] < big * keep_ratio:
+            continue
+        ys, xs = np.nonzero(lab == i)
+        if areas[i - 1] < big and (ys.min() == 0 or xs.min() == 0 or ys.max() == h - 1 or xs.max() == w - 1):
+            continue
+        keep |= lab == i
+    zone = ndimage.binary_dilation(keep, iterations=grow)
+    out = cell.copy()
+    al = np.where(zone, rem, 0).astype(np.uint8)
+    out[:, :, 3] = al
+    out[al == 0, :3] = 0
+    return out
+
+
 def bbox(a, thr=16):
     ys, xs = np.nonzero(a > thr)
     if len(xs) == 0:
@@ -74,9 +115,9 @@ def bbox(a, thr=16):
     return xs.min(), ys.min(), xs.max() + 1, ys.max() + 1
 
 
-def save(arr, name, max_h):
+def save(arr, name, max_h, scale=None):
     img = Image.fromarray(arr)
-    s = min(1.0, max_h / img.height)
+    s = scale if scale is not None else min(1.0, max_h / img.height)
     if s < 1:
         img = bleed_rgb(img).resize((max(1, round(img.width * s)), max(1, round(img.height * s))), Image.LANCZOS)
     fn = f'steed_{name}.webp'
@@ -151,20 +192,22 @@ def rides(out, log):
         cs, cw, ch = cells(path, 4, 2)
         a, b = BRANCHES[cls]
         forms = ['base', a, a + '_t2', a + '_t3', b, b + '_t2', b + '_t3']
+        hx, hip_y = HIP[cls]
         for i, form in enumerate(forms):
-            f = cs[i]
+            f = dehaze(cs[i], sheet)
             bb = bbox(f[:, :, 3])
             if bb is None:
                 continue
             x0, y0 = max(bb[0] - PAD, 0), max(bb[1] - PAD, 0)
             x1, y1 = min(bb[2] + PAD, cw), min(bb[3] + PAD, ch)
-            hip_y = 0.60 * ch   # spec: seat contact at 60% from the cell top
-            # hips x: alpha-weighted centre of the rows around the seat line
-            band = f[int(hip_y) - 12:int(hip_y) + 12, :, 3].astype(np.float32)
-            hx = (band.sum(axis=0) * np.arange(cw)).sum() / max(band.sum(), 1)
-            m = save(f[y0:y1, x0:x1], f'ride_{form}_{cls}', RIDE_H)
-            m.update({'hx': round((hx - x0) / (x1 - x0), 3), 'hy': round((hip_y - y0) / (y1 - y0), 3), 'source': f'gpt_n/{sheet} cell {i + 1}'})
+            # one scale per sheet (cell height -> RIDE_H/0.75) so every form of a class is
+            # drawn at the same size; `ref` = hip-to-cell-top distance in saved px
+            k = RIDE_H / (0.75 * ch)
+            m = save(f[y0:y1, x0:x1], f'ride_{form}_{cls}', RIDE_H, scale=k)
+            m.update({'hx': round((hx - x0) / (x1 - x0), 3), 'hy': round((hip_y - y0) / (y1 - y0), 3),
+                      'hipFromTop': round(hip_y / ch, 3), 'cellH': round(ch * k, 1), 'source': f'gpt_n/{sheet} cell {i + 1}'})
             out[f'ride_{form}_{cls}'] = m
+            log.append(f'ride_{form}_{cls} {m["w"]}x{m["h"]} hip=({m["hx"]},{m["hy"]}) cellTop%={m["hipFromTop"]}')
 
 
 def wings(out, log):
@@ -175,15 +218,27 @@ def wings(out, log):
             continue
         cs, cw, ch = cells(path, 4, 2)
         for col, wid in enumerate(ids):
+            pair = []
             for row, pose in enumerate(('up', 'down')):
-                f = cs[row * 4 + col]
+                f = dehaze(cs[row * 4 + col], sheet)
                 bb = bbox(f[:, :, 3])
                 x0, y0 = max(bb[0] - PAD, 0), max(bb[1] - PAD, 0)
                 x1, y1 = min(bb[2] + PAD, cw), min(bb[3] + PAD, ch)
-                axp, ayp = 0.5 * cw, 0.45 * ch   # spec: attach point at 50% / 45% of the cell
-                m = save(f[y0:y1, x0:x1], f'wing_{wid}_{pose}', WING_H)
-                m.update({'ax': round((axp - x0) / (x1 - x0), 3), 'ay': round((ayp - y0) / (y1 - y0), 3), 'source': f'gpt_n/{sheet}'})
+                pair.append((pose, f, x0, y0, x1, y1))
+            # same scale for up and down so the flap doesn't change the wing size
+            k = min(1.0, WING_H / max(y1 - y0 for _, _, _, y0, _, y1 in pair))
+            for pose, f, x0, y0, x1, y1 in pair:
+                # attach point = the shoulder ornament (bird head) at the right end where both
+                # wings join: rightmost solid column, its mean row, stepped back into the joint
+                solid = f[:, :, 3] > 128
+                tx = int(np.nonzero(solid.any(axis=0))[0].max())
+                rows = np.nonzero(solid[:, tx - 10:tx + 1].any(axis=1))[0]
+                axp, ayp = tx - 0.07 * cw, float(rows.mean())
+                m = save(f[y0:y1, x0:x1], f'wing_{wid}_{pose}', WING_H, scale=k)
+                m.update({'ax': round((axp - x0) / (x1 - x0), 3), 'ay': round((ayp - y0) / (y1 - y0), 3),
+                          'ref': round(ch * k, 1), 'source': f'gpt_n/{sheet} col {col + 1} row {row + 1}'})
                 out[f'wing_{wid}_{pose}'] = m
+                log.append(f'wing_{wid}_{pose} {m["w"]}x{m["h"]} attach=({m["ax"]},{m["ay"]})')
 
 
 def icons(out, log):
@@ -193,7 +248,7 @@ def icons(out, log):
         return
     cs, cw, ch = cells(path, 6, 4)
     for i, key in enumerate(ICON_ORDER):
-        f = cs[i]
+        f = dehaze(cs[i], 'icons_mount_wing.png')
         bb = bbox(f[:, :, 3])
         if bb is None:
             continue
@@ -213,6 +268,18 @@ def icons(out, log):
         out['icon_' + key] = {'file': 'assets/runtime/' + fn, 'w': ICON, 'h': ICON}
 
 
+def hero_image(out, log):
+    """mount_banner.png (1774x887 RGB) -> steed_hero.webp, 960 wide, top of the mount screen."""
+    path = os.path.join(SRC, 'mount_banner.png')
+    if not os.path.exists(path):
+        return
+    img = Image.open(path).convert('RGB')
+    w = 960
+    img = img.resize((w, round(img.height * w / img.width)), Image.LANCZOS)
+    img.save(os.path.join(OUT, 'steed_hero.webp'), 'WEBP', quality=82, method=6)
+    out['hero_mount'] = {'file': 'assets/runtime/steed_hero.webp', 'w': img.width, 'h': img.height}
+
+
 def main():
     sprites = json.load(open(META))
     out, log = {}, []
@@ -220,10 +287,11 @@ def main():
     rides(out, log)
     wings(out, log)
     icons(out, log)
+    hero_image(out, log)
     sprites['steeds'] = out
     src = sprites.setdefault('sources', {})
     for f in sorted(os.listdir(SRC)) if os.path.isdir(SRC) else []:
-        src['gpt_n/' + f] = 'GPT package N'
+        src['gpt_n/' + f] = 'GPT package N (alternate, unused)' if '_alt_' in f else 'GPT package N'
     json.dump(sprites, open(META, 'w'), ensure_ascii=False, indent=1)
     print('\n'.join(log))
 

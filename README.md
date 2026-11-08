@@ -68,6 +68,8 @@ python3 tools/extract_gpt_f.py                  # GPT F 영웅·전설·신화 �
 python3 tools/extract_gpt_g.py                  # GPT G 금고·서고·시련장·균열 배경
 python3 tools/extract_gpt_h.py                  # GPT H 세린 8포즈(찌르기 보정·투명 배경)
 python3 tools/extract_gpt_l.py                  # GPT L 고유 효과·추출·이식·재련·등급·각성 아이콘
+python3 tools/extract_gpt_m.py                  # GPT M 스킬 등급 테두리 4종 + 등급 상승 문장 → frame_sg_*.webp
+python3 tools/extract_gpt_n.py                  # GPT N 탈것 8·탄 자세 28·날개 8·아이콘 22·탈것 머리 그림 → steed_*.webp, icon_*.webp
 python3 tools/extract_gpt_i.py                  # GPT I 스테이지 지도 → map_*.webp + 노드 좌표
 python3 tools/extract_v5.py                     # pets_6 / icons_v5 → pet_P0x, skill_V## 
 python3 tools/extract_assets.py                 # 원화 보드 → assets/runtime (원본 불변)

@@ -102,13 +102,14 @@ const BAD = /(^|[-_ ])(adv?|ads|banner|sponsor|promo-banner)([-_ ]|$)/;
     await p.screenshot({ path: `${out}v12_wings_${tag}.png` });
     await clearModals(p);
 
-    // 6) placeholder mount (no art yet) on a travel leg, and reduce-motion keeps the scene still
+    // 6) second mount (GPT N2 art) + seated rider art (N3) on a travel leg, and reduce-motion keeps the scene still
     if (vp[0] === 390) {
       await tx(`(s) => { s.mounts.owned.skelhorse = { lv: 1, star: 1, shards: 0 }; s.mounts.equipped = 'skelhorse'; s.wings.owned.phoenix = { lv: 1, star: 1, shards: 0 }; s.wings.equipped = 'phoenix'; s.progression.waveKills = 2; }`);
       await p.evaluate(() => __asteria.app.setTab('battle'));
       const t2 = await p.waitForFunction(() => __asteria.game.farm && __asteria.game.farm.traveling, null, { timeout: 20000 }).then(() => true).catch(() => false);
-      if (t2) { await p.waitForTimeout(300); await p.screenshot({ path: `${out}v12_travel_placeholder_${tag}.png` }); }
-      ok(t2, `placeholder mount travel captured ${tag}`);
+      if (t2) { await p.waitForTimeout(400); await p.screenshot({ path: `${out}v12_travel_skelhorse_${tag}.png` }); }
+      const ri = await p.evaluate(() => __asteria.app.renderer.rideInfo || {});
+      ok(t2 && /steed_ride_/.test(ri.ride || '') && ri.seat > 0, `skelhorse travel: seated rider art on the saddle ${tag}`, ri);
       await tx(`(s) => { s.settings.reduceMotion = true; s.progression.waveKills = 5; }`);
       const t3 = await p.waitForFunction(() => __asteria.game.farm && __asteria.game.farm.traveling, null, { timeout: 25000 }).then(() => true).catch(() => false);
       const rm0 = await p.evaluate(() => __asteria.app.renderer.bgScroll || 0);

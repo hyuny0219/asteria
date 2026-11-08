@@ -29,7 +29,7 @@ import { parseExport } from '../platform/save.js';
 import * as Profiles from '../platform/profiles.js';
 import { ATTENDANCE, RETURN_BONUS, attendanceStatus, boostActive, resolveReward } from '../core/rewards.js';
 import { enableAudio, setVolume, sfx } from '../platform/audio.js';
-import { button, closeAllModals, h, icon, img, modalOpen, openModal, toast } from './dom.js';
+import { button, closeAllModals, gradeFramed, h, icon, img, modalOpen, openModal, toast } from './dom.js';
 import * as FS from './fullscreen.js';
 import { openShop, openClassChange } from './shop.js';
 import { openStageMap, stagePanel, stageSig } from './stagemap.js';
@@ -402,11 +402,11 @@ export function skillsPanel(app) {
     const locked = i >= slots;
     const unlockText = i === 3 ? '1차 승급(Lv 30)에서 열려요.' : '2차 승급(Lv 60)에서 열려요.';
     sc.appendChild(h('div', { class: 'skill-line' },
-      locked ? h('span', { class: 'skill locked', style: { width: '44px', height: '44px' } }, icon('lock', 18)) : id ? img(skillIcon(SKILLS[id].icon), '', awkCls(s, id)) : h('span', { class: 'skill empty', style: { width: '44px', height: '44px' } }),
+      locked ? h('span', { class: 'skill locked', style: { width: '44px', height: '44px' } }, icon('lock', 18)) : id ? gradeFramed(img(skillIcon(SKILLS[id].icon), '', awkCls(s, id)), skGrade(s, id)) : h('span', { class: 'skill empty', style: { width: '44px', height: '44px' } }),
       h('div', null, h('div', { class: 't' }, `${i + 1}번 · ${locked ? '승급 해금' : id ? SKILLS[id].name : '비어 있음'}`), locked ? h('div', { class: 'muted' }, unlockText) : id ? lvLine(id) : null),
       locked ? button('조건', { cls: 'chip-btn', onClick: () => openQuest(app) }) : button('변경', { cls: 'chip-btn', onClick: () => openSkillPicker(app, i) })));
   }
-  sc.appendChild(h('div', { class: 'skill-line' }, img(skillIcon(SKILLS[ult].icon), '', awkCls(s, ult)),
+  sc.appendChild(h('div', { class: 'skill-line' }, gradeFramed(img(skillIcon(SKILLS[ult].icon), '', awkCls(s, ult)), skGrade(s, ult)),
     h('div', null, h('div', { class: 't' }, `궁극기 · ${SKILLS[ult].name}`), lvLine(ult)),
     button('상세', { cls: 'chip-btn', onClick: () => openSkillDetail(app, ult) })));
   sc.appendChild(h('div', { class: 'setting-block' }, h('span', null, '궁극기 자동 사용'), h('div', { class: 'seg', role: 'group', 'aria-label': '궁극기 자동 사용' },
@@ -418,7 +418,7 @@ export function skillsPanel(app) {
     const c = prog.skillLevelCost(s, id);
     const have = s.skills.books[id] || 0;
     const ok = c && have >= c.books && s.wallet.gold >= c.gold;
-    sc.appendChild(h('div', { class: 'skill-line', dataset: { key: 'lv-' + id } }, h('button', { type: 'button', class: 'sk-ic-btn', 'aria-label': `${SKILLS[id].name} 상세`, onClick: () => openSkillDetail(app, id) }, img(skillIcon(SKILLS[id].icon), '', awkCls(s, id))),
+    sc.appendChild(h('div', { class: 'skill-line', dataset: { key: 'lv-' + id } }, h('button', { type: 'button', class: 'sk-ic-btn', 'aria-label': `${SKILLS[id].name} 상세`, onClick: () => openSkillDetail(app, id) }, gradeFramed(img(skillIcon(SKILLS[id].icon), '', awkCls(s, id)), skGrade(s, id))),
       h('div', null, h('div', { class: 't' }, gradeTag(s, id), ` ${SKILLS[id].name} Lv ${prog.skillLevel(s, id)}`),
         h('div', { class: 'muted' }, c ? `다음: 스킬북 ${have}/${c.books} · 골드 ${fmt(c.gold)}` : '최대 레벨')),
       button(c ? '레벨업' : 'MAX', { cls: 'chip-btn' + (ok ? ' hot' : ''), disabled: !ok, busy: true, ariaLabel: `${SKILLS[id].name} 레벨업`, onClick: async () => {

@@ -236,7 +236,20 @@
   "gpt_j4/*_cycle.png": "GPT J4 — walk 4 + attack 4 frames for 16 tier-2/3 forms",
   "gpt_l/icons_v10.png": "GPT package L — v10 legend / awaken / forge icons",
   "gpt_n/mounts_1.png": "GPT package N",
-  "gpt_n/mounts_2.png": "GPT package N"
+  "gpt_n/mounts_2.png": "GPT package N",
+  "gpt_n/icons_mount_wing.png": "GPT package N",
+  "gpt_n/mount_banner.png": "GPT package N",
+  "gpt_n/mounts_3.png": "GPT package N",
+  "gpt_n/mounts_4.png": "GPT package N",
+  "gpt_n/ride_elena.png": "GPT package N",
+  "gpt_n/ride_lyra.png": "GPT package N",
+  "gpt_n/ride_nox.png": "GPT package N",
+  "gpt_n/ride_nox_alt_whitebg.png": "GPT package N (alternate, unused)",
+  "gpt_n/ride_serin.png": "GPT package N",
+  "gpt_n/wings_1.png": "GPT package N",
+  "gpt_n/wings_1_alt_whitebg.png": "GPT package N (alternate, unused)",
+  "gpt_n/wings_2.png": "GPT package N",
+  "gpt_m/skill_grade_frames.png": "GPT package M"
  },
  "monsters": {
   "M01": {
@@ -30221,6 +30234,772 @@
    "sy": 0.495,
    "seatFromTop": 0.438,
    "source": "gpt_n/mounts_2.png row 2"
+  },
+  "mount_skelhorse_run1": {
+   "file": "assets/runtime/steed_mount_skelhorse_run1.webp",
+   "w": 319,
+   "h": 220,
+   "fx": 0.5,
+   "fy": 0.984,
+   "sx": 0.52,
+   "sy": 0.407,
+   "seatFromTop": 0.467,
+   "source": "gpt_n/mounts_3.png row 1"
+  },
+  "mount_skelhorse_run2": {
+   "file": "assets/runtime/steed_mount_skelhorse_run2.webp",
+   "w": 319,
+   "h": 220,
+   "fx": 0.5,
+   "fy": 0.984,
+   "sx": 0.52,
+   "sy": 0.368,
+   "seatFromTop": 0.447,
+   "source": "gpt_n/mounts_3.png row 1"
+  },
+  "mount_skelhorse_run3": {
+   "file": "assets/runtime/steed_mount_skelhorse_run3.webp",
+   "w": 319,
+   "h": 220,
+   "fx": 0.5,
+   "fy": 0.984,
+   "sx": 0.526,
+   "sy": 0.332,
+   "seatFromTop": 0.43,
+   "source": "gpt_n/mounts_3.png row 1"
+  },
+  "mount_skelhorse_run4": {
+   "file": "assets/runtime/steed_mount_skelhorse_run4.webp",
+   "w": 319,
+   "h": 220,
+   "fx": 0.5,
+   "fy": 0.984,
+   "sx": 0.531,
+   "sy": 0.403,
+   "seatFromTop": 0.465,
+   "source": "gpt_n/mounts_3.png row 1"
+  },
+  "mount_griffin_run1": {
+   "file": "assets/runtime/steed_mount_griffin_run1.webp",
+   "w": 291,
+   "h": 220,
+   "fx": 0.5,
+   "fy": 0.986,
+   "sx": 0.536,
+   "sy": 0.383,
+   "seatFromTop": 0.428,
+   "source": "gpt_n/mounts_3.png row 2"
+  },
+  "mount_griffin_run2": {
+   "file": "assets/runtime/steed_mount_griffin_run2.webp",
+   "w": 291,
+   "h": 220,
+   "fx": 0.5,
+   "fy": 0.986,
+   "sx": 0.534,
+   "sy": 0.34,
+   "seatFromTop": 0.404,
+   "source": "gpt_n/mounts_3.png row 2"
+  },
+  "mount_griffin_run3": {
+   "file": "assets/runtime/steed_mount_griffin_run3.webp",
+   "w": 291,
+   "h": 220,
+   "fx": 0.5,
+   "fy": 0.986,
+   "sx": 0.531,
+   "sy": 0.312,
+   "seatFromTop": 0.389,
+   "source": "gpt_n/mounts_3.png row 2"
+  },
+  "mount_griffin_run4": {
+   "file": "assets/runtime/steed_mount_griffin_run4.webp",
+   "w": 291,
+   "h": 220,
+   "fx": 0.5,
+   "fy": 0.986,
+   "sx": 0.547,
+   "sy": 0.39,
+   "seatFromTop": 0.432,
+   "source": "gpt_n/mounts_3.png row 2"
+  },
+  "mount_unicorn_run1": {
+   "file": "assets/runtime/steed_mount_unicorn_run1.webp",
+   "w": 321,
+   "h": 220,
+   "fx": 0.5,
+   "fy": 0.984,
+   "sx": 0.549,
+   "sy": 0.426,
+   "seatFromTop": 0.459,
+   "source": "gpt_n/mounts_4.png row 1"
+  },
+  "mount_unicorn_run2": {
+   "file": "assets/runtime/steed_mount_unicorn_run2.webp",
+   "w": 321,
+   "h": 220,
+   "fx": 0.5,
+   "fy": 0.984,
+   "sx": 0.552,
+   "sy": 0.418,
+   "seatFromTop": 0.455,
+   "source": "gpt_n/mounts_4.png row 1"
+  },
+  "mount_unicorn_run3": {
+   "file": "assets/runtime/steed_mount_unicorn_run3.webp",
+   "w": 321,
+   "h": 220,
+   "fx": 0.5,
+   "fy": 0.984,
+   "sx": 0.571,
+   "sy": 0.375,
+   "seatFromTop": 0.434,
+   "source": "gpt_n/mounts_4.png row 1"
+  },
+  "mount_unicorn_run4": {
+   "file": "assets/runtime/steed_mount_unicorn_run4.webp",
+   "w": 321,
+   "h": 220,
+   "fx": 0.5,
+   "fy": 0.984,
+   "sx": 0.574,
+   "sy": 0.442,
+   "seatFromTop": 0.467,
+   "source": "gpt_n/mounts_4.png row 1"
+  },
+  "mount_nightmare_run1": {
+   "file": "assets/runtime/steed_mount_nightmare_run1.webp",
+   "w": 320,
+   "h": 220,
+   "fx": 0.5,
+   "fy": 0.985,
+   "sx": 0.552,
+   "sy": 0.405,
+   "seatFromTop": 0.471,
+   "source": "gpt_n/mounts_4.png row 2"
+  },
+  "mount_nightmare_run2": {
+   "file": "assets/runtime/steed_mount_nightmare_run2.webp",
+   "w": 320,
+   "h": 220,
+   "fx": 0.5,
+   "fy": 0.985,
+   "sx": 0.557,
+   "sy": 0.413,
+   "seatFromTop": 0.475,
+   "source": "gpt_n/mounts_4.png row 2"
+  },
+  "mount_nightmare_run3": {
+   "file": "assets/runtime/steed_mount_nightmare_run3.webp",
+   "w": 320,
+   "h": 220,
+   "fx": 0.5,
+   "fy": 0.985,
+   "sx": 0.581,
+   "sy": 0.363,
+   "seatFromTop": 0.449,
+   "source": "gpt_n/mounts_4.png row 2"
+  },
+  "mount_nightmare_run4": {
+   "file": "assets/runtime/steed_mount_nightmare_run4.webp",
+   "w": 320,
+   "h": 220,
+   "fx": 0.5,
+   "fy": 0.985,
+   "sx": 0.584,
+   "sy": 0.425,
+   "seatFromTop": 0.48,
+   "source": "gpt_n/mounts_4.png row 2"
+  },
+  "ride_base_warrior": {
+   "file": "assets/runtime/steed_ride_base_warrior.webp",
+   "w": 232,
+   "h": 320,
+   "hx": 0.559,
+   "hy": 0.59,
+   "hipFromTop": 0.576,
+   "cellH": 400.0,
+   "source": "gpt_n/ride_serin.png cell 1"
+  },
+  "ride_knight_warrior": {
+   "file": "assets/runtime/steed_ride_knight_warrior.webp",
+   "w": 246,
+   "h": 323,
+   "hx": 0.581,
+   "hy": 0.592,
+   "hipFromTop": 0.576,
+   "cellH": 400.0,
+   "source": "gpt_n/ride_serin.png cell 2"
+  },
+  "ride_knight_t2_warrior": {
+   "file": "assets/runtime/steed_ride_knight_t2_warrior.webp",
+   "w": 248,
+   "h": 323,
+   "hx": 0.558,
+   "hy": 0.591,
+   "hipFromTop": 0.576,
+   "cellH": 400.0,
+   "source": "gpt_n/ride_serin.png cell 3"
+  },
+  "ride_knight_t3_warrior": {
+   "file": "assets/runtime/steed_ride_knight_t3_warrior.webp",
+   "w": 245,
+   "h": 324,
+   "hx": 0.538,
+   "hy": 0.586,
+   "hipFromTop": 0.576,
+   "cellH": 400.0,
+   "source": "gpt_n/ride_serin.png cell 4"
+  },
+  "ride_berserker_warrior": {
+   "file": "assets/runtime/steed_ride_berserker_warrior.webp",
+   "w": 241,
+   "h": 324,
+   "hx": 0.562,
+   "hy": 0.588,
+   "hipFromTop": 0.576,
+   "cellH": 400.0,
+   "source": "gpt_n/ride_serin.png cell 5"
+  },
+  "ride_berserker_t2_warrior": {
+   "file": "assets/runtime/steed_ride_berserker_t2_warrior.webp",
+   "w": 248,
+   "h": 321,
+   "hx": 0.571,
+   "hy": 0.591,
+   "hipFromTop": 0.576,
+   "cellH": 400.0,
+   "source": "gpt_n/ride_serin.png cell 6"
+  },
+  "ride_berserker_t3_warrior": {
+   "file": "assets/runtime/steed_ride_berserker_t3_warrior.webp",
+   "w": 260,
+   "h": 324,
+   "hx": 0.562,
+   "hy": 0.588,
+   "hipFromTop": 0.576,
+   "cellH": 400.0,
+   "source": "gpt_n/ride_serin.png cell 7"
+  },
+  "ride_base_mage": {
+   "file": "assets/runtime/steed_ride_base_mage.webp",
+   "w": 226,
+   "h": 353,
+   "hx": 0.505,
+   "hy": 0.571,
+   "hipFromTop": 0.566,
+   "cellH": 400.0,
+   "source": "gpt_n/ride_elena.png cell 1"
+  },
+  "ride_wizard_mage": {
+   "file": "assets/runtime/steed_ride_wizard_mage.webp",
+   "w": 242,
+   "h": 380,
+   "hx": 0.558,
+   "hy": 0.578,
+   "hipFromTop": 0.566,
+   "cellH": 400.0,
+   "source": "gpt_n/ride_elena.png cell 2"
+  },
+  "ride_wizard_t2_mage": {
+   "file": "assets/runtime/steed_ride_wizard_t2_mage.webp",
+   "w": 242,
+   "h": 355,
+   "hx": 0.571,
+   "hy": 0.568,
+   "hipFromTop": 0.566,
+   "cellH": 400.0,
+   "source": "gpt_n/ride_elena.png cell 3"
+  },
+  "ride_wizard_t3_mage": {
+   "file": "assets/runtime/steed_ride_wizard_t3_mage.webp",
+   "w": 245,
+   "h": 358,
+   "hx": 0.562,
+   "hy": 0.563,
+   "hipFromTop": 0.566,
+   "cellH": 400.0,
+   "source": "gpt_n/ride_elena.png cell 4"
+  },
+  "ride_warlock_mage": {
+   "file": "assets/runtime/steed_ride_warlock_mage.webp",
+   "w": 234,
+   "h": 351,
+   "hx": 0.523,
+   "hy": 0.572,
+   "hipFromTop": 0.566,
+   "cellH": 400.0,
+   "source": "gpt_n/ride_elena.png cell 5"
+  },
+  "ride_warlock_t2_mage": {
+   "file": "assets/runtime/steed_ride_warlock_t2_mage.webp",
+   "w": 240,
+   "h": 349,
+   "hx": 0.567,
+   "hy": 0.575,
+   "hipFromTop": 0.566,
+   "cellH": 400.0,
+   "source": "gpt_n/ride_elena.png cell 6"
+  },
+  "ride_warlock_t3_mage": {
+   "file": "assets/runtime/steed_ride_warlock_t3_mage.webp",
+   "w": 253,
+   "h": 351,
+   "hx": 0.562,
+   "hy": 0.572,
+   "hipFromTop": 0.566,
+   "cellH": 400.0,
+   "source": "gpt_n/ride_elena.png cell 7"
+  },
+  "ride_base_archer": {
+   "file": "assets/runtime/steed_ride_base_archer.webp",
+   "w": 202,
+   "h": 355,
+   "hx": 0.469,
+   "hy": 0.589,
+   "hipFromTop": 0.566,
+   "cellH": 400.0,
+   "source": "gpt_n/ride_lyra.png cell 1"
+  },
+  "ride_ranger_archer": {
+   "file": "assets/runtime/steed_ride_ranger_archer.webp",
+   "w": 205,
+   "h": 353,
+   "hx": 0.479,
+   "hy": 0.586,
+   "hipFromTop": 0.566,
+   "cellH": 400.0,
+   "source": "gpt_n/ride_lyra.png cell 2"
+  },
+  "ride_ranger_t2_archer": {
+   "file": "assets/runtime/steed_ride_ranger_t2_archer.webp",
+   "w": 214,
+   "h": 353,
+   "hx": 0.496,
+   "hy": 0.586,
+   "hipFromTop": 0.566,
+   "cellH": 400.0,
+   "source": "gpt_n/ride_lyra.png cell 3"
+  },
+  "ride_ranger_t3_archer": {
+   "file": "assets/runtime/steed_ride_ranger_t3_archer.webp",
+   "w": 219,
+   "h": 357,
+   "hx": 0.496,
+   "hy": 0.593,
+   "hipFromTop": 0.566,
+   "cellH": 400.0,
+   "source": "gpt_n/ride_lyra.png cell 4"
+  },
+  "ride_hunter_archer": {
+   "file": "assets/runtime/steed_ride_hunter_archer.webp",
+   "w": 208,
+   "h": 354,
+   "hx": 0.477,
+   "hy": 0.587,
+   "hipFromTop": 0.566,
+   "cellH": 400.0,
+   "source": "gpt_n/ride_lyra.png cell 5"
+  },
+  "ride_hunter_t2_archer": {
+   "file": "assets/runtime/steed_ride_hunter_t2_archer.webp",
+   "w": 212,
+   "h": 351,
+   "hx": 0.491,
+   "hy": 0.584,
+   "hipFromTop": 0.566,
+   "cellH": 400.0,
+   "source": "gpt_n/ride_lyra.png cell 6"
+  },
+  "ride_hunter_t3_archer": {
+   "file": "assets/runtime/steed_ride_hunter_t3_archer.webp",
+   "w": 230,
+   "h": 354,
+   "hx": 0.525,
+   "hy": 0.587,
+   "hipFromTop": 0.566,
+   "cellH": 400.0,
+   "source": "gpt_n/ride_lyra.png cell 7"
+  },
+  "ride_base_rogue": {
+   "file": "assets/runtime/steed_ride_base_rogue.webp",
+   "w": 251,
+   "h": 366,
+   "hx": 0.498,
+   "hy": 0.569,
+   "hipFromTop": 0.57,
+   "cellH": 400.0,
+   "source": "gpt_n/ride_nox.png cell 1"
+  },
+  "ride_assassin_rogue": {
+   "file": "assets/runtime/steed_ride_assassin_rogue.webp",
+   "w": 243,
+   "h": 367,
+   "hx": 0.502,
+   "hy": 0.568,
+   "hipFromTop": 0.57,
+   "cellH": 400.0,
+   "source": "gpt_n/ride_nox.png cell 2"
+  },
+  "ride_assassin_t2_rogue": {
+   "file": "assets/runtime/steed_ride_assassin_t2_rogue.webp",
+   "w": 254,
+   "h": 363,
+   "hx": 0.535,
+   "hy": 0.572,
+   "hipFromTop": 0.57,
+   "cellH": 400.0,
+   "source": "gpt_n/ride_nox.png cell 3"
+  },
+  "ride_assassin_t3_rogue": {
+   "file": "assets/runtime/steed_ride_assassin_t3_rogue.webp",
+   "w": 259,
+   "h": 363,
+   "hx": 0.545,
+   "hy": 0.566,
+   "hipFromTop": 0.57,
+   "cellH": 400.0,
+   "source": "gpt_n/ride_nox.png cell 4"
+  },
+  "ride_trickster_rogue": {
+   "file": "assets/runtime/steed_ride_trickster_rogue.webp",
+   "w": 256,
+   "h": 366,
+   "hx": 0.506,
+   "hy": 0.569,
+   "hipFromTop": 0.57,
+   "cellH": 400.0,
+   "source": "gpt_n/ride_nox.png cell 5"
+  },
+  "ride_trickster_t2_rogue": {
+   "file": "assets/runtime/steed_ride_trickster_t2_rogue.webp",
+   "w": 255,
+   "h": 374,
+   "hx": 0.511,
+   "hy": 0.578,
+   "hipFromTop": 0.57,
+   "cellH": 400.0,
+   "source": "gpt_n/ride_nox.png cell 6"
+  },
+  "ride_trickster_t3_rogue": {
+   "file": "assets/runtime/steed_ride_trickster_t3_rogue.webp",
+   "w": 253,
+   "h": 365,
+   "hx": 0.515,
+   "hy": 0.567,
+   "hipFromTop": 0.57,
+   "cellH": 400.0,
+   "source": "gpt_n/ride_nox.png cell 7"
+  },
+  "wing_rose_up": {
+   "file": "assets/runtime/steed_wing_rose_up.webp",
+   "w": 188,
+   "h": 260,
+   "ax": 0.898,
+   "ay": 0.657,
+   "ref": 299.1,
+   "source": "gpt_n/wings_1.png col 1 row 2"
+  },
+  "wing_rose_down": {
+   "file": "assets/runtime/steed_wing_rose_down.webp",
+   "w": 192,
+   "h": 244,
+   "ax": 0.903,
+   "ay": 0.163,
+   "ref": 299.1,
+   "source": "gpt_n/wings_1.png col 1 row 2"
+  },
+  "wing_angel_up": {
+   "file": "assets/runtime/steed_wing_angel_up.webp",
+   "w": 180,
+   "h": 260,
+   "ax": 0.896,
+   "ay": 0.632,
+   "ref": 291.3,
+   "source": "gpt_n/wings_1.png col 2 row 2"
+  },
+  "wing_angel_down": {
+   "file": "assets/runtime/steed_wing_angel_down.webp",
+   "w": 184,
+   "h": 233,
+   "ax": 0.901,
+   "ay": 0.136,
+   "ref": 291.3,
+   "source": "gpt_n/wings_1.png col 2 row 2"
+  },
+  "wing_bat_up": {
+   "file": "assets/runtime/steed_wing_bat_up.webp",
+   "w": 222,
+   "h": 260,
+   "ax": 0.909,
+   "ay": 0.635,
+   "ref": 325.5,
+   "source": "gpt_n/wings_1.png col 3 row 2"
+  },
+  "wing_bat_down": {
+   "file": "assets/runtime/steed_wing_bat_down.webp",
+   "w": 215,
+   "h": 233,
+   "ax": 0.903,
+   "ay": 0.106,
+   "ref": 325.5,
+   "source": "gpt_n/wings_1.png col 3 row 2"
+  },
+  "wing_fairy_up": {
+   "file": "assets/runtime/steed_wing_fairy_up.webp",
+   "w": 180,
+   "h": 260,
+   "ax": 0.897,
+   "ay": 0.689,
+   "ref": 289.4,
+   "source": "gpt_n/wings_1.png col 4 row 2"
+  },
+  "wing_fairy_down": {
+   "file": "assets/runtime/steed_wing_fairy_down.webp",
+   "w": 175,
+   "h": 207,
+   "ax": 0.897,
+   "ay": 0.099,
+   "ref": 289.4,
+   "source": "gpt_n/wings_1.png col 4 row 2"
+  },
+  "wing_phoenix_up": {
+   "file": "assets/runtime/steed_wing_phoenix_up.webp",
+   "w": 201,
+   "h": 260,
+   "ax": 0.885,
+   "ay": 0.596,
+   "ref": 370.8,
+   "source": "gpt_n/wings_2.png col 1 row 2"
+  },
+  "wing_phoenix_down": {
+   "file": "assets/runtime/steed_wing_phoenix_down.webp",
+   "w": 190,
+   "h": 222,
+   "ax": 0.878,
+   "ay": 0.161,
+   "ref": 370.8,
+   "source": "gpt_n/wings_2.png col 1 row 2"
+  },
+  "wing_ice_up": {
+   "file": "assets/runtime/steed_wing_ice_up.webp",
+   "w": 207,
+   "h": 260,
+   "ax": 0.884,
+   "ay": 0.615,
+   "ref": 372.9,
+   "source": "gpt_n/wings_2.png col 2 row 2"
+  },
+  "wing_ice_down": {
+   "file": "assets/runtime/steed_wing_ice_down.webp",
+   "w": 191,
+   "h": 219,
+   "ax": 0.875,
+   "ay": 0.161,
+   "ref": 372.9,
+   "source": "gpt_n/wings_2.png col 2 row 2"
+  },
+  "wing_star_up": {
+   "file": "assets/runtime/steed_wing_star_up.webp",
+   "w": 237,
+   "h": 260,
+   "ax": 0.887,
+   "ay": 0.648,
+   "ref": 414.7,
+   "source": "gpt_n/wings_2.png col 3 row 2"
+  },
+  "wing_star_down": {
+   "file": "assets/runtime/steed_wing_star_down.webp",
+   "w": 205,
+   "h": 231,
+   "ax": 0.87,
+   "ay": 0.139,
+   "ref": 414.7,
+   "source": "gpt_n/wings_2.png col 3 row 2"
+  },
+  "wing_abyss_up": {
+   "file": "assets/runtime/steed_wing_abyss_up.webp",
+   "w": 216,
+   "h": 260,
+   "ax": 0.887,
+   "ay": 0.639,
+   "ref": 390.4,
+   "source": "gpt_n/wings_2.png col 4 row 2"
+  },
+  "wing_abyss_down": {
+   "file": "assets/runtime/steed_wing_abyss_down.webp",
+   "w": 201,
+   "h": 225,
+   "ax": 0.879,
+   "ay": 0.144,
+   "ref": 390.4,
+   "source": "gpt_n/wings_2.png col 4 row 2"
+  },
+  "icon_mount_horse": {
+   "file": "assets/runtime/icon_mount_horse.webp",
+   "w": 96,
+   "h": 96
+  },
+  "icon_mount_wolf": {
+   "file": "assets/runtime/icon_mount_wolf.webp",
+   "w": 96,
+   "h": 96
+  },
+  "icon_mount_lizard": {
+   "file": "assets/runtime/icon_mount_lizard.webp",
+   "w": 96,
+   "h": 96
+  },
+  "icon_mount_elk": {
+   "file": "assets/runtime/icon_mount_elk.webp",
+   "w": 96,
+   "h": 96
+  },
+  "icon_mount_skelhorse": {
+   "file": "assets/runtime/icon_mount_skelhorse.webp",
+   "w": 96,
+   "h": 96
+  },
+  "icon_mount_griffin": {
+   "file": "assets/runtime/icon_mount_griffin.webp",
+   "w": 96,
+   "h": 96
+  },
+  "icon_mount_unicorn": {
+   "file": "assets/runtime/icon_mount_unicorn.webp",
+   "w": 96,
+   "h": 96
+  },
+  "icon_mount_nightmare": {
+   "file": "assets/runtime/icon_mount_nightmare.webp",
+   "w": 96,
+   "h": 96
+  },
+  "icon_wing_rose": {
+   "file": "assets/runtime/icon_wing_rose.webp",
+   "w": 96,
+   "h": 96
+  },
+  "icon_wing_angel": {
+   "file": "assets/runtime/icon_wing_angel.webp",
+   "w": 96,
+   "h": 96
+  },
+  "icon_wing_bat": {
+   "file": "assets/runtime/icon_wing_bat.webp",
+   "w": 96,
+   "h": 96
+  },
+  "icon_wing_fairy": {
+   "file": "assets/runtime/icon_wing_fairy.webp",
+   "w": 96,
+   "h": 96
+  },
+  "icon_wing_phoenix": {
+   "file": "assets/runtime/icon_wing_phoenix.webp",
+   "w": 96,
+   "h": 96
+  },
+  "icon_wing_ice": {
+   "file": "assets/runtime/icon_wing_ice.webp",
+   "w": 96,
+   "h": 96
+  },
+  "icon_wing_star": {
+   "file": "assets/runtime/icon_wing_star.webp",
+   "w": 96,
+   "h": 96
+  },
+  "icon_wing_abyss": {
+   "file": "assets/runtime/icon_wing_abyss.webp",
+   "w": 96,
+   "h": 96
+  },
+  "icon_steed_menu_mount": {
+   "file": "assets/runtime/icon_steed_menu_mount.webp",
+   "w": 96,
+   "h": 96
+  },
+  "icon_steed_menu_wing": {
+   "file": "assets/runtime/icon_steed_menu_wing.webp",
+   "w": 96,
+   "h": 96
+  },
+  "icon_steed_food": {
+   "file": "assets/runtime/icon_steed_food.webp",
+   "w": 96,
+   "h": 96
+  },
+  "icon_steed_feather": {
+   "file": "assets/runtime/icon_steed_feather.webp",
+   "w": 96,
+   "h": 96
+  },
+  "icon_steed_ticket_mount": {
+   "file": "assets/runtime/icon_steed_ticket_mount.webp",
+   "w": 96,
+   "h": 96
+  },
+  "icon_steed_ticket_wing": {
+   "file": "assets/runtime/icon_steed_ticket_wing.webp",
+   "w": 96,
+   "h": 96
+  },
+  "hero_mount": {
+   "file": "assets/runtime/steed_hero.webp",
+   "w": 960,
+   "h": 480
+  }
+ },
+ "gradeFrames": {
+  "rare": {
+   "file": "assets/runtime/frame_sg_rare.webp",
+   "w": 160,
+   "h": 160,
+   "inner": {
+    "l": 0.128,
+    "t": 0.126,
+    "r": 0.872,
+    "b": 0.872
+   }
+  },
+  "epic": {
+   "file": "assets/runtime/frame_sg_epic.webp",
+   "w": 160,
+   "h": 160,
+   "inner": {
+    "l": 0.133,
+    "t": 0.145,
+    "r": 0.867,
+    "b": 0.864
+   }
+  },
+  "legendary": {
+   "file": "assets/runtime/frame_sg_legendary.webp",
+   "w": 160,
+   "h": 160,
+   "inner": {
+    "l": 0.143,
+    "t": 0.163,
+    "r": 0.855,
+    "b": 0.844
+   }
+  },
+  "mythic": {
+   "file": "assets/runtime/frame_sg_mythic.webp",
+   "w": 160,
+   "h": 160,
+   "inner": {
+    "l": 0.172,
+    "t": 0.192,
+    "r": 0.835,
+    "b": 0.841
+   }
+  },
+  "up": {
+   "file": "assets/runtime/frame_sg_up.webp",
+   "w": 115,
+   "h": 128
   }
  }
 }

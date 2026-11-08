@@ -690,10 +690,25 @@ img.awk-b, .awk-b img { border: 2px solid #b48cff !important; border-radius: 8px
 /* ---- v11 스킬 등급 (뽑기형) ---- */
 .sg-tag { display: inline-block; font-size: 11px; font-weight: 800; padding: 0 6px; border-radius: 6px; line-height: 18px; color: #140f1b; background: var(--sgc, var(--r-common)); vertical-align: 1px; }
 .sg-common { --sgc: var(--r-common); } .sg-rare { --sgc: var(--r-rare); } .sg-epic { --sgc: var(--r-epic); } .sg-legendary { --sgc: var(--r-legendary); } .sg-mythic { --sgc: var(--r-mythic); }
-img.sg-rare, img.sg-epic, img.sg-legendary, img.sg-mythic { outline: 2px solid var(--sgc); outline-offset: -1px; border-radius: 8px; }
-img.sg-legendary, img.sg-mythic { box-shadow: 0 0 8px color-mix(in srgb, var(--sgc) 70%, transparent); }
-.skills .skill.sg-rare, .skills .skill.sg-epic, .skills .skill.sg-legendary, .skills .skill.sg-mythic { border-color: var(--sgc); box-shadow: 0 0 0 1px var(--sgc) inset; }
-.skills .skill.sg-legendary, .skills .skill.sg-mythic { box-shadow: 0 0 0 1px var(--sgc) inset, 0 0 8px color-mix(in srgb, var(--sgc) 60%, transparent); }
+/* GPT M skill grade frames (tools/extract_gpt_m.py): the frame's see-through middle spans
+   ~74% of the art, so the overlay is drawn 12% past the icon on each side and its bar
+   covers the icon edge. Common = no frame. */
+.sgf { position: relative; display: inline-block; line-height: 0; flex: none; vertical-align: middle; }
+.sgf > img { display: block; }
+.sgf::after, .skills .skill.sgb::after { content: ''; position: absolute; inset: -12%; background: var(--sgf) center / 100% 100% no-repeat; pointer-events: none; z-index: 1; }
+.sgf-rare, .skills .skill.sg-rare { --sgf: url(../assets/runtime/frame_sg_rare.webp); }
+.sgf-epic, .skills .skill.sg-epic { --sgf: url(../assets/runtime/frame_sg_epic.webp); }
+.sgf-legendary, .skills .skill.sg-legendary { --sgf: url(../assets/runtime/frame_sg_legendary.webp); }
+.sgf-mythic, .skills .skill.sg-mythic { --sgf: url(../assets/runtime/frame_sg_mythic.webp); }
+/* skill bar: the button is the wrapper (overflow visible so the frame can reach past it) */
+.skills .skill.sgb { overflow: visible; border-color: transparent; background: transparent; }
+.skills .skill.sgb::after { inset: -10%; }
+.skills .skill.sgb > img { border-radius: 6px; }
+.skills .skill.sgb .cd { border-radius: 0 0 6px 6px; overflow: hidden; }
+.skills .skill.ult.sgb { border-color: var(--sgc); background: var(--panel); overflow: hidden; }
+.skills .skill.ult.sgb::after { content: none; }
+img.sg-up-ico { width: 16px !important; height: 16px !important; margin: 0 4px 0 0 !important; vertical-align: -3px; object-fit: contain; display: inline-block; }
+.draw-up img.sg-up-ico { width: 20px !important; height: 20px !important; vertical-align: -5px; }
 .sk-ic-btn { padding: 0; border: 0; background: none; cursor: pointer; line-height: 0; flex: none; }
 .sg-card .sg-row { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--ibord); min-width: 0; }
 .sg-card .sg-row .sg-tag { flex: none; min-width: 34px; text-align: center; }
@@ -702,13 +717,19 @@ img.sg-legendary, img.sg-mythic { box-shadow: 0 0 8px color-mix(in srgb, var(--s
 .sg-card .sg-row.past { opacity: .55; }
 .sg-card .sg-row .sg-nx { flex: none; font-size: 11px; color: var(--gold); font-weight: 800; }
 .draw .tag.up { position: static; order: -1; align-self: center; margin: 12px 0 2px; font-size: 11px; background: var(--r-legendary); color: #160f1d; }
-.draw .tag.up ~ img, .draw .tag.up + img { margin-top: 0; }
+.draw .tag.up ~ img, .draw .tag.up + img, .draw .tag.up ~ .sgf > img { margin-top: 0; }
+.draw .sgf { margin: 8px 0 4px; }
+.draw .sgf > img { margin: 0; }
+.draw .tag.up { display: inline-flex; align-items: center; }
 .draw-up { text-align: center; color: var(--r-legendary); font-weight: 800; margin: 0 0 8px; }
 .pbar.mythic i { background: var(--r-mythic); }
 /* v12 탈것 · 날개 */
 .steed-cards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.steed-hero { position: relative; margin: -2px 0 10px; border-radius: 10px; overflow: hidden; aspect-ratio: 2 / 1; max-height: 200px; border: 1px solid var(--ibord); background: #120e18; }
+.steed-hero-img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; display: block; }
+.steed-hero-cap { position: absolute; left: 10px; bottom: 8px; font-size: 12px; font-weight: 800; color: #f3e7c9; text-shadow: 0 1px 3px #000, 0 0 8px #000; letter-spacing: .02em; }
 .steed-card b { font-size: 12px; text-align: center; word-break: keep-all; }
-.steed-card .steed-img { width: 100%; max-width: 72px; height: 48px; object-fit: contain; }
+.steed-card .steed-img { width: 100%; max-width: 64px; height: 56px; object-fit: contain; }
 .steed-card.unseen .steed-img { filter: grayscale(1) brightness(.55); }
 .steed-grade { font-size: 11px; font-weight: 700; }
 .steed-lv .btn, .btn-row .btn .cost-chip { white-space: nowrap; }
@@ -716,4 +737,4 @@ img.sg-legendary, img.sg-mythic { box-shadow: 0 0 8px color-mix(in srgb, var(--s
 .steed-results { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 6px; }
 .steed-res { display: flex; flex-direction: column; align-items: center; border: 1px solid var(--border); border-radius: 8px; padding: 4px; font-size: 12px; text-align: center; min-width: 0; }
 .steed-res.dup { opacity: .8; }
-.steed-res .steed-img { width: 72px; height: 48px; object-fit: contain; }
+.steed-res .steed-img { width: 56px; height: 56px; object-fit: contain; }

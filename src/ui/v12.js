@@ -8,12 +8,6 @@ import { button, h, img, openModal, toast } from './dom.js';
 import { costChip, fail } from './screens.js';
 
 const TABLE = { mount: MOUNTS, wing: WINGS };
-const PLACE = {   // placeholder glyph colours until GPT N5 icons arrive
-  mount: ['#D8B675', 'M'], wing: ['#C9A6FF', 'W'], food: ['#E8C25A', '먹'], feather: ['#9FE3FF', '깃'], ticket_mount: ['#D8B675', '권'], ticket_wing: ['#C9A6FF', '권'],
-};
-const svgIcon = (bg, glyph) => 'data:image/svg+xml;utf8,' + encodeURIComponent(
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><circle cx="24" cy="24" r="21" fill="${bg}" stroke="#1a1420" stroke-width="3"/><text x="24" y="31" font-size="20" font-family="sans-serif" font-weight="700" text-anchor="middle" fill="#1a1420">${glyph}</text></svg>`);
-
 // key: mount | wing | food | feather | ticket_mount | ticket_wing | mount_<id> | wing_<id>
 export function steedIcon(key) {
   const sm = (spriteMeta() && spriteMeta().steeds) || {};
@@ -21,12 +15,8 @@ export function steedIcon(key) {
   const e = sm['icon_' + (named || key)];
   if (e) return e.file;
   if (key.startsWith('mount_') && sm[key + '_run1']) return sm[key + '_run1'].file;
-  if (key.startsWith('mount_') || key.startsWith('wing_')) {
-    const kind = key.startsWith('mount_') ? 'mount' : 'wing', d = TABLE[kind][key.slice(kind.length + 1)];
-    return svgIcon(d ? d.color : '#888', d ? d.name.slice(0, 1) : '?');
-  }
-  const p = PLACE[key] || ['#888', '?'];
-  return svgIcon(p[0], p[1]);
+  if (key.startsWith('wing_') && sm[key + '_up']) return sm[key + '_up'].file;
+  return 'assets/runtime/icon_steed_menu_' + (key.startsWith('wing') ? 'wing' : 'mount') + '.webp';
 }
 const matKey = (kind) => (kind === 'mount' ? 'food' : 'feather');
 function matChip(kind, amount, short = false) {
@@ -108,7 +98,9 @@ export function openSteeds(app, kind = 'mount', focus = null) {
       h('h3', null, `${K.name} 소환`),
       h('div', { class: 'btn-row' }, drawBtn(1), drawBtn(10)),
       h('p', { class: 'muted small', style: { margin: '6px 0 0' } }, `확률: ${rates}. 천장: 전설 이상 없이 ${S.pity}회째 소환은 전설 확정 (지금 ${B.pity}/${S.pity}). 중복은 조각 ${S.dupShards}개. 소환 1회마다 ${K.matName} ${S.mats10 / 10}개. 소환권을 먼저 쓰고, 모자라면 보석(1회 ${S.gem} · 10회 ${S.gem10}).`));
+    const hero = kind === 'mount' && (spriteMeta().steeds || {}).hero_mount;
     const body = h('div', { dataset: { screen: kind === 'mount' ? 'mounts' : 'wings' } },
+      hero ? h('div', { class: 'steed-hero' }, img(hero.file, '', 'steed-hero-img'), h('span', { class: 'steed-hero-cap' }, '함께 달리는 동료')) : null,
       h('div', { class: 'wallet-row' },
         h('span', { class: 'cur' }, img(steedIcon(matKey(kind)), '', 'cur-ico'), `${K.matName} ${fmtFull(have)}`),
         h('span', { class: 'cur' }, img(steedIcon('ticket_' + kind), '', 'cur-ico'), `소환권 ${fmtFull(s.wallet[K.ticket] || 0)}`)),
@@ -129,7 +121,7 @@ export function v12Tiles(app) {
   const t = (kind) => {
     const B = s[ST.KINDS[kind].key] || ST.defaultSteeds();
     const T = TABLE[kind];
-    return { id: kind === 'mount' ? 'mounts' : 'wings', src: steedIcon(kind === 'mount' ? 'mount_' + (B.equipped || 'horse') : kind), t: kind === 'mount' ? '탈것' : '날개',
+    return { id: kind === 'mount' ? 'mounts' : 'wings', src: steedIcon(kind), t: kind === 'mount' ? '탈것' : '날개',
       s: B.equipped ? `${T[B.equipped].name} Lv ${B.owned[B.equipped].lv}` : `${Object.keys(B.owned).length}/${Object.keys(T).length}`,
       dot: steedTodo(s, kind), on: () => openSteeds(app, kind) };
   };

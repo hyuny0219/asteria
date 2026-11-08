@@ -445,7 +445,7 @@ export class App {
       const sk = SKILLS[id];
       const cd = h('span', { class: 'cd', style: { height: '0%' } });
       const cdt = h('span', { class: 'cdt' });
-      const b = h('button', { type: 'button', class: `skill sg-${(s.skills.grades && s.skills.grades[id]) || 'common'}`, 'aria-label': `${sk.name}${sk.kind === 'passive-counter' ? ' (자동 반응)' : ''}`, onClick: () => this.castSkill(id) }, img(skillIcon(sk.icon), ''), cd, cdt);
+      const b = h('button', { type: 'button', class: `skill sg-${(s.skills.grades && s.skills.grades[id]) || 'common'}${((s.skills.grades && s.skills.grades[id]) || 'common') === 'common' ? '' : ' sgb'}`, 'aria-label': `${sk.name}${sk.kind === 'passive-counter' ? ' (자동 반응)' : ''}`, onClick: () => this.castSkill(id) }, img(skillIcon(sk.icon), ''), cd, cdt);
       bar.appendChild(b);
       this.skillEls.push({ id, cd, cdt, b });
     }
@@ -453,7 +453,7 @@ export class App {
     const gauge = h('i', { style: { width: '0%' } });
     const ultId = prog.ultId(s);
     const ultSk = SKILLS[ultId];
-    const ult = h('button', { type: 'button', class: `skill ult sg-${(s.skills.grades && s.skills.grades[ultId]) || 'common'}`, 'aria-label': `궁극기 ${ultSk.name}`, onClick: () => this.castSkill(ultId) }, img(skillIcon(ultSk.icon), ''), h('span', { class: 'gauge' }, gauge));
+    const ult = h('button', { type: 'button', class: `skill ult sg-${(s.skills.grades && s.skills.grades[ultId]) || 'common'}${((s.skills.grades && s.skills.grades[ultId]) || 'common') === 'common' ? '' : ' sgb'}`, 'aria-label': `궁극기 ${ultSk.name}`, onClick: () => this.castSkill(ultId) }, img(skillIcon(ultSk.icon), ''), h('span', { class: 'gauge' }, gauge));
     this.ultName = ultSk.name;
     bar.appendChild(ult);
     this.ultEl = { b: ult, gauge };
