@@ -134,3 +134,11 @@ docs/handoff/                   인계 사양 사본
 
 ## 공개·배포
 선배 지시로 GitHub Pages에 배포합니다: https://hyuny0219.github.io/asteria/ (`main` 푸시 시 갱신).
+
+### 난이도 밸런스 확인
+
+```
+node tools/balance_sim_v4.mjs --seeds 1 --days 30 --rebirths 0 --full --snap /tmp/snaps --snap-days 10,30
+node tools/difficulty_sim.mjs /tmp/snaps [--diffs normal,hard] [--set normal.hp.growth=1.02]
+node tools/qa_difficulty.cjs <port>
+```

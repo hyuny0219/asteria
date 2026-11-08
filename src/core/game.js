@@ -32,6 +32,7 @@ import * as tower from './tower.js';
 import * as raid from './raid.js';
 import * as meta from './meta.js';
 import * as stages from './stages.js';
+import * as DF from './difficulty.js';
 import * as mplus from './mplus.js';
 import * as expedition from './expedition.js';
 import * as gear from './gearplus.js';
@@ -301,10 +302,11 @@ export class Game {
       kind: 'farm', rng: this.rng, hero: this.heroCfg({}),
       farm: {
         monsters: region.monsters,
-        levelFn: () => waveLevel(this.state.progression.region, this.state.progression.wave),
+        levelFn: () => DF.farmLevel(DF.curDiff(this.state), this.state.progression.region, this.state.progression.wave),
+        mulFn: () => DF.enemyMul(DF.curDiff(this.state), this.state.progression.region, this.state.progression.wave),
         eliteAllowed: () => this.state.progression.wave >= BALANCE.monster.elite.fromWave,
         killsFn: () => this.state.progression.waveKills,
-        stageFn: () => this.state.progression.region + '-' + this.state.progression.wave,
+        stageFn: () => DF.curDiff(this.state) + ':' + this.state.progression.region + '-' + this.state.progression.wave,
       },
     });
     this.active = this.farm;
@@ -366,7 +368,8 @@ export class Game {
       const pst = playerStats(s);
       const gp = (1 + (pst.goldPct || 0)) * pst.rebirth.gold;
       const pm = BALANCE.phase.rewardMul;   // v12: travel legs between phases → richer kills
-      r.gold = Math.floor(r.gold * pm * mul.gold * gp); r.exp = Math.floor(r.exp * pm * mul.exp * (1 + (pst.expPct || 0)) * pst.rebirth.exp);
+      const dm = DF.rewardMul(DF.curDiff(s));   // 노말/하드 gold · exp
+      r.gold = Math.floor(r.gold * pm * dm.gold * mul.gold * gp); r.exp = Math.floor(r.exp * pm * dm.exp * mul.exp * (1 + (pst.expPct || 0)) * pst.rebirth.exp);
       missions.track(s, 'kills', 1, this.now());
       meta.trackKill(s, e.id);
       meta.trackPassKill(s, this.now());
@@ -402,22 +405,24 @@ export class Game {
         this.queueStageClear(p.region, p.wave, { deaths: run.deaths, timeSec: run.ms / 1000 });
         this.run = null;
         const rare = this.farm === this.active && worldboss.rollRare(p.region, this.rng);
-        if (rare) this.farm.spawnRare(rare, waveLevel(p.region, p.wave));
+        if (rare) this.farm.spawnRare(rare, DF.farmLevel(DF.curDiff(s), p.region, p.wave));
         if (p.holdKills > 0) { /* holding after a retreat */ }
         else if (p.wave < 10 && p.autoAdvance !== false) { p.wave++; advanced = true; }
-        p.maxWave[p.region] = Math.max(p.maxWave[p.region] || 1, p.wave);
+        const tr = DF.track(s);
+        tr.maxWave[p.region] = Math.max(tr.maxWave[p.region] || 1, p.wave);
         // after a rebirth, regions whose boss is already beaten are re-climbed automatically
         // (only when the next region's first wave is at most 5 levels above the hero)
         if (p.wave >= 10 && !advanced && p.autoAdvance !== false && s.rebirth?.count && !this.climbQueued) {
           const reg = REGIONS.find((x) => x.id === p.region);
           const next = REGIONS[REGIONS.indexOf(reg) + 1];
-          if (reg && next && s.progression.bossCleared[reg.boss] && prog.regionUnlocked(s, next.id) && next.minLv <= s.player.level + 5) {
+          if (reg && next && tr.bossCleared[reg.boss] && prog.regionUnlocked(s, next.id) && (!DF.isEasy(s) || next.minLv <= s.player.level + 5)) {
             this.climbQueued = true;
             queueMicrotask(() => this.setFarm(next.id, 1, true).finally(() => { this.climbQueued = false; }));
           }
         }
       }
       const vf = this.verifier.onKill(p.region, p.wave, e.level, this.active.t);
+      if (vf) vf.diff = DF.curDiff(s);
       if (vf && !this.sameFarm(p.verifiedFarm, vf)) { p.verifiedFarm = vf; this.emit('farmVerified', vf); }
       this.emit('reward', { gold: r.gold, exp: r.exp, expRes, loot, token: tok, advanced, enemy: e, supplyEq: r.supplyEq, supplySk: r.supplySk, rare: r.rare });
       if (expRes.levels) { this.syncHero(); this.emit('levelUp', { level: s.player.level }); this.checkpoint('levelUp'); }
@@ -446,17 +451,18 @@ export class Game {
   // transient per-stage run (combat ms + deaths); resets when the farm stage changes
   stageRun() {
     const p = this.state.progression;
-    const key = stages.stageKey(p.region, p.wave);
+    const key = DF.curDiff(this.state) + ':' + stages.stageKey(p.region, p.wave);
     if (!this.run || this.run.key !== key) this.run = { key, ms: 0, deaths: 0 };
     return this.run;
   }
   // Clears are committed in their own transaction (first-clear reward once). They wait in a
   // queue while another commit is in flight and are flushed by the loop — never dropped.
   queueStageClear(region, wave, run) {
-    const st = this.state.stages || {};
+    const d = DF.curDiff(this.state);
+    const st = DF.track(this.state, d);
     const key = stages.stageKey(region, wave);
-    if (st.claimed && st.claimed[key] && stages.starsFor(run, wave) <= (st.stars[key] || 0)) return;   // nothing to gain
-    (this.stageQueue ||= []).push({ region, wave, run });
+    if (st.claimed[key] && stages.starsFor(run, wave) <= (st.stars[key] || 0)) return;   // nothing to gain
+    (this.stageQueue ||= []).push({ region, wave, run, d });
     queueMicrotask(() => this.flushStageClears());
   }
   async flushStageClears() {
@@ -465,7 +471,7 @@ export class Game {
     try {
       while (this.stageQueue.length && !this.busy) {
         const q = this.stageQueue[0];
-        const r = await this.transact('stageClear', (s) => stages.recordClear(s, q.region, q.wave, q.run));
+        const r = await this.transact('stageClear', (s) => stages.recordClear(s, q.region, q.wave, q.run, q.d || 'easy'));
         if (!r.ok && (r.reason === 'busy' || r.reason === 'save' || r.reason === 'conflict')) break;   // retry on next flush
         this.stageQueue.shift();
         if (r.ok && (r.first || r.improved)) this.emit('stageClear', r);   // UI shows it only after the commit
@@ -475,7 +481,7 @@ export class Game {
   setStageAuto(on) {
     return this.transact('stageAuto', (s) => { s.stages.auto = !!on; s.progression.autoAdvance = !!on; return { ok: true, auto: !!on }; });
   }
-  sameFarm(a, b) { return a && a.region === b.region && a.wave === b.wave && Math.abs(a.killsPerSec - b.killsPerSec) < 0.02; }
+  sameFarm(a, b) { return a && a.region === b.region && a.wave === b.wave && (a.diff || 'easy') === (b.diff || 'easy') && Math.abs(a.killsPerSec - b.killsPerSec) < 0.02; }
 
   rollLoot(e) {
     const s = this.state;
@@ -486,8 +492,12 @@ export class Game {
       const { mythic, ...noMythic } = EQ.bossRarity;
       items.push(makeItem(s, { slot: rollSlot(this.rng), rarity: rollRarity(this.rng, noMythic), level: e.level, rng: this.rng, source: 'fieldBoss' }));
     } else {
-      const chance = (e.elite ? EQ.eliteDropChance : EQ.dropChance) * (1 + (playerStats(s).dropPct || 0));
-      if (this.rng() < chance) items.push(makeItem(s, { slot: rollSlot(this.rng), rarity: rollRarity(this.rng, e.elite ? EQ.eliteRarity : EQ.rarityConditional), level: e.level, rng: this.rng }));
+      const d = DF.curDiff(s);
+      const D = DF.DIFFICULTY[d];
+      const chance = (e.elite ? EQ.eliteDropChance : EQ.dropChance) * (1 + (playerStats(s).dropPct || 0)) * DF.rewardMul(d).drop;
+      // 노말/하드: one richer table for every farm drop (elites still drop more often)
+      const table = d !== 'easy' ? D.rarity : e.elite ? EQ.eliteRarity : EQ.rarityConditional;
+      if (this.rng() < chance) items.push(makeItem(s, { slot: rollSlot(this.rng), rarity: rollRarity(this.rng, table), level: e.level, rng: this.rng }));
     }
     const R = BALANCE.monster.rewards;
     if (e.elite && this.rng() < R.oreChanceElite) ore += 1 + Math.floor(e.level / 8);
@@ -502,17 +512,20 @@ export class Game {
   canChallengeBoss(bossId) {
     const b = BOSSES[bossId];
     const s = this.state;
-    if (b.raid) return { ok: false, reason: 'raid' };
+    // (the weekly raid is its own session — startRaid; this is the stage boss fight)
+    const t = DF.track(s);
     if (!prog.regionUnlocked(s, b.region)) return { ok: false, reason: 'region' };
-    if ((s.progression.maxWave[b.region] || 1) < 10) return { ok: false, reason: 'wave', need: 10, have: s.progression.maxWave[b.region] || 1 };
+    if ((t.maxWave[b.region] || 1) < 10) return { ok: false, reason: 'wave', need: 10, have: t.maxWave[b.region] || 1 };
     return { ok: true };
   }
   startBoss(bossId) {
     const c = this.canChallengeBoss(bossId);
     if (!c.ok || this.mode !== 'FARM') return c.ok ? { ok: false, reason: 'mode' } : c;
     missions.track(this.state, 'boss', 1, this.now());
-    this.session = { kind: 'boss', id: uid('boss'), bossId, startedAt: this.now(), viewBefore: this.state.settings.battleView };
-    this.active = new Battle({ kind: 'boss', rng: this.rng, hero: this.sessionHero({ session: true, kind: 'boss' }), boss: { id: bossId } });
+    const d = DF.curDiff(this.state);
+    this.session = { kind: 'boss', id: uid('boss'), bossId, diff: d, startedAt: this.now(), viewBefore: this.state.settings.battleView };
+    const diff = d === 'easy' ? null : { level: DF.bossLevel(d, bossId), mul: DF.enemyMul(d, BOSSES[bossId].region, 'boss') };
+    this.active = new Battle({ kind: 'boss', rng: this.rng, hero: this.sessionHero({ session: true, kind: 'boss' }), boss: { id: bossId, diff } });
     this.acc = 0;
     this.setMode('BOSS');
     this.emit('session', this.session);
@@ -595,19 +608,42 @@ export class Game {
         meta.trackKill(s, sess.bossId);
         meta.addPassXp(s, PASS.xp.boss, this.now());
         const b = BOSSES[sess.bossId];
-        const rw = killRewards(b.level, { boss: true });
+        const d = sess.diff || 'easy';
+        const dm = DF.rewardMul(d);
+        const rw = killRewards(DF.bossLevel(d, sess.bossId), { boss: true });
+        rw.gold = Math.floor(rw.gold * dm.gold); rw.exp = Math.floor(rw.exp * dm.exp);
         s.wallet.gold += rw.gold;
         res.gold = rw.gold;
         res.exp = rw.exp;
         res.expRes = prog.gainExp(s, rw.exp);
-        const cleared = prog.onBossCleared(s, sess.bossId);
-        if (REGION_BY_ID[BOSSES[sess.bossId].region]?.boss === sess.bossId) res.stage = stages.recordClear(s, BOSSES[sess.bossId].region, 'boss', { deaths: 0, timeSec: ev.t / 1000 });
+        res.diff = d;
+        const cleared = prog.onBossCleared(s, sess.bossId, d);
+        if (REGION_BY_ID[BOSSES[sess.bossId].region]?.boss === sess.bossId) res.stage = stages.recordClear(s, BOSSES[sess.bossId].region, 'boss', { deaths: 0, timeSec: ev.t / 1000 }, d);
         res.first = cleared.first;
         res.unlocked = cleared.unlocked;
+        res.diffUnlocked = cleared.diffUnlocked;
         const items = [];
         const order = Object.keys(BOSSES).indexOf(sess.bossId);
         const setSlot = () => SET_SLOTS[Math.floor(this.rng() * SET_SLOTS.length)];
-        if (cleared.first && !s.progression.firstClearClaimed[sess.bossId]) {
+        const fcKey = d === 'easy' ? sess.bossId : `${d}:${sess.bossId}`;
+        if (d !== 'easy') {
+          // 노말/하드: own first clear (epic/legendary Lv 100 piece, gems/ore × firstClearMul), richer repeats
+          const D = DF.DIFFICULTY[d];
+          const lv = DF.bossLevel(d, sess.bossId);
+          if (cleared.first && !s.progression.firstClearClaimed[fcKey]) {
+            s.progression.firstClearClaimed[fcKey] = sess.id;
+            const m = DF.firstClearMul(d);
+            items.push(makeItem(s, { slot: setSlot(), rarity: rollRarity(this.rng, D.bossFirst), level: lv, rng: this.rng, source: 'firstClear', set: b.region }));
+            s.wallet.ore += 30 * (order + 1) * m; res.ore = 30 * (order + 1) * m;
+            s.wallet.gem += 100 * m; res.gem = 100 * m;
+            s.wallet.starShard += D.order; res.starShard = D.order;
+          } else {
+            const { mythic, ...table } = EQ.bossRarity;
+            items.push(makeItem(s, { slot: setSlot(), rarity: 'rare', level: lv, rng: this.rng, source: 'boss', set: b.region }));
+            items.push(makeItem(s, { slot: this.rng() < 0.5 ? setSlot() : rollSlot(this.rng), rarity: rollRarity(this.rng, table), level: lv, rng: this.rng, source: 'boss', set: b.region }));
+            if (this.rng() < 0.15 * D.order) { s.wallet.starShard += 1; res.starShard = 1; }
+          }
+        } else if (cleared.first && !s.progression.firstClearClaimed[sess.bossId]) {
           s.progression.firstClearClaimed[sess.bossId] = sess.id;
           // first clear: a guaranteed piece (rare for the first three bosses, epic after), ore and gems
           const slot = sess.bossId === 'B01' ? 'weapon' : sess.bossId === 'B02' ? 'armor' : order === 2 ? 'necklace' : setSlot();
@@ -661,8 +697,6 @@ export class Game {
         if (!markTx(s, sess.id)) return { ok: false, reason: 'duplicate' };
         const fr = raid.finishRaid(s, ev.damage || 0, this.rng);
         fr.overflowed = eco.addItems(s, fr.items).overflowed;
-        const sc = stages.recordRaidClear(s, fr.grade);
-        if (sc.ok) fr.stage = sc;
         return { ...fr, win: true, timeSec: Math.round(ev.t / 1000), reason: ev.reason };
       });
     } else if (sess.kind === 'trial') {
@@ -719,7 +753,7 @@ export class Game {
   async setFarm(regionId, wave, autoAdvance = true) {
     const r = await this.transact('setFarm', (s) => {
       if (!prog.regionUnlocked(s, regionId)) return { ok: false, reason: 'locked' };
-      const max = s.progression.maxWave[regionId] || 1;
+      const max = DF.track(s).maxWave[regionId] || 1;
       if (wave > max) return { ok: false, reason: 'wave' };
       s.progression.region = regionId;
       s.progression.wave = wave;
@@ -728,6 +762,14 @@ export class Game {
       return { ok: true };
     });
     if (r.ok && this.mode === 'FARM') { this.startFarm(); this.emit('farmChanged', {}); }
+    return r;
+  }
+
+  // 난이도 전환: farm moves to that difficulty's last position (FARM mode only)
+  async switchDifficulty(d) {
+    if (this.mode !== 'FARM') return { ok: false, reason: 'mode' };
+    const r = await this.transact('difficulty', (s) => DF.switchDiff(s, d));
+    if (r.ok) { this.run = null; if (this.mode === 'FARM') this.startFarm(); this.emit('farmChanged', {}); }
     return r;
   }
 

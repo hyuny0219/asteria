@@ -21,6 +21,7 @@ import { autoGrowReserve } from '../core/autogrow.js';
 import { killRewards } from '../core/combat.js';
 import { enhanceChance, itemOptions, itemStats, rarityLabel, rarityOrder } from '../core/items.js';
 import * as prog from '../core/progression.js';
+import * as DF from '../core/difficulty.js';
 import { stageLevel, stageReward, nextRefillAt } from '../core/dungeon.js';
 import { activeSetBonuses, playerStats, powerRating, setCounts } from '../core/stats.js';
 import { RATE_METHOD } from '../core/offline.js';
@@ -489,11 +490,12 @@ function adventureHeader(app) {
   const region = REGION_BY_ID[s.progression.region];
   const boss = BOSSES[region.boss];
   const can = app.game.canChallengeBoss(region.boss);
-  const cleared = s.progression.bossCleared[region.boss];
+  const T = DF.track(s), pre = DF.prefix(DF.curDiff(s));
+  const cleared = T.bossCleared[region.boss];
   const wrap = h('div');
   wrap.appendChild(h('div', { class: 'section-title' }, '사냥터 · 보스'));
   wrap.appendChild(h('div', { class: 'card' },
-    h('div', { class: 'kv' }, region.name, h('b', null, `스테이지 ${stageLabel(region.id, s.progression.wave)} · 최고 ${stageLabel(region.id, s.progression.maxWave[region.id] || 1)}`)),
+    h('div', { class: 'kv' }, region.name, h('b', null, `스테이지 ${pre}${stageLabel(region.id, s.progression.wave)} · 최고 ${stageLabel(region.id, T.maxWave[region.id] || 1)}`)),
     h('div', { class: 'kv' }, boss.name, h('b', null, cleared ? '처치 완료' : can.ok ? '도전 가능' : '웨이브 10 도달 시')),
     h('div', { class: 'btn-row', style: { marginTop: '8px' } },
       button('스테이지 지도', { cls: 'btn', onClick: () => openWorld(app) }),
@@ -550,10 +552,11 @@ function huntCard(app) {
   const region = REGION_BY_ID[s.progression.region];
   const boss = BOSSES[region.boss];
   const can = app.game.canChallengeBoss(region.boss);
-  const cleared = s.progression.bossCleared[region.boss];
+  const T = DF.track(s), pre = DF.prefix(DF.curDiff(s));
+  const cleared = T.bossCleared[region.boss];
   const card = h('div', { class: 'card', dataset: { screen: 'hunt' } },
     h('div', { class: 'kv' }, h('b', null, `${region.name} · ${boss.name}`), h('b', null, cleared ? '처치 완료' : can.ok ? '도전 가능' : `${stageLabel(region.id, 10)} 필요`)),
-    h('div', { class: 'kv' }, '사냥 중', h('b', null, `스테이지 ${stageLabel(region.id, s.progression.wave)} · 최고 ${stageLabel(region.id, s.progression.maxWave[region.id] || 1)}`)),
+    h('div', { class: 'kv' }, '사냥 중', h('b', null, `스테이지 ${pre}${stageLabel(region.id, s.progression.wave)} · 최고 ${stageLabel(region.id, T.maxWave[region.id] || 1)}`)),
     h('div', { class: 'btn-row', style: { marginTop: '6px' } },
       button('스테이지 지도', { cls: 'btn', onClick: () => openWorld(app) }),
       button(cleared ? '보스 재도전' : '보스 도전', { cls: 'btn btn-primary', disabled: !can.ok || app.game.mode !== 'FARM', onClick: () => openBoss(app, region.boss) })));
@@ -655,19 +658,26 @@ export function openBoss(app, bossId = null) {
   bossId ||= REGION_BY_ID[s.progression.region].boss;
   const b = BOSSES[bossId];
   const can = app.game.canChallengeBoss(bossId);
-  const first = !s.progression.bossCleared[bossId];
+  const d = DF.curDiff(s);
+  const pre = DF.prefix(d);
+  const first = !DF.track(s, d).bossCleared[bossId];
+  const nextR = REGIONS[REGION_BY_ID[b.region].order + 1];
+  const nextD = DF.DIFF_IDS[DF.DIFFICULTY[d].order + 1];
+  const em = DF.enemyMul(d, b.region, 'boss');
+  const firstTxt = d !== 'easy' ? `${DF.DIFFICULTY[d].bossFirst.legendary >= 0.5 ? '영웅/전설' : '영웅(15% 전설)'} 장비 확정 · 보석·광석 ×${DF.firstClearMul(d)}` : (bossId === 'B01' ? '희귀 무기 1개 확정' : Object.keys(BOSSES).indexOf(bossId) < 3 ? '희귀 장비 1개 확정' : '영웅 장비 1개 확정') + ' · 강화 광석';
   const art = spriteMeta().bosses[bossId];
-  const m = openModal({ id: 'boss', title: '보스 도전', body: h('div', { dataset: { screen: 'boss' } },
+  const m = openModal({ id: 'boss', title: `${pre}보스 도전`, body: h('div', { dataset: { screen: 'boss' } },
     img(art.file, b.name, 'boss-art'),
     h('h3', { style: { fontSize: '18px', margin: '0 0 8px' } }, b.name),
     h('div', { class: 'card' },
       h('div', { class: 'kv' }, '제한 시간', h('b', null, `${BALANCE.combat.bossTimeoutSec}초`)),
-      h('div', { class: 'kv' }, '보스 레벨', h('b', null, `Lv ${b.level}`)),
+      h('div', { class: 'kv' }, '보스 레벨', h('b', null, `Lv ${DF.bossLevel(d, bossId)}${em ? ` · 체력 ×${em.hp.toFixed(2)} · 공격 ×${em.atk.toFixed(2)}` : ''}`)),
       h('div', { class: 'kv' }, '패턴', h('b', null, `${b.heavy.name} · ${b.heavy.everySec}초마다 · 예고 ${b.heavy.telegraphMs / 1000}초`)),
       h('p', { class: 'muted', style: { margin: '6px 0 0' } }, b.desc)),
     h('div', { class: 'card' },
-      h('div', { class: 'kv' }, first ? '최초 처치 보상' : '반복 처치 보상', h('b', null, first ? (bossId === 'B01' ? '희귀 무기 1개 확정' : '희귀 장비 1개 확정') + ' · 강화 광석' : '고급/희귀 장비 1개')),
-      first && bossId !== 'B03' ? h('div', { class: 'kv' }, '다음 지역', h('b', null, REGIONS[REGION_BY_ID[b.region].order + 1].name + ' 개방')) : null,
+      h('div', { class: 'kv' }, first ? '최초 처치 보상' : '반복 처치 보상', h('b', null, first ? firstTxt : d !== 'easy' ? '희귀 장비 1개 + 희귀~전설 1개' : '고급/희귀 장비 1개')),
+      first && nextR ? h('div', { class: 'kv' }, '다음 지역', h('b', null, pre + nextR.name + ' 개방')) : null,
+      first && !nextR && nextD && !DF.diffOpen(s, nextD) ? h('div', { class: 'kv' }, '다음 난이도', h('b', { class: 'd-' + nextD }, `${DF.diffName(nextD)} 난이도 개방`)) : null,
       h('p', { class: 'muted', style: { margin: '6px 0 0' } }, '실패해도 골드·장비 손실은 없고 직전 사냥 위치로 돌아갑니다.'))),
     actions: [
       button(can.ok ? '무료 도전' : can.reason === 'wave' ? `웨이브 10 도달 필요 (현재 ${can.have}/10)` : why(can), { cls: 'btn btn-primary', disabled: !can.ok || app.game.mode !== 'FARM', onClick: () => {
@@ -707,13 +717,15 @@ export function openResult(app, r) {
     tiles.push(...itemRewards(r.items || []));
     if (app.state.settings.sound) sfx('bell');
     const actions = [];
+    if (r.diffUnlocked) actions.push(button(`${DF.diffName(r.diffUnlocked)} 난이도 시작`, { cls: 'btn btn-primary', busy: true, dataset: { act: 'diff-start' }, onClick: async () => { m.close(); back(); const x = await app.game.switchDifficulty(r.diffUnlocked); if (x.ok) toast(`${DF.diffName(r.diffUnlocked)} 1-1에서 사냥합니다.`, 'info'); } }));
     if (r.unlocked) actions.push(button(`${REGION_BY_ID[r.unlocked].name}(으)로 이동`, { cls: 'btn btn-primary', busy: true, onClick: async () => { m.close(); back(); await app.game.setFarm(r.unlocked, 1, true); } }));
-    actions.push(button(r.unlocked ? '현재 지역에서 계속' : '파밍으로 돌아가기', { cls: 'btn' + (r.unlocked ? '' : ' btn-primary'), onClick: () => { m.close(); back(); } }));
-    const m = openModal({ id: 'victory', title: r.first ? '지역 돌파' : '보스 처치', dismissible: false, body: h('div', { dataset: { screen: 'victory' }, class: 'reveal' },
-      h('p', null, `${b.name} 처치 · ${r.timeSec}초`), rewardTiles(tiles),
+    actions.push(button(r.unlocked || r.diffUnlocked ? '현재 지역에서 계속' : '파밍으로 돌아가기', { cls: 'btn' + (r.unlocked || r.diffUnlocked ? '' : ' btn-primary'), onClick: () => { m.close(); back(); } }));
+    const m = openModal({ id: 'victory', title: r.diffUnlocked ? `${DF.diffName(r.diffUnlocked)} 난이도 개방` : r.first ? `${DF.prefix(r.diff || 'easy')}지역 돌파` : '보스 처치', dismissible: false, body: h('div', { dataset: { screen: 'victory' }, class: 'reveal' },
+      h('p', null, `${DF.prefix(r.diff || 'easy')}${b.name} 처치 · ${r.timeSec}초`), rewardTiles(tiles),
+      r.diffUnlocked ? h('p', { class: 'okc' }, `${DF.diffName(r.diffUnlocked)} 난이도가 열렸어요. 1-1부터 더 강한 적과 더 좋은 보상이 기다려요. 스테이지 탭 위 난이도 칩으로 언제든 바꿀 수 있어요.`) : null,
       r.overflowed && r.overflowed.length ? h('p', { class: 'warn' }, `보관함이 가득 차 ${r.overflowed.length}개는 임시 보관함에 들어갔습니다.`) : null,
       r.unlocked ? h('p', { class: 'okc' }, `새 지역 개방: ${REGION_BY_ID[r.unlocked].name}`) : null,
-      r.bossId === 'B01' && r.first ? h('p', { class: 'muted' }, '재료 던전 「별의 채석장」이 열렸습니다.') : null), actions });
+      r.bossId === 'B01' && r.first && (r.diff || 'easy') === 'easy' ? h('p', { class: 'muted' }, '재료 던전 「별의 채석장」이 열렸습니다.') : null), actions });
     return m;
   }
   if (r.kind === 'boss' && !r.win) {
@@ -766,7 +778,7 @@ export function openOffline(app) {
     const by = c.items.reduce((m2, it) => ((m2[it.rarity] = (m2[it.rarity] || 0) + 1), m2), {});
     for (const [r, n] of Object.entries(by)) tiles.push({ icon: itemIcon(r === 'rare' ? 'I02' : r === 'uncommon' ? 'I01' : 'I00'), value: `${n}개`, label: `${RARITY[r].name} 장비` });
   }
-  const farm = c.farm ? `${REGION_BY_ID[c.farm.region].name} 웨이브 ${c.farm.wave} · 분당 ${fmt(c.farm.killsPerSec * 60)}마리` : '—';
+  const farm = c.farm ? `${DF.prefix(c.farm.diff || 'easy')}${REGION_BY_ID[c.farm.region].name} 웨이브 ${c.farm.wave} · 분당 ${fmt(c.farm.killsPerSec * 60)}마리` : '—';
   const body = h('div', { dataset: { screen: 'offline' } },
     h('div', { style: { display: 'flex', gap: '12px', alignItems: 'center' } }, img(classPortrait(app.state.player.cls || 'warrior', 'face'), '', 'face'), h('p', { style: { margin: 0 } }, nothing ? '기다리고 있었어요.' : '돌아오셨군요. 그동안 길을 지켜두었어요.')),
     h('h3', { style: { fontSize: '18px', margin: '8px 0 0' } }, `${fmtDuration(c.elapsedSec)}의 여정`),

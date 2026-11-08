@@ -6,6 +6,7 @@ import { refreshLook } from './items.js';
 import { defaultMeta } from './meta.js';
 import { defaultStages, stagesFromProgress } from './stages.js';
 import { defaultMplus } from './mplus.js';
+import { defaultDiff, defaultTrack } from './difficulty.js';
 import { defaultExpedition } from './expedition.js';
 import { defaultWorldBoss } from './worldboss.js';
 import { defaultCraft } from './crafting.js';
@@ -13,7 +14,7 @@ import { defaultMail } from './mail.js';
 import { defaultSteeds } from './steeds.js';
 import { backfillLegends, defaultGearPlus, defaultLoadouts } from './gearplus.js';
 
-export const SCHEMA_VERSION = 8;
+export const SCHEMA_VERSION = 9;
 
 export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0, cls = 'warrior') {
   return {
@@ -49,6 +50,7 @@ export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0, cls = 'wa
     stages: defaultStages(),
     // v8 콘텐츠 (schema 8): 쐐기 던전 (mplus.js)
     mplus: defaultMplus(),
+    diff: defaultDiff(),                         // 난이도 (schema 9): 이지 = progression/stages; 노말·하드 tracks
     expedition: defaultExpedition(),     // 원정 파견 (expedition.js)
     craft: defaultCraft(),                // 제작 재료 · 보옥 가방 · 마부(슬롯) · 버프 음식 (crafting.js)
     mail: defaultMail(),                  // 우편함 · 운영 우편 배달 기록 · 쿠폰 사용 기록 (mail.js)
@@ -217,6 +219,12 @@ const MIGRATIONS = {
     if (!s.mplus) s.mplus = defaultMplus();
     return s;
   },
+  // 난이도: every existing record stays 이지 (progression/stages untouched); 노말·하드 start empty
+  8: (s) => {
+    s.schemaVersion = 9;
+    if (!s.diff) s.diff = defaultDiff();
+    return s;
+  },
 };
 export function migrate(s) {
   let cur = s;
@@ -243,6 +251,15 @@ export function migrate(s) {
     const b = cur[k];
     if (!b || typeof b !== 'object' || !b.owned || typeof b.owned !== 'object') cur[k] = d[k];
     else { b.pity = Number.isFinite(b.pity) ? b.pity : 0; b.draws = Number.isFinite(b.draws) ? b.draws : 0; if (b.equipped && !b.owned[b.equipped]) b.equipped = null; }
+  }
+  // 난이도 block: keep half-written / tampered data playable
+  if (!cur.diff || typeof cur.diff !== 'object') cur.diff = defaultDiff();
+  if (!['easy', 'normal', 'hard'].includes(cur.diff.cur)) cur.diff.cur = 'easy';
+  cur.diff.tracks ||= {};
+  for (const k of ['normal', 'hard']) {
+    const t = cur.diff.tracks[k], dt = defaultTrack();
+    if (!t || typeof t !== 'object') cur.diff.tracks[k] = dt;
+    else for (const f of Object.keys(dt)) if (t[f] === undefined || t[f] === null) t[f] = dt[f];
   }
   backfillLegends(cur);   // v10: legendary/mythic found before 고유 효과 get one (seeded by item id)
   return cur;

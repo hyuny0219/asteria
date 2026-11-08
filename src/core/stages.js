@@ -4,6 +4,7 @@
 import { BALANCE } from '../data/balance.js';
 import { REGIONS, REGION_BY_ID, BOSSES, waveLevel } from '../data/content.js';
 import { killRewards } from './combat.js';
+import { track, curDiff, firstClearMul, bossLevel } from './difficulty.js';
 
 const ST = BALANCE.stages;
 export const STAGE_COUNT = 10;
@@ -12,17 +13,19 @@ export const stageLabel = (regionId, n) => n === 'boss' ? `${REGION_BY_ID[region
 export function defaultStages() { return { stars: {}, claimed: {}, auto: true }; }
 
 // Small first-clear rewards; boss nodes give more (on top of the existing boss first clear).
-export function stageReward(regionId, n) {
+// 노말/하드: own first-clear rewards (× firstClearMul), gold at Lv 100.
+export function stageReward(regionId, n, d = 'easy') {
   const r = REGION_BY_ID[regionId];
+  const m = firstClearMul(d);
   if (n === 'boss') {
     const b = BOSSES[r.boss];
-    return { gem: ST.bossGem + ST.bossGemPerRegion * r.order, ore: ST.bossOre + ST.bossOrePerRegion * r.order, gold: Math.floor(killRewards(b.level).gold * ST.bossGoldKills) };
+    return { gem: (ST.bossGem + ST.bossGemPerRegion * r.order) * m, ore: (ST.bossOre + ST.bossOrePerRegion * r.order) * m, gold: Math.floor(killRewards(bossLevel(d, b.id)).gold * ST.bossGoldKills * m) };
   }
   const milestone = n % 5 === 0;
   return {
-    gem: milestone ? ST.milestoneGem : ST.gem,
-    ore: ST.ore + ST.orePerRegion * r.order + (milestone ? ST.ore * 2 : 0),
-    gold: Math.floor(killRewards(waveLevel(r, n)).gold * ST.goldKills),
+    gem: (milestone ? ST.milestoneGem : ST.gem) * m,
+    ore: (ST.ore + ST.orePerRegion * r.order + (milestone ? ST.ore * 2 : 0)) * m,
+    gold: Math.floor(killRewards(d === 'easy' ? waveLevel(r, n) : 100).gold * ST.goldKills * m),
   };
 }
 export const starTimeSec = (n) => (n === 'boss' ? ST.bossStarSec : ST.starSec);
@@ -33,17 +36,19 @@ export function starsFor({ deaths = 0, timeSec = Infinity }, n) {
 }
 
 // Record a clear inside a transaction draft. Returns what changed (reward only the first time).
-export function recordClear(state, regionId, n, run) {
+// d: the difficulty the clear happened on (defaults to the current one).
+export function recordClear(state, regionId, n, run, d = curDiff(state)) {
   if (!REGION_BY_ID[regionId] || !(n === 'boss' || (n >= 1 && n <= STAGE_COUNT))) return { ok: false, reason: 'missing' };
   state.stages ||= defaultStages();
+  const t = track(state, d);
   const key = stageKey(regionId, n);
-  const stars = run.stars || starsFor(run, n);
-  const prev = state.stages.stars[key] || 0;
-  if (stars > prev) state.stages.stars[key] = stars;
-  const out = { ok: true, key, label: stageLabel(regionId, n), stars, best: Math.max(prev, stars), improved: stars > prev, first: false, reward: null };
-  if (!state.stages.claimed[key]) {
-    state.stages.claimed[key] = true;
-    const rw = stageReward(regionId, n);
+  const stars = starsFor(run, n);
+  const prev = t.stars[key] || 0;
+  if (stars > prev) t.stars[key] = stars;
+  const out = { ok: true, key, diff: d, label: stageLabel(regionId, n), stars, best: Math.max(prev, stars), improved: stars > prev, first: false, reward: null };
+  if (!t.claimed[key]) {
+    t.claimed[key] = true;
+    const rw = stageReward(regionId, n, d);
     state.wallet.gem += rw.gem; state.wallet.ore += rw.ore; state.wallet.gold += rw.gold;
     out.first = true; out.reward = rw;
   }
@@ -51,35 +56,25 @@ export function recordClear(state, regionId, n, run) {
 }
 
 // Node state for the map: 'cleared' | 'current' | 'locked'.
-export function nodeStatus(state, regionId, n, unlocked) {
+export function nodeStatus(state, regionId, n, unlocked, d = curDiff(state)) {
   if (!unlocked) return 'locked';
-  const p = state.progression;
+  const p = track(state, d);
   const max = p.maxWave[regionId] || 1;
-  const stars = (state.stages && state.stages.stars) || {};
+  const stars = p.stars;
   if (n === 'boss') {
-    const bid = REGION_BY_ID[regionId].boss;
-    if (p.bossCleared[bid] || (BOSSES[bid].raid && stars[stageKey(regionId, 'boss')])) return 'cleared';
+    if (p.bossCleared[REGION_BY_ID[regionId].boss]) return 'cleared';
     return max >= STAGE_COUNT ? 'current' : 'locked';
   }
   if (n < max) return 'cleared';
   if (n === max) return n === STAGE_COUNT && stars[stageKey(regionId, n)] ? 'cleared' : 'current';
   return 'locked';
 }
-export function regionStars(state, regionId) {
-  const stars = (state.stages && state.stages.stars) || {};
+export function regionStars(state, regionId, d = curDiff(state)) {
+  const stars = track(state, d).stars;
   let got = 0;
   for (let n = 1; n <= STAGE_COUNT; n++) got += stars[stageKey(regionId, n)] || 0;
   got += stars[stageKey(regionId, 'boss')] || 0;
   return { got, max: (STAGE_COUNT + 1) * 3 };
-}
-
-// The last region's boss node is the weekly raid (심연의 군주). Any raid attempt clears
-// the node; stars follow the raid grade (S/A ★★★ · B ★★ · C/D ★).
-export const raidRegion = () => REGIONS.find((r) => BOSSES[r.boss].raid) || null;
-export const raidStars = (grade) => (grade === 'S' || grade === 'A' ? 3 : grade === 'B' ? 2 : 1);
-export function recordRaidClear(state, grade) {
-  const r = raidRegion();
-  return r ? recordClear(state, r.id, 'boss', { stars: raidStars(grade) }) : { ok: false, reason: 'missing' };
 }
 
 // Existing saves (schema 6 → 7): progress already made counts as 1★ cleared with its

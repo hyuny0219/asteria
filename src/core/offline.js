@@ -12,6 +12,7 @@
 import { BALANCE } from '../data/balance.js';
 import { REGION_BY_ID } from '../data/content.js';
 import { killRewards } from './combat.js';
+import { rewardMul, DIFFICULTY } from './difficulty.js';
 import { makeItem, rollRarity, rollSlot } from './items.js';
 import { hashString, makeRng } from './util.js';
 import { playerStats } from './stats.js';
@@ -66,11 +67,12 @@ export function ratePerSecond(vf0) {
   if (!vf0) return null;
   const vf = vf0.method === RATE_METHOD ? vf0 : { ...vf0, killsPerSec: travelAdjustedKps(vf0) };
   const r = killRewards(vf.level);
-  r.exp = Math.floor(r.exp * BALANCE.phase.rewardMul); r.gold = Math.floor(r.gold * BALANCE.phase.rewardMul);   // same as foreground farming (v12)
+  const dm = rewardMul(DIFFICULTY[vf.diff] ? vf.diff : 'easy');   // 노말/하드 baseline (measured on that difficulty)
+  r.exp = Math.floor(r.exp * BALANCE.phase.rewardMul * dm.exp); r.gold = Math.floor(r.gold * BALANCE.phase.rewardMul * dm.gold);   // same as foreground farming (v12)
   return {
     exp: r.exp * vf.killsPerSec,
     gold: r.gold * vf.killsPerSec,
-    items: vf.killsPerSec * EQ.dropChance,
+    items: vf.killsPerSec * EQ.dropChance * dm.drop,
     killsPerSec: vf.killsPerSec,
   };
 }
@@ -88,7 +90,7 @@ export function computeClaim(state, now, claimId) {
   const vf = state.progression.verifiedFarm;
   const rate = ratePerSecond(vf);
   const claim = { claimId, computedAt: now, fromAt: last, elapsedSec: Math.floor(elapsed), appliedSec: Math.floor(applied), lostSec: Math.floor(lost),
-    efficiency: O.efficiency, capSec: cap, diag, farm: vf ? { region: vf.region, wave: vf.wave, level: vf.level, killsPerSec: rate ? rate.killsPerSec : vf.killsPerSec } : null,
+    efficiency: O.efficiency, capSec: cap, diag, farm: vf ? { region: vf.region, wave: vf.wave, diff: vf.diff || 'easy', level: vf.level, killsPerSec: rate ? rate.killsPerSec : vf.killsPerSec } : null,
     exp: 0, gold: 0, ore: 0, items: [], convertedItems: 0, reason: null };
   if (!rate) { claim.reason = 'unverified'; return claim; }
   if (applied < O.minSeconds) { claim.reason = 'short'; return claim; }

@@ -55,9 +55,11 @@ export const BOSSES = Object.freeze({
   B09: { id: 'B09', name: '타락한 대천사', sprite: 'B09', region: 'sky', level: 90, lesson: '3차 승급의 벽', telegraphMs: 550,
     heavy: { name: '심판의 빛', everySec: 5.5, telegraphMs: 1200, mult: 3.6, shape: 'circle' },
     desc: '날개를 펼치면 빛이 떨어집니다. 3차 승급 조건입니다.' },
-  B10: { id: 'B10', name: '심연의 군주', sprite: 'B10', region: 'void', level: 100, lesson: '주간 레이드', telegraphMs: 550, raid: true,
+  // 10-보스 (stage boss fight, like B01–B09). The weekly raid reuses its art/pattern with its
+  // own HP pool, timer and grades (raid.js) — the two never affect each other.
+  B10: { id: 'B10', name: '심연의 군주', sprite: 'B10', region: 'void', level: 100, lesson: '마지막 보스', telegraphMs: 550,
     heavy: { name: '공허 붕괴', everySec: 5, telegraphMs: 1200, mult: 3.8, shape: 'crack' },
-    desc: '주간 레이드 보스. 120초 동안 준 피해로 보상이 정해집니다.' },
+    desc: '심연의 마지막 주인. 땅이 갈라지면 피하세요. 처치하면 다음 난이도가 열립니다. (주간 레이드는 별도)' },
 });
 
 export const REGIONS = Object.freeze([

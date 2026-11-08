@@ -1,5 +1,6 @@
 // EXP / level (Lv 1–100), promotion tiers 1–3 (Lv 30 / 60 / 90), skill unlocks and
 // levels, region unlocks and the single "next goal".
+import * as DF from './difficulty.js';
 import { BALANCE, expToNext } from '../data/balance.js';
 import { BOSSES, BRANCHES, BRANCH_SKILL, BRANCH_SKILL2, CLASS_SKILLS, REGIONS, REGION_BY_ID, SKILLS, branchesOf } from '../data/content.js';
 import { killRewards } from './combat.js';
@@ -194,19 +195,24 @@ export function levelSkill(state, id) {
 }
 
 // ---------- regions ----------
-export function regionUnlocked(state, id) { return state.progression.unlockedRegions.includes(id); }
-export function onBossCleared(state, bossId) {
-  const first = !state.progression.bossCleared[bossId];
-  state.progression.bossCleared[bossId] = true;
+// Region access / boss clears follow the current difficulty's track (이지 = state.progression).
+export function regionUnlocked(state, id, d = DF.curDiff(state)) { return DF.track(state, d).unlockedRegions.includes(id); }
+export function onBossCleared(state, bossId, d = DF.curDiff(state)) {
+  const t = DF.track(state, d);
+  const first = !t.bossCleared[bossId];
+  const diffWasOpen = DF.DIFF_IDS.map((x) => DF.diffOpen(state, x));
+  t.bossCleared[bossId] = true;
   const region = REGIONS.find((r) => r.boss === bossId);
   const next = region ? REGIONS[region.order + 1] : null;
   let unlocked = null;
-  if (next && !regionUnlocked(state, next.id)) {
-    state.progression.unlockedRegions.push(next.id);
-    state.progression.maxWave[next.id] = 1;
+  if (next && !regionUnlocked(state, next.id, d)) {
+    t.unlockedRegions.push(next.id);
+    t.maxWave[next.id] = 1;
     unlocked = next.id;
   }
-  return { first, unlocked };
+  // last region's boss → the next difficulty opens
+  const diffUnlocked = DF.DIFF_IDS.find((x, i) => !diffWasOpen[i] && DF.diffOpen(state, x)) || null;
+  return { first, unlocked, diffUnlocked, diff: d };
 }
 
 export const dungeonOpen = (state, type = 'quarry') => !!state.progression.bossCleared[BALANCE.dungeons[type].unlockBoss];
@@ -227,12 +233,18 @@ export function nextGoal(state) {
     return { id: 'promo', text: lock === 1 ? '서약 각성 분기 선택' : `${lock}차 승급하기`, action: 'promotion' };
   }
   const region = REGION_BY_ID[p.region];
-  if (!p.bossCleared[region.boss] && !BOSSES[region.boss].raid) {
-    if ((p.maxWave[region.id] || 1) < 10) return { id: 'wave', text: `${region.name} 웨이브 10 도달`, action: null, progress: `${p.maxWave[region.id] || 1} / 10` };
-    return { id: 'boss', text: `${BOSSES[region.boss].name} 도전`, action: `boss:${region.boss}` };
+  const d = DF.curDiff(state);
+  const t = DF.track(state, d);
+  const pre = DF.prefix(d);
+  if (!t.bossCleared[region.boss]) {
+    if ((t.maxWave[region.id] || 1) < 10) return { id: 'wave', text: `${pre}${region.name} 웨이브 10 도달`, action: null, progress: `${t.maxWave[region.id] || 1} / 10` };
+    return { id: 'boss', text: `${pre}${BOSSES[region.boss].name} 도전`, action: `boss:${region.boss}` };
   }
-  const nextRegion = REGIONS.find((r) => regionUnlocked(state, r.id) && !p.bossCleared[r.boss] && !BOSSES[r.boss].raid);
-  if (nextRegion && nextRegion.id !== p.region) return { id: 'move', text: `${nextRegion.name}(으)로 이동`, action: 'world' };
+  const nextRegion = REGIONS.find((r) => regionUnlocked(state, r.id) && !t.bossCleared[r.boss]);
+  if (nextRegion && nextRegion.id !== p.region) return { id: 'move', text: `${pre}${nextRegion.name}(으)로 이동`, action: 'world' };
+  // this difficulty is done → point at the next one (once it is open and untouched)
+  const nd = DF.DIFF_IDS[DF.DIFFICULTY[d].order + 1];
+  if (nd && DF.diffOpen(state, nd) && !Object.keys(DF.track(state, nd).bossCleared).length && (DF.track(state, nd).maxWave[REGIONS[0].id] || 1) <= 1) return { id: 'diff', text: `${DF.diffName(nd)} 난이도 1-1 시작`, action: 'world' };
   const nt = nextTier(state);
   if (tierOf(state) < 3 && state.player.level >= BALANCE.tiers[nt].level - 5) {
     const cl = promotionChecklist(state, nt);
@@ -242,7 +254,8 @@ export function nextGoal(state) {
   if (state.pets && state.pets.eggs > 0) return { id: 'pet', text: `정령 알 ${state.pets.eggs}개 부화하기`, action: 'pets' };
   if (state.dungeon.tickets > 0 && dungeonOpen(state)) return { id: 'dungeon', text: '별의 채석장에서 강화 광석 얻기', action: 'dungeon' };
   if (state.player.level < CAP) return { id: 'level', text: `레벨 ${state.player.level + 1} 달성`, action: null };
-  return { id: 'max', text: '최고 레벨 · 레이드와 시련의 탑 기록 갱신', action: 'dungeon' };
+  const hardDone = DF.track(state, 'hard').bossCleared[DF.lastRegion().boss];
+  return { id: 'max', text: hardDone ? '최고 레벨 · 하드 별 모으기 · 레이드와 시련의 탑 기록 갱신' : '최고 레벨 · 상위 난이도 · 레이드와 시련의 탑 기록 갱신', action: hardDone ? 'dungeon' : 'world' };
 }
 
 export { branchesOf };

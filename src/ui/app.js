@@ -12,6 +12,7 @@ import { sfx } from '../platform/audio.js';
 import * as FS from './fullscreen.js';
 import { titleName } from '../core/meta.js';
 import { stageLabel } from '../core/stages.js';
+import * as DF from '../core/difficulty.js';
 import * as V5 from './v5.js';
 import { BLESSINGS, CURSES } from '../core/rift.js';
 import { AFFIXES, MPLUS } from '../core/mplus.js';
@@ -540,13 +541,13 @@ export class App {
     if (E.mailBtn) { E.mailBtn.hidden = !mailN; E.mailN.textContent = mailN > 9 ? '9+' : String(mailN); E.mailBtn.setAttribute('aria-label', `우편함 · 받을 우편 ${mailN}통`); }
     const m = this.game.mode;
     let pv = 0;
-    if (m === 'BOSS') { E.where.textContent = BOSSES[this.game.session.bossId].name; E.prog.textContent = '보스전'; }
+    if (m === 'BOSS') { E.where.textContent = BOSSES[this.game.session.bossId].name; E.prog.textContent = DF.prefix(this.game.session.diff || 'easy') + '보스전'; }
     else if (m === 'DUNGEON' && this.game.session && this.game.session.kind === 'rift') { E.where.textContent = '균열'; E.prog.textContent = `${this.game.session.floor}층`; }
     else if (m === 'DUNGEON' && this.game.session && this.game.session.kind === 'mplus') { E.where.textContent = MPLUS.dungeons[this.game.session.dungeon].name; E.prog.textContent = `쐐기 +${this.game.session.key}`; }
     else if (m === 'DUNGEON' && this.game.session && this.game.session.kind === 'tower') { E.where.textContent = '시련의 탑'; E.prog.textContent = `${this.game.session.floor}층`; }
     else if (m === 'DUNGEON') { E.where.textContent = BALANCE.dungeons[this.game.session.type || 'quarry'].name; E.prog.textContent = `${this.game.session.stage}단계`; }
     else if (m === 'PROMOTION_TRIAL') { E.where.textContent = (this.game.session && this.game.session.tier === 3) ? '영웅의 시련' : '교관 시련'; E.prog.textContent = '승급 시련'; }
-    else { E.where.textContent = region.name; E.prog.textContent = stageLabel(region.id, s.progression.wave); pv = s.progression.waveKills / BALANCE.combat.waveKillTarget; }
+    else { E.where.textContent = region.name; E.prog.textContent = DF.prefix(DF.curDiff(s)) + stageLabel(region.id, s.progression.wave); pv = s.progression.waveKills / BALANCE.combat.waveKillTarget; }
     E.progBar.style.width = Math.round(Math.min(1, pv) * 100) + '%';
     E.miniTxt.textContent = `${E.where.textContent} ${E.prog.textContent}`;
     E.miniSub.textContent = m === 'DEFEAT' ? '재정비 중' : m === 'FARM' ? `처치 ${s.progression.waveKills}/${BALANCE.combat.waveKillTarget}` : '전투 중';
@@ -557,13 +558,13 @@ export class App {
     const bossId = region.boss;
     const can = this.game.canChallengeBoss(bossId);
     E.bossBtn.disabled = m !== 'FARM';
-    E.bossBtn.textContent = m === 'BOSS' || m === 'DUNGEON' || m === 'PROMOTION_TRIAL' ? '전투 중' : s.progression.bossCleared[bossId] ? '보스 재도전' : can.ok ? '보스 도전!' : `보스 · ${stageLabel(region.id, 10)} 필요`;
-    E.bossBtn.classList.toggle('hot', can.ok && !s.progression.bossCleared[bossId]);
+    E.bossBtn.textContent = m === 'BOSS' || m === 'DUNGEON' || m === 'PROMOTION_TRIAL' ? '전투 중' : DF.track(s).bossCleared[bossId] ? '보스 재도전' : can.ok ? '보스 도전!' : `보스 · ${stageLabel(region.id, 10)} 필요`;
+    E.bossBtn.classList.toggle('hot', can.ok && !DF.track(s).bossCleared[bossId]);
     E.speedBtn.textContent = s.settings.speed === 2 ? '×2' : '×1';
     E.autoBadge.textContent = m === 'DEFEAT' ? '재정비 중' : m === 'BOSS' ? '보스전' : m === 'DUNGEON' ? '던전' : m === 'PROMOTION_TRIAL' ? '시련' : `자동 전투 · ×${s.settings.speed}`;
     // portrait live summary (same simulation)
     const vf = s.progression.verifiedFarm;
-    clear(E.portraitLive).append(h('span', null, `자동 사냥 중 · ${region.name} ${stageLabel(region.id, s.progression.wave)}`), h('span', { class: 'muted' }, vf ? `검증 사냥터 W${vf.wave} · 분당 ${fmt(vf.killsPerSec * 60)}마리` : '사냥터 검증 중 (웨이브 10마리 ×3회 무사 처치)'));
+    clear(E.portraitLive).append(h('span', null, `자동 사냥 중 · ${region.name} ${DF.prefix(DF.curDiff(s))}${stageLabel(region.id, s.progression.wave)}`), h('span', { class: 'muted' }, vf ? `검증 사냥터 W${vf.wave} · 분당 ${fmt(vf.killsPerSec * 60)}마리` : '사냥터 검증 중 (웨이브 10마리 ×3회 무사 처치)'));
     // nav badges
     const newItems = s.inventory.some((i) => i.isNew) || s.overflow.length > 0;
     this.navDot('equipment', newItems);

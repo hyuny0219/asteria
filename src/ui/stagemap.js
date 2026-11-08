@@ -4,7 +4,7 @@ import { BALANCE } from '../data/balance.js';
 import { BOSSES, REGIONS, REGION_BY_ID, MONSTERS, waveLevel } from '../data/content.js';
 import * as prog from '../core/progression.js';
 import * as ST from '../core/stages.js';
-import { triesLeft } from '../core/raid.js';
+import * as DF from '../core/difficulty.js';
 import { bgMeta, itemIcon, spriteMeta } from '../render/assets.js';
 import { CURRENCY_ICONS } from '../data/content.js';
 import { fmt } from '../core/util.js';
@@ -38,6 +38,10 @@ function rewardLine(rw) {
 // Builds the map UI. `ui` keeps {region, sel} across rebuilds; `rerender` redraws;
 // `close` runs after the player leaves (starts a hunt / opens the boss).
 function buildStage(app, ui, rerender, close) {
+  // a difficulty switch (chip, victory button, rebirth) re-centres the map on the new hunt
+  const dNow = DF.curDiff(app.state);
+  if (ui.diffFor && ui.diffFor !== dNow) { ui.region = null; ui.sel = null; }
+  ui.diffFor = dNow;
   let region = ui.region || app.state.progression.region;
   let sel = ui.sel === undefined ? null : ui.sel;   // selected node (1..10 | 'boss'); null → current stage
   const render = () => { ui.region = region; ui.sel = sel; rerender(); };
@@ -49,7 +53,30 @@ function buildStage(app, ui, rerender, close) {
     const status = (n) => ST.nodeStatus(s, r.id, n, open);
     const current = NODES.find((n) => status(n) === 'current') || null;
     if (sel === null || (typeof sel === 'number' && sel > 10)) sel = (p.region === r.id ? p.wave : null) || current || (open ? 10 : 1);
-    const stars = s.stages.stars;
+    const d = DF.curDiff(s);
+    const T = DF.track(s, d);
+    const pre = DF.prefix(d);
+    const stars = T.stars;
+    // ---- difficulty chips (이지 · 노말 · 하드): picking one moves the hunt to its last stage
+    const busyMode = app.game.mode !== 'FARM';
+    const diffSeg = h('div', { class: 'seg diff-seg', role: 'tablist', 'aria-label': '난이도' }, DF.DIFF_IDS.map((x) => {
+      const ok = DF.diffOpen(s, x);
+      return h('button', { type: 'button', role: 'tab', class: `diff-chip d-${x}${ok ? '' : ' locked'}`, 'aria-pressed': String(x === d), 'aria-selected': String(x === d), dataset: { diff: x },
+        'aria-label': `${DF.diffName(x)}${ok ? '' : ' 잠김 · ' + DF.lockText(x)}`,
+        onClick: async () => {
+          if (x === d) return;
+          if (!ok) { toast(`${DF.diffName(x)} 잠김 · ${DF.lockText(x)}`, 'info'); return; }
+          if (busyMode) { toast('전투가 끝난 뒤에 바꿀 수 있어요.', 'info'); return; }
+          const res = await app.game.switchDifficulty(x);
+          if (!res.ok) { toast(res.reason === 'busy' ? '잠시 후 다시 시도해 주세요.' : res.reason === 'level' ? `Lv ${res.need} 이상에서 들어갈 수 있어요.` : '난이도를 바꿀 수 없습니다.', 'error'); return; }
+          toast(`${DF.diffName(x)} ${ST.stageLabel(res.region, res.wave)}에서 사냥합니다.`, 'info');
+          region = null; sel = null; ui.region = null; ui.sel = null; rerender();
+        } }, ok ? DF.diffName(x) : `🔒 ${DF.diffName(x)}`);
+    }));
+    const diffNote = d === 'easy' ? null : (() => {
+      const m = DF.enemyMul(d, r.id, 1), mb = DF.enemyMul(d, r.id, 'boss');
+      return h('p', { class: 'muted small diff-note d-' + d }, `${DF.diffName(d)} · 적 Lv ${DF.DIFFICULTY[d].level} · 이 지역 체력 ×${m.hp.toFixed(2)}–${mb.hp.toFixed(2)} · 공격 ×${m.atk.toFixed(2)}–${mb.atk.toFixed(2)} · 골드 ×${DF.DIFFICULTY[d].gold} · 첫 클리어 보상 ×${DF.firstClearMul(d)}`);
+    })();
     // ---- header: auto-advance toggle
     const auto = s.stages.auto !== false;
     const head = h('div', { class: 'stage-head' },
@@ -77,7 +104,7 @@ function buildStage(app, ui, rerender, close) {
     if (reach > 0) svg.append(svgEl('path', { d: mapArt ? 'M' + mapArt.path.slice(0, mapArt.nodeIdx[reach] + 1).map((q) => q.join(',')).join(' L') : pathThrough(POS.slice(0, reach + 1)), class: 'trail-done' }));
     map.append(svg);
     const rs = ST.regionStars(s, r.id);
-    map.append(h('div', { class: 'stage-title' }, h('b', null, `${r.order + 1}. ${r.name}`), h('span', null, `${r.label} · ★ ${rs.got}/${rs.max}`)));
+    map.append(h('div', { class: 'stage-title' }, h('b', null, `${pre}${r.order + 1}. ${r.name}`), h('span', null, `${d === 'easy' ? r.label : 'Lv ' + DF.DIFFICULTY[d].level} · ★ ${rs.got}/${rs.max}`)));
     NODES.forEach((n, i) => {
       const stt = status(n);
       const key = ST.stageKey(r.id, n);
@@ -97,45 +124,39 @@ function buildStage(app, ui, rerender, close) {
     });
     if (!open) {
       const prev = REGIONS[r.order - 1];
-      map.append(h('div', { class: 'stage-lock' }, h('b', null, '🔒 잠긴 지역'), h('span', null, prev ? `${BOSSES[prev.boss].name} 처치 시 열림` : '')));
+      map.append(h('div', { class: 'stage-lock' }, h('b', null, '🔒 잠긴 지역'), h('span', null, prev ? `${pre}${BOSSES[prev.boss].name} 처치 시 열림` : '')));
     }
     // ---- node detail
     const n = sel;
     const stt = status(n);
     const key = ST.stageKey(r.id, n);
     const got = stars[key] || 0;
-    const claimed = !!s.stages.claimed[key];
+    const claimed = !!T.claimed[key];
     const boss = n === 'boss';
-    const lv = boss ? BOSSES[r.boss].level : waveLevel(r, n);
+    const lv = boss ? DF.bossLevel(d, r.boss) : DF.farmLevel(d, r.id, n);
+    const em = DF.enemyMul(d, r.id, n);
     const here = p.region === r.id && p.wave === n;
     let action;
-    const raidB = boss && BOSSES[r.boss].raid;
-    if (raidB) {
-      const ropen = prog.raidOpen(s);
-      const left = triesLeft(s, Date.now());
-      action = button(!open ? '잠긴 지역입니다' : stt === 'locked' ? `${r.order + 1}-10 도달 시 도전` : !ropen ? `Lv ${BALANCE.raid.unlockLevel} 달성 시 레이드 도전` : left > 0 ? `주간 레이드로 도전 (이번 주 ${left}/${BALANCE.raid.weeklyTries}회)` : '이번 주 레이드 횟수 모두 사용',
-        { cls: 'btn btn-primary', disabled: stt === 'locked' || !ropen, dataset: { act: 'stage-go' },
-          onClick: () => { close(); app.advTab = 'challenge'; app.setTab('dungeon'); setTimeout(() => { const el = document.querySelector('[data-screen="raid"]'); if (el) el.scrollIntoView({ block: 'center', behavior: 'smooth' }); }, 60); } });
-    } else if (boss) {
-      action = button(!open ? '잠긴 지역입니다' : stt === 'locked' ? `${r.order + 1}-10 도달 시 도전` : p.bossCleared[r.boss] ? '보스 재도전' : '보스 도전', { cls: 'btn btn-primary', disabled: stt === 'locked', dataset: { act: 'stage-go' },
+    if (boss) {
+      action = button(!open ? '잠긴 지역입니다' : stt === 'locked' ? `${r.order + 1}-10 도달 시 도전` : T.bossCleared[r.boss] ? '보스 재도전' : '보스 도전', { cls: 'btn btn-primary', disabled: stt === 'locked', dataset: { act: 'stage-go' },
         onClick: () => { close(); openBoss(app, r.boss); } });
     } else {
       action = button(!open ? '잠긴 지역입니다' : stt === 'locked' ? '이전 스테이지를 깨면 열립니다' : here ? '이 스테이지에서 사냥 중' : '여기서 사냥', { cls: 'btn btn-primary', disabled: stt === 'locked' || here, busy: true, dataset: { act: 'stage-go' },
         onClick: async () => {
           const res = await app.game.setFarm(r.id, n, s.stages.auto !== false);
           if (!res.ok) { toast(res.reason === 'busy' ? '잠시 후 다시 시도해 주세요.' : '이 스테이지로 갈 수 없습니다.', 'error'); return; }
-          toast(`${ST.stageLabel(r.id, n)}에서 사냥합니다.${s.stages.auto === false ? ' (자동 진행 꺼짐)' : ''}`, 'info');
+          toast(`${pre}${ST.stageLabel(r.id, n)}에서 사냥합니다.${s.stages.auto === false ? ' (자동 진행 꺼짐)' : ''}`, 'info');
           close();
         } });
     }
     const detail = h('div', { class: 'card stage-detail', dataset: { detail: String(n) } },
-      h('div', { class: 'stage-dh' }, h('b', null, `${ST.stageLabel(r.id, n)}${boss ? ' ' + BOSSES[r.boss].name : ''}`),
+      h('div', { class: 'stage-dh' }, h('b', null, `${pre}${ST.stageLabel(r.id, n)}${boss ? ' ' + BOSSES[r.boss].name : ''}`),
         h('span', { class: 'stage-badge ' + stt }, { cleared: '클리어', current: '진행 중', locked: '잠김' }[stt]), h('span', { class: 'spacer', style: { flex: 1 } }),
         h('span', { class: 'stars', 'aria-label': `별 ${got}개` }, starText(got))),
-      raidB ? h('p', { class: 'muted small', style: { margin: '2px 0 4px' } }, `${BOSSES[r.boss].name}은 주간 레이드 보스예요. ${BALANCE.raid.timeSec}초 동안 준 피해로 등급이 정해지고, 한 번 도전하면 이 칸이 클리어돼요. 심연은 마지막 지역이라 다음 지역은 아직 없어요.`) : null,
-      h('div', { class: 'kv' }, '적', h('b', null, raidB ? `Lv ${lv} 레이드 보스` : boss ? `Lv ${lv} 보스` : `Lv ${lv} · ${r.monsters.map((id) => MONSTERS[id] ? MONSTERS[id].name : id).join('·')}`)),
-      h('div', { class: 'kv' }, '별 조건', h('b', null, raidB ? '레이드 등급 C·D ★ · B ★★ · A·S ★★★' : boss ? `★ 처치 · ★★ 처치 · ★★★ ${ST.starTimeSec('boss')}초 안에` : `★ ${BALANCE.combat.waveKillTarget}마리 · ★★ 사망 없이 · ★★★ ${ST.starTimeSec(n)}초 안에`)),
-      h('div', { class: 'kv' }, '최초 클리어 보상', claimed ? h('b', { class: 'okc' }, '받음 ✓') : rewardLine(ST.stageReward(r.id, n))),
+      h('div', { class: 'kv' }, '적', h('b', null, boss ? `Lv ${lv} 보스` : `Lv ${lv} · ${r.monsters.map((id) => MONSTERS[id] ? MONSTERS[id].name : id).join('·')}`)),
+      em ? h('div', { class: 'kv' }, '강화 배율', h('b', { class: 'd-' + d }, `체력 ×${em.hp.toFixed(2)} · 공격 ×${em.atk.toFixed(2)}`)) : null,
+      h('div', { class: 'kv' }, '별 조건', h('b', null, boss ? `★ 처치 · ★★ 처치 · ★★★ ${ST.starTimeSec('boss')}초 안에` : `★ ${BALANCE.combat.waveKillTarget}마리 · ★★ 사망 없이 · ★★★ ${ST.starTimeSec(n)}초 안에`)),
+      h('div', { class: 'kv' }, '최초 클리어 보상', claimed ? h('b', { class: 'okc' }, '받음 ✓') : rewardLine(ST.stageReward(r.id, n, d))),
       action);
     ui.region = region; ui.sel = sel;
     // keep the tab strip scrolled to the selected region
@@ -147,8 +168,8 @@ function buildStage(app, ui, rerender, close) {
       if (!recentre && ui.tabsLeft != null) { tabs.scrollLeft = ui.tabsLeft; return; }
       const t = tabs.querySelector('[aria-selected="true"]'); if (t && t.scrollIntoView) t.scrollIntoView({ block: 'nearest', inline: 'center' });
     });
-    return h('div', { class: 'stage-wrap', dataset: { screen: 'world' } }, head, tabs, map, detail,
-      h('p', { class: 'muted small', style: { margin: '6px 2px 0' } }, '스테이지 = 웨이브. 적 10마리를 처치하면 클리어입니다. 보스를 처치하면 다음 지역이 열립니다. 자동 진행을 끄면 고른 스테이지에서 계속 사냥합니다.'));
+    return h('div', { class: 'stage-wrap', dataset: { screen: 'world', diff: d } }, diffSeg, diffNote, head, tabs, map, detail,
+      h('p', { class: 'muted small', style: { margin: '6px 2px 0' } }, `스테이지 = 웨이브. 적 10마리를 처치하면 클리어입니다. 보스를 처치하면 다음 지역이 열립니다. 마지막 지역 보스(${BOSSES[DF.lastRegion().boss].name})를 처치하면 다음 난이도가 열립니다. 자동 진행을 끄면 고른 스테이지에서 계속 사냥합니다.`));
   }
 }
 
@@ -165,9 +186,9 @@ export function openStageMap(app, focus = null) {
 export function stageSig(app) {
   const s = app.state;
   if (!s) return null;
-  const p = s.progression, st = s.stages || {};
-  return [p.region, p.wave, app.game.mode, (p.unlockedRegions || []).join(), JSON.stringify(p.maxWave || {}), Object.keys(p.bossCleared || {}).length,
-    JSON.stringify(st.stars || {}), Object.keys(st.claimed || {}).length, st.auto, p.autoAdvance, s.player.level >= 100 ? 100 : Math.floor(s.player.level / 10)].join('|');
+  const p = s.progression, st = s.stages || {}, d = DF.curDiff(s), t = DF.track(s, d);
+  return [d, DF.DIFF_IDS.map((x) => DF.diffOpen(s, x) ? 1 : 0).join(''), p.region, p.wave, app.game.mode, (t.unlockedRegions || []).join(), JSON.stringify(t.maxWave || {}), Object.keys(t.bossCleared || {}).length,
+    JSON.stringify(t.stars || {}), Object.keys(t.claimed || {}).length, st.auto, p.autoAdvance, s.player.level >= 100 ? 100 : Math.floor(s.player.level / 10)].join('|');
 }
 
 // Bottom-tab version (선배 요청: 스테이지가 하단 첫 탭). Selection survives the

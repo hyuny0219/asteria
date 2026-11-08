@@ -149,13 +149,13 @@ export class Battle {
     const ids = f.monsters;
     const id = ids[this.rng.int(0, ids.length - 1)];
     const elite = f.eliteAllowed() && this.rng() < M.elite.chance;
-    this.addEnemy(MONSTERS[id], level, { elite });
+    this.addEnemy(MONSTERS[id], level, { elite, mul: f.mulFn ? f.mulFn() : null });
   }
   // 희귀 정예: a named elite joins the farm field (one at a time, never with a field boss)
   spawnRare(rare, level) {
     if (this.kind !== 'farm' || this.enemies.some((e) => e.fieldBoss || e.rare)) return null;
     const def = MONSTERS[rare.base];
-    const e = this.addEnemy({ ...def, name: rare.name }, level + 2, { elite: true });
+    const e = this.addEnemy({ ...def, name: rare.name }, level + 2, { elite: true, mul: this.cfg.farm.mulFn ? this.cfg.farm.mulFn() : null });
     e.maxHp = e.hp = Math.floor(e.hp * 5);
     e.atk = Math.floor(e.atk * 1.3);
     e.rare = rare.id;
@@ -167,12 +167,14 @@ export class Battle {
     if (this.kind !== 'farm' || this.enemies.some((e) => e.fieldBoss)) return null;
     const ids = this.cfg.farm.monsters;
     const def = MONSTERS[ids[this.rng.int(0, ids.length - 1)]];
-    const e = this.addEnemy({ ...def, name: `필드 보스 · ${def.name}` }, level, { elite: true, fieldBoss: true });
+    const e = this.addEnemy({ ...def, name: `필드 보스 · ${def.name}` }, level, { elite: true, fieldBoss: true, mul: this.cfg.farm.mulFn ? this.cfg.farm.mulFn() : null });
     this.events.push({ type: 'fieldBoss', enemy: e.uid, name: e.name, t: this.t });
     return e;
   }
-  addEnemy(def, level, { elite = false, boss = false, fieldBoss = false } = {}) {
+  // mul: 노말/하드 scaling { hp, atk } (difficulty.js)
+  addEnemy(def, level, { elite = false, boss = false, fieldBoss = false, mul = null } = {}) {
     const st = monsterStats(level, { elite, boss, fieldBoss });
+    if (mul) { st.hp = Math.floor(st.hp * mul.hp); st.atk = Math.floor(st.atk * mul.atk); }
     if (this.mp) {
       const a = this.mp.aff;
       let hm = this.mp.statMul, am = this.mp.statMul;
@@ -200,8 +202,9 @@ export class Battle {
     return e;
   }
   spawnBoss(def, { raid = false } = {}) {
-    const lv = def.isTrial ? def.level : def.level;
-    const e = this.addEnemy(def, lv, { boss: true });
+    const dv = !raid && !def.isTrial && this.kind === 'boss' && this.cfg.boss && this.cfg.boss.diff;   // 노말/하드 stage boss
+    const lv = dv ? dv.level : def.level;
+    const e = this.addEnemy(def, lv, { boss: true, mul: dv ? dv.mul : null });
     if (def.isTrial) {
       // instructor projection / past self: a test, not a wall
       const hm = def.hpMul || 0.55, am = def.atkMul || 0.8;

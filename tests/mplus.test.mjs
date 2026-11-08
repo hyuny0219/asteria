@@ -76,10 +76,10 @@ test('쐐기 전투: trash then the dungeon boss; boss kill ends it', () => {
   assert.equal(b.kills, cfg.trash + 1);
 });
 
-test('schema 7 save migrates to 8 with a fresh keystone', () => {
+test('schema 7 save migrates (to 9 now) with a fresh keystone', () => {
   const s = newGame(T0);
   delete s.mplus; s.schemaVersion = 7;
   const m = migrate(s);
-  assert.equal(m.schemaVersion, 8);
+  assert.equal(m.schemaVersion, 9);
   assert.equal(m.mplus.key, 2);
 });

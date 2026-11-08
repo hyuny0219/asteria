@@ -68,6 +68,13 @@ export function doRebirth(state, now) {
   applyAutoStats(state);
   state.wallet.gold = 0;
   const pr = state.progression;
+  // 난이도: 환생은 이지 1-1에서 다시 시작 (노말·하드 기록과 위치는 그대로 보관)
+  if (state.diff && state.diff.cur && state.diff.cur !== 'easy') {
+    const t = state.diff.tracks[state.diff.cur];
+    if (t) { t.region = pr.region; t.wave = pr.wave; }
+    state.diff.cur = 'easy';
+  }
+  if (state.diff) state.diff.easyPos = null;
   pr.region = 'meadow'; pr.wave = 1; pr.waveKills = 0; pr.autoAdvance = true; pr.holdKills = 0; pr.waveDeaths = 0;
   pr.verifiedFarm = null;
   const rb = state.rebirth;

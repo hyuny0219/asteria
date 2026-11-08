@@ -191,7 +191,7 @@ async function runOne(seed, cls) {
     if (g.state.player.level >= 100) mark('lv100');
     // --snap dir: write the save at the end of each listed day (e.g. --snap-days 3,6,10) for other sims
     if (args.snap) { const days = String(args['snap-days'] || '3,6,10,14').split(',').map(Number); if (days.includes(d + 1)) { const { mkdirSync } = await import('node:fs'); mkdirSync(args.snap, { recursive: true }); writeFileSync(`${args.snap}/${cls}_s${seed}_d${d + 1}.json`, JSON.stringify(g.state)); } }
-    if (g.state.player.level >= 100 && m.marks.tier3 && (g.state.rebirth.count || 0) >= Number(args.rebirths ?? 1)) break;
+    if (!args.full && g.state.player.level >= 100 && m.marks.tier3 && (g.state.rebirth.count || 0) >= Number(args.rebirths ?? 1)) break;
   }
   if (args.trace) console.error("end", JSON.stringify(m.marks), g.state.player.exp, g.state.player.pendingExp, cls, g.mode, JSON.stringify(g.state.rift.run), g.state.player.level, g.state.progression.region);
   m.final = { level: g.state.player.level, tier: tierOf(g.state), region: g.state.progression.region, wave: g.state.progression.wave, tower: g.state.tower.best, stats: playerStats(g.state), gem: g.state.wallet.gem, days: day(), locked: lockTierAt(g.state) };
