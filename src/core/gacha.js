@@ -3,6 +3,7 @@
 // Pity: equipment legendary+ on the 200th draw without one; skill rune on the 100th.
 import { BALANCE } from '../data/balance.js';
 import { CLASS_SKILLS, RUNES } from '../data/content.js';
+import { gradeIndex, SKILL_GRADES } from '../data/skillgrade.js';
 import { makeItem, rollSlot } from './items.js';
 import { unlockedSkills } from './progression.js';
 
@@ -66,23 +67,28 @@ export function drawEquipment(state, n, rng) {
   return { ok: true, quote: q, results, items: results.map((r) => r.item), level: summonLevel(g.draws), pity: g.pity };
 }
 
+export const skillGrade = (state, id) => (state.skills.grades && state.skills.grades[id]) || 'common';
 export function drawSkill(state, n, rng) {
   if (n !== 1 && n !== 11) return { ok: false, reason: 'count' };
   const q = quoteDraw(state, 'skill', n);
   if (!pay(state, q)) return { ok: false, reason: 'gem', quote: q };
   const g = state.gacha.sk;
+  g.mythPity ||= 0;
+  state.skills.grades ||= {};
   const cls = state.player.cls || 'warrior';
-  // books go to skills of the player's class (unlocked first, otherwise base skills)
-  const pool = unlockedSkills(state).filter((id) => id !== CLASS_SKILLS[cls].ult);
-  const skills = pool.length ? pool : CLASS_SKILLS[cls].base;
+  // cards go to this class's learned skills, ultimate included
+  const learned = unlockedSkills(state);
+  const pool = learned.length ? learned : [...CLASS_SKILLS[cls].base, CLASS_SKILLS[cls].ult];
   const runeIds = Object.keys(RUNES);
   const results = [];
   for (let i = 0; i < n; i++) {
     let r = rng.weighted(GS.rates);
     g.pity += 1;
+    g.mythPity += 1;
     let pity = false;
-    if (g.pity >= GS.pity && r !== 'legendary') { r = 'legendary'; pity = true; }
-    if (r === 'legendary') {
+    if (g.pity >= GS.pity && r !== 'rune') { r = 'rune'; pity = true; }
+    else if (g.mythPity >= GS.mythicPity && r !== 'mythic' && r !== 'rune') { r = 'mythic'; pity = true; }
+    if (r === 'rune') {
       g.pity = 0;
       const id = runeIds[Math.floor(rng() * runeIds.length)];
       const owned = state.skills.runes.owned;
@@ -91,15 +97,20 @@ export function drawSkill(state, n, rng) {
       results.push({ kind: 'rune', rarity: 'legendary', rune: id, level: owned[id], dupe: before > 0, capped: before >= BALANCE.runes.maxLevel, pity });
       if (before >= BALANCE.runes.maxLevel) state.wallet.gem += 100;   // max-level duplicate → gems back (shown)
     } else {
-      const sk = skills[Math.floor(rng() * skills.length)];
-      const books = GS.books[r];
+      if (r === 'mythic') g.mythPity = 0;
+      const sk = pool[Math.floor(rng() * pool.length)];
+      const before = skillGrade(state, sk);
+      const up = gradeIndex(r) > gradeIndex(before);
+      // every card brings its books; an upgrade also returns the old grade's books (its 환산)
+      const books = GS.books[r] + (up ? (before === 'common' ? 0 : GS.books[before]) : 0);
+      if (up) state.skills.grades[sk] = r;
       state.skills.books[sk] = (state.skills.books[sk] || 0) + books;
-      results.push({ kind: 'books', rarity: r, skill: sk, books, pity });
+      results.push({ kind: 'card', rarity: r, skill: sk, books, upgraded: up, from: before, pity });
     }
     g.draws += 1;
   }
   state.progression.counters.draws += n;
-  return { ok: true, quote: q, results, pity: g.pity };
+  return { ok: true, quote: q, results, pity: g.pity, mythPity: g.mythPity };
 }
 
 export function equipRune(state, runeId, slot) {

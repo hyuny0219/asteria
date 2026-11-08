@@ -1,0 +1,241 @@
+{
+ "at": "2026-11-08T03:10:58.367Z",
+ "pass": 36,
+ "total": 36,
+ "results": [
+  {
+   "name": "gacha skill rates 390x844",
+   "pass": true,
+   "extra": {
+    "rows": 6,
+    "myth": true,
+    "sum": 100.00999999999999
+   }
+  },
+  {
+   "name": "gacha no overflow 390x844",
+   "pass": true
+  },
+  {
+   "name": "등급 상승 shown 390x844",
+   "pass": true,
+   "extra": {
+    "up": 3,
+    "line": true
+   }
+  },
+  {
+   "name": "grades upgraded by draws 390x844",
+   "pass": true,
+   "extra": {
+    "strike": "epic",
+    "starSlash": "mythic"
+   }
+  },
+  {
+   "name": "result no overflow 390x844",
+   "pass": true
+  },
+  {
+   "name": "skills tab grade tags 390x844",
+   "pass": true,
+   "extra": {
+    "tags": 6,
+    "coloured": 4
+   }
+  },
+  {
+   "name": "skills tab no overflow 390x844",
+   "pass": true
+  },
+  {
+   "name": "detail grade table 390x844",
+   "pass": true,
+   "extra": {
+    "rows": 5,
+    "on": 1,
+    "next": 1
+   }
+  },
+  {
+   "name": "detail no overflow 390x844",
+   "pass": true
+  },
+  {
+   "name": "skill bar grade classes 390x844",
+   "pass": true,
+   "extra": [
+    "sg-epic",
+    "sg-common",
+    "sg-common",
+    "sg-mythic"
+   ]
+  },
+  {
+   "name": "no blocker-like class names 390x844",
+   "pass": true,
+   "extra": []
+  },
+  {
+   "name": "no page errors 390x844",
+   "pass": true,
+   "extra": []
+  },
+  {
+   "name": "gacha skill rates 360x700",
+   "pass": true,
+   "extra": {
+    "rows": 6,
+    "myth": true,
+    "sum": 100.00999999999999
+   }
+  },
+  {
+   "name": "gacha no overflow 360x700",
+   "pass": true
+  },
+  {
+   "name": "등급 상승 shown 360x700",
+   "pass": true,
+   "extra": {
+    "up": 5,
+    "line": true
+   }
+  },
+  {
+   "name": "grades upgraded by draws 360x700",
+   "pass": true,
+   "extra": {
+    "starSlash": "mythic",
+    "strike": "epic"
+   }
+  },
+  {
+   "name": "result no overflow 360x700",
+   "pass": true
+  },
+  {
+   "name": "skills tab grade tags 360x700",
+   "pass": true,
+   "extra": {
+    "tags": 6,
+    "coloured": 4
+   }
+  },
+  {
+   "name": "skills tab no overflow 360x700",
+   "pass": true
+  },
+  {
+   "name": "detail grade table 360x700",
+   "pass": true,
+   "extra": {
+    "rows": 5,
+    "on": 1,
+    "next": 1
+   }
+  },
+  {
+   "name": "detail no overflow 360x700",
+   "pass": true
+  },
+  {
+   "name": "skill bar grade classes 360x700",
+   "pass": true,
+   "extra": [
+    "sg-epic",
+    "sg-common",
+    "sg-common",
+    "sg-mythic"
+   ]
+  },
+  {
+   "name": "no blocker-like class names 360x700",
+   "pass": true,
+   "extra": []
+  },
+  {
+   "name": "no page errors 360x700",
+   "pass": true,
+   "extra": []
+  },
+  {
+   "name": "gacha skill rates 412x915",
+   "pass": true,
+   "extra": {
+    "rows": 6,
+    "myth": true,
+    "sum": 100.00999999999999
+   }
+  },
+  {
+   "name": "gacha no overflow 412x915",
+   "pass": true
+  },
+  {
+   "name": "등급 상승 shown 412x915",
+   "pass": true,
+   "extra": {
+    "up": 4,
+    "line": true
+   }
+  },
+  {
+   "name": "grades upgraded by draws 412x915",
+   "pass": true,
+   "extra": {
+    "starSlash": "mythic",
+    "strike": "rare"
+   }
+  },
+  {
+   "name": "result no overflow 412x915",
+   "pass": true
+  },
+  {
+   "name": "skills tab grade tags 412x915",
+   "pass": true,
+   "extra": {
+    "tags": 6,
+    "coloured": 2
+   }
+  },
+  {
+   "name": "skills tab no overflow 412x915",
+   "pass": true
+  },
+  {
+   "name": "detail grade table 412x915",
+   "pass": true,
+   "extra": {
+    "rows": 5,
+    "on": 1,
+    "next": 1
+   }
+  },
+  {
+   "name": "detail no overflow 412x915",
+   "pass": true
+  },
+  {
+   "name": "skill bar grade classes 412x915",
+   "pass": true,
+   "extra": [
+    "sg-rare",
+    "sg-common",
+    "sg-common",
+    "sg-mythic"
+   ]
+  },
+  {
+   "name": "no blocker-like class names 412x915",
+   "pass": true,
+   "extra": []
+  },
+  {
+   "name": "no page errors 412x915",
+   "pass": true,
+   "extra": []
+  }
+ ]
+}

@@ -1,5 +1,5 @@
 {
- "at": "2026-11-07T12:35:00.090Z",
+ "at": "2026-11-08T03:12:45.286Z",
  "pass": 42,
  "total": 42,
  "results": [
@@ -210,7 +210,7 @@
    "pass": true,
    "info": {
     "before": 5,
-    "after": 6,
+    "after": 5,
     "over": false,
     "small": [],
     "broken": []
@@ -445,7 +445,7 @@
    "info": {
     "claimed": true,
     "stars": 3,
-    "gem": 10,
+    "gem": 13,
     "seen": [
      "desert-6:true"
     ],

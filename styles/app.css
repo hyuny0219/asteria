@@ -686,3 +686,22 @@ img.awk-b, .awk-b img { border: 2px solid #b48cff !important; border-radius: 8px
 .awk-opt .cost-chip, .awk-opt .awk-cost { display: flex; margin-top: 4px; font-size: 11.5px; }
 .awk-cost.free { color: #6FD08C; font-weight: 700; }
 .awk-opt[disabled] { opacity: .5; cursor: default; }
+
+/* ---- v11 스킬 등급 (뽑기형) ---- */
+.sg-tag { display: inline-block; font-size: 11px; font-weight: 800; padding: 0 6px; border-radius: 6px; line-height: 18px; color: #140f1b; background: var(--sgc, var(--r-common)); vertical-align: 1px; }
+.sg-common { --sgc: var(--r-common); } .sg-rare { --sgc: var(--r-rare); } .sg-epic { --sgc: var(--r-epic); } .sg-legendary { --sgc: var(--r-legendary); } .sg-mythic { --sgc: var(--r-mythic); }
+img.sg-rare, img.sg-epic, img.sg-legendary, img.sg-mythic { outline: 2px solid var(--sgc); outline-offset: -1px; border-radius: 8px; }
+img.sg-legendary, img.sg-mythic { box-shadow: 0 0 8px color-mix(in srgb, var(--sgc) 70%, transparent); }
+.skills .skill.sg-rare, .skills .skill.sg-epic, .skills .skill.sg-legendary, .skills .skill.sg-mythic { border-color: var(--sgc); box-shadow: 0 0 0 1px var(--sgc) inset; }
+.skills .skill.sg-legendary, .skills .skill.sg-mythic { box-shadow: 0 0 0 1px var(--sgc) inset, 0 0 8px color-mix(in srgb, var(--sgc) 60%, transparent); }
+.sk-ic-btn { padding: 0; border: 0; background: none; cursor: pointer; line-height: 0; flex: none; }
+.sg-card .sg-row { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--ibord); min-width: 0; }
+.sg-card .sg-row .sg-tag { flex: none; min-width: 34px; text-align: center; }
+.sg-card .sg-row .sg-eff { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.sg-card .sg-row.on { color: var(--text); font-weight: 700; }
+.sg-card .sg-row.past { opacity: .55; }
+.sg-card .sg-row .sg-nx { flex: none; font-size: 11px; color: var(--gold); font-weight: 800; }
+.draw .tag.up { position: static; order: -1; align-self: center; margin: 12px 0 2px; font-size: 11px; background: var(--r-legendary); color: #160f1d; }
+.draw .tag.up ~ img, .draw .tag.up + img { margin-top: 0; }
+.draw-up { text-align: center; color: var(--r-legendary); font-weight: 800; margin: 0 0 8px; }
+.pbar.mythic i { background: var(--r-mythic); }

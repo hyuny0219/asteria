@@ -2,6 +2,7 @@
 // DOM-free; every mutation runs inside Game.transact.
 import { AWAKEN, AWAKENINGS, EXTRACT, IMPRINT, ITEM_LEVEL, LOADOUT_DEFAULT_MAP, LOADOUT_NAMES, MYTHIC_MUL, RARITY_UP, REFORGE, UNIQUES } from '../data/gearplus.js';
 import { BALANCE } from '../data/balance.js';
+import { GRADE_BONUS, GRADE_EFFECT } from '../data/skillgrade.js';
 import { SKILLS } from '../data/content.js';
 import { lookFor, MYTHIC_UNIQUE_KEYS, rollLegend, rollOneOption } from './items.js';
 import { hashString, kstDayIndex, makeRng } from './util.js';
@@ -54,6 +55,18 @@ export function skillMods(state, equipped = state.equipped) {
   for (const id of Object.values(equipped)) {
     const it = id && find(state, id);
     if (it && it.legend && UNIQUES[it.legend.id]) add(UNIQUES[it.legend.id].mods(legendValue(it)));
+  }
+  // v11 스킬 등급: base multipliers + 전설/신화 bonus
+  const gr = (state.skills && state.skills.grades) || {};
+  for (const [sid, g] of Object.entries(gr)) {
+    const e = GRADE_EFFECT[g];
+    if (!e) continue;
+    const m = {};
+    if (e.coefMul !== 1) m.coefMul = e.coefMul;
+    if (e.cdMul !== 1) m.cdMul = e.cdMul;
+    const b = GRADE_BONUS[sid];
+    if (b && (g === 'legendary' || g === 'mythic')) Object.assign(m, b[g]);
+    if (Object.keys(m).length) add({ [sid]: m });
   }
   const aw = state.skills && state.skills.awaken;
   if (aw) for (const [sid, pick] of Object.entries(aw)) {

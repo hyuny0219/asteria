@@ -30,9 +30,9 @@
   "pass": true,
   "info": {
    "choices": [
-    "b_atk",
-    "b_def",
-    "b_evade"
+    "b_hp",
+    "b_berserk",
+    "b_heal"
    ]
   }
  },
@@ -82,9 +82,9 @@
   "pass": true,
   "info": {
    "choices": [
-    "b_cdmg",
-    "b_glass",
-    "b_greed"
+    "b_atk",
+    "b_guard",
+    "b_ult"
    ]
   }
  },

@@ -1,6 +1,6 @@
 {
- "startedAt": "2026-11-07T14:34:06.445Z",
- "base": "http://localhost:8270/",
+ "startedAt": "2026-11-08T03:08:17.168Z",
+ "base": "http://localhost:8280/",
  "viewports": [
   [
    390,
@@ -238,7 +238,8 @@
     "runes"
    ],
    "tiny": [
-    "2"
+    "2",
+    "일반"
    ],
    "errors": []
   },
@@ -258,10 +259,16 @@
     "awaken",
     "runes",
     "skilldetail",
-    "skilldetail"
+    "skilldetail",
+    "skillgrade"
    ],
    "tiny": [
-    "2"
+    "2",
+    "일반",
+    "희귀",
+    "다음",
+    "영웅",
+    "전설"
    ],
    "errors": []
   },
@@ -636,7 +643,8 @@
     "매일 재료",
     "보스·탑·균열",
     "방치·강화",
-    "재료 던전 · 매일"
+    "재료 던전 · 매일",
+    "등급 상승!"
    ],
    "errors": []
   },
@@ -1031,7 +1039,10 @@
     "statpoints"
    ],
    "tiny": [
-    "2"
+    "2",
+    "전설",
+    "희귀",
+    "일반"
    ],
    "errors": []
   },
@@ -1501,7 +1512,8 @@
     "runes"
    ],
    "tiny": [
-    "2"
+    "2",
+    "일반"
    ],
    "errors": []
   },
@@ -1521,10 +1533,16 @@
     "awaken",
     "runes",
     "skilldetail",
-    "skilldetail"
+    "skilldetail",
+    "skillgrade"
    ],
    "tiny": [
-    "2"
+    "2",
+    "일반",
+    "희귀",
+    "다음",
+    "영웅",
+    "전설"
    ],
    "errors": []
   },
@@ -1581,8 +1599,7 @@
    ],
    "tiny": [
     "2",
-    "✓",
-    "★★★"
+    "✓"
    ],
    "errors": []
   },
@@ -1900,7 +1917,8 @@
     "매일 재료",
     "보스·탑·균열",
     "방치·강화",
-    "재료 던전 · 매일"
+    "재료 던전 · 매일",
+    "등급 상승!"
    ],
    "errors": []
   },
@@ -2295,7 +2313,9 @@
     "statpoints"
    ],
    "tiny": [
-    "2"
+    "2",
+    "일반",
+    "희귀"
    ],
    "errors": []
   },
@@ -2758,7 +2778,8 @@
     "runes"
    ],
    "tiny": [
-    "2"
+    "2",
+    "일반"
    ],
    "errors": []
   },
@@ -2778,10 +2799,16 @@
     "awaken",
     "runes",
     "skilldetail",
-    "skilldetail"
+    "skilldetail",
+    "skillgrade"
    ],
    "tiny": [
-    "2"
+    "2",
+    "일반",
+    "희귀",
+    "다음",
+    "영웅",
+    "전설"
    ],
    "errors": []
   },
@@ -3156,7 +3183,8 @@
     "매일 재료",
     "보스·탑·균열",
     "방치·강화",
-    "재료 던전 · 매일"
+    "재료 던전 · 매일",
+    "등급 상승!"
    ],
    "errors": []
   },
@@ -3551,7 +3579,10 @@
     "statpoints"
    ],
    "tiny": [
-    "2"
+    "2",
+    "희귀",
+    "일반",
+    "신화"
    ],
    "errors": []
   },
@@ -3867,8 +3898,8 @@
    "name": "reload keeps the same pending claim",
    "pass": true,
    "detail": {
-    "first": "claim_mw6ia1ki_1fnp91c",
-    "after": "claim_mw6ia1ki_1fnp91c"
+    "first": "claim_mw797vv9_1xf0a7j",
+    "after": "claim_mw797vv9_1xf0a7j"
    }
   },
   {
@@ -3950,7 +3981,7 @@
     "k0": 1,
     "k1": {
      "kills": 1,
-     "acc": 16.600000000000136,
+     "acc": 49.89999999999998,
      "mode": "FARM"
     }
    }
@@ -4045,7 +4076,7 @@
   }
  ],
  "errors": [],
- "finishedAt": "2026-11-07T14:36:36.564Z",
+ "finishedAt": "2026-11-08T03:10:43.174Z",
  "summary": {
   "screenChecks": 141,
   "screenPass": 141,

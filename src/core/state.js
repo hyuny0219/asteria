@@ -63,8 +63,9 @@ export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0, cls = 'wa
       books: {},                                 // skillId → skill books owned
       runes: { owned: {}, equipped: [null, null] },   // runeId → level 1..5
       awaken: {},                                // v10 skillId → 0 (A) | 1 (B), skill Lv 10+
+      grades: {},                                // v11 skillId → 'rare' | 'epic' | 'legendary' | 'mythic' (missing = 일반)
     },
-    gacha: { eq: { draws: 0, pity: 0 }, sk: { draws: 0, pity: 0 } },
+    gacha: { eq: { draws: 0, pity: 0 }, sk: { draws: 0, pity: 0, mythPity: 0 } },
     missions: { day: null, progress: {}, claimed: {}, bonus: false },
     tower: { best: 0 },
     raid: { week: null, tries: 0, best: 0, bestGrade: null },

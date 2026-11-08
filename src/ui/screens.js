@@ -7,6 +7,7 @@ import * as V4 from './v4.js';
 import * as V5 from './v5.js';
 import * as V6 from './v6.js';
 import * as V8 from './v8.js';
+import { bonusText, GRADE_EFFECT, GRADE_NAME, gradeIndex, SKILL_GRADES } from '../data/skillgrade.js';
 import * as V10 from './v10.js';
 import * as WBM from '../core/worldboss.js';
 import * as MAILUI from './mail.js';
@@ -374,7 +375,9 @@ export function openOverflow(app) {
 
 // ======================= S05 skills panel / S06 detail =======================
 // v10 각성 아이콘 테두리 (A 금색 · B 보라)
-function awkCls(s, id) { const a = (s.skills.awaken || {})[id]; return a === undefined || prog.skillLevel(s, id) < 10 ? '' : a ? 'awk-b' : 'awk-a'; }
+function awkCls(s, id) { const a = (s.skills.awaken || {})[id]; return `sg-${skGrade(s, id)}` + (a === undefined || prog.skillLevel(s, id) < 10 ? '' : a ? ' awk-b' : ' awk-a'); }
+const skGrade = (s, id) => (s.skills.grades && s.skills.grades[id]) || 'common';
+const gradeTag = (s, id) => h('span', { class: `sg-tag sg-${skGrade(s, id)}` }, GRADE_NAME[skGrade(s, id)]);
 export function skillsPanel(app) {
   const s = app.state;
   const root = h('div', { class: 'panel', dataset: { screen: 'skills' }, style: { height: '100%', margin: 0 } });
@@ -388,7 +391,7 @@ export function skillsPanel(app) {
     const lv = prog.skillLevel(s, id);
     const c = prog.skillLevelCost(s, id);
     const have = s.skills.books[id] || 0;
-    return h('span', { class: 'sk-lv' }, `Lv ${lv}/${BALANCE.skills.maxLevel} · 스킬북 ${have}${c ? `/${c.books}` : ''}`);
+    return h('span', { class: 'sk-lv' }, gradeTag(s, id), ` Lv ${lv}/${BALANCE.skills.maxLevel} · 스킬북 ${have}${c ? `/${c.books}` : ''}`);
   };
   sc.appendChild(h('div', { class: 'section-title' }, '편성'));
   for (let i = 0; i < 5; i++) {
@@ -412,15 +415,15 @@ export function skillsPanel(app) {
     const c = prog.skillLevelCost(s, id);
     const have = s.skills.books[id] || 0;
     const ok = c && have >= c.books && s.wallet.gold >= c.gold;
-    sc.appendChild(h('div', { class: 'skill-line', dataset: { key: 'lv-' + id } }, img(skillIcon(SKILLS[id].icon), ''),
-      h('div', null, h('div', { class: 't' }, `${SKILLS[id].name} Lv ${prog.skillLevel(s, id)}`),
+    sc.appendChild(h('div', { class: 'skill-line', dataset: { key: 'lv-' + id } }, h('button', { type: 'button', class: 'sk-ic-btn', 'aria-label': `${SKILLS[id].name} 상세`, onClick: () => openSkillDetail(app, id) }, img(skillIcon(SKILLS[id].icon), '', awkCls(s, id))),
+      h('div', null, h('div', { class: 't' }, gradeTag(s, id), ` ${SKILLS[id].name} Lv ${prog.skillLevel(s, id)}`),
         h('div', { class: 'muted' }, c ? `다음: 스킬북 ${have}/${c.books} · 골드 ${fmt(c.gold)}` : '최대 레벨')),
       button(c ? '레벨업' : 'MAX', { cls: 'chip-btn' + (ok ? ' hot' : ''), disabled: !ok, busy: true, ariaLabel: `${SKILLS[id].name} 레벨업`, onClick: async () => {
         const r = fail(await app.game.levelSkill(id));
         if (r.ok) toast(`${SKILLS[id].name} Lv ${r.level}`, 'good');
       } })));
   }
-  sc.appendChild(h('p', { class: 'muted' }, `레벨당 피해 +${Math.round(BALANCE.skills.levelBonusPerLevel * 100)}%. 스킬북은 스킬북 서고 던전·스킬 뽑기·보스에서 얻어요.`));
+  sc.appendChild(h('p', { class: 'muted' }, `레벨당 피해 +${Math.round(BALANCE.skills.levelBonusPerLevel * 100)}%. 스킬북은 스킬북 서고 던전·스킬 뽑기·보스에서 얻어요. 스킬 등급(일반~신화)은 스킬 뽑기에서 더 높은 등급 카드가 나오면 올라가요. 아이콘을 누르면 등급 효과를 볼 수 있어요.`));
   sc.appendChild(V10.awakenCard(app));
   sc.appendChild(V4.runesCard(app));
   const cs = CLASSES[s.player.cls || 'warrior'];
@@ -457,7 +460,24 @@ export function openSkillDetail(app, id) {
       sk.cd ? h('div', { class: 'kv' }, '재사용 대기', h('b', null, `${sk.cd}초`)) : null,
       sk.internalCd ? h('div', { class: 'kv' }, '내부 대기', h('b', null, `${sk.internalCd}초`)) : null,
       h('div', { class: 'kv' }, '범위', h('b', null, sk.target === 'all' ? '화면의 모든 적' : sk.kind === 'buff' ? '자신' : sk.kind === 'passive-counter' ? '공격한 적' : '전방 단일'))),
+    gradeCard(s, id),
     h('p', { class: 'muted' }, '레벨당 피해 +8% (합연산). 피해는 공격 동작의 타격 시점에 한 번 계산됩니다.')) });
+}
+// v11 스킬 등급 표: 지금 등급 강조 + 다음 등급 미리보기
+function gradeCard(s, id) {
+  const cur = skGrade(s, id);
+  const ci = gradeIndex(cur);
+  const isUltSk = SKILLS[id].kind === 'ultimate';
+  return h('div', { class: 'card sg-card', dataset: { screen: 'skillgrade' } },
+    h('div', { class: 'kv' }, h('b', { style: { color: 'var(--text)' } }, '스킬 등급'), h('span', { class: `sg-tag sg-${cur}` }, GRADE_NAME[cur])),
+    SKILL_GRADES.map((g, i) => {
+      const e = GRADE_EFFECT[g];
+      const bt = bonusText(id, g);
+      const parts = [`피해 ×${e.coefMul.toFixed(2)}`, !isUltSk && e.cdMul !== 1 ? `대기 -${Math.round((1 - e.cdMul) * 100)}%` : null, bt ? `${bt.name}: ${bt.text}` : null].filter(Boolean);
+      return h('div', { class: 'sg-row' + (i === ci ? ' on' : i === ci + 1 ? ' next' : i < ci ? ' past' : '') },
+        h('span', { class: `sg-tag sg-${g}` }, GRADE_NAME[g]), h('span', { class: 'sg-eff' }, parts.join(' · ')), i === ci + 1 ? h('span', { class: 'sg-nx' }, '다음') : null);
+    }),
+    h('p', { class: 'muted small', style: { margin: '6px 0 0' } }, '등급은 스킬 뽑기에서 더 높은 등급 카드가 나오면 올라가요.'));
 }
 
 // ======================= S14 adventure panel (region + boss + dungeon) =======================

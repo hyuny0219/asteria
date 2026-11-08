@@ -12,6 +12,7 @@ import { dungeonState, nextRefillAt, stageLevel, stageReward } from '../core/dun
 import { statPointsFree, statResetCost } from '../core/economy.js';
 import { runeValue } from '../core/stats.js';
 import { rarityLabel } from '../core/items.js';
+import { GRADE_NAME } from '../data/skillgrade.js';
 import { fmt, fmtFull, fmtPct } from '../core/util.js';
 import { sfx } from '../platform/audio.js';
 import { button, closeAllModals, h, icon, img, modalOpen, openModal, toast } from './dom.js';
@@ -77,7 +78,8 @@ export function openClassPicker(app, { onDone } = {}) {
 }
 
 // ======================= 뽑기 =======================
-const RATE_NAMES_SK = { common: '스킬북 3권 (일반)', rare: '스킬북 8권 (희귀)', epic: '스킬북 20권 (영웅)', legendary: '고유 각인 (전설)' };
+const SKB = BALANCE.gacha.skill.books;
+const RATE_NAMES_SK = { rune: '고유 각인', common: `일반 스킬 · 스킬북 ${SKB.common}`, rare: `희귀 스킬 · 스킬북 ${SKB.rare}`, epic: `영웅 스킬 · 스킬북 ${SKB.epic}`, legendary: `전설 스킬 · 스킬북 ${SKB.legendary}`, mythic: `신화 스킬 · 스킬북 ${SKB.mythic}` };
 export function freeDrawAvailable(state) { return (state.wallet.eqTicket || 0) > 0 || (state.wallet.skTicket || 0) > 0; }
 
 export function openGacha(app, tab = 'eq') {
@@ -105,13 +107,15 @@ export function openGacha(app, tab = 'eq') {
     }
     lines.push(h('div', { class: 'kv' }, isEq ? '전설 확정까지' : '고유 각인 확정까지', h('b', null, `${pityLeft}회`)),
       h('div', { class: 'pbar gold', role: 'progressbar', 'aria-label': '천장 진행', 'aria-valuenow': String(g.pity), 'aria-valuemax': String(G.pity) }, h('i', { style: { width: `${(g.pity / G.pity) * 100}%` } })),
+      ...(isEq ? [] : [h('div', { class: 'kv' }, '신화 스킬 확정까지', h('b', null, `${G.mythicPity - (g.mythPity || 0)}회`)),
+        h('div', { class: 'pbar mythic', role: 'progressbar', 'aria-label': '신화 천장 진행', 'aria-valuenow': String(g.mythPity || 0), 'aria-valuemax': String(G.mythicPity) }, h('i', { style: { width: `${((g.mythPity || 0) / G.mythicPity) * 100}%` } }))]),
       h('div', { class: 'kv' }, '누적 뽑기', h('b', null, `${fmtFull(g.draws)}회`)));
     const table = isEq ? rateTable(summonLevel(g.draws)) : skillRateTable();
     const rates = h('details', { class: 'card', open: true }, h('summary', { class: 'small' }, `확률 공개${isEq ? ` (소환 Lv ${summonLevel(g.draws)})` : ''}`),
-      Object.entries(table).map(([r, p]) => h('div', { class: 'kv' }, h('span', { class: `rar r-${r}` }, isEq ? rarityLabel(r) : RATE_NAMES_SK[r]), h('b', null, fmtPct(p, p < 0.001 ? 3 : 2)))),
+      Object.entries(table).map(([r, p]) => h('div', { class: 'kv' }, h('span', { class: `rar r-${r === 'rune' ? 'legendary' : r}` }, isEq ? rarityLabel(r) : RATE_NAMES_SK[r]), h('b', null, fmtPct(p, p < 0.001 ? 3 : 2)))),
       h('p', { class: 'muted', style: { margin: '6px 0 0' } }, isEq
         ? `장비 레벨은 지금 레벨(Lv ${s.player.level}), 부위는 무작위입니다. ${G.pity}회 동안 전설 이상이 없으면 ${G.pity}번째는 전설 확정이고, 전설·신화가 나오면 횟수가 0으로 돌아갑니다. 소환 레벨은 누적 뽑기 수로 오르며 상위 등급 확률이 조금씩 올라갑니다.`
-        : `스킬북은 지금 배운 ${CLASSES[s.player.cls || 'warrior'].name} 스킬 중 하나에 들어갑니다. 각인 ${Object.keys(RUNES).length}종은 모든 클래스 공용이며 중복이면 각인 레벨 +1(최대 ${BALANCE.runes.maxLevel}). ${G.pity}회째는 각인 확정입니다.`));
+        : `스킬 카드는 지금 배운 ${CLASSES[s.player.cls || 'warrior'].name} 스킬(궁극기 포함) 중 하나로, 등급(일반·희귀·영웅·전설·신화)과 스킬북이 함께 와요. 가진 등급보다 높으면 그 스킬의 등급이 올라가고(이전 등급의 스킬북도 돌려받음), 같거나 낮으면 스킬북만 받아요. 각인 ${Object.keys(RUNES).length}종은 모든 클래스 공용, 중복이면 각인 레벨 +1(최대 ${BALANCE.runes.maxLevel}). ${G.pity}회째는 각인, ${G.mythicPity}회째는 신화 스킬이 확정입니다.`));
     const drawBtn = (n) => {
       const q = quoteDraw(s, kind, n);
       const cost = [q.tickets ? `뽑기권 ${q.tickets}` : null, q.gem ? `보석 ${fmtFull(q.gem)}` : null].filter(Boolean).join(' + ');
@@ -148,15 +152,18 @@ function showDrawResults(app, isEq, r, after) {
     let pic, name, sub;
     if (isEq) { pic = img(itemIcon(x.item.look), ''); name = x.item.name; sub = rarityLabel(rar); }
     else if (x.kind === 'rune') { pic = RUNES[x.rune].icon ? img(skillIcon(RUNES[x.rune].icon), '') : icon('star', 30); name = `각인 · ${RUNES[x.rune].name}`; sub = x.capped ? '최대 레벨 · 보석 +100' : `Lv ${x.level}${x.dupe ? ' (중복)' : ' NEW'}`; }
-    else { pic = img(skillIcon(SKILLS[x.skill].icon), ''); name = SKILLS[x.skill].name; sub = `스킬북 ×${x.books}`; }
+    else { pic = img(skillIcon(SKILLS[x.skill].icon), '', `sg-${rar}`); name = `${GRADE_NAME[rar]} ${SKILLS[x.skill].name}`; sub = x.upgraded ? `${GRADE_NAME[x.from]} → ${GRADE_NAME[rar]} · 스킬북 ×${x.books}` : `보유 ${GRADE_NAME[x.from]} 이상 · 스킬북 ×${x.books}`; }
     return h('div', { class: `draw r-${rar}${top ? ' top' : ''}`, style: fast ? null : { animationDelay: `${150 + i * 70}ms` } },
-      h('span', { class: `mk r-${rar}` }, RARITY[rar] ? RARITY[rar].mark : ''), pic, h('b', null, name), h('span', { class: 'muted' }, sub), x.pity ? h('span', { class: 'tag' }, '천장') : null);
+      h('span', { class: `mk r-${rar}` }, isEq || x.kind === 'rune' ? (RARITY[rar] ? RARITY[rar].mark : '') : GRADE_NAME[rar]), pic, h('b', null, name), h('span', { class: 'muted' }, sub),
+      x.upgraded ? h('span', { class: 'tag up' }, '등급 상승!') : null, x.pity ? h('span', { class: 'tag' }, '천장') : null);
   }));
+  const ups = isEq ? [] : res.filter((x) => x.upgraded);
   const head = order(bestR) >= 4 ? h('p', { class: 'draw-best', role: 'status' }, `${RARITY[bestR].name} 등급 획득!`) : h('p', { class: 'muted', role: 'status' }, `최고 등급: ${RARITY[bestR] ? RARITY[bestR].name : ''}`);
+  const upLine = ups.length ? h('p', { class: 'draw-up', role: 'status' }, `스킬 등급 상승 ${ups.length}개 · ` + ups.map((x) => `${SKILLS[x.skill].name} ${GRADE_NAME[x.rarity]}`).join(', ')) : null;
   const extra = [];
   if (r.overflowed && r.overflowed.length) extra.push(h('p', { class: 'warn' }, `보관함이 가득 차 ${r.overflowed.length}개는 임시 보관함에 들어갔습니다.`));
   if (r.converted && r.converted.length) extra.push(h('p', { class: 'warn' }, `임시 보관함도 가득 차 ${r.converted.length}개는 강화 광석으로 바뀌었습니다.`));
-  const m = openModal({ id: 'gachaResult', title: `${isEq ? '장비' : '스킬'} 뽑기 결과 · ${res.length}회`, body: h('div', { dataset: { screen: 'gachaResult' } }, head, grid, ...extra),
+  const m = openModal({ id: 'gachaResult', title: `${isEq ? '장비' : '스킬'} 뽑기 결과 · ${res.length}회`, body: h('div', { dataset: { screen: 'gachaResult' } }, head, upLine, grid, ...extra),
     onClose: after, actions: [button('확인', { cls: 'btn btn-primary', onClick: () => m.close() })] });
   if (!fast && order(bestR) >= 4) setTimeout(() => app.renderer && app.renderer.kick(2, 90), 200);
 }

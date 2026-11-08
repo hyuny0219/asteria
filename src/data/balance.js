@@ -161,9 +161,12 @@ export const BALANCE = Object.freeze({
     },
     skill: {
       cost: { gem: 80, gem11: 800 },
-      rates: { common: 0.70, rare: 0.22, epic: 0.07, legendary: 0.01 },
-      books: { common: 3, rare: 8, epic: 20 },
+      // v11 뽑기형 스킬 등급: each draw is a skill card (skill + grade) or a rune.
+      // published per-draw table = rune + card grades (sum 1)
+      rates: { common: 0.5445, rare: 0.2772, epic: 0.1188, legendary: 0.04455, mythic: 0.00495, rune: 0.01 },
+      books: { common: 2, rare: 5, epic: 12, legendary: 25, mythic: 50 },   // every card brings these books
       pity: 100,                 // rune guaranteed on the 100th draw without one
+      mythicPity: 150,           // mythic skill card guaranteed on the 150th draw without one
     },
   },
   missions: { gem: 40, bonus: { gem: 100, eqTicket: 3, skTicket: 2 } },   // v8: ×2 + skill tickets
