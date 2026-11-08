@@ -249,7 +249,8 @@
   "gpt_n/wings_1.png": "GPT package N",
   "gpt_n/wings_1_alt_whitebg.png": "GPT package N (alternate, unused)",
   "gpt_n/wings_2.png": "GPT package N",
-  "gpt_m/skill_grade_frames.png": "GPT package M"
+  "gpt_m/skill_grade_frames.png": "GPT package M",
+  "gpt_k/icons_v8.png": "GPT package K — v8 jewels / foods / content emblems"
  },
  "monsters": {
   "M01": {
@@ -26167,6 +26168,138 @@
    ],
    "status": "RUNTIME_ICON",
    "source": "gpt_l/icons_v10.png"
+  },
+  "Q00": {
+   "id": "Q00",
+   "name": "jewel_ruby",
+   "file": "assets/runtime/skill_Q00.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_k/icons_v8.png"
+  },
+  "Q01": {
+   "id": "Q01",
+   "name": "jewel_sapphire",
+   "file": "assets/runtime/skill_Q01.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_k/icons_v8.png"
+  },
+  "Q02": {
+   "id": "Q02",
+   "name": "jewel_emerald",
+   "file": "assets/runtime/skill_Q02.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_k/icons_v8.png"
+  },
+  "Q03": {
+   "id": "Q03",
+   "name": "jewel_topaz",
+   "file": "assets/runtime/skill_Q03.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_k/icons_v8.png"
+  },
+  "Q04": {
+   "id": "Q04",
+   "name": "jewel_amethyst",
+   "file": "assets/runtime/skill_Q04.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_k/icons_v8.png"
+  },
+  "Q05": {
+   "id": "Q05",
+   "name": "food_soup",
+   "file": "assets/runtime/skill_Q05.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_k/icons_v8.png"
+  },
+  "Q06": {
+   "id": "Q06",
+   "name": "food_roast",
+   "file": "assets/runtime/skill_Q06.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_k/icons_v8.png"
+  },
+  "Q07": {
+   "id": "Q07",
+   "name": "food_feast",
+   "file": "assets/runtime/skill_Q07.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_k/icons_v8.png"
+  },
+  "Q08": {
+   "id": "Q08",
+   "name": "emblem_mplus",
+   "file": "assets/runtime/skill_Q08.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_k/icons_v8.png"
+  },
+  "Q09": {
+   "id": "Q09",
+   "name": "emblem_expedition",
+   "file": "assets/runtime/skill_Q09.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_k/icons_v8.png"
+  },
+  "Q10": {
+   "id": "Q10",
+   "name": "emblem_worldboss",
+   "file": "assets/runtime/skill_Q10.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_k/icons_v8.png"
+  },
+  "Q11": {
+   "id": "Q11",
+   "name": "emblem_workshop",
+   "file": "assets/runtime/skill_Q11.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_k/icons_v8.png"
   }
  },
  "backgrounds": {

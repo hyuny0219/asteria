@@ -13,7 +13,16 @@ import { button, h, img, openModal, toast } from './dom.js';
 import { fail, itemRewards, rewardTiles } from './screens.js';
 
 const ico = (id) => { try { return img(skillIcon(id), '', 'emblem'); } catch { return null; } };
-const jewelTiles = (js) => (js || []).map((g) => ({ icon: itemIcon(CURRENCY_ICONS.gem), value: CR.jewelName(g.type, g.lv), label: '보옥' }));
+// GPT K icons (skill_Q00..Q11): 보옥 5종 · 버프 음식 3종 · 콘텐츠 문장 4개
+export const JEWEL_ICONS = Object.freeze({ ruby: 'Q00', sapphire: 'Q01', emerald: 'Q02', topaz: 'Q03', amethyst: 'Q04' });
+export const FOOD_ICONS = Object.freeze({ soup: 'Q05', roast: 'Q06', feast: 'Q07' });
+export const V8_EMBLEMS = Object.freeze({ mplus: 'Q08', expedition: 'Q09', worldboss: 'Q10', workshop: 'Q11' });
+const kIcon = (id, fb) => { try { return skillIcon(id); } catch { return fb; } };
+export const jewelIcon = (t) => kIcon(JEWEL_ICONS[t], itemIcon(CURRENCY_ICONS.gem));
+// 보옥 아이콘 + 단계 숫자 (4·5단계는 빛남)
+const jewelBadge = (t, lv) => h('span', { class: `jw-ico jw-lv${lv}`, 'aria-hidden': 'true' }, img(jewelIcon(t), ''), h('i', null, String(lv)));
+const foodIcon = (id) => img(kIcon(FOOD_ICONS[id], itemIcon(CURRENCY_ICONS.gem)), '', 'emblem food-ico');
+const jewelTiles = (js) => (js || []).map((g) => ({ icon: jewelIcon(g.type), value: CR.jewelName(g.type, g.lv), label: '보옥' }));
 const pctTxt = (t) => Object.entries(t).map(([r, p]) => `${RARITY[r].name} ${Math.round(p * 1000) / 10}%`).join(' · ');
 
 // ======================= 쐐기 던전 =======================
@@ -25,7 +34,7 @@ export function mplusCard(app) {
   const aff = MP.affixesFor(now).map((a) => MP.AFFIXES[a].name).join(' · ');
   const left = MP.rewardedLeft(s, now);
   return h('div', { class: 'card', dataset: { screen: 'mplus' } },
-    h('div', { class: 'kv' }, h('span', { class: 'card-title' }, ico('R04'), h('b', { style: { color: 'var(--text)' } }, '쐐기 던전')), h('b', null, `열쇠 +${m.key}`)),
+    h('div', { class: 'kv' }, h('span', { class: 'card-title' }, ico(V8_EMBLEMS.mplus), h('b', { style: { color: 'var(--text)' } }, '쐐기 던전')), h('b', null, `열쇠 +${m.key}`)),
     h('div', { class: 'kv' }, '이번 주 변칙', h('b', null, aff)),
     h('div', { class: 'kv' }, '오늘 보상', h('b', null, `${left}/${MP.MPLUS.runsPerDay}회 남음 · 주간 최고 +${m.weekBest || 0}`)),
     m.vault ? h('div', { class: 'kv' }, h('span', { class: 'okc' }, '주간 금고 도착'), h('b', null, `지난주 +${m.vault.best}`)) : null,
@@ -120,7 +129,7 @@ export function expeditionCard(app) {
   const busy = e.slots.filter(Boolean).length;
   const ready = EX.readyCount(s, now);
   return h('div', { class: 'card', dataset: { screen: 'expedition' } },
-    h('div', { class: 'kv' }, h('span', { class: 'card-title' }, ico('V10'), h('b', { style: { color: 'var(--text)' } }, '원정 파견')), h('b', null, `${busy}/${EX.EXPEDITION.slots} 진행 중`)),
+    h('div', { class: 'kv' }, h('span', { class: 'card-title' }, ico(V8_EMBLEMS.expedition), h('b', { style: { color: 'var(--text)' } }, '원정 파견')), h('b', null, `${busy}/${EX.EXPEDITION.slots} 진행 중`)),
     h('div', { class: 'kv' }, '오늘 원정 목록', h('b', null, `${e.board.length}개 남음 · 매일 00:00 갱신`)),
     ready ? h('div', { class: 'kv' }, h('span', { class: 'okc' }, `${ready}개 원정 완료`), h('b', null, '보상 받기')) : null,
     h('div', { class: 'btn-row' }, button(ready ? `보상 받기 (${ready})` : '원정 보내기', { cls: 'btn btn-primary', onClick: () => openExpedition(app) })));
@@ -213,7 +222,7 @@ export function worldBossCard(app) {
   const win = WBm.currentWindow(now);
   const status = c.ok ? `지금 열림 · ${String(win.hour).padStart(2, '0')}:00~${String(win.hour + 1).padStart(2, '0')}:00` : c.reason === 'used' ? `이번 시간 도전 완료 · 다음 ${hhmm(c.next.start)}` : `다음 ${c.next ? hhmm(c.next.start) : ''}`;
   return h('div', { class: 'card' + (c.ok ? ' hot-card' : ''), dataset: { screen: 'worldBoss' } },
-    h('div', { class: 'kv' }, h('span', { class: 'card-title' }, ico('V15'), h('b', { style: { color: 'var(--text)' } }, `월드 보스 · ${boss.name}`)), h('b', null, c.ok ? '도전 가능' : '대기')),
+    h('div', { class: 'kv' }, h('span', { class: 'card-title' }, ico(V8_EMBLEMS.worldboss), h('b', { style: { color: 'var(--text)' } }, `월드 보스 · ${boss.name}`)), h('b', null, c.ok ? '도전 가능' : '대기')),
     h('div', { class: 'kv' }, '시간대(매일)', h('b', null, '12시 · 18시 · 21시 (각 1시간, 1회)')),
     h('div', { class: 'kv' }, '상태', h('b', null, status)),
     h('div', { class: 'kv' }, '최고 기록', h('b', null, s.worldBoss.best ? `${s.worldBoss.bestGrade} · 피해 ${fmt(s.worldBoss.best)}` : '없음')),
@@ -251,7 +260,7 @@ export function workshopCard(app) {
   const jewels = Object.values(c.jewels || {}).reduce((a, b) => a + b, 0);
   const f = CR.activeFood(s, now);
   return h('div', { class: 'card', dataset: { screen: 'workshopCard' } },
-    h('div', { class: 'kv' }, h('span', { class: 'card-title' }, ico('V09'), h('b', { style: { color: 'var(--text)' } }, '제작소 · 보옥 · 마부 · 음식')), h('b', null, `보옥 ${jewels}개`)),
+    h('div', { class: 'kv' }, h('span', { class: 'card-title' }, ico(V8_EMBLEMS.workshop), h('b', { style: { color: 'var(--text)' } }, '제작소 · 보옥 · 마부 · 음식')), h('b', null, `보옥 ${jewels}개`)),
     h('div', { class: 'kv' }, '재료', h('b', null, `달빛 약초 ${c.herb || 0} · 야수 고기 ${c.meat || 0}`)),
     h('div', { class: 'kv' }, '버프 음식', h('b', null, f ? `${CR.FOODS[f.id].name} · ${Math.ceil((f.until - now) / 60000)}분 남음` : '없음')),
     h('div', { class: 'btn-row' }, button('제작소 열기', { cls: 'btn btn-primary', onClick: () => openWorkshop(app) })));
@@ -273,12 +282,13 @@ export function openWorkshop(app, tab = 'jewel', focusItem = null) {
       h('div', { class: 'ws-sockets' }, Array.from({ length: CR.socketCount(it) }, (_, i) => {
         const g = it.gems && it.gems[i];
         const sel = pick && pick.itemId === it.id && pick.idx === i;
-        return g ? button(jewelText(g), { cls: 'btn small-btn jewel-' + g.t, ariaLabel: `${jewelText(g)} 빼기`, busy: true, onClick: () => act(app.game.unsocketJewel(it.id, i)) })
+        return g ? button(h('span', { class: 'jw-label' }, jewelBadge(g.t, g.lv), h('span', null, jewelText(g))), { cls: 'btn small-btn jewel-' + g.t, ariaLabel: `${jewelText(g)} 빼기`, busy: true, onClick: () => act(app.game.unsocketJewel(it.id, i)) })
           : button(sel ? '보옥을 고르세요 ↓' : `빈 홈 ${i + 1} +`, { cls: 'btn small-btn' + (sel ? ' btn-primary' : ''), onClick: () => { pick = sel ? null : { itemId: it.id, idx: i }; render(); } });
       })))) : [h('p', { class: 'muted' }, '홈이 있는 장비를 끼고 있지 않아요. 영웅 1칸 · 전설 2칸 · 신화 3칸.')];
     const bag = Object.entries(s.craft.jewels || {}).filter(([, n]) => n > 0).map(([k, n]) => { const [t, lv] = k.split(':'); return { t, lv: Number(lv), n }; })
       .sort((a, b) => CR.JEWEL_TYPES.indexOf(a.t) - CR.JEWEL_TYPES.indexOf(b.t) || b.lv - a.lv);
     const bagRows = bag.length ? bag.map((j) => h('div', { class: 'mp-row' },
+      jewelBadge(j.t, j.lv),
       h('div', { class: 'mp-name' }, h('b', { class: 'jewel-' + j.t }, `${CR.jewelName(j.t, j.lv)} ×${j.n}`), h('span', { class: 'muted small' }, `${CR.JEWELS[j.t].label} ${pct1(CR.JEWELS[j.t].values[j.lv - 1])}`)),
       pick ? button('끼우기', { cls: 'btn btn-primary', busy: true, onClick: async () => { const r = await act(app.game.socketJewel(pick.itemId, pick.idx, j.t, j.lv)); if (r.ok) { pick = null; render(); } } })
         : button(j.lv >= CR.MAX_JEWEL_LV ? '최대' : `합성 3→1`, { cls: 'btn', disabled: j.n < 3 || j.lv >= CR.MAX_JEWEL_LV, busy: true, onClick: () => act(app.game.combineJewel(j.t, j.lv)) }))) : [h('p', { class: 'muted' }, '가방이 비었어요. 쐐기 던전(시간 내), 월드 보스(B 이상), 보옥 원정에서 얻어요.')];
@@ -305,8 +315,9 @@ export function openWorkshop(app, tab = 'jewel', focusItem = null) {
     const f = CR.activeFood(s, now);
     return [h('p', { class: 'modal-desc' }, `원정에서 모은 재료로 음식을 만들어요. ${CR.FOOD_MIN}분 동안 효과, 한 번에 하나만(새로 먹으면 바뀌어요).`),
       h('div', { class: 'kv' }, '재료', h('b', null, `달빛 약초 ${s.craft.herb || 0} · 야수 고기 ${s.craft.meat || 0}`)),
-      h('div', { class: 'kv' }, '지금 효과', h('b', null, f ? `${CR.FOODS[f.id].name} (${CR.FOODS[f.id].desc}) · ${Math.ceil((f.until - now) / 60000)}분` : '없음')),
-      ...Object.entries(CR.FOODS).map(([id, x]) => h('div', { class: 'mp-row' },
+      h('div', { class: 'kv' }, '지금 효과', h('b', { class: 'food-now' }, f ? foodIcon(f.id) : null, f ? `${CR.FOODS[f.id].name} (${CR.FOODS[f.id].desc}) · ${Math.ceil((f.until - now) / 60000)}분` : '없음')),
+      ...Object.entries(CR.FOODS).map(([id, x]) => h('div', { class: 'mp-row', dataset: { food: id } },
+        foodIcon(id),
         h('div', { class: 'mp-name' }, h('b', null, `${x.name} · ${x.desc}`), h('span', { class: 'muted small' }, `약초 ${x.cost.herb} · 고기 ${x.cost.meat}`)),
         button('만들어 먹기', { cls: 'btn btn-primary', disabled: (s.craft.herb || 0) < x.cost.herb || (s.craft.meat || 0) < x.cost.meat, busy: true, onClick: async () => { const r = await act(app.game.cookFood(id)); if (r.ok) toast(`${x.name} · ${x.desc} ${CR.FOOD_MIN}분`, 'good'); } })))];
   };
@@ -319,4 +330,4 @@ export function openWorkshop(app, tab = 'jewel', focusItem = null) {
   render();
   return m;
 }
-export const v8Tiles = (app) => [{ id: 'workshop', ic: 'equipment', em: 'V09', t: '제작소', s: '보옥 · 마부 · 음식', on: () => openWorkshop(app) }];
+export const v8Tiles = (app) => [{ id: 'workshop', ic: 'equipment', em: V8_EMBLEMS.workshop, t: '제작소', s: '보옥 · 마부 · 음식', on: () => openWorkshop(app) }];
