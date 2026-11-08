@@ -6,10 +6,12 @@ import { fmt } from '../core/util.js';
 import { sfx } from '../platform/audio.js';
 import { button, h, img, openModal, toast } from './dom.js';
 import { fail, itemRewards, rewardTiles } from './screens.js';
+import { steedIcon } from './v12.js';
 
 const ICON = {
   gold: () => itemIcon(CURRENCY_ICONS.gold), gem: () => itemIcon(CURRENCY_ICONS.gem), ore: () => itemIcon(CURRENCY_ICONS.ore),
   eqTicket: () => itemIcon(CURRENCY_ICONS.chest), skTicket: () => itemIcon(CURRENCY_ICONS.goldChest), ticket: () => itemIcon(CURRENCY_ICONS.ticket),
+  mount: () => steedIcon('mount'), wing: () => steedIcon('wing'), mountFood: () => steedIcon('food'), wingFeather: () => steedIcon('feather'), mountTicket: () => steedIcon('ticket_mount'), wingTicket: () => steedIcon('ticket_wing'),
   awakenStone: () => itemIcon('I36'), starShard: () => itemIcon('I37'), petEgg: () => skillIcon('V10'), petFood: () => skillIcon('V11'),
 };
 const iconFor = (k) => (ICON[k] ? ICON[k]() : itemIcon(CURRENCY_ICONS.mail));
@@ -19,13 +21,15 @@ const when = (t) => new Date(t).toLocaleDateString('ko-KR', { timeZone: 'Asia/Se
 function rewardChips(rw) {
   return h('div', { class: 'mail-chips' }, Object.entries(rw || {}).map(([k, v]) => k === 'item'
     ? h('span', { class: 'mail-chip' }, img(itemIcon(CURRENCY_ICONS.bag), ''), `장비 · ${v.rarity}`)
+    : k === 'mount' || k === 'wing' ? h('span', { class: 'mail-chip' }, img(iconFor(k), ''), h('b', null, MAILC.MAIL_REWARD_NAMES[k]), MAILC.steedName(k, v))
     : h('span', { class: 'mail-chip' }, img(iconFor(k), ''), h('b', null, fmt(v)), MAILC.MAIL_REWARD_NAMES[k] || k)));
 }
 
 // reward reveal only after the claim transaction has been saved
 function showClaimed(app, r) {
   if (app.state.settings.sound) sfx('bell');
-  const tiles = Object.entries(r.got || {}).map(([k, v]) => ({ icon: iconFor(k), value: '+' + fmt(v), label: MAILC.MAIL_REWARD_NAMES[k] || k }))
+  const tiles = Object.entries(r.got || {}).filter(([k]) => k !== 'steeds').map(([k, v]) => ({ icon: iconFor(k), value: '+' + fmt(v), label: MAILC.MAIL_REWARD_NAMES[k] || k }))
+    .concat((r.got && r.got.steeds || []).map((x) => ({ icon: iconFor(x.kind), value: MAILC.steedName(x.kind, x.id), label: MAILC.MAIL_REWARD_NAMES[x.kind] })))
     .concat(itemRewards(r.items || []));
   const m = openModal({ id: 'mailClaimed', title: r.ids.length > 1 ? `우편 ${r.ids.length}통 수령` : '우편 수령', kind: 'center',
     body: h('div', { dataset: { screen: 'mailClaimed' } }, tiles.length ? rewardTiles(tiles) : h('p', null, '받을 보상이 없는 우편이었어요.')),

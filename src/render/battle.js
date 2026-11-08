@@ -19,6 +19,7 @@ import { HERO_X } from '../core/combat.js';
 import { CLASSES, SKILLS } from '../data/content.js';
 import { bgMeta, fxSprite, classPortrait, enemyMeta, heroFrames, loadImage, outlined, petMeta, promoPortrait, ready, scaledImage, spriteMeta } from './assets.js';
 import { Particles, PK } from './particles.js';
+import { MOUNTS, WINGS } from '../data/steeds.js';
 import { fmt } from '../core/util.js';
 
 const LOGICAL_W = 390;
@@ -27,6 +28,8 @@ const GROUND = 0.8;
 const FLIGHT = 150;        // ms a ranged projectile is shown travelling
 const COMBO_RESET = 2000;  // ms without a swing/hit → combo back to 1타 / counter cleared
 const FX_CAP = 64;
+// v12: seat height above the ground per mount, in hero heights (sets the mount's drawn size)
+const MOUNT_SEAT = { horse: 0.8, wolf: 0.7, lizard: 0.6, elk: 0.8, skelhorse: 0.8, griffin: 0.78, unicorn: 0.82, nightmare: 0.82 };
 
 // pose / lunge per combo step (melee values; ranged classes use a fraction)
 const COMBO = [null,
@@ -519,8 +522,9 @@ export class BattleRenderer {
   }
 
   // ---------- frame ----------
-  draw(battle, { alpha = 0, region = null, bgId = null, bgTint = null, branch = null, cls = 'warrior', tier = 1, heroTint = 0, label = null, victory = false }) {
+  draw(battle, { alpha = 0, region = null, bgId = null, bgTint = null, branch = null, cls = 'warrior', tier = 1, heroTint = 0, mount = null, wing = null, label = null, victory = false }) {
     this.heroTier = tier;
+    this.mountId = mount; this.wingId = wing;
     this.heroTint = heroTint;
     this.heroCls = cls;
     this.heroBranch = branch;
@@ -697,18 +701,21 @@ export class BattleRenderer {
         if (motion && rel >= imp) dx = 12 * Math.max(0, 1 - (rel - imp) / 300);
       }
     } else if (t < h.hitFxUntil) { pose = 'hit'; if (motion) dx = -5; }
-    else if (battle.traveling) pose = Math.floor(t / 320) % 2 ? 'step' : 'idle';
+    else if (battle.traveling) pose = this.mountId ? 'idle' : Math.floor(t / 320) % 2 ? 'step' : 'idle';
     else if (battle.enemies.every((e) => e.state === 'approach') && battle.enemies.length) pose = Math.floor(t / 320) % 2 ? 'step' : 'idle';
     if (h.buffs && h.buffs.evade && battle.t < h.buffs.evade.until && !h.dead) alpha = 0.55;   // 그림자 걸음 / 후방 도약
     // Promoted forms with a key-pose sheet (GPT A01, tier 1) use their own 8 poses.
     // Others have one authored figure per costume: that figure + lunge/trail only
     // (the base poses would change costume mid-swing).
     let m = frames[pose];
+    const riding = !!(this.mountId && battle.traveling && !h.dead && !victory);
     // GPT J3 cycle frames (base form): 4-frame walk while closing in, 4-frame basic attack
     if (frames.cycle && !h.dead && !victory) {
       if (ac && ac.kind === 'attack') {
         const rel = t - ac.start, imp = ac.impactAt - ac.start, hold = COMBO[step].hold;
         m = frames.cycle.atk[rel < imp * 0.5 ? 0 : rel < imp ? 1 : rel < imp + hold ? 2 : 3] || m;
+      } else if (riding) {
+        // seated on the mount: keep the still idle figure
       } else if (!ac && pose === 'step' || (!ac && pose === 'idle' && battle.enemies.length && battle.enemies.every((e) => e.state === 'approach'))) {
         m = frames.cycle.walk[Math.floor(t / 150) % 4] || m;
       }
@@ -726,7 +733,20 @@ export class BattleRenderer {
     }
     // shadow
     ctx.fillStyle = 'rgba(0,0,0,0.35)';
-    ctx.beginPath(); ctx.ellipse(x + dx, gy + 2, 30 * this.fit * this.figScale, 6 * this.fit * this.figScale, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(x + dx, gy + 2, (riding ? 62 : 30) * this.fit * this.figScale, 6 * this.fit * this.figScale, 0, 0, Math.PI * 2); ctx.fill();
+    // v12 탈것: ridden only on travel legs (between phases / stages). The seated rider
+    // sits with the hips on the measured saddle seat; until ride_* art exists the idle
+    // figure is lowered so its legs hang over the flank.
+    let rideRaise = 0;
+    if (riding) {
+      dx += 22 * this.fit;   // room for the mount's hindquarters at the left edge
+      const seat = this.drawMount(this.mountId, x + dx, gy, d.h, t, motion);
+      rideRaise = Math.max(0, seat - d.h * 0.42);
+      this.rideInfo = { seat, heroH: d.h, raise: rideRaise };   // QA
+      dy -= rideRaise;
+    }
+    // v12 날개: always behind the hero; slow flap at rest, fast while attacking
+    if (this.wingId && !h.dead) this.drawWing(this.wingId, x + dx, gy + dy, d, t, motion, !!(ac && !riding));
     if (img) {
       const sc = scaledImage(img, d.w * this.dpr, d.h * this.dpr, m.file, hf);
       const gh = this.ghost || (this.ghost = { sc: null, d: null, x: 0, gy: 0 });
@@ -774,11 +794,92 @@ export class BattleRenderer {
       ctx.restore();
     }
     // hero HP bar (above head, clear of the figure)
-    const bw = 56 * this.fit, top = gy - d.py - 10;
+    const bw = 56 * this.fit, top = gy - d.py - 10 - rideRaise;
     this.heroTop = Math.max(4, top);
     this.bar(x - bw / 2, Math.max(4, top), bw, 5, h.hp / h.maxHp, '#E06A86');
     // ult gauge ring under bar
     this.bar(x - bw / 2, Math.max(11, top + 7), bw, 3, h.gauge / 100, '#D8B675');
+  }
+
+  // returns the seat height above the ground (css px)
+  drawMount(id, x, gy, heroH, t, motion) {
+    const ctx = this.ctx;
+    const sm = spriteMeta() && spriteMeta().steeds;
+    const seatH = heroH * (MOUNT_SEAT[id] || 0.5);
+    const f = motion ? Math.floor(t / 110) % 4 : 0;
+    const m = sm && sm[`mount_${id}_run${f + 1}`];
+    const img = m && ready(m.file);
+    if (m && !img) loadImage(m.file);
+    if (img) {
+      const m0 = sm[`mount_${id}_run1`];
+      const k = seatH / ((m0.fy - m0.sy) * m0.h);   // frame 1 seat sits at seatH; later frames bob with the art
+      const w = m.w * k, h = m.h * k;
+      const left = x - m0.sx * w, top = gy - m.fy * h;
+      const sc = scaledImage(img, w * this.dpr, h * this.dpr, m.file, '');
+      ctx.drawImage(sc, left, top, w, h);
+      return gy - (top + m.sy * h);
+    }
+    // placeholder: body, neck, head and 4 legs in the mount colour (until GPT N art)
+    const d = MOUNTS[id] || { color: '#555' };
+    const L = seatH * 1.5, bob = motion ? Math.sin(t / 70) * seatH * 0.03 : 0;
+    const by = gy - seatH * 0.72 + bob;
+    ctx.save();
+    ctx.fillStyle = d.color; ctx.strokeStyle = 'rgba(0,0,0,0.45)'; ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    for (let i = 0; i < 4; i++) {
+      const lx = x + (i < 2 ? -L * 0.32 : L * 0.3) + (i % 2) * 6;
+      const sw = motion ? Math.sin(t / 90 + i * 1.6) * seatH * 0.18 : 0;
+      ctx.lineWidth = seatH * 0.09; ctx.strokeStyle = d.color;
+      ctx.beginPath(); ctx.moveTo(lx, by + seatH * 0.1); ctx.lineTo(lx + sw, gy); ctx.stroke();
+    }
+    ctx.lineWidth = 2; ctx.strokeStyle = 'rgba(0,0,0,0.45)';
+    ctx.beginPath(); ctx.ellipse(x, by, L * 0.5, seatH * 0.24, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x + L * 0.38, by - seatH * 0.05); ctx.lineTo(x + L * 0.58, by - seatH * 0.45); ctx.lineTo(x + L * 0.5, by - seatH * 0.05); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(x + L * 0.64, by - seatH * 0.46, seatH * 0.16, seatH * 0.09, 0.2, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#5A3A2A';
+    ctx.beginPath(); ctx.ellipse(x, by - seatH * 0.22, L * 0.14, seatH * 0.07, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+    return gy - (by - seatH * 0.26);
+  }
+
+  // wing behind the hero's back; d = hero sprite dims at the current pose
+  drawWing(id, x, gy, d, t, motion, fast) {
+    const ctx = this.ctx;
+    const sm = spriteMeta() && spriteMeta().steeds;
+    const period = fast ? 260 : 1500;
+    const ph = motion ? (Math.sin(t * Math.PI * 2 / period) + 1) / 2 : 1;   // 1 = up (spread)
+    const bx = x - d.w * 0.06, by = gy - d.h * 0.66;
+    const size = d.h * 0.78;
+    const up = sm && sm[`wing_${id}_up`], dn = sm && sm[`wing_${id}_down`];
+    const iu = up && ready(up.file), idn = dn && ready(dn.file);
+    if (up && !iu) loadImage(up.file);
+    if (dn && !idn) loadImage(dn.file);
+    if (iu && idn) {
+      for (const [m, img, a] of [[dn, idn, 1 - ph], [up, iu, ph]]) {
+        if (a <= 0.02) continue;
+        const k = size / m.h, w = m.w * k, h = m.h * k;
+        ctx.save(); ctx.globalAlpha = Math.min(1, a * 1.15);
+        ctx.drawImage(scaledImage(img, w * this.dpr, h * this.dpr, m.file, ''), bx - m.ax * w, by - m.ay * h, w, h);
+        ctx.restore();
+      }
+      return;
+    }
+    // placeholder: two feathered blades in the wing colour, rotating with the flap
+    const def = WINGS[id] || { color: '#888' };
+    ctx.save();
+    ctx.translate(bx, by);
+    ctx.fillStyle = def.color; ctx.strokeStyle = 'rgba(255,240,220,0.7)'; ctx.lineWidth = 1.5;
+    for (const [side, al] of [[-1, 0.75], [1, 1]]) {
+      const ang = (0.25 + ph * 0.6) * (side < 0 ? 0.8 : 1);   // clockwise = wing tip up and back
+      ctx.save(); ctx.globalAlpha = al; ctx.rotate(ang); if (side < 0) ctx.translate(-size * 0.06, 0);
+      ctx.beginPath(); ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(-size * 0.25, -size * 0.35, -size * 0.6, -size * 0.3, -size * 0.72, -size * 0.12);
+      ctx.bezierCurveTo(-size * 0.55, -size * 0.05, -size * 0.5, size * 0.05, -size * 0.6, size * 0.12);
+      ctx.bezierCurveTo(-size * 0.4, size * 0.12, -size * 0.3, size * 0.2, -size * 0.32, size * 0.3);
+      ctx.bezierCurveTo(-size * 0.15, size * 0.18, -size * 0.05, size * 0.1, 0, 0);
+      ctx.fill(); ctx.stroke(); ctx.restore();
+    }
+    ctx.restore();
   }
 
   drawEnemy(e, battle, x, gy, s, now) {

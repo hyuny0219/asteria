@@ -19,7 +19,7 @@
   "name": "pets hatched & active 390x844",
   "pass": true,
   "info": {
-   "owned": 3,
+   "owned": 5,
    "active": "P03",
    "eggs": 0
   }
@@ -61,7 +61,7 @@
   "pass": true,
   "info": {
    "equipped": "t_pioneer",
-   "status": "QA2560 「초원의 개척자」"
+   "status": "QA2767 「초원의 개척자」"
   }
  },
  {
@@ -143,8 +143,8 @@
   "name": "pets hatched & active 360x700",
   "pass": true,
   "info": {
-   "owned": 4,
-   "active": "P02",
+   "owned": 6,
+   "active": "P03",
    "eggs": 0
   }
  },
@@ -185,7 +185,7 @@
   "pass": true,
   "info": {
    "equipped": "t_pioneer",
-   "status": "QA9119 「초원의 개척자」"
+   "status": "QA9319 「초원의 개척자」"
   }
  },
  {
@@ -200,8 +200,8 @@
   "name": "pass level 1 claimed once 360x700",
   "pass": true,
   "info": {
-   "gem0": 860,
-   "gem1": 910
+   "gem0": 1160,
+   "gem1": 1210
   }
  },
  {

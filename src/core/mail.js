@@ -9,6 +9,7 @@
 import { OPS_MAIL } from '../data/mail.js';
 import { COUPONS } from '../data/coupons.js';
 import { grantMeta } from './meta.js';
+import { MOUNTS, WINGS } from '../data/steeds.js';
 import { makeItem } from './items.js';
 import { addItems } from './economy.js';
 import { hashString, makeRng } from './util.js';
@@ -17,7 +18,8 @@ export const MAIL = Object.freeze({ keepDays: 30, cleanDays: 7, max: 100 });
 const DAY = 86400000;
 export const COUPON_SALT = 'asteria-nocturne-v9';
 export const MAIL_REWARD_NAMES = Object.freeze({ gold: '골드', gem: '보석', ore: '강화 광석', eqTicket: '장비 뽑기권', skTicket: '스킬 뽑기권',
-  awakenStone: '각성석', starShard: '별의 파편', petEgg: '정령 알', petFood: '동료 먹이', ticket: '던전 입장권', item: '장비' });
+  awakenStone: '각성석', starShard: '별의 파편', petEgg: '정령 알', petFood: '동료 먹이', ticket: '던전 입장권', item: '장비',
+  mountFood: '탈것 먹이', wingFeather: '날개 깃털', mountTicket: '탈것 소환권', wingTicket: '날개 소환권', mount: '탈것', wing: '날개' });
 const KEYS = Object.keys(MAIL_REWARD_NAMES);
 
 export function defaultMail() { return { list: [], delivered: {}, coupons: {}, seq: 0, expired: 0 }; }
@@ -63,7 +65,8 @@ function grantRewards(state, mail) {
       const it = makeItem(state, { slot: v.slot, rarity: v.rarity, level: Math.max(1, state.player.level), rng, source: 'mail' });
       addItems(state, [it]);
       items.push(it);
-    } else { grantMeta(state, { [k]: v }); got[k] = (got[k] || 0) + v; }
+    } else if (k === 'mount' || k === 'wing') { grantMeta(state, { [k]: v }); (got.steeds ||= []).push({ kind: k, id: v }); }
+    else { grantMeta(state, { [k]: v }); got[k] = (got[k] || 0) + v; }
   }
   return { got, items };
 }
@@ -86,7 +89,7 @@ export function claimAllMail(state, now) {
   const got = {}; const items = []; const ids = [];
   for (const mail of open) {
     const r = grantRewards(state, mail);
-    for (const [k, v] of Object.entries(r.got)) got[k] = (got[k] || 0) + v;
+    for (const [k, v] of Object.entries(r.got)) got[k] = k === 'steeds' ? [...(got.steeds || []), ...v] : (got[k] || 0) + v;
     items.push(...r.items);
     mail.claimedAt = now;
     ids.push(mail.id);
@@ -116,4 +119,5 @@ export function redeemCouponHash(state, hash, now) {
   return { ok: true, mailId: mail.id, title: c.title, rewards: c.rewards };
 }
 
-export const rewardText = (rw) => Object.entries(rw || {}).map(([k, v]) => (k === 'item' ? `장비(${v.rarity})` : `${MAIL_REWARD_NAMES[k] || k} ${v}`)).join(' · ');
+export const rewardText = (rw) => Object.entries(rw || {}).map(([k, v]) => (k === 'item' ? `장비(${v.rarity})` : k === 'mount' || k === 'wing' ? `${MAIL_REWARD_NAMES[k]} ${steedName(k, v)}` : `${MAIL_REWARD_NAMES[k] || k} ${v}`)).join(' · ');
+export const steedName = (k, id) => ((k === 'mount' ? MOUNTS : WINGS)[id] || { name: id }).name;

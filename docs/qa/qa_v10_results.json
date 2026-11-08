@@ -48,7 +48,7 @@
   "name": "390x844 reforge rerolls one line",
   "pass": true,
   "extra": {
-   "o": "[{\"k\":\"critDmg\",\"v\":0.061},{\"k\":\"atkPct\",\"v\":0.033},{\"k\":\"defPct\",\"v\":0.064},{\"k\":\"critChance\",\"v\":0.018}]",
+   "o": "[{\"k\":\"hpPct\",\"v\":0.074},{\"k\":\"atkPct\",\"v\":0.033},{\"k\":\"defPct\",\"v\":0.064},{\"k\":\"critChance\",\"v\":0.018}]",
    "n": 1
   }
  },
@@ -198,7 +198,7 @@
   "name": "360x700 reforge rerolls one line",
   "pass": true,
   "extra": {
-   "o": "[{\"k\":\"goldPct\",\"v\":0.037},{\"k\":\"atkPct\",\"v\":0.033},{\"k\":\"defPct\",\"v\":0.064},{\"k\":\"critChance\",\"v\":0.018}]",
+   "o": "[{\"k\":\"hpPct\",\"v\":0.067},{\"k\":\"atkPct\",\"v\":0.033},{\"k\":\"defPct\",\"v\":0.064},{\"k\":\"critChance\",\"v\":0.018}]",
    "n": 1
   }
  },
@@ -348,7 +348,7 @@
   "name": "412x915 reforge rerolls one line",
   "pass": true,
   "extra": {
-   "o": "[{\"k\":\"ultCharge\",\"v\":0.118},{\"k\":\"atkPct\",\"v\":0.033},{\"k\":\"defPct\",\"v\":0.064},{\"k\":\"critChance\",\"v\":0.018}]",
+   "o": "[{\"k\":\"hpPct\",\"v\":0.043},{\"k\":\"atkPct\",\"v\":0.033},{\"k\":\"defPct\",\"v\":0.064},{\"k\":\"critChance\",\"v\":0.018}]",
    "n": 1
   }
  },

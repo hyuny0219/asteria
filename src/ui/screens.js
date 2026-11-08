@@ -9,6 +9,7 @@ import * as V6 from './v6.js';
 import * as V8 from './v8.js';
 import { bonusText, GRADE_EFFECT, GRADE_NAME, gradeIndex, SKILL_GRADES } from '../data/skillgrade.js';
 import * as V10 from './v10.js';
+import * as V12 from './v12.js';
 import * as WBM from '../core/worldboss.js';
 import * as MAILUI from './mail.js';
 import { jewelName, socketCount } from '../core/crafting.js';
@@ -78,6 +79,8 @@ export function go(app, action) {
   if (action.startsWith('dungeon:')) { app.advTab = 'dungeon'; return app.setTab('dungeon'); }
   if (action === 'expedition' || action === 'workshop') { app.advTab = 'idle'; return app.setTab('dungeon'); }
   if (action === 'gacha') return V4.openGacha(app);
+  if (action === 'mounts') return V12.openSteeds(app, 'mount');
+  if (action === 'wings') return V12.openSteeds(app, 'wing');
   if (action === 'missions') return V4.openMissions(app);
   if (action === 'pets') return V6.openPets(app);
   if (action === 'pass') return V6.openPass(app);
@@ -595,7 +598,7 @@ export function menuTiles(app) {
   const tier = prog.tierOf(s);
   const cl = tier < 3 ? prog.promotionChecklist(s) : null;
   const promoHot = !!cl && (cl.canChoose || cl.canTrial || cl.canPromote);
-  const extra = [...V4.v4Tiles(app), ...V5.v5Tiles(app), ...V6.v6Tiles(app), ...V8.v8Tiles(app), ...V10.v10Tiles(app)];
+  const extra = [...V4.v4Tiles(app), ...V5.v5Tiles(app), ...V6.v6Tiles(app), ...V8.v8Tiles(app), ...V10.v10Tiles(app), ...V12.v12Tiles(app)];
   const att = attendanceStatus(s, Date.now());
   return [
     MAILUI.mailTile(app),
@@ -618,7 +621,7 @@ export function menuPanel(app) {
   const grid = h('div', { class: 'tiles' });
   for (const t of menuTiles(app)) {
     grid.appendChild(h('button', { type: 'button', class: 'tile' + (t.dot ? ' hot' : ''), dataset: { key: 'tile-' + t.id }, 'aria-label': t.t + (t.dot ? ' (할 일 있음)' : ''), onClick: t.on },
-      t.em ? img(skillIcon(t.em), '', 'tile-em') : icon(t.ic, 24), h('span', { class: 't' }, t.t), h('span', { class: 's' }, t.s), t.dot ? h('span', { class: 'dot', 'aria-hidden': 'true' }) : null));
+      t.src ? img(t.src, '', 'tile-em') : t.em ? img(skillIcon(t.em), '', 'tile-em') : icon(t.ic, 24), h('span', { class: 't' }, t.t), h('span', { class: 's' }, t.s), t.dot ? h('span', { class: 'dot', 'aria-hidden': 'true' }) : null));
   }
   sc.appendChild(grid);
   root.appendChild(sc);

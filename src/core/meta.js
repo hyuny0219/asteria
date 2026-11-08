@@ -1,6 +1,7 @@
 // v5 part 2 systems: 도감, 업적·칭호, 무료 시즌 패스, 동료(정령·펫), 신화 제작.
 // Pure state functions; Game wraps the player actions in transact() and calls the
 // track* hooks from the places where kills, boss wins, tower/rift results happen.
+import { give as giveSteed } from './steeds.js';
 import { BALANCE } from '../data/balance.js';
 import { ACHIEVEMENTS, CODEX, CODEX_MONSTERS, CRAFT, PASS, PETS, PET_RULES, TITLES } from '../data/meta.js';
 import { BOSSES, RARITY } from '../data/content.js';
@@ -89,6 +90,7 @@ export function grantMeta(state, rw) {
     else if (k === 'essence') state.rebirth.essence += v;
     else if (k === 'title') { if (!state.titles.owned.includes(v)) state.titles.owned.push(v); }
     else if (k === 'ticket') state.dungeon.tickets += v;
+    else if (k === 'mount' || k === 'wing') giveSteed(state, k, v);   // v12: a specific steed id
     else w[k] = (w[k] || 0) + v;
   }
 }

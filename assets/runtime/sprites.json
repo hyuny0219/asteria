@@ -234,7 +234,9 @@
   "gpt_j/elena_poses_fix.png": "GPT package J2 — Elena 8 key poses (alpha, tome glow kept)",
   "gpt_j3/*_cycle.png": "GPT J3 — walk 4 + basic attack 4 frames (Serin, Lyra, Elena, Nox)",
   "gpt_j4/*_cycle.png": "GPT J4 — walk 4 + attack 4 frames for 16 tier-2/3 forms",
-  "gpt_l/icons_v10.png": "GPT package L — v10 legend / awaken / forge icons"
+  "gpt_l/icons_v10.png": "GPT package L — v10 legend / awaken / forge icons",
+  "gpt_n/mounts_1.png": "GPT package N",
+  "gpt_n/mounts_2.png": "GPT package N"
  },
  "monsters": {
   "M01": {
@@ -30041,6 +30043,184 @@
     35,
     39
    ]
+  }
+ },
+ "steeds": {
+  "mount_horse_run1": {
+   "file": "assets/runtime/steed_mount_horse_run1.webp",
+   "w": 306,
+   "h": 220,
+   "fx": 0.5,
+   "fy": 0.986,
+   "sx": 0.521,
+   "sy": 0.33,
+   "seatFromTop": 0.441,
+   "source": "gpt_n/mounts_1.png row 1"
+  },
+  "mount_horse_run2": {
+   "file": "assets/runtime/steed_mount_horse_run2.webp",
+   "w": 306,
+   "h": 220,
+   "fx": 0.5,
+   "fy": 0.986,
+   "sx": 0.503,
+   "sy": 0.326,
+   "seatFromTop": 0.439,
+   "source": "gpt_n/mounts_1.png row 1"
+  },
+  "mount_horse_run3": {
+   "file": "assets/runtime/steed_mount_horse_run3.webp",
+   "w": 306,
+   "h": 220,
+   "fx": 0.5,
+   "fy": 0.986,
+   "sx": 0.508,
+   "sy": 0.33,
+   "seatFromTop": 0.441,
+   "source": "gpt_n/mounts_1.png row 1"
+  },
+  "mount_horse_run4": {
+   "file": "assets/runtime/steed_mount_horse_run4.webp",
+   "w": 306,
+   "h": 220,
+   "fx": 0.5,
+   "fy": 0.986,
+   "sx": 0.503,
+   "sy": 0.312,
+   "seatFromTop": 0.432,
+   "source": "gpt_n/mounts_1.png row 1"
+  },
+  "mount_wolf_run1": {
+   "file": "assets/runtime/steed_mount_wolf_run1.webp",
+   "w": 378,
+   "h": 216,
+   "fx": 0.5,
+   "fy": 0.981,
+   "sx": 0.54,
+   "sy": 0.218,
+   "seatFromTop": 0.404,
+   "source": "gpt_n/mounts_1.png row 2"
+  },
+  "mount_wolf_run2": {
+   "file": "assets/runtime/steed_mount_wolf_run2.webp",
+   "w": 378,
+   "h": 216,
+   "fx": 0.5,
+   "fy": 0.981,
+   "sx": 0.519,
+   "sy": 0.185,
+   "seatFromTop": 0.391,
+   "source": "gpt_n/mounts_1.png row 2"
+  },
+  "mount_wolf_run3": {
+   "file": "assets/runtime/steed_mount_wolf_run3.webp",
+   "w": 378,
+   "h": 216,
+   "fx": 0.5,
+   "fy": 0.981,
+   "sx": 0.526,
+   "sy": 0.222,
+   "seatFromTop": 0.406,
+   "source": "gpt_n/mounts_1.png row 2"
+  },
+  "mount_wolf_run4": {
+   "file": "assets/runtime/steed_mount_wolf_run4.webp",
+   "w": 378,
+   "h": 216,
+   "fx": 0.5,
+   "fy": 0.981,
+   "sx": 0.521,
+   "sy": 0.162,
+   "seatFromTop": 0.381,
+   "source": "gpt_n/mounts_1.png row 2"
+  },
+  "mount_lizard_run1": {
+   "file": "assets/runtime/steed_mount_lizard_run1.webp",
+   "w": 372,
+   "h": 196,
+   "fx": 0.5,
+   "fy": 0.98,
+   "sx": 0.492,
+   "sy": 0.362,
+   "seatFromTop": 0.543,
+   "source": "gpt_n/mounts_2.png row 1"
+  },
+  "mount_lizard_run2": {
+   "file": "assets/runtime/steed_mount_lizard_run2.webp",
+   "w": 372,
+   "h": 196,
+   "fx": 0.5,
+   "fy": 0.98,
+   "sx": 0.492,
+   "sy": 0.337,
+   "seatFromTop": 0.533,
+   "source": "gpt_n/mounts_2.png row 1"
+  },
+  "mount_lizard_run3": {
+   "file": "assets/runtime/steed_mount_lizard_run3.webp",
+   "w": 372,
+   "h": 196,
+   "fx": 0.5,
+   "fy": 0.98,
+   "sx": 0.484,
+   "sy": 0.332,
+   "seatFromTop": 0.531,
+   "source": "gpt_n/mounts_2.png row 1"
+  },
+  "mount_lizard_run4": {
+   "file": "assets/runtime/steed_mount_lizard_run4.webp",
+   "w": 372,
+   "h": 196,
+   "fx": 0.5,
+   "fy": 0.98,
+   "sx": 0.478,
+   "sy": 0.25,
+   "seatFromTop": 0.5,
+   "source": "gpt_n/mounts_2.png row 1"
+  },
+  "mount_elk_run1": {
+   "file": "assets/runtime/steed_mount_elk_run1.webp",
+   "w": 212,
+   "h": 220,
+   "fx": 0.5,
+   "fy": 0.99,
+   "sx": 0.476,
+   "sy": 0.529,
+   "seatFromTop": 0.463,
+   "source": "gpt_n/mounts_2.png row 2"
+  },
+  "mount_elk_run2": {
+   "file": "assets/runtime/steed_mount_elk_run2.webp",
+   "w": 212,
+   "h": 220,
+   "fx": 0.5,
+   "fy": 0.99,
+   "sx": 0.459,
+   "sy": 0.521,
+   "seatFromTop": 0.457,
+   "source": "gpt_n/mounts_2.png row 2"
+  },
+  "mount_elk_run3": {
+   "file": "assets/runtime/steed_mount_elk_run3.webp",
+   "w": 212,
+   "h": 220,
+   "fx": 0.5,
+   "fy": 0.99,
+   "sx": 0.478,
+   "sy": 0.529,
+   "seatFromTop": 0.463,
+   "source": "gpt_n/mounts_2.png row 2"
+  },
+  "mount_elk_run4": {
+   "file": "assets/runtime/steed_mount_elk_run4.webp",
+   "w": 212,
+   "h": 220,
+   "fx": 0.5,
+   "fy": 0.99,
+   "sx": 0.457,
+   "sy": 0.495,
+   "seatFromTop": 0.438,
+   "source": "gpt_n/mounts_2.png row 2"
   }
  }
 }

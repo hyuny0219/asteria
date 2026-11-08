@@ -10,6 +10,7 @@ import { defaultExpedition } from './expedition.js';
 import { defaultWorldBoss } from './worldboss.js';
 import { defaultCraft } from './crafting.js';
 import { defaultMail } from './mail.js';
+import { defaultSteeds } from './steeds.js';
 import { backfillLegends, defaultGearPlus, defaultLoadouts } from './gearplus.js';
 
 export const SCHEMA_VERSION = 8;
@@ -35,7 +36,7 @@ export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0, cls = 'wa
     // 도감 · 업적 · 칭호 · 시즌 패스 · 동료 (schema 5) — see meta.js
     ...defaultMeta(),
     profile: { nickname: '' },
-    wallet: { gold: 0, ore: 0, token: 0, gem: 0, eqTicket: 0, skTicket: 0, awakenStone: 0, starShard: 0, classTicket: 0 },
+    wallet: { gold: 0, ore: 0, token: 0, gem: 0, eqTicket: 0, skTicket: 0, awakenStone: 0, starShard: 0, classTicket: 0, mountFood: 0, wingFeather: 0, mountTicket: 0, wingTicket: 0 },
     shop: { buys: {} },
     attendance: { lastDay: null, count: 0 },
     returnBonus: { pending: null, lastAwayFrom: null, claimed: 0, boostUntil: 0 },
@@ -51,6 +52,8 @@ export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0, cls = 'wa
     expedition: defaultExpedition(),     // 원정 파견 (expedition.js)
     craft: defaultCraft(),                // 제작 재료 · 보옥 가방 · 마부(슬롯) · 버프 음식 (crafting.js)
     mail: defaultMail(),                  // 우편함 · 운영 우편 배달 기록 · 쿠폰 사용 기록 (mail.js)
+    mounts: defaultSteeds(),              // v12 탈것 (steeds.js)
+    wings: defaultSteeds(),               // v12 날개
     gearPlus: defaultGearPlus(),          // v10 고유 효과 보관함 · 각성 변경 기록 (gearplus.js)
     loadouts: defaultLoadouts(),          // v10 장비·스킬 프리셋 3칸 + 자동 교체 (gearplus.js)
     worldBoss: defaultWorldBoss(),        // 월드 보스 기록 + 희귀 정예 도감 (worldboss.js)   // 스테이지 지도 (schema 7): best stars, first-clear claimed, auto-advance
@@ -236,6 +239,11 @@ export function migrate(s) {
   for (const k of Object.keys(d.slotEnhance)) { cur.slotEnhance[k] ||= 0; cur.slotEnhanceOre[k] ||= 0; }
   for (const k of Object.keys(d.craft)) if (cur.craft[k] === undefined) cur.craft[k] = d.craft[k];
   for (const k of Object.keys(d.gearPlus)) if (cur.gearPlus[k] === undefined) cur.gearPlus[k] = d.gearPlus[k];
+  for (const k of ['mounts', 'wings']) {   // v12: keep a half-written steed block safe
+    const b = cur[k];
+    if (!b || typeof b !== 'object' || !b.owned || typeof b.owned !== 'object') cur[k] = d[k];
+    else { b.pity = Number.isFinite(b.pity) ? b.pity : 0; b.draws = Number.isFinite(b.draws) ? b.draws : 0; if (b.equipped && !b.owned[b.equipped]) b.equipped = null; }
+  }
   backfillLegends(cur);   // v10: legendary/mythic found before 고유 효과 get one (seeded by item id)
   return cur;
 }

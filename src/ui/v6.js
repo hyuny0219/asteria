@@ -1,5 +1,6 @@
 // v5 part 2 screens: 도감, 업적·칭호, 무료 시즌 패스, 동료, 신화 제작.
 // Every grant goes through game.transact; reveals start only after r.ok.
+import { steedIcon } from './v12.js';
 import { ACHIEVEMENTS, CODEX, CODEX_MONSTERS, CRAFT, PASS, PETS, PET_RULES, TITLES } from '../data/meta.js';
 import { BOSSES, CURRENCY_ICONS, MONSTERS, RARITY, REGION_BY_ID, SLOT_NAMES } from '../data/content.js';
 import * as WBm from '../core/worldboss.js';
@@ -16,13 +17,14 @@ export const V6_ICONS = Object.freeze({ talents: 'V00', rebirth: 'V01', rift: 'V
 const ico = (id, cls = 'emblem') => { try { return img(skillIcon(V6_ICONS[id] || id), '', cls); } catch { return null; } };
 const STAT_KO = { atkPct: '공격력', hpPct: '체력', defPct: '방어력', goldPct: '골드 획득', critChance: '치명 확률', critDmg: '치명 피해', ultCharge: '궁극기 충전', regen: '초당 회복', evade: '회피', expPct: '경험치' };
 export const bonusText = (b) => Object.entries(b || {}).map(([k, v]) => `${STAT_KO[k] || k} +${fmtPct(v, v < 0.01 ? 2 : 1)}`).join(' · ');
-const REWARD_KO = { gem: '보석', eqTicket: '장비 뽑기권', skTicket: '스킬 뽑기권', petEgg: '정령 알', petFood: '정령 먹이', essence: '환생 정수', ore: '강화 광석', gold: '골드', ticket: '입장권' };
+const REWARD_KO = { gem: '보석', eqTicket: '장비 뽑기권', skTicket: '스킬 뽑기권', petEgg: '정령 알', petFood: '정령 먹이', essence: '환생 정수', ore: '강화 광석', gold: '골드', ticket: '입장권', mountFood: '탈것 먹이', wingFeather: '날개 깃털', mountTicket: '탈것 소환권', wingTicket: '날개 소환권' };
 export const rewardText = (rw) => Object.entries(rw || {}).map(([k, v]) => (k === 'title' ? `칭호 「${TITLES[v].name}」` : k === 'titles' ? v.map((t) => `칭호 「${TITLES[t].name}」`).join(' · ') : `${REWARD_KO[k] || k} +${fmt(v)}`)).join(' · ');
 function rewardIcons(rw) {
   const out = [];
   for (const [k, v] of Object.entries(rw || {})) {
     if (k === 'title' || k === 'titles') continue;
-    const icon = k === 'petEgg' ? skillIcon('V10') : k === 'petFood' ? skillIcon('V11') : k === 'essence' ? skillIcon('V14') : itemIcon(CURRENCY_ICONS[k === 'eqTicket' ? 'chest' : k === 'skTicket' ? 'goldChest' : k] || CURRENCY_ICONS.gem);
+    const STI = { mountFood: 'food', wingFeather: 'feather', mountTicket: 'ticket_mount', wingTicket: 'ticket_wing' };
+    const icon = STI[k] ? steedIcon(STI[k]) : k === 'petEgg' ? skillIcon('V10') : k === 'petFood' ? skillIcon('V11') : k === 'essence' ? skillIcon('V14') : itemIcon(CURRENCY_ICONS[k === 'eqTicket' ? 'chest' : k === 'skTicket' ? 'goldChest' : k] || CURRENCY_ICONS.gem);
     out.push({ icon, value: '+' + fmt(v), label: REWARD_KO[k] || k });
   }
   return out;

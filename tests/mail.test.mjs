@@ -11,14 +11,14 @@ const DAY = 86400000;
 test('운영 우편: delivered once per profile inside its window', () => {
   const s = newGame(T0);
   const r1 = M.refreshMail(s, T0);
-  assert.equal(r1.added, 2);                       // welcome + v8 update
-  assert.deepEqual(s.mail.list.map((x) => x.id).sort(), ['ops-v8-update', 'ops-welcome']);
+  assert.equal(r1.added, 3);                       // welcome + v8 update + v12 steeds
+  assert.deepEqual(s.mail.list.map((x) => x.id).sort(), ['ops-v12-steeds', 'ops-v8-update', 'ops-welcome']);
   assert.equal(M.refreshMail(s, T0 + 1000).added, 0);
-  assert.equal(s.mail.list.length, 2);
+  assert.equal(s.mail.list.length, 3);
   // after the v8 window only the welcome mail arrives
   const late = newGame(KST(2026, 12, 2));
   M.refreshMail(late, KST(2026, 12, 2));
-  assert.deepEqual(late.mail.list.map((x) => x.id), ['ops-welcome']);
+  assert.deepEqual(late.mail.list.map((x) => x.id).sort(), ['ops-v12-steeds', 'ops-welcome']);
 });
 
 test('old saves (no mail block) get one after migrate', () => {
@@ -38,8 +38,11 @@ test('claim / claim all grant once; claimed mail is cleaned after 7 days, unclai
   assert.equal(s.wallet.eqTicket - eq0, 15);
   assert.equal(M.claimAllMail(s, T0).reason, 'none');
   assert.equal(M.claimMail(s, 'ops-welcome', T0).reason, 'duplicate');
+  assert.deepEqual(r.got.steeds, [{ kind: 'mount', id: 'horse' }, { kind: 'wing', id: 'rose' }]);
+  assert.equal(s.mounts.equipped, 'horse');
+  assert.equal(s.wings.equipped, 'rose');
   M.refreshMail(s, T0 + 6 * DAY);
-  assert.equal(s.mail.list.length, 2);
+  assert.equal(s.mail.list.length, 3);
   M.refreshMail(s, T0 + 8 * DAY);
   assert.equal(s.mail.list.length, 0);
   // expiry of an unclaimed mail
@@ -88,7 +91,7 @@ test('Game: refreshMail saves only when something changes; coupon → mail → c
   let clock = T0;
   const g = new Game({ saver: new MemorySaver(), now: () => clock });
   await g.load();
-  assert.equal(g.state.mail.list.length, 2);          // delivered by the load housekeeping
+  assert.equal(g.state.mail.list.length, 3);          // delivered by the load housekeeping
   const r2 = await g.refreshMail();
   assert.equal(r2.noop, true);                         // nothing changed → no save
   clock += 31 * 86400000;

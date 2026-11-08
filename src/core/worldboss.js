@@ -18,8 +18,8 @@ export const WB = Object.freeze({
   // grade thresholds as a share of the world boss HP
   grades: [['S', 0.7], ['A', 0.45], ['B', 0.28], ['C', 0.14], ['D', 0]],
   rewards: {
-    S: { gem: 120, ore: 80, eqTicket: 2, skTicket: 1 },
-    A: { gem: 90, ore: 60, eqTicket: 1, skTicket: 1 },
+    S: { gem: 120, ore: 80, eqTicket: 2, skTicket: 1, wingFeather: 20, mountFood: 20 },
+    A: { gem: 90, ore: 60, eqTicket: 1, skTicket: 1, wingFeather: 10, mountFood: 10 },
     B: { gem: 60, ore: 45, eqTicket: 1 },
     C: { gem: 40, ore: 30 },
     D: { gem: 20, ore: 15 },
@@ -79,6 +79,8 @@ export function finishWorldBoss(state, runId, damage, bossHp, rng) {
   state.wallet.gem += rw.gem; state.wallet.ore += rw.ore;
   if (rw.eqTicket) state.wallet.eqTicket += rw.eqTicket;
   if (rw.skTicket) state.wallet.skTicket += rw.skTicket;
+  if (rw.wingFeather) state.wallet.wingFeather = (state.wallet.wingFeather || 0) + rw.wingFeather;
+  if (rw.mountFood) state.wallet.mountFood = (state.wallet.mountFood || 0) + rw.mountFood;
   const items = [];
   if (grade === 'S' || grade === 'A') items.push(makeItem(state, { slot: rollSlot(rng), rarity: rollRarity(rng, grade === 'S' ? { epic: 0.6, legendary: 0.4 } : { rare: 0.5, epic: 0.5 }), level: bossLevel(state), rng, source: 'worldBoss' }));
   const JW = { S: [2, 2], A: [1, 2], B: [1, 1] }[grade];   // [count, level] 보옥

@@ -9,6 +9,7 @@
 // and only on a successful commit swaps it in and emits the result. A failed save
 // leaves the live state untouched, so nothing is spent or granted twice and no
 // reward animation starts before the save is confirmed.
+import * as steeds from './steeds.js';
 import { BALANCE } from '../data/balance.js';
 import { REGIONS, BOSSES, MONSTERS, REGION_BY_ID, waveLevel, DUNGEON, CLASSES, CLASS_SKILLS, SET_SLOTS } from '../data/content.js';
 import { Battle, killRewards } from './combat.js';
@@ -251,6 +252,11 @@ export class Game {
   renameLoadout(idx, name) { return this.transact('loadoutName', (s) => gear.renameLoadout(s, idx, name)); }
   applyLoadout(idx) { return this.transact('loadoutApply', (s) => gear.applyLoadout(s, idx, prog.unlockedSkills(s))); }
   setLoadoutAuto(on, map = null) { return this.transact('loadoutAuto', (s) => gear.setLoadoutAuto(s, on, map)); }
+  // v12 탈것 · 날개
+  steedEquip(kind, id) { return this.transact('steed', (s) => steeds.equip(s, kind, id)).then((r) => { if (r.ok) this.syncHero(); return r; }); }
+  steedLevel(kind, id, steps) { return this.transact('steed', (s) => steeds.levelUp(s, kind, id, steps)).then((r) => { if (r.ok) this.syncHero(); return r; }); }
+  steedStar(kind, id) { return this.transact('steed', (s) => steeds.starUp(s, kind, id)).then((r) => { if (r.ok) this.syncHero(); return r; }); }
+  steedSummon(kind, n) { return this.transact('steedSummon', (s) => steeds.summon(s, kind, n, this.rng)).then((r) => { if (r.ok) this.syncHero(); return r; }); }
   levelUpItem(id, steps) { return this.transact('itemLevel', (s) => gear.levelUpItem(s, id, steps)); }
   reforge(id, optIdx) { return this.transact('reforge', (s) => gear.reforge(s, id, optIdx, this.rng)); }
   rarityUp(baseId, matIds) { return this.transact('rarityUp', (s) => gear.rarityUp(s, baseId, matIds, this.rng)); }

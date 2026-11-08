@@ -33,11 +33,11 @@
    "pass": true,
    "m": {
     "frames": 180,
-    "avgMs": 0.12,
-    "p95Ms": 0.2,
-    "maxParts": 55,
+    "avgMs": 0.17,
+    "p95Ms": 0.3,
+    "maxParts": 76,
     "fx": 0,
-    "steps": "12312312312312311",
+    "steps": "12312311",
     "cues": "hit,hit2,finisher,crit,skill,boom"
    },
    "errs": []
@@ -71,7 +71,7 @@
    "pass": true,
    "m": {
     "frames": 180,
-    "avgMs": 0.17,
+    "avgMs": 0.19,
     "p95Ms": 0.3,
     "maxParts": 145,
     "fx": 0,
@@ -109,9 +109,9 @@
    "pass": true,
    "m": {
     "frames": 180,
-    "avgMs": 0.23,
+    "avgMs": 0.21,
     "p95Ms": 0.4,
-    "maxParts": 197,
+    "maxParts": 218,
     "fx": 0,
     "steps": "123121212",
     "cues": "hit,hit2,finisher,crit,skill,boom"
@@ -150,13 +150,13 @@
    "name": "perf_rogue",
    "pass": true,
    "m": {
-    "frames": 180,
-    "avgMs": 0.14,
+    "frames": 181,
+    "avgMs": 0.21,
     "p95Ms": 0.3,
-    "maxParts": 92,
+    "maxParts": 156,
     "fx": 0,
-    "steps": "123123123123123123123123",
-    "cues": "crit,hit2,hit,finisher,skill,boom"
+    "steps": "123123121212",
+    "cues": "hit,hit2,finisher,crit,skill,,boom"
    },
    "errs": []
   },
@@ -211,18 +211,18 @@
   {
    "cls": "warrior",
    "frames": 180,
-   "avgMs": 0.12,
-   "p95Ms": 0.2,
-   "maxParts": 55,
+   "avgMs": 0.17,
+   "p95Ms": 0.3,
+   "maxParts": 76,
    "fx": 0,
-   "steps": "12312312312312311",
+   "steps": "12312311",
    "cues": "hit,hit2,finisher,crit,skill,boom",
    "errs": []
   },
   {
    "cls": "mage",
    "frames": 180,
-   "avgMs": 0.17,
+   "avgMs": 0.19,
    "p95Ms": 0.3,
    "maxParts": 145,
    "fx": 0,
@@ -233,9 +233,9 @@
   {
    "cls": "archer",
    "frames": 180,
-   "avgMs": 0.23,
+   "avgMs": 0.21,
    "p95Ms": 0.4,
-   "maxParts": 197,
+   "maxParts": 218,
    "fx": 0,
    "steps": "123121212",
    "cues": "hit,hit2,finisher,crit,skill,boom",
@@ -243,13 +243,13 @@
   },
   {
    "cls": "rogue",
-   "frames": 180,
-   "avgMs": 0.14,
+   "frames": 181,
+   "avgMs": 0.21,
    "p95Ms": 0.3,
-   "maxParts": 92,
+   "maxParts": 156,
    "fx": 0,
-   "steps": "123123123123123123123123",
-   "cues": "crit,hit2,hit,finisher,skill,boom",
+   "steps": "123123121212",
+   "cues": "hit,hit2,finisher,crit,skill,,boom",
    "errs": []
   }
  ]

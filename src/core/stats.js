@@ -12,6 +12,7 @@ import { rebirthMultipliers, farmMultipliers as rebirthFarm } from './rebirth.js
 import { metaBonus } from './meta.js';
 import { enchantBonus, foodBonus, jewelBonus } from './crafting.js';
 import { skillMods as gearSkillMods } from './gearplus.js';
+import { equippedBonus as steedBonus } from './steeds.js';
 
 const P = BALANCE.player;
 const U = BALANCE.upgrade;
@@ -96,6 +97,8 @@ export function playerStats(state, opts = {}) {
   // v8 마부(슬롯) · 버프 음식(30분)
   add(enchantBonus(state));
   add(foodBonus(state, opts.now !== undefined ? opts.now : Date.now()));
+  // v12 탈것 · 날개 (equipped ones; expeditionCut is read by the expedition module)
+  { const { expeditionCut, ...sb } = steedBonus(state); add(sb); }
   // v10 전설 고유 효과 · 스킬 각성 (skill mods; '*' may carry plain % stats)
   const sm = gearSkillMods(state);
   if (sm['*'] && sm['*'].pct) add(sm['*'].pct);

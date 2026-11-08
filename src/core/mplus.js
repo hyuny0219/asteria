@@ -151,13 +151,14 @@ export function finishRun(state, runId, outcome, now, rng) {
 
 export function vaultReward(best) {
   const V = MPLUS.vault;
-  return { gem: V.gemBase + V.gemPerKey * best, eqTicket: Math.floor(best / V.eqTicketPerKeys) + 1, skTicket: Math.floor(best / V.skTicketPerKeys) };
+  return { gem: V.gemBase + V.gemPerKey * best, eqTicket: Math.floor(best / V.eqTicketPerKeys) + 1, skTicket: Math.floor(best / V.skTicketPerKeys), mountTicket: best >= 4 ? 1 : 0, wingTicket: best >= 8 ? 1 : 0 };
 }
 export function claimVault(state, now) {
   const m = refreshMplus(state, now);
   if (!m.vault) return { ok: false, reason: 'none' };
   const rw = vaultReward(m.vault.best);
   state.wallet.gem += rw.gem; state.wallet.eqTicket += rw.eqTicket; state.wallet.skTicket += rw.skTicket;
+  state.wallet.mountTicket = (state.wallet.mountTicket || 0) + rw.mountTicket; state.wallet.wingTicket = (state.wallet.wingTicket || 0) + rw.wingTicket;
   const best = m.vault.best;
   m.vault = null;
   return { ok: true, best, reward: rw };

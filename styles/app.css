@@ -705,3 +705,15 @@ img.sg-legendary, img.sg-mythic { box-shadow: 0 0 8px color-mix(in srgb, var(--s
 .draw .tag.up ~ img, .draw .tag.up + img { margin-top: 0; }
 .draw-up { text-align: center; color: var(--r-legendary); font-weight: 800; margin: 0 0 8px; }
 .pbar.mythic i { background: var(--r-mythic); }
+/* v12 탈것 · 날개 */
+.steed-cards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.steed-card b { font-size: 12px; text-align: center; word-break: keep-all; }
+.steed-card .steed-img { width: 100%; max-width: 72px; height: 48px; object-fit: contain; }
+.steed-card.unseen .steed-img { filter: grayscale(1) brightness(.55); }
+.steed-grade { font-size: 11px; font-weight: 700; }
+.steed-lv .btn, .btn-row .btn .cost-chip { white-space: nowrap; }
+.steed-lv { flex-wrap: wrap; }
+.steed-results { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 6px; }
+.steed-res { display: flex; flex-direction: column; align-items: center; border: 1px solid var(--border); border-radius: 8px; padding: 4px; font-size: 12px; text-align: center; min-width: 0; }
+.steed-res.dup { opacity: .8; }
+.steed-res .steed-img { width: 72px; height: 48px; object-fit: contain; }

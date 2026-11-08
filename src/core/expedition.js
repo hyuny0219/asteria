@@ -7,6 +7,7 @@
 // - Success chance from companion score (level + 5 × (stars − 1)) vs the expedition's
 //   requirement; great success doubles the reward, failure still returns 30%.
 //   The roll is seeded by the expedition id, so it cannot be re-rolled by reloading.
+import { equippedBonus } from './steeds.js';
 import { kstDayIndex, makeRng, hashString } from './util.js';
 import { PETS } from '../data/meta.js';
 import { rollJewel } from './crafting.js';
@@ -17,9 +18,9 @@ export const EXPEDITION = Object.freeze({
   chance: { base: 0.55, perPoint: 0.03, min: 0.25, max: 0.95 },
   great: { perPoint: 0.015, max: 0.35 }, failShare: 0.3,
   // reward per hour of expedition by type (rounded down, min 1)
-  perHour: { gem: 9, ore: 12, food: 2, herb: 1.5, meat: 1.5, eqTicket: 0.25, skTicket: 0.15, jewel: 0.125 },
+  perHour: { gem: 9, ore: 12, food: 2, herb: 1.5, meat: 1.5, eqTicket: 0.25, skTicket: 0.15, jewel: 0.125, mountFood: 2, wingFeather: 2 },
 });
-export const EXP_REWARD_NAMES = Object.freeze({ gem: '보석', ore: '강화 광석', food: '동료 먹이', herb: '달빛 약초', meat: '야수 고기', eqTicket: '장비 뽑기권', skTicket: '스킬 뽑기권', jewel: '보옥' });
+export const EXP_REWARD_NAMES = Object.freeze({ gem: '보석', ore: '강화 광석', food: '동료 먹이', herb: '달빛 약초', meat: '야수 고기', eqTicket: '장비 뽑기권', skTicket: '스킬 뽑기권', jewel: '보옥', mountFood: '탈것 먹이', wingFeather: '날개 깃털' });
 const TYPE_W = { gem: 24, ore: 16, food: 13, herb: 12, meat: 12, eqTicket: 9, skTicket: 7, jewel: 7 };
 const NAMES = ['폐허 정찰', '상단 호위', '약초 채집', '사냥감 추적', '광맥 탐사', '잃어버린 보물 찾기', '마물 소굴 소탕', '별빛 순례', '고대 서고 조사', '국경 순찰', '밀수꾼 추적', '정령의 샘 탐색'];
 
@@ -109,7 +110,8 @@ export function send(state, expId, petId, now) {
   const slot = e.slots.findIndex((x) => !x);
   if (slot < 0) return { ok: false, reason: 'slots' };
   const ch = successChance(state, petId, exp);
-  e.slots[slot] = { exp, pet: petId, startAt: now, endAt: now + exp.hours * 3600000, chance: ch.success, greatChance: ch.great };
+  const cut = Math.min(0.5, equippedBonus(state).expeditionCut || 0);   // v12 그리폰
+  e.slots[slot] = { exp, pet: petId, startAt: now, endAt: now + Math.round(exp.hours * 3600000 * (1 - cut)), chance: ch.success, greatChance: ch.great };
   e.board = e.board.filter((x) => x.id !== expId);
   return { ok: true, slot, endAt: e.slots[slot].endAt };
 }
@@ -117,10 +119,14 @@ export function send(state, expId, petId, now) {
 // grant: (type, amount) → applies to the wallet / pets / craft materials
 export function grant(state, type, amount) {
   if (type === 'gem' || type === 'ore' || type === 'eqTicket' || type === 'skTicket') state.wallet[type] += amount;
+  else if (type === 'mountFood' || type === 'wingFeather') state.wallet[type] = (state.wallet[type] || 0) + amount;
   else if (type === 'food') state.pets.food += amount;
   else { state.craft ||= { herb: 0, meat: 0 }; state.craft[type] = (state.craft[type] || 0) + amount; }
 }
 
+// v12: every expedition also brings steed material (1 per hour; doubled on great success,
+// nothing on failure). Derived from the board id so existing boards need no migration.
+export function steedBonusOf(exp) { return { type: hashString(exp.id + ':steed') % 2 ? 'wingFeather' : 'mountFood', amount: exp.hours }; }
 export function claim(state, slot, now) {
   const e = state.expedition;
   const x = e && e.slots[slot];
@@ -133,10 +139,13 @@ export function claim(state, slot, now) {
   let jewels = null;
   if (x.exp.type === 'jewel') { jewels = []; for (let i = 0; i < amount; i++) jewels.push(rollJewel(state, rng, x.exp.hours >= 8 ? 2 : 1)); }
   else grant(state, x.exp.type, amount);
+  const sb = steedBonusOf(x.exp);
+  const steed = ok ? { type: sb.type, amount: sb.amount * (great ? 2 : 1) } : null;
+  if (steed) grant(state, steed.type, steed.amount);
   e.slots[slot] = null;
   e.done = (e.done || 0) + 1;
   if (great) e.great = (e.great || 0) + 1;
-  return { ok: true, result: great ? 'great' : ok ? 'success' : 'fail', type: x.exp.type, amount, pet: x.pet, name: x.exp.name, jewels };
+  return { ok: true, result: great ? 'great' : ok ? 'success' : 'fail', type: x.exp.type, amount, pet: x.pet, name: x.exp.name, jewels, steed };
 }
 export function claimAll(state, now) {
   const out = [];

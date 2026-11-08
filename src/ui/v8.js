@@ -182,7 +182,7 @@ export function openExpedition(app) {
       running.length ? h('div', { class: 'section-title' }, '진행 중') : null, ...runRows,
       h('div', { class: 'section-title' }, `오늘의 원정 ${e.board.length}개 · 00:00 갱신`),
       board.length ? board : h('p', { class: 'muted' }, '오늘 원정을 모두 보냈어요. 00:00(KST)에 새 목록이 와요.'),
-      h('p', { class: 'muted small' }, `원정은 앱을 꺼도 실제 시간으로 진행되고, 원정 중인 동료도 전투는 계속 도와요. 동료 레벨·별이 높을수록 성공률이 올라요. 대성공이면 보상 2배, 실패해도 30%. 보유 재료: 달빛 약초 ${s.craft.herb} · 야수 고기 ${s.craft.meat} · 동료 먹이 ${s.pets.food}`)));
+      h('p', { class: 'muted small' }, `원정은 앱을 꺼도 실제 시간으로 진행되고, 원정 중인 동료도 전투는 계속 도와요. 동료 레벨·별이 높을수록 성공률이 올라요. 대성공이면 보상 2배, 실패해도 30%. 성공하면 탈것 먹이나 날개 깃털도 시간당 1개씩 더 받아요(대성공 2배). 보유 재료: 달빛 약초 ${s.craft.herb} · 야수 고기 ${s.craft.meat} · 동료 먹이 ${s.pets.food}`)));
   };
   render();
   timer = setInterval(() => {
@@ -197,7 +197,7 @@ export function openExpedition(app) {
 function showExpResults(app, results) {
   if (app.state.settings.sound) sfx('bell');
   const RES = { great: '대성공! ×2', success: '성공', fail: '실패 · 30%' };
-  const lines = results.map((r) => h('div', { class: 'kv' }, `${r.name} · ${EX.petName(r.pet)}`, h('b', { class: r.result === 'fail' ? 'warn' : 'okc' }, `${RES[r.result]} · ${r.jewels && r.jewels.length ? r.jewels.map((g) => CR.jewelName(g.type, g.lv)).join(', ') : rwTxt(r.type, r.amount)}`)));
+  const lines = results.map((r) => h('div', { class: 'kv' }, `${r.name} · ${EX.petName(r.pet)}`, h('b', { class: r.result === 'fail' ? 'warn' : 'okc' }, `${RES[r.result]} · ${r.jewels && r.jewels.length ? r.jewels.map((g) => CR.jewelName(g.type, g.lv)).join(', ') : rwTxt(r.type, r.amount)}${r.steed ? ' · ' + rwTxt(r.steed.type, r.steed.amount) : ''}`)));
   const rm = openModal({ id: 'expResult', title: '원정 결과', kind: 'center', body: h('div', { dataset: { screen: 'expResult' } }, lines), actions: [button('확인', { cls: 'btn btn-primary', onClick: () => rm.close() })] });
 }
 export const expeditionDot = (s) => EX.expeditionOpen(s) && (EX.readyCount(s, Date.now()) > 0 || (s.expedition && s.expedition.slots.some((x) => !x) && (s.expedition.board || []).length > 0));

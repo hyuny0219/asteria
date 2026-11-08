@@ -496,7 +496,7 @@ export class App {
         : sk === 'raid' ? `레이드 · 누적 피해 ${fmt(b.raidDamage || b.damageDealt || 0)} · ${Math.ceil((left || 0) / 1000)}초`
         : g.mode === 'DEFEAT' ? '쓰러졌습니다 · 3초 뒤 재개 (손실 없음)' : null;
       const cls = CLASSES[s.player.cls || 'warrior'];
-      this.renderer.draw(b, { alpha, region, bgId: bg, bgTint, branch: s.player.branch, cls: s.player.cls || 'warrior', tier: prog.tierOf(s), heroTint: cls.tint || 0, label, victory: g.mode === 'RESULT' && g.result && g.result.win });
+      this.renderer.draw(b, { alpha, region, bgId: bg, bgTint, branch: s.player.branch, cls: s.player.cls || 'warrior', tier: prog.tierOf(s), heroTint: cls.tint || 0, mount: s.mounts && s.mounts.equipped, wing: s.wings && s.wings.equipped, label, victory: g.mode === 'RESULT' && g.result && g.result.win });
     }
     // cooldowns
     if (b && this.skillEls) {

@@ -19,4 +19,11 @@ export const OPS_MAIL = Object.freeze([
     body: '쐐기 던전 · 원정 파견 · 월드 보스 · 제작소가 열렸어요. 새 콘텐츠를 즐기는 데 보태 쓰세요.',
     rewards: { gem: 500, eqTicket: 10, skTicket: 5 },
   },
+  {
+    id: 'v12-steeds',
+    from: KST(2026, 11, 8), to: KST(2099, 1, 1),
+    title: '탈것 · 날개 오픈 기념',
+    body: '이동 구간에서 함께 달릴 검은 군마와 흑장미 깃털 날개를 보내 드려요. 소환권과 먹이·깃털도 넣었어요.',
+    rewards: { mount: 'horse', wing: 'rose', mountTicket: 3, wingTicket: 3, mountFood: 60, wingFeather: 60 },
+  },
 ]);

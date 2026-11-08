@@ -1,0 +1,418 @@
+{
+ "at": "2026-11-08T04:02:50.090Z",
+ "pass": 50,
+ "total": 50,
+ "results": [
+  {
+   "name": "phase info + steeds passed to renderer 390x844",
+   "pass": true,
+   "extra": {
+    "phase": {
+     "idx": 0,
+     "count": 3,
+     "traveling": false,
+     "pending": false
+    },
+    "wing": "rose",
+    "mount": "horse"
+   }
+  },
+  {
+   "name": "travel leg starts after phase 1 390x844",
+   "pass": true
+  },
+  {
+   "name": "travel: background scrolls, no enemies, hero idle 390x844",
+   "pass": true,
+   "extra": {
+    "s0": {
+     "scroll": 1.9920000000111757,
+     "hp": 1587,
+     "info": {
+      "idx": 1,
+      "count": 3,
+      "traveling": true,
+      "pending": false
+     },
+     "alive": 0
+    },
+    "s1": {
+     "scroll": 109.97999999999999,
+     "traveling": true,
+     "alive": 0,
+     "act": null
+    }
+   }
+  },
+  {
+   "name": "phase HUD state while travelling 390x844",
+   "pass": true,
+   "extra": {
+    "idx": 1,
+    "count": 3,
+    "traveling": true,
+    "pending": false
+   }
+  },
+  {
+   "name": "menu tiles 탈것/날개 with red dot 390x844",
+   "pass": true,
+   "extra": [
+    {
+     "id": "mounts",
+     "hot": true,
+     "txt": "탈것검은 군마 Lv 1"
+    },
+    {
+     "id": "wings",
+     "hot": true,
+     "txt": "날개흑장미 깃털 날개 Lv 1"
+    }
+   ]
+  },
+  {
+   "name": "menu no overflow 390x844",
+   "pass": true
+  },
+  {
+   "name": "mounts screen: 8 cards, cost chips, odds + pity published 390x844",
+   "pass": true,
+   "extra": {
+    "cards": 8,
+    "chips": 3,
+    "rates": true,
+    "imgs": 8
+   }
+  },
+  {
+   "name": "mounts no overflow 390x844",
+   "pass": true
+  },
+  {
+   "name": "mount level +10 and star up 390x844",
+   "pass": true,
+   "extra": {
+    "lv": 11,
+    "star": 2,
+    "shards": 2
+   }
+  },
+  {
+   "name": "mount summon ×10 uses tickets first 390x844",
+   "pass": true,
+   "extra": {
+    "n": 10,
+    "t": 0
+   }
+  },
+  {
+   "name": "summon result no overflow 390x844",
+   "pass": true
+  },
+  {
+   "name": "wings screen 390x844",
+   "pass": true,
+   "extra": {
+    "cards": 8,
+    "equipped": true
+   }
+  },
+  {
+   "name": "wing level max 390x844",
+   "pass": true,
+   "extra": 21
+  },
+  {
+   "name": "wings no overflow 390x844",
+   "pass": true
+  },
+  {
+   "name": "placeholder mount travel captured 390x844",
+   "pass": true
+  },
+  {
+   "name": "reduce motion: travel background stays still 390x844",
+   "pass": true,
+   "extra": {
+    "rm0": 157.9560000000336,
+    "rm1": 157.9560000000336
+   }
+  },
+  {
+   "name": "no blocker-like class names 390x844",
+   "pass": true,
+   "extra": []
+  },
+  {
+   "name": "no page errors 390x844",
+   "pass": true,
+   "extra": []
+  },
+  {
+   "name": "phase info + steeds passed to renderer 360x700",
+   "pass": true,
+   "extra": {
+    "phase": {
+     "idx": 0,
+     "count": 3,
+     "traveling": false,
+     "pending": false
+    },
+    "wing": "rose",
+    "mount": "horse"
+   }
+  },
+  {
+   "name": "travel leg starts after phase 1 360x700",
+   "pass": true
+  },
+  {
+   "name": "travel: background scrolls, no enemies, hero idle 360x700",
+   "pass": true,
+   "extra": {
+    "s0": {
+     "scroll": 1.8498461538152051,
+     "hp": 1587,
+     "info": {
+      "idx": 1,
+      "count": 3,
+      "traveling": true,
+      "pending": false
+     },
+     "alive": 0
+    },
+    "s1": {
+     "scroll": 101.55323076921012,
+     "traveling": true,
+     "alive": 0,
+     "act": null
+    }
+   }
+  },
+  {
+   "name": "phase HUD state while travelling 360x700",
+   "pass": true,
+   "extra": {
+    "idx": 1,
+    "count": 3,
+    "traveling": true,
+    "pending": false
+   }
+  },
+  {
+   "name": "menu tiles 탈것/날개 with red dot 360x700",
+   "pass": true,
+   "extra": [
+    {
+     "id": "mounts",
+     "hot": true,
+     "txt": "탈것검은 군마 Lv 1"
+    },
+    {
+     "id": "wings",
+     "hot": true,
+     "txt": "날개흑장미 깃털 날개 Lv 1"
+    }
+   ]
+  },
+  {
+   "name": "menu no overflow 360x700",
+   "pass": true
+  },
+  {
+   "name": "mounts screen: 8 cards, cost chips, odds + pity published 360x700",
+   "pass": true,
+   "extra": {
+    "cards": 8,
+    "chips": 3,
+    "rates": true,
+    "imgs": 8
+   }
+  },
+  {
+   "name": "mounts no overflow 360x700",
+   "pass": true
+  },
+  {
+   "name": "mount level +10 and star up 360x700",
+   "pass": true,
+   "extra": {
+    "lv": 11,
+    "star": 2,
+    "shards": 2
+   }
+  },
+  {
+   "name": "mount summon ×10 uses tickets first 360x700",
+   "pass": true,
+   "extra": {
+    "n": 10,
+    "t": 0
+   }
+  },
+  {
+   "name": "summon result no overflow 360x700",
+   "pass": true
+  },
+  {
+   "name": "wings screen 360x700",
+   "pass": true,
+   "extra": {
+    "cards": 8,
+    "equipped": true
+   }
+  },
+  {
+   "name": "wing level max 360x700",
+   "pass": true,
+   "extra": 21
+  },
+  {
+   "name": "wings no overflow 360x700",
+   "pass": true
+  },
+  {
+   "name": "no blocker-like class names 360x700",
+   "pass": true,
+   "extra": []
+  },
+  {
+   "name": "no page errors 360x700",
+   "pass": true,
+   "extra": []
+  },
+  {
+   "name": "phase info + steeds passed to renderer 412x915",
+   "pass": true,
+   "extra": {
+    "phase": {
+     "idx": 0,
+     "count": 3,
+     "traveling": false,
+     "pending": false
+    },
+    "wing": "rose",
+    "mount": "horse"
+   }
+  },
+  {
+   "name": "travel leg starts after phase 1 412x915",
+   "pass": true
+  },
+  {
+   "name": "travel: background scrolls, no enemies, hero idle 412x915",
+   "pass": true,
+   "extra": {
+    "s0": {
+     "scroll": 2.117046153869766,
+     "hp": 1587,
+     "info": {
+      "idx": 1,
+      "count": 3,
+      "traveling": true,
+      "pending": false
+     },
+     "alive": 0
+    },
+    "s1": {
+     "scroll": 116.23470769229588,
+     "traveling": true,
+     "alive": 0,
+     "act": null
+    }
+   }
+  },
+  {
+   "name": "phase HUD state while travelling 412x915",
+   "pass": true,
+   "extra": {
+    "idx": 1,
+    "count": 3,
+    "traveling": true,
+    "pending": false
+   }
+  },
+  {
+   "name": "menu tiles 탈것/날개 with red dot 412x915",
+   "pass": true,
+   "extra": [
+    {
+     "id": "mounts",
+     "hot": true,
+     "txt": "탈것검은 군마 Lv 1"
+    },
+    {
+     "id": "wings",
+     "hot": true,
+     "txt": "날개흑장미 깃털 날개 Lv 1"
+    }
+   ]
+  },
+  {
+   "name": "menu no overflow 412x915",
+   "pass": true
+  },
+  {
+   "name": "mounts screen: 8 cards, cost chips, odds + pity published 412x915",
+   "pass": true,
+   "extra": {
+    "cards": 8,
+    "chips": 3,
+    "rates": true,
+    "imgs": 8
+   }
+  },
+  {
+   "name": "mounts no overflow 412x915",
+   "pass": true
+  },
+  {
+   "name": "mount level +10 and star up 412x915",
+   "pass": true,
+   "extra": {
+    "lv": 11,
+    "star": 2,
+    "shards": 2
+   }
+  },
+  {
+   "name": "mount summon ×10 uses tickets first 412x915",
+   "pass": true,
+   "extra": {
+    "n": 10,
+    "t": 0
+   }
+  },
+  {
+   "name": "summon result no overflow 412x915",
+   "pass": true
+  },
+  {
+   "name": "wings screen 412x915",
+   "pass": true,
+   "extra": {
+    "cards": 8,
+    "equipped": true
+   }
+  },
+  {
+   "name": "wing level max 412x915",
+   "pass": true,
+   "extra": 21
+  },
+  {
+   "name": "wings no overflow 412x915",
+   "pass": true
+  },
+  {
+   "name": "no blocker-like class names 412x915",
+   "pass": true,
+   "extra": []
+  },
+  {
+   "name": "no page errors 412x915",
+   "pass": true,
+   "extra": []
+  }
+ ]
+}
