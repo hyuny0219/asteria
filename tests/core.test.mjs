@@ -8,7 +8,7 @@ import { Battle } from '../src/core/combat.js';
 import { buyUpgrade, quoteUpgrade, upgradeCost, upgradeRoom, dismantle, dismantleQuote, addItems, equip, setLock, enhance } from '../src/core/economy.js';
 import { makeItem, dismantleValue } from '../src/core/items.js';
 import { gainExp, choosePromotion, promotionChecklist, onTokenKill, slotCount } from '../src/core/progression.js';
-import { computeClaim, applyClaim, FarmVerifier } from '../src/core/offline.js';
+import { computeClaim, applyClaim, FarmVerifier, RATE_METHOD } from '../src/core/offline.js';
 import * as dun from '../src/core/dungeon.js';
 import { playerStats } from '../src/core/stats.js';
 import { fmt, makeRng, kstDayIndex } from '../src/core/util.js';
@@ -247,7 +247,7 @@ test('trial: automatic battle can win; failure costs nothing', async () => {
 
 test('offline: 0s / 1h / 12h / 24h / clock rollback, 75%, ×1, verified farm only', () => {
   const s = newGame(T0);
-  s.progression.verifiedFarm = { region: 'meadow', wave: 5, level: 5, killsPerSec: 0.4, windowSec: 75 };
+  s.progression.verifiedFarm = { region: 'meadow', wave: 5, level: 5, killsPerSec: 0.4, windowSec: 75, method: RATE_METHOD };
   const at = (sec) => { s.offlineSnapshot.lastActiveAt = T0; return computeClaim(s, T0 + sec * 1000, 'c' + sec); };
   assert.equal(at(0).reason, 'short');
   const h1 = at(3600), h12 = at(43200), h24 = at(86400);
@@ -255,7 +255,7 @@ test('offline: 0s / 1h / 12h / 24h / clock rollback, 75%, ×1, verified farm onl
   assert.equal(h24.appliedSec, 43200); assert.equal(h24.lostSec, 43200);
   assert.equal(h24.gold, h12.gold); assert.equal(h24.exp, h12.exp);
   // 75% of rate × seconds
-  const perKillGold = Math.floor(BALANCE.monster.rewards.goldBase * Math.pow(BALANCE.monster.rewards.goldGrowth, 4));
+  const perKillGold = Math.floor(Math.floor(BALANCE.monster.rewards.goldBase * Math.pow(BALANCE.monster.rewards.goldGrowth, 4)) * BALANCE.phase.rewardMul);   // v12 phase reward mul
   assert.equal(h1.gold, Math.floor(perKillGold * 0.4 * 3600 * 0.75));
   // deterministic for the same claim id
   assert.deepEqual(computeClaim(s, T0 + 3600e3, 'same'), computeClaim(s, T0 + 3600e3, 'same'));
@@ -361,7 +361,7 @@ test('revision conflict blocks writes (second writer)', async () => {
 test('offline claim in game: persisted pending claim, reload shows same, double claim once', async () => {
   const env = await newLoadedGame();
   const { g, saver } = env;
-  await g.transact('t', (s) => { s.progression.verifiedFarm = { region: 'meadow', wave: 5, level: 5, killsPerSec: 0.4, windowSec: 75 }; return { ok: true }; });
+  await g.transact('t', (s) => { s.progression.verifiedFarm = { region: 'meadow', wave: 5, level: 5, killsPerSec: 0.4, windowSec: 75, method: RATE_METHOD }; return { ok: true }; });
   await g.onHidden();
   env.tick(3 * 3600e3);
   g.onVisible();

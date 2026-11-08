@@ -19,7 +19,16 @@ import { playerStats } from './stats.js';
 const O = BALANCE.offline;
 const EQ = BALANCE.equipment;
 
-export const RATE_METHOD = 'measured-60s-window-x1/v1';
+export const RATE_METHOD = 'measured-60s-window-x1-travel/v2';
+
+// v12: the measured window now contains the travel legs between phases (3 per 10-kill
+// stage). A baseline saved by v1 measured fighting time only, so its rate is converted
+// once to the same footing: time per stage + 3 × travelSec.
+export function travelAdjustedKps(vf) {
+  if (!vf || vf.method === RATE_METHOD || !(vf.killsPerSec > 0)) return vf ? vf.killsPerSec : 0;
+  const n = BALANCE.combat.waveKillTarget, P = BALANCE.phase;
+  return n / (n / vf.killsPerSec + P.sizes.length * P.travelSec);
+}
 
 // --- verification tracker (lives in memory, result stored in progression.verifiedFarm) ---
 export class FarmVerifier {
@@ -53,9 +62,11 @@ export class FarmVerifier {
   }
 }
 
-export function ratePerSecond(vf) {
-  if (!vf) return null;
+export function ratePerSecond(vf0) {
+  if (!vf0) return null;
+  const vf = vf0.method === RATE_METHOD ? vf0 : { ...vf0, killsPerSec: travelAdjustedKps(vf0) };
   const r = killRewards(vf.level);
+  r.exp = Math.floor(r.exp * BALANCE.phase.rewardMul); r.gold = Math.floor(r.gold * BALANCE.phase.rewardMul);   // same as foreground farming (v12)
   return {
     exp: r.exp * vf.killsPerSec,
     gold: r.gold * vf.killsPerSec,
@@ -77,7 +88,7 @@ export function computeClaim(state, now, claimId) {
   const vf = state.progression.verifiedFarm;
   const rate = ratePerSecond(vf);
   const claim = { claimId, computedAt: now, fromAt: last, elapsedSec: Math.floor(elapsed), appliedSec: Math.floor(applied), lostSec: Math.floor(lost),
-    efficiency: O.efficiency, capSec: cap, diag, farm: vf ? { region: vf.region, wave: vf.wave, level: vf.level, killsPerSec: vf.killsPerSec } : null,
+    efficiency: O.efficiency, capSec: cap, diag, farm: vf ? { region: vf.region, wave: vf.wave, level: vf.level, killsPerSec: rate ? rate.killsPerSec : vf.killsPerSec } : null,
     exp: 0, gold: 0, ore: 0, items: [], convertedItems: 0, reason: null };
   if (!rate) { claim.reason = 'unverified'; return claim; }
   if (applied < O.minSeconds) { claim.reason = 'short'; return claim; }

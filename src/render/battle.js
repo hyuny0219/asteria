@@ -538,6 +538,9 @@ export class BattleRenderer {
       const a = this.shake.amp * Math.min(1, (this.shake.until - now) / this.shake.ms + 0.25);
       ctx.translate((Math.random() * 2 - 1) * a, (Math.random() * 2 - 1) * a);
     }
+    // v12 travel legs: the scene scrolls left while the hero walks / rides on
+    if (battle && battle.traveling && !s.reduceMotion) this.bgScroll = ((this.bgScroll || 0) + dt * 0.12 * (W / 390)) % (W * 2);
+    if (battle && !battle.phase) this.bgScroll = 0;
     this.drawBg(bgId || (region && region.bg) || 'meadow', bgTint ?? (region && !bgId ? region.bgTint : null));
     if (!battle) { ctx.restore(); return; }
     // hit-stop: sprites are drawn at a frozen battle time; the simulation keeps going
@@ -578,6 +581,7 @@ export class BattleRenderer {
     const boss = battle.enemies.find((e) => e.boss);
     if (boss) this.drawBossBar(boss, battle);
     if (label && !this.immersive) this.drawLabel(label);   // the immersive HUD shows it
+    if (battle.phase && !this.immersive) this.drawPhase(battle);
     ctx.restore();
   }
 
@@ -612,7 +616,16 @@ export class BattleRenderer {
         return;
       }
     }
-    ctx.drawImage(this.bgCache, 0, 0, W, H);
+    const off = this.bgScroll || 0;
+    if (!off) { ctx.drawImage(this.bgCache, 0, 0, W, H); return; }
+    // seamless loop: the picture, then its mirror image, then the picture again
+    const x0 = -(off % (W * 2));
+    for (let i = 0; i < 3; i++) {
+      const x = x0 + i * W;
+      if (x >= W || x + W <= 0) continue;
+      if (i % 2 === 0) ctx.drawImage(this.bgCache, x, 0, W, H);
+      else { ctx.save(); ctx.translate(x + W, 0); ctx.scale(-1, 1); ctx.drawImage(this.bgCache, 0, 0, W, H); ctx.restore(); }
+    }
   }
 
   spriteDims(m, extraScale = 1) {
@@ -684,6 +697,7 @@ export class BattleRenderer {
         if (motion && rel >= imp) dx = 12 * Math.max(0, 1 - (rel - imp) / 300);
       }
     } else if (t < h.hitFxUntil) { pose = 'hit'; if (motion) dx = -5; }
+    else if (battle.traveling) pose = Math.floor(t / 320) % 2 ? 'step' : 'idle';
     else if (battle.enemies.every((e) => e.state === 'approach') && battle.enemies.length) pose = Math.floor(t / 320) % 2 ? 'step' : 'idle';
     if (h.buffs && h.buffs.evade && battle.t < h.buffs.evade.until && !h.dead) alpha = 0.55;   // 그림자 걸음 / 후방 도약
     // Promoted forms with a key-pose sheet (GPT A01, tier 1) use their own 8 poses.
@@ -1391,6 +1405,26 @@ export class BattleRenderer {
     const left = battle.timeLeftMs();
     if (left !== null && battle.kind !== 'mplus') this.text(Math.ceil(left / 1000) + '초', W - 12, y + 12, 13, left < 15000 ? '#FF9DB2' : '#D8B675', 'right', 700, true);
     this.bar(x, y + 18, w, 7, boss.hp / boss.maxHp, '#C9455F');
+  }
+  // v12: "페이즈 2/3" + 3 dots, and "이동 중" while travelling
+  drawPhase(battle) {
+    const ctx = this.ctx;
+    const p = battle.phaseInfo();
+    if (!p) return;
+    const x0 = 12, y = this.topInset + 16;
+    const txt = p.traveling ? `이동 중 · 페이즈 ${Math.min(p.count, p.idx + 1)}/${p.count}` : `페이즈 ${p.idx + 1}/${p.count}`;
+    this.text(txt, x0, y, 12, p.traveling ? '#EDBD68' : '#E9DFF0', 'left', 700, true);
+    for (let i = 0; i < p.count; i++) {
+      const dx = x0 + 4 + i * 12, dy = y + 11;
+      ctx.beginPath(); ctx.arc(dx, dy, 3.2, 0, Math.PI * 2);
+      ctx.fillStyle = i < p.idx ? '#EDBD68' : i === p.idx ? '#FFF6DE' : 'rgba(255,255,255,0.25)';
+      ctx.fill();
+    }
+    if (p.traveling) {   // travel progress bar
+      const w = 64, q = battle.travelProgress();
+      ctx.fillStyle = 'rgba(255,255,255,0.15)'; ctx.fillRect(x0 + 40, y + 9, w, 3);
+      ctx.fillStyle = '#EDBD68'; ctx.fillRect(x0 + 40, y + 9, w * q, 3);
+    }
   }
   drawLabel(text) { this.text(text, 12, this.cssH - 60, 14, '#C8BAC9', 'left', 500, true); }
 

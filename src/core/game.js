@@ -297,6 +297,8 @@ export class Game {
         monsters: region.monsters,
         levelFn: () => waveLevel(this.state.progression.region, this.state.progression.wave),
         eliteAllowed: () => this.state.progression.wave >= BALANCE.monster.elite.fromWave,
+        killsFn: () => this.state.progression.waveKills,
+        stageFn: () => this.state.progression.region + '-' + this.state.progression.wave,
       },
     });
     this.active = this.farm;
@@ -317,7 +319,7 @@ export class Game {
       this.acc -= TICK;
       this.active.step();
       n++;
-      if ((this.mode === 'FARM' || this.mode === 'DEFEAT') && this.active === this.farm) this.stageRun().ms += TICK;
+      if ((this.mode === 'FARM' || this.mode === 'DEFEAT') && this.active === this.farm && !this.farm.traveling) this.stageRun().ms += TICK;   // stars: combat time only
       if (this.mode === 'FARM' && this.active === this.farm) {
         const p = this.state.progression;
         p.fieldBossSec = (p.fieldBossSec || 0) + TICK / 1000;
@@ -357,7 +359,8 @@ export class Game {
       const mul = rewards.farmMultipliers(s, this.now());
       const pst = playerStats(s);
       const gp = (1 + (pst.goldPct || 0)) * pst.rebirth.gold;
-      r.gold = Math.floor(r.gold * mul.gold * gp); r.exp = Math.floor(r.exp * mul.exp * (1 + (pst.expPct || 0)) * pst.rebirth.exp);
+      const pm = BALANCE.phase.rewardMul;   // v12: travel legs between phases → richer kills
+      r.gold = Math.floor(r.gold * pm * mul.gold * gp); r.exp = Math.floor(r.exp * pm * mul.exp * (1 + (pst.expPct || 0)) * pst.rebirth.exp);
       missions.track(s, 'kills', 1, this.now());
       meta.trackKill(s, e.id);
       meta.trackPassKill(s, this.now());

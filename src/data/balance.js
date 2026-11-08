@@ -19,6 +19,9 @@ export const BALANCE = Object.freeze({
   promotionLevel: 30,                 // first tier (kept for v3 UI)
   promotionLevels: [30, 60, 90],      // tier 1 / 2 / 3: EXP is stored at these levels until promoted
   expCurve: { base: 100, exponent: 1.8, bandMul: [[10, 0.25], [30, 0.15], [60, 0.6], [90, 0.8], [101, 1.6]] },   // floor(100 · Lv^1.8 · band) — band ×0.25 / ×0.15 / ×0.6 / ×0.8 / ×1.6 (v6 속도 조정: Lv30≈6h·Lv60≈2.5d·Lv90≈7d·Lv100≈10d)
+  // v12 스테이지 페이즈: a farm stage (10 kills) is 3 phases with a short travel leg between
+  // phases and between stages. rewardMul makes up for the kills lost to travel (farm + offline).
+  phase: { sizes: [3, 3, 4], travelSec: 3, travelRegenPct: 0.03, rewardMul: 1.9 },
   combat: {
     tickMs: 50,
     bossTimeoutSec: 90,

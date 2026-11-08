@@ -1,5 +1,5 @@
 {
- "at": "2026-11-08T03:10:58.367Z",
+ "at": "2026-11-08T03:38:51.598Z",
  "pass": 36,
  "total": 36,
  "results": [
@@ -28,8 +28,8 @@
    "name": "grades upgraded by draws 390x844",
    "pass": true,
    "extra": {
-    "strike": "epic",
-    "starSlash": "mythic"
+    "starSlash": "mythic",
+    "strike": "legendary"
    }
   },
   {
@@ -65,7 +65,7 @@
    "name": "skill bar grade classes 390x844",
    "pass": true,
    "extra": [
-    "sg-epic",
+    "sg-legendary",
     "sg-common",
     "sg-common",
     "sg-mythic"
@@ -98,7 +98,7 @@
    "name": "등급 상승 shown 360x700",
    "pass": true,
    "extra": {
-    "up": 5,
+    "up": 4,
     "line": true
    }
   },
@@ -106,8 +106,8 @@
    "name": "grades upgraded by draws 360x700",
    "pass": true,
    "extra": {
-    "starSlash": "mythic",
-    "strike": "epic"
+    "strike": "legendary",
+    "starSlash": "mythic"
    }
   },
   {
@@ -143,7 +143,7 @@
    "name": "skill bar grade classes 360x700",
    "pass": true,
    "extra": [
-    "sg-epic",
+    "sg-legendary",
     "sg-common",
     "sg-common",
     "sg-mythic"
@@ -176,7 +176,7 @@
    "name": "등급 상승 shown 412x915",
    "pass": true,
    "extra": {
-    "up": 4,
+    "up": 3,
     "line": true
    }
   },
@@ -184,8 +184,8 @@
    "name": "grades upgraded by draws 412x915",
    "pass": true,
    "extra": {
-    "starSlash": "mythic",
-    "strike": "rare"
+    "strike": "epic",
+    "starSlash": "mythic"
    }
   },
   {
@@ -197,7 +197,7 @@
    "pass": true,
    "extra": {
     "tags": 6,
-    "coloured": 2
+    "coloured": 4
    }
   },
   {
@@ -221,7 +221,7 @@
    "name": "skill bar grade classes 412x915",
    "pass": true,
    "extra": [
-    "sg-rare",
+    "sg-epic",
     "sg-common",
     "sg-common",
     "sg-mythic"

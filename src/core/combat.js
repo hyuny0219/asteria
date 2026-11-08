@@ -98,6 +98,8 @@ export class Battle {
       : o.kind === 'world' ? o.world.timeSec * 1000 : Infinity;
     this.secondWindUsed = false;
     this.respawnAt = null;
+    // v12 farm phases: needs the game's live stage / kill counters (killsFn, stageFn)
+    this.phase = o.kind === 'farm' && o.farm && o.farm.killsFn ? { key: null, pending: false, travelUntil: 0, travelFrom: 0, idx: 0 } : null;
     this.setHero(o.hero, true);
     if (o.kind === 'boss') this.spawnBoss(BOSSES[o.boss.id]);
     if (o.kind === 'raid') this.spawnBoss(BOSSES[T.raid.boss], { raid: true });
@@ -280,8 +282,14 @@ export class Battle {
       this.affixHit(0.08, 'quaking');
       if (this.hero.dead) return;
     }
+    if (this.phase && this.phaseStep()) {   // travelling between phases / stages: no enemies, regen, no actions
+      h.hp = Math.min(h.maxHp, h.hp + h.maxHp * BALANCE.phase.travelRegenPct * (TICK / 1000));
+      this.tickBuffs();
+      this.cleanupDying();
+      return;
+    }
     if (this.kind === 'farm' || this.kind === 'dungeon' || this.kind === 'tower' || this.kind === 'rift' || this.kind === 'mplus') {
-      if (this.alive().length < C.maxEnemiesOnField && t >= this.nextSpawnAt) {
+      if (this.alive().length < C.maxEnemiesOnField && t >= this.nextSpawnAt && (!this.phase || this.phaseRoom())) {
         if (this.kind === 'farm') this.spawnFarmEnemy(); else this.spawnSessionEnemy();
         this.nextSpawnAt = t + C.spawnGapSec * 1000;
       }
@@ -294,6 +302,43 @@ export class Battle {
     this.petAct();
     this.enemiesAct();
     this.cleanupDying();
+  }
+
+  // ---------- v12 farm phases ----------
+  static phaseOf(kills) { const S = BALANCE.phase.sizes; let acc = 0; for (let i = 0; i < S.length; i++) { acc += S[i]; if (kills < acc) return i; } return S.length - 1; }
+  static phaseEnd(idx) { return BALANCE.phase.sizes.slice(0, idx + 1).reduce((a, b) => a + b, 0); }
+  get traveling() { return !!(this.phase && this.phase.travelUntil); }
+  travelProgress() { const P = this.phase; return P && P.travelUntil ? Math.min(1, (this.t - P.travelFrom) / (P.travelUntil - P.travelFrom)) : 0; }
+  phaseInfo() { return this.phase ? { idx: this.phase.idx, count: BALANCE.phase.sizes.length, traveling: this.traveling, pending: this.phase.pending } : null; }
+  // returns true while travelling (the caller skips combat for this tick)
+  phaseStep() {
+    const P = this.phase, f = this.cfg.farm, t = this.t;
+    const idx = Battle.phaseOf(f.killsFn());
+    const key = f.stageFn() + ':' + idx;
+    P.idx = idx;
+    if (P.key === null) P.key = key;
+    if (key !== P.key) { P.key = key; P.pending = true; }
+    if (P.pending && !P.travelUntil && !this.alive().length && !this.hero.action) {
+      P.pending = false;
+      P.travelFrom = t;
+      P.travelUntil = t + BALANCE.phase.travelSec * 1000;
+      this.events.push({ type: 'travelStart', phase: idx, t });
+    }
+    if (P.travelUntil) {
+      if (t < P.travelUntil) return true;
+      P.travelUntil = 0;
+      this.nextSpawnAt = t + 150;
+      this.events.push({ type: 'travelEnd', phase: idx, t });
+    }
+    return false;
+  }
+  // spawn only up to the end of the current phase (field boss / rare elites are extra)
+  phaseRoom() {
+    const P = this.phase;
+    if (P.pending || P.travelUntil) return false;
+    const k = this.cfg.farm.killsFn();
+    const normal = this.alive().filter((e) => !e.fieldBoss && !e.rare).length;
+    return k + normal < Battle.phaseEnd(Battle.phaseOf(k));
   }
 
   moveEnemies() {
