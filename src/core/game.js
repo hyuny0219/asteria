@@ -661,6 +661,8 @@ export class Game {
         if (!markTx(s, sess.id)) return { ok: false, reason: 'duplicate' };
         const fr = raid.finishRaid(s, ev.damage || 0, this.rng);
         fr.overflowed = eco.addItems(s, fr.items).overflowed;
+        const sc = stages.recordRaidClear(s, fr.grade);
+        if (sc.ok) fr.stage = sc;
         return { ...fr, win: true, timeSec: Math.round(ev.t / 1000), reason: ev.reason };
       });
     } else if (sess.kind === 'trial') {

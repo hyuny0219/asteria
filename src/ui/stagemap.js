@@ -4,6 +4,7 @@ import { BALANCE } from '../data/balance.js';
 import { BOSSES, REGIONS, REGION_BY_ID, MONSTERS, waveLevel } from '../data/content.js';
 import * as prog from '../core/progression.js';
 import * as ST from '../core/stages.js';
+import { triesLeft } from '../core/raid.js';
 import { bgMeta, itemIcon, spriteMeta } from '../render/assets.js';
 import { CURRENCY_ICONS } from '../data/content.js';
 import { fmt } from '../core/util.js';
@@ -108,7 +109,14 @@ function buildStage(app, ui, rerender, close) {
     const lv = boss ? BOSSES[r.boss].level : waveLevel(r, n);
     const here = p.region === r.id && p.wave === n;
     let action;
-    if (boss) {
+    const raidB = boss && BOSSES[r.boss].raid;
+    if (raidB) {
+      const ropen = prog.raidOpen(s);
+      const left = triesLeft(s, Date.now());
+      action = button(!open ? '잠긴 지역입니다' : stt === 'locked' ? `${r.order + 1}-10 도달 시 도전` : !ropen ? `Lv ${BALANCE.raid.unlockLevel} 달성 시 레이드 도전` : left > 0 ? `주간 레이드로 도전 (이번 주 ${left}/${BALANCE.raid.weeklyTries}회)` : '이번 주 레이드 횟수 모두 사용',
+        { cls: 'btn btn-primary', disabled: stt === 'locked' || !ropen, dataset: { act: 'stage-go' },
+          onClick: () => { close(); app.advTab = 'challenge'; app.setTab('dungeon'); setTimeout(() => { const el = document.querySelector('[data-screen="raid"]'); if (el) el.scrollIntoView({ block: 'center', behavior: 'smooth' }); }, 60); } });
+    } else if (boss) {
       action = button(!open ? '잠긴 지역입니다' : stt === 'locked' ? `${r.order + 1}-10 도달 시 도전` : p.bossCleared[r.boss] ? '보스 재도전' : '보스 도전', { cls: 'btn btn-primary', disabled: stt === 'locked', dataset: { act: 'stage-go' },
         onClick: () => { close(); openBoss(app, r.boss); } });
     } else {
@@ -124,8 +132,9 @@ function buildStage(app, ui, rerender, close) {
       h('div', { class: 'stage-dh' }, h('b', null, `${ST.stageLabel(r.id, n)}${boss ? ' ' + BOSSES[r.boss].name : ''}`),
         h('span', { class: 'stage-badge ' + stt }, { cleared: '클리어', current: '진행 중', locked: '잠김' }[stt]), h('span', { class: 'spacer', style: { flex: 1 } }),
         h('span', { class: 'stars', 'aria-label': `별 ${got}개` }, starText(got))),
-      h('div', { class: 'kv' }, '적', h('b', null, boss ? `Lv ${lv} 보스` : `Lv ${lv} · ${r.monsters.map((id) => MONSTERS[id] ? MONSTERS[id].name : id).join('·')}`)),
-      h('div', { class: 'kv' }, '별 조건', h('b', null, boss ? `★ 처치 · ★★ 처치 · ★★★ ${ST.starTimeSec('boss')}초 안에` : `★ ${BALANCE.combat.waveKillTarget}마리 · ★★ 사망 없이 · ★★★ ${ST.starTimeSec(n)}초 안에`)),
+      raidB ? h('p', { class: 'muted small', style: { margin: '2px 0 4px' } }, `${BOSSES[r.boss].name}은 주간 레이드 보스예요. ${BALANCE.raid.timeSec}초 동안 준 피해로 등급이 정해지고, 한 번 도전하면 이 칸이 클리어돼요. 심연은 마지막 지역이라 다음 지역은 아직 없어요.`) : null,
+      h('div', { class: 'kv' }, '적', h('b', null, raidB ? `Lv ${lv} 레이드 보스` : boss ? `Lv ${lv} 보스` : `Lv ${lv} · ${r.monsters.map((id) => MONSTERS[id] ? MONSTERS[id].name : id).join('·')}`)),
+      h('div', { class: 'kv' }, '별 조건', h('b', null, raidB ? '레이드 등급 C·D ★ · B ★★ · A·S ★★★' : boss ? `★ 처치 · ★★ 처치 · ★★★ ${ST.starTimeSec('boss')}초 안에` : `★ ${BALANCE.combat.waveKillTarget}마리 · ★★ 사망 없이 · ★★★ ${ST.starTimeSec(n)}초 안에`)),
       h('div', { class: 'kv' }, '최초 클리어 보상', claimed ? h('b', { class: 'okc' }, '받음 ✓') : rewardLine(ST.stageReward(r.id, n))),
       action);
     ui.region = region; ui.sel = sel;

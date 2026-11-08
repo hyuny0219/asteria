@@ -37,7 +37,7 @@ export function recordClear(state, regionId, n, run) {
   if (!REGION_BY_ID[regionId] || !(n === 'boss' || (n >= 1 && n <= STAGE_COUNT))) return { ok: false, reason: 'missing' };
   state.stages ||= defaultStages();
   const key = stageKey(regionId, n);
-  const stars = starsFor(run, n);
+  const stars = run.stars || starsFor(run, n);
   const prev = state.stages.stars[key] || 0;
   if (stars > prev) state.stages.stars[key] = stars;
   const out = { ok: true, key, label: stageLabel(regionId, n), stars, best: Math.max(prev, stars), improved: stars > prev, first: false, reward: null };
@@ -57,7 +57,8 @@ export function nodeStatus(state, regionId, n, unlocked) {
   const max = p.maxWave[regionId] || 1;
   const stars = (state.stages && state.stages.stars) || {};
   if (n === 'boss') {
-    if (p.bossCleared[REGION_BY_ID[regionId].boss]) return 'cleared';
+    const bid = REGION_BY_ID[regionId].boss;
+    if (p.bossCleared[bid] || (BOSSES[bid].raid && stars[stageKey(regionId, 'boss')])) return 'cleared';
     return max >= STAGE_COUNT ? 'current' : 'locked';
   }
   if (n < max) return 'cleared';
@@ -70,6 +71,15 @@ export function regionStars(state, regionId) {
   for (let n = 1; n <= STAGE_COUNT; n++) got += stars[stageKey(regionId, n)] || 0;
   got += stars[stageKey(regionId, 'boss')] || 0;
   return { got, max: (STAGE_COUNT + 1) * 3 };
+}
+
+// The last region's boss node is the weekly raid (심연의 군주). Any raid attempt clears
+// the node; stars follow the raid grade (S/A ★★★ · B ★★ · C/D ★).
+export const raidRegion = () => REGIONS.find((r) => BOSSES[r.boss].raid) || null;
+export const raidStars = (grade) => (grade === 'S' || grade === 'A' ? 3 : grade === 'B' ? 2 : 1);
+export function recordRaidClear(state, grade) {
+  const r = raidRegion();
+  return r ? recordClear(state, r.id, 'boss', { stars: raidStars(grade) }) : { ok: false, reason: 'missing' };
 }
 
 // Existing saves (schema 6 → 7): progress already made counts as 1★ cleared with its

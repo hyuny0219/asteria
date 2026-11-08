@@ -322,11 +322,18 @@ export function openRaidResult(app, r, back, itemRewards) {
   const tiles = [{ icon: itemIcon(CURRENCY_ICONS.gem), value: '+' + (r.reward.gem || 0), label: '보석' }];
   if (r.reward.starShard) tiles.push({ icon: itemIcon(CURRENCY_ICONS.starShard), value: '+' + r.reward.starShard, label: '별의 파편' });
   tiles.push(...itemRewards(r.items || []));
+  const st = r.stage && r.stage.ok ? r.stage : null;
+  if (st && st.reward) {
+    if (st.reward.gem) tiles.push({ icon: itemIcon(CURRENCY_ICONS.gem), value: '+' + st.reward.gem, label: '10-보스 첫 클리어' });
+    if (st.reward.ore) tiles.push({ icon: itemIcon(CURRENCY_ICONS.ore), value: '+' + st.reward.ore, label: '강화 광석' });
+    if (st.reward.gold) tiles.push({ icon: itemIcon(CURRENCY_ICONS.gold), value: '+' + fmt(st.reward.gold), label: '골드' });
+  }
   const m = openModal({ id: 'raidResult', title: `레이드 결과 · ${r.grade} 등급`, dismissible: false,
     body: h('div', { dataset: { screen: 'raidResult' } },
       h('p', { class: 'raid-grade g-' + r.grade }, r.grade),
       h('p', { style: { textAlign: 'center' } }, `누적 피해 ${fmtFull(r.damage)} · 보스 체력의 ${fmtPct(r.share, 1)}`),
       rewardTiles(tiles),
+      st ? h('p', { class: 'muted small', style: { textAlign: 'center' } }, `스테이지 ${st.label} 별 ${'★'.repeat(st.best)}${st.improved && !st.first ? ' · 별 갱신' : ''}`) : null,
       h('p', { class: 'muted' }, `등급 기준: S 100% · A 70% · B 45% · C 25% (보스 최대 체력 ${fmt(raidBossHp())} 대비).`)),
     actions: [button('확인', { cls: 'btn btn-primary', onClick: () => { m.close(); back(); app.setTab('dungeon'); } })] });
   return m;
