@@ -77,6 +77,7 @@ export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0, cls = 'wa
     bossDaily: { day: null, used: 0 },   // 지역 보스 반복 처치 하루 3회 (bossdaily.js)
     story: { seen: {} },                 // v14 이야기 (story.js): 지역 소개·보스 기록·엔딩 본 시각
     theme: { week: null, id: null, progress: 0, claimed: false },   // v14 주간 테마 도전 (theme.js)
+    synergy: { found: {} },             // v14 시너지 도감 (synergy.js)
     dungeons: {
       gold: { tickets: BALANCE.dungeon.dailyTickets, lastDay: kstDayIndex(now), best: 0, pendingRun: null, clockWarnings: 0 },
       books: { tickets: BALANCE.dungeon.dailyTickets, lastDay: kstDayIndex(now), best: 0, pendingRun: null, clockWarnings: 0 },

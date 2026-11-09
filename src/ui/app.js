@@ -15,6 +15,7 @@ import * as FS from './fullscreen.js';
 import { titleName } from '../core/meta.js';
 import { stageLabel } from '../core/stages.js';
 import * as DF from '../core/difficulty.js';
+import { COMBOS as SYNC } from '../data/synergy.js';
 import * as V5 from './v5.js';
 import { BLESSINGS, CURSES } from '../core/rift.js';
 import { AFFIXES, MPLUS } from '../core/mplus.js';
@@ -147,6 +148,7 @@ export class App {
 
   bindGame() {
     const g = this.game;
+    g.on('synergyFound', (r) => { const C = SYNC[r.id]; if (C) { toast(`새 시너지 발견! ${C.name} · 보석 +${r.reward.gem}`, 'good', 3200); this.announce(`시너지 발견 ${C.name}`); } });
     g.on('combat', (ev) => {
       const cue = this.renderer ? this.renderer.onCombat(ev, g.active) : null;
       if (cue && this.state.settings.sound) sfx(cue);

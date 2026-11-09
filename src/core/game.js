@@ -42,6 +42,7 @@ import * as mail from './mail.js';
 import * as BD from './bossdaily.js';
 import * as story from './story.js';
 import * as TH from './theme.js';
+import * as SYN from './synergy.js';
 import { PASS } from '../data/meta.js';
 import { deepClone, makeRng, uid } from './util.js';
 
@@ -358,8 +359,23 @@ export class Game {
   }
   get alpha() { return this.acc / TICK; }
 
+  // v14 시너지 도감: the first trigger of a combo is saved (own tx) with a small reward; the
+  // reward toast is emitted only after the save succeeded.
+  onSynergy(ev) {
+    if (SYN.isFound(this.state, ev.id)) return;
+    this.synPending ||= new Set();
+    if (this.synPending.has(ev.id)) return;
+    this.synPending.add(ev.id);
+    this.transact('synergy', (s) => {
+      const r = SYN.record(s, ev.id, this.now());
+      if (r.first) meta.addPassXp(s, r.passXp, this.now());
+      return { ...r, id: ev.id };
+    }).then((r) => { this.synPending.delete(ev.id); if (r.ok && r.first) this.emit('synergyFound', r); });
+  }
+
   process(events) {
     for (const ev of events) {
+      if (ev.type === 'synergy') this.onSynergy(ev);
       if (this.active.kind === 'farm') this.processFarm(ev);
       else this.processSession(ev);
       this.emit('combat', ev);

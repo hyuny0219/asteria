@@ -16,6 +16,7 @@ import * as BD from '../core/bossdaily.js';
 import * as STORY from '../core/story.js';
 import * as STORYUI from './story.js';
 import * as V14 from './v14.js';
+import * as SYNUI from './synergy.js';
 import * as MAILUI from './mail.js';
 import { jewelName, socketCount } from '../core/crafting.js';
 import { MONSTERS } from '../data/content.js';
@@ -453,15 +454,16 @@ export function skillsPanel(app) {
     const unlockText = i === 3 ? '1차 승급(Lv 30)에서 열려요.' : '2차 승급(Lv 60)에서 열려요.';
     sc.appendChild(h('div', { class: 'skill-line' },
       locked ? h('span', { class: 'skill locked', style: { width: '44px', height: '44px' } }, icon('lock', 18)) : id ? gradeFramed(img(skillIcon(SKILLS[id].icon), '', awkCls(s, id)), skGrade(s, id)) : h('span', { class: 'skill empty', style: { width: '44px', height: '44px' } }),
-      h('div', null, h('div', { class: 't' }, `${i + 1}번 · ${locked ? '승급 해금' : id ? SKILLS[id].name : '비어 있음'}`), locked ? h('div', { class: 'muted' }, unlockText) : id ? lvLine(id) : null),
+      h('div', null, h('div', { class: 't' }, `${i + 1}번 · ${locked ? '승급 해금' : id ? SKILLS[id].name : '비어 있음'}`, id && !locked ? SYNUI.tagChips(id) : null), locked ? h('div', { class: 'muted' }, unlockText) : id ? lvLine(id) : null),
       locked ? button('조건', { cls: 'chip-btn', onClick: () => openQuest(app) }) : button('변경', { cls: 'chip-btn', onClick: () => openSkillPicker(app, i) })));
   }
   sc.appendChild(h('div', { class: 'skill-line' }, gradeFramed(img(skillIcon(SKILLS[ult].icon), '', awkCls(s, ult)), skGrade(s, ult)),
-    h('div', null, h('div', { class: 't' }, `궁극기 · ${SKILLS[ult].name}`), lvLine(ult)),
+    h('div', null, h('div', { class: 't' }, `궁극기 · ${SKILLS[ult].name}`, SYNUI.tagChips(ult)), lvLine(ult)),
     button('상세', { cls: 'chip-btn', onClick: () => openSkillDetail(app, ult) })));
   sc.appendChild(h('div', { class: 'setting-block' }, h('span', null, '궁극기 자동 사용'), h('div', { class: 'seg', role: 'group', 'aria-label': '궁극기 자동 사용' },
     [['OFF', '끔'], ['ELITE_BOSS', '정예·보스'], ['ALWAYS', '항상']].map(([k, l]) => h('button', { type: 'button', 'aria-pressed': String(s.skills.ultAuto === k), onClick: async () => fail(await app.game.setUltAuto(k)) }, l)))));
   sc.appendChild(h('label', { class: 'switch-row' }, h('span', null, '일반 스킬 자동 시전'), h('input', { type: 'checkbox', checked: s.skills.autoCast, onChange: async (e) => fail(await app.game.setAutoCast(e.target.checked)) })));
+  sc.appendChild(SYNUI.synergyCard(app, ult));   // v14 시너지
   // levels
   sc.appendChild(h('div', { class: 'section-title' }, '스킬 레벨 (스킬북 + 골드)'));
   for (const id of unlocked) {

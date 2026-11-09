@@ -817,3 +817,12 @@ img.sg-up-ico { width: 16px !important; height: 16px !important; margin: 0 4px 0
 .theme-chip[hidden] { display: none; }
 .theme-card .bar-mini { height: 6px; border-radius: 3px; background: rgba(255,255,255,.08); overflow: hidden; margin: 4px 0 0; }
 .theme-card .bar-mini > span { display: block; height: 100%; background: var(--gold); }
+/* v14 시너지 */
+.syn-tags { display: inline-flex; gap: 4px; margin-left: 6px; vertical-align: middle; flex-wrap: wrap; }
+.syn-tags.wrap { margin: 4px 0 6px; }
+.syn-tag { font-size: 11px; font-weight: 800; line-height: 1; padding: 3px 6px; border-radius: 999px; color: var(--tc, #ddd); border: 1px solid color-mix(in srgb, var(--tc, #ddd) 55%, transparent); background: color-mix(in srgb, var(--tc, #ddd) 12%, transparent); }
+.syn-card { margin-top: 8px; }
+.syn-list { display: grid; gap: 6px; margin-bottom: 8px; }
+.syn-row { display: grid; gap: 1px; }
+.syn-row.unknown b, .syn-entry.unknown b { letter-spacing: 2px; }
+.syn-entry { margin: 6px 0; }

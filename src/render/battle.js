@@ -50,7 +50,7 @@ const PAL = {
   archer: { main: '#C9F0D8', hot: '#FFE6A8', deep: '#3E8C6A', band: '#173B2E' },
   rogue: { main: '#F0C6D2', hot: '#FF6F8E', deep: '#8E294C', band: '#3A0F22' },
 };
-const DOT_COL = { r_poison: '#8BE07A', m_curse: '#C08CFF', a_beast: '#F08080' };
+const DOT_COL = { r_poison: '#8BE07A', m_curse: '#C08CFF', a_beast: '#F08080', syn_burn: '#FF8A4C', syn_bleed: '#E2556B' };
 const PROJ_SKILL = { m_fireball: 'fire', m_curse: 'hex', m_drain: null, m_chain: null, m_frost: null, m_blizzard: null,
   a_aim: 'arrowC', a_pierce: null, a_snipe: null, a_beast: null, a_pack: null, r_poison: 'daggerP' };
 const byXDesc = (a, b) => b.x - a.x;
@@ -147,6 +147,14 @@ export class BattleRenderer {
       if (e && s.damageNumbers === 'all') this.pushNumber({ x: e.x, y: 0.42, text: '+' + fmt(ev.amount), dot: '#7FE0A0', born: now, dx: 0 });
     } else if (ev.type === 'enrage') {
       this.kick(3, 140);
+    } else if (ev.type === 'synergy') {   // v14 시너지 콤보 이름
+      this.pushNumber({ x: ev.x ?? 260, y: 0.3, text: ev.name + '!', syn: ev.color || '#FFD46E', born: now, dx: 0 });
+      const x = this.ex(ev.x ?? 260) * this.sx;
+      this.pushFx({ kind: 'ring', x, y: this.groundY, r0: 8 * this.u, r1: 60 * this.u, col: ev.color || '#FFD46E', w: 3, flat: 0.32, born: this.clock, dur: 480 });
+      return 'cast';
+    } else if (ev.type === 'frozen') {
+      const x = this.ex(ev.x ?? 260) * this.sx;
+      this.pushFx({ kind: 'ring', x, y: this.groundY, r0: 4 * this.u, r1: 34 * this.u, col: '#8FD3FF', w: 2, flat: 0.32, born: this.clock, dur: 360 });
     } else if (ev.type === 'skillStart') {
       const sk = SKILLS[ev.skill];
       if (sk) this.toast = { text: sk.name, born: now, ult: false };
@@ -197,7 +205,7 @@ export class BattleRenderer {
     const ac = battle.hero.action;
     const step = a === 'attack' ? this.comboStep(ac, now) : 0;
     const finisher = step === 3;
-    const proj = a !== 'combo' && a !== 'counter' ? this.projKind(ev) : null;
+    const proj = a !== 'combo' && a !== 'counter' && a !== 'synergy' ? this.projKind(ev) : null;
     const delay = proj ? FLIGHT : 0;
     const land = now + delay, landC = this.clock + delay;
     const ult = a === 'ult';
@@ -1487,12 +1495,12 @@ export class BattleRenderer {
       const bounce = motion && p < 0.3 ? Math.sin((p / 0.3) * Math.PI) * (n.crit ? 10 : 6) : 0;
       const y = H * n.y - (motion ? 24 * p : 0) - bounce;
       const x = this.ex(n.x) * sx + (n.enemy ? 0 : 6) + (motion ? (n.dx || 0) * p : 0);
-      const size = n.crit ? 22 : n.big ? 20 : n.dot ? 13 : n.enemy ? 15 : 16;
-      const col = n.miss ? '#A9E8D0' : n.dot ? n.dot : n.enemy ? (n.guarded ? '#A9C8FF' : '#FF9DB2') : n.crit ? '#FFD46E' : n.big ? '#FFF2D0' : '#F5EDF0';
+      const size = n.syn ? 17 : n.crit ? 22 : n.big ? 20 : n.dot ? 13 : n.enemy ? 15 : 16;
+      const col = n.syn ? n.syn : n.miss ? '#A9E8D0' : n.dot ? n.dot : n.enemy ? (n.guarded ? '#A9C8FF' : '#FF9DB2') : n.crit ? '#FFD46E' : n.big ? '#FFF2D0' : '#F5EDF0';
       ctx.save();
       ctx.globalAlpha = 1 - Math.max(0, p - 0.6) / 0.4;
       ctx.translate(x, y); ctx.scale(pop, pop);
-      this.text(n.miss ? n.text : (n.enemy ? '-' : '') + n.text, 0, 0, size, col, 'center', 900, true);
+      this.text(n.miss || n.syn ? n.text : (n.enemy ? '-' : '') + n.text, 0, 0, size, col, 'center', 900, true);
       if (n.crit) this.text('치명!', 0, -size + 2, 11, '#FF8FA6', 'center', 900, true);
       ctx.restore();
     }

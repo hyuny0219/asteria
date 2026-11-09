@@ -14,6 +14,7 @@ const NO_THEME = Object.freeze({});
 import { clamp } from './util.js';
 
 const C = BALANCE.combat;
+import * as SYN from './synergy.js';
 const M = BALANCE.monster;
 const TICK = C.tickMs;
 
@@ -582,18 +583,25 @@ export class Battle {
     const atk = this.heroAtk();
     let kills = 0;
     const ranged = this.heroCfg.range === 'ranged';
+    // v14 시너지: skill / ultimate hits carry tags (statuses + combos); chain lightning once per cast
+    const synSkill = ac.kind !== 'attack' && ac.skill ? ac.skill : null;
+    this.synCoef = coef; this.synCast = new Set(); let synFirst = true;   // statuses once per target per cast
     const hitOne = (e, c, extraCrit = 0) => {
       if (!e || e.state === 'dying') return;
-      let crit = this.rng() < Math.min(1, st.crit + extraCrit);
+      const pre = synSkill ? SYN.preHit(this, e, synSkill) : null;
+      if (e.state === 'dying') return;
+      let crit = this.rng() < Math.min(1, st.crit + extraCrit) || !!(pre && pre.forceCrit);
       if (h.buffs.nextCrit) { crit = true; delete h.buffs.nextCrit; }
       else if (h.buffs.critStacks && h.buffs.critStacks.n > 0) { crit = true; if (--h.buffs.critStacks.n <= 0) delete h.buffs.critStacks; }
       let cc = c;
       if (sk && sk.executeBelow && e.hp / e.maxHp <= sk.executeBelow) cc *= 2;
       if (e.boss && this.gmods.bossMul) cc *= 1 + this.gmods.bossMul;   // 거인 사냥꾼
+      if (pre) cc *= pre.mul;
       const dmg = damageFormula(atk, cc, e.defense, e.level, crit, this.rng(), st.critMul);
       if (crit && this.gmods.critGauge) this.addGauge(this.gmods.critGauge);   // 집중
       const killed = this.dealDamage(e, dmg, { crit, action: ac.kind, skill: ac.skill || null, ranged });
       if (killed) kills++;
+      if (synSkill) { SYN.postHit(this, e, synSkill, { first: synFirst }); synFirst = false; }
       if (st.combo && this.rng() < st.combo && e.state !== 'dying') {
         const d2 = Math.max(1, Math.floor(dmg * 0.5));
         if (this.dealDamage(e, d2, { crit: false, action: 'combo', skill: null, ranged })) kills++;
@@ -691,6 +699,14 @@ export class Battle {
     this.hero.gauge = clamp(this.hero.gauge + v * mul, 0, 100);
   }
 
+  // v14 시너지 combo / chain damage: × hero attack, no crit, never re-triggers combos
+  synHit(e, coef, comboId, chainSkill = null) {
+    if (!e || e.state === 'dying') return false;
+    const dmg = damageFormula(this.heroAtk(), coef * (this.synMul || 1), e.defense, e.level, false, this.rng());
+    return this.dealDamage(e, dmg, { crit: false, action: chainSkill ? 'skill' : 'synergy', skill: comboId || chainSkill });
+  }
+  synLv(skill) { return SKILLS[skill] ? 1 + BALANCE.skills.levelBonusPerLevel * (this.heroCfg.skillLevel(skill) - 1) : 1; }
+
   kill(e) {
     e.state = 'dying';
     e.dieAt = this.t + 420;
@@ -706,6 +722,7 @@ export class Battle {
     }
     this.events.push({ type: 'kill', enemy: { uid: e.uid, id: e.id, level: e.level, elite: e.elite, boss: e.boss, fieldBoss: !!e.fieldBoss, trial: !!e.trial, rare: e.rare || null }, t: this.t });
     if (this.heroCfg.stats.mythHeal && this.rng() < 0.1) this.heal(this.hero.maxHp * 0.2);
+    if (!this.over) SYN.onKill(this, e);   // 얼음 파편
     const kc = this.gmods.killCdrMs;   // 전장의 흐름
     if (kc) for (const k of Object.keys(this.hero.cds)) this.hero.cds[k] = Math.max(this.t, this.hero.cds[k] - kc);
     if (this.kind === 'boss' || this.kind === 'trial' || this.kind === 'raid' || this.kind === 'world') { if (e.boss) this.finish('victory'); }
