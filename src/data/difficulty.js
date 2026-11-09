@@ -8,6 +8,8 @@ export const DIFFICULTY = Object.freeze({
   normal: {
     id: 'normal', name: '노말', order: 1, level: 100, minPlayerLevel: 0,
     hp: { base: 1, growth: 1.02 }, atk: { base: 1.5, growth: 1.02 },
+    // v13: 이지 보스에 붙은 추가 배율(balance.monster.scale.boss*)을 보스전에서 일부 상쇄
+    boss: { hp: 0.55, atk: 0.8 },
     gold: 1.6, exp: 1.5, drop: 1.25, firstClear: 2,
     // per-kill drop rarity (replaces the easy table) and repeat boss table
     rarity: { common: 0.3, uncommon: 0.38, rare: 0.24, epic: 0.075, legendary: 0.005 },
@@ -16,6 +18,7 @@ export const DIFFICULTY = Object.freeze({
   hard: {
     id: 'hard', name: '하드', order: 2, level: 100, minPlayerLevel: 0,
     hp: { base: 2.5, growth: 1.022 }, atk: { base: 5, growth: 1.022 },
+    boss: { hp: 0.55, atk: 0.8 },
     gold: 2.4, exp: 2, drop: 1.5, firstClear: 3,
     rarity: { common: 0.12, uncommon: 0.33, rare: 0.35, epic: 0.18, legendary: 0.02 },
     bossFirst: { epic: 0.5, legendary: 0.5 },

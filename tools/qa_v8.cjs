@@ -32,7 +32,7 @@ const shot = (p, name, vp) => p.screenshot({ path: path.join(OUT, `v8_${name}_${
     await p.waitForTimeout(300);
     ok(await p.locator('[data-screen="mplus"].locked-card').count() === 1, `${vp[0]} mplus locked before B03`);
     // open
-    await p.evaluate(() => __qaTx((s) => { s.player.level = 45; s.progression.bossCleared.B03 = true; s.player.statsUpgrades.atk = 900; s.player.statsUpgrades.hp = 900; s.player.statsUpgrades.def = 300; return { ok: true }; }));
+    await p.evaluate(() => __qaTx((s) => { s.player.level = 45; s.progression.bossCleared.B03 = true; s.player.statsUpgrades.atk = 2400; s.player.statsUpgrades.hp = 2000; s.player.statsUpgrades.def = 500; return { ok: true }; }));
     await p.evaluate(() => { __asteria.app.panelDirty = true; __asteria.app.renderPanel(); });
     await p.waitForTimeout(300);
     ok(await p.locator('[data-screen="mplus"]:not(.locked-card)').count() === 1, `${vp[0]} mplus card open`);

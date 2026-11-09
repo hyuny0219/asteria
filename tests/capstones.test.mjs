@@ -48,8 +48,10 @@ test('capstone 피의 군주: low-HP attack bonus +50% instead of +25%', () => {
 
 test('capstone 역병: damage over time doubled', () => {
   const s = hero('mage', 'warlock', ['m_curse', null, null, null, null]);
-  const off = sumDmg(run(s, {}, { range: 'ranged' }).ev, (e) => e.action === 'dot');
-  const on = sumDmg(run(s, { cap_dot2: true }, { range: 'ranged' }).ev, (e) => e.action === 'dot');
+  // single target (boss) so overkill on a 4-monster farm field does not blur the ratio
+  const opt = { range: 'ranged', kind: 'boss', extra: { boss: { id: 'B03' } }, ms: 30000 };
+  const off = sumDmg(run(s, {}, opt).ev, (e) => e.action === 'dot');
+  const on = sumDmg(run(s, { cap_dot2: true }, opt).ev, (e) => e.action === 'dot');
   assert.ok(off > 0);
   assert.ok(on > off * 1.5, `${on} vs ${off}`);
 });

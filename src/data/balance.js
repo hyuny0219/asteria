@@ -37,8 +37,9 @@ export const BALANCE = Object.freeze({
     defenseKBase: 50,
     defenseKPerEnemyLevel: 10,
     respawnDelaySec: 3,
-    spawnGapSec: 0.9,
-    maxEnemiesOnField: 2,
+    spawnGapSec: 0.45,
+    maxEnemiesOnField: 4,          // v13: 무리 사냥 — 최대 4마리가 동시에 붙고 모두 공격
+    sideAtkMul: 0.6,               // 맨 앞이 아닌 적의 공격력 배율 (4마리 동시 공격이 4배 피해가 되지 않게)
     waveKillTarget: 10,
     retreatAfterDeaths: 2,
     retreatHoldKills: 40,
@@ -67,13 +68,21 @@ export const BALANCE = Object.freeze({
     hpBase: 50, hpGrowth: 1.10,
     atkBase: 7, atkGrowth: 1.075,
     late: { from: 30, hpExp: 2.6, atkExp: 2.1 },
+    // v13: 장비 성장이 몬스터를 크게 앞질러 Lv 60에 Lv 100 보스를 잡던 문제 → 레벨별 배율 (구간 선형)
+    scale: {
+      hp: [[1, 1], [15, 1.2], [30, 1.5], [50, 2], [70, 2.4], [100, 2.6]],
+      atk: [[1, 1], [15, 1.1], [30, 1.4], [50, 1.8], [70, 2.2], [100, 2.5]],
+      // 보스는 사냥터 몬스터보다 더: 보스 체력·공격 = 위 배율 × 아래 배율
+      bossHp: [[1, 1], [15, 1.08], [30, 1.33], [50, 1.5], [70, 1.67], [100, 1.73]],
+      bossAtk: [[1, 1], [15, 1.05], [30, 1.05], [50, 1.08], [70, 1.1], [100, 1.1]],
+    },
     defPerLevel: 0,
     elite: { hp: 3, atk: 1.3, chance: 0.06, fromWave: 3 },
     boss: { hp: 40, atk: 1.6 },
     fieldBoss: { hp: 12, atk: 1.5 },
     rewards: {
       // EXP per kill by level (piecewise), gold per kill: v3 curve ≤ 30 then polynomial
-      exp: [[1, 11], [30, 12], [45, 18.5], [75, 24], [100, 26]],
+      exp: [[1, 11], [30, 12], [45, 22], [75, 29], [100, 31]],   // v13: 몬스터가 단단해진 만큼 Lv 45+ 처치 경험치 +20%
       goldBase: 2.4, goldGrowth: 1.1, goldLateExp: 2.2,
       eliteMul: 3, oreChanceElite: 0.6,
       awakenFromLevel: 51, awakenChanceElite: 0.25,

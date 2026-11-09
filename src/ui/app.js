@@ -558,7 +558,7 @@ export class App {
     const bossId = region.boss;
     const can = this.game.canChallengeBoss(bossId);
     E.bossBtn.disabled = m !== 'FARM';
-    E.bossBtn.textContent = m === 'BOSS' || m === 'DUNGEON' || m === 'PROMOTION_TRIAL' ? '전투 중' : DF.track(s).bossCleared[bossId] ? '보스 재도전' : can.ok ? '보스 도전!' : `보스 · ${stageLabel(region.id, 10)} 필요`;
+    E.bossBtn.textContent = m === 'BOSS' || m === 'DUNGEON' || m === 'PROMOTION_TRIAL' ? '전투 중' : DF.track(s).bossCleared[bossId] ? (can.ok ? `보스 재도전 ${can.left}/3` : '보스 · 오늘 3회 완료') : can.ok ? '보스 도전!' : `보스 · ${stageLabel(region.id, 10)} 필요`;
     E.bossBtn.classList.toggle('hot', can.ok && !DF.track(s).bossCleared[bossId]);
     E.speedBtn.textContent = s.settings.speed === 2 ? '×2' : '×1';
     E.autoBadge.textContent = m === 'DEFEAT' ? '재정비 중' : m === 'BOSS' ? '보스전' : m === 'DUNGEON' ? '던전' : m === 'PROMOTION_TRIAL' ? '시련' : `자동 전투 · ×${s.settings.speed}`;

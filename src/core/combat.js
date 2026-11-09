@@ -16,7 +16,7 @@ const M = BALANCE.monster;
 const TICK = C.tickMs;
 
 export const HERO_X = 92;
-export const SLOT_X = [204, 300];
+export const SLOT_X = [204, 250, 296, 342];
 export const SPAWN_X = 440;
 const WALK = 150 / 1000;
 
@@ -30,9 +30,20 @@ function atkAt(level) {
   if (level <= L) return M.atkBase * Math.pow(M.atkGrowth, level);
   return M.atkBase * Math.pow(M.atkGrowth, L) * Math.pow(level / L, M.late.atkExp);
 }
+// v13 난이도 곡선: 레벨이 오를수록 몬스터 체력·공격에 곱하는 배율 (구간 선형 보간)
+function curveMul(pts, level) {
+  if (!pts || !pts.length) return 1;
+  if (level <= pts[0][0]) return pts[0][1];
+  for (let i = 1; i < pts.length; i++) {
+    const [l1, m1] = pts[i];
+    if (level <= l1) { const [l0, m0] = pts[i - 1]; return m0 + (m1 - m0) * ((level - l0) / (l1 - l0)); }
+  }
+  return pts[pts.length - 1][1];
+}
 export function monsterStats(level, { elite = false, boss = false, fieldBoss = false } = {}) {
-  let hp = hpAt(level);
-  let atk = atkAt(level);
+  const S = M.scale || {};
+  let hp = hpAt(level) * curveMul(S.hp, level) * (boss ? curveMul(S.bossHp, level) : 1);
+  let atk = atkAt(level) * curveMul(S.atk, level) * (boss ? curveMul(S.bossAtk, level) : 1);
   if (elite) { hp *= M.elite.hp; atk *= M.elite.atk; }
   if (fieldBoss) { hp *= M.fieldBoss.hp; atk *= M.fieldBoss.atk; }
   if (boss) { hp *= M.boss.hp; atk *= M.boss.atk; }
@@ -106,6 +117,7 @@ export class Battle {
     if (o.kind === 'world') {   // 월드 보스: score fight, boss HP × hpMul at the hero's level
       const e = this.addEnemy(BOSSES[o.world.boss], o.world.level, { boss: true });
       e.maxHp = e.hp = Math.floor(e.hp * o.world.hpMul);
+      if (o.world.atkMul) e.atk = Math.floor(e.atk * o.world.atkMul);
       e.world = true;
       this.worldHp = e.maxHp;
     }
@@ -657,15 +669,14 @@ export class Battle {
     const t = this.t;
     const front = this.front();
     for (const e of this.alive()) {
-      if (e.state === 'approach') continue;
-      if (e !== front) continue;
+      if (e.state === 'approach') continue;   // v13: 붙은 적은 모두 공격 (맨 앞 외에는 sideAtkMul)
       if (e.stunUntil > t) { if (e.pending) e.pending.impactAt += TICK; continue; }
       if (e.pending) {
         if (t >= e.pending.impactAt) {
           const p = e.pending;
           e.pending = null;
           e.state = 'attack'; e.stateAt = t;
-          this.enemyHits(e, p.mult, p.heavy);
+          this.enemyHits(e, p.mult * (e === this.front() || e.boss ? 1 : C.sideAtkMul), p.heavy);
           let interval = C.enemyAttackIntervalSec * 1000;
           if (e.enraged) interval *= C.enrage.intervalMul;
           if (this.curse === 'c_haste') interval *= 0.75;

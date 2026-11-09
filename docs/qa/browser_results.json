@@ -1,5 +1,5 @@
 {
- "startedAt": "2026-11-09T09:37:25.345Z",
+ "startedAt": "2026-11-09T10:03:16.871Z",
  "base": "http://localhost:8411/",
  "viewports": [
   [
@@ -1041,8 +1041,8 @@
    "tiny": [
     "3",
     "희귀",
-    "일반",
-    "영웅"
+    "전설",
+    "일반"
    ],
    "errors": []
   },
@@ -2314,9 +2314,9 @@
    ],
    "tiny": [
     "3",
-    "영웅",
-    "희귀",
-    "일반"
+    "일반",
+    "전설",
+    "희귀"
    ],
    "errors": []
   },
@@ -3582,8 +3582,7 @@
    "tiny": [
     "3",
     "일반",
-    "희귀",
-    "영웅"
+    "희귀"
    ],
    "errors": []
   },
@@ -3899,8 +3898,8 @@
    "name": "reload keeps the same pending claim",
    "pass": true,
    "detail": {
-    "first": "claim_mw92kaxx_sqfakd",
-    "after": "claim_mw92kaxx_sqfakd"
+    "first": "claim_mw93hmd9_gqewls",
+    "after": "claim_mw93hmd9_gqewls"
    }
   },
   {
@@ -3979,10 +3978,10 @@
    "name": "hidden → visible does not replay ticks",
    "pass": true,
    "detail": {
-    "k0": 2,
+    "k0": 1,
     "k1": {
-     "kills": 2,
-     "acc": 49.999999999999886,
+     "kills": 1,
+     "acc": 49.90000000000009,
      "mode": "FARM"
     }
    }
@@ -4077,7 +4076,7 @@
   }
  ],
  "errors": [],
- "finishedAt": "2026-11-09T09:40:04.519Z",
+ "finishedAt": "2026-11-09T10:06:04.092Z",
  "summary": {
   "screenChecks": 141,
   "screenPass": 141,

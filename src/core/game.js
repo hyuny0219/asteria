@@ -39,6 +39,7 @@ import * as gear from './gearplus.js';
 import * as worldboss from './worldboss.js';
 import * as craft from './crafting.js';
 import * as mail from './mail.js';
+import * as BD from './bossdaily.js';
 import { PASS } from '../data/meta.js';
 import { deepClone, makeRng, uid } from './util.js';
 
@@ -517,7 +518,8 @@ export class Game {
     const t = DF.track(s);
     if (!prog.regionUnlocked(s, b.region)) return { ok: false, reason: 'region' };
     if ((t.maxWave[b.region] || 1) < 10) return { ok: false, reason: 'wave', need: 10, have: t.maxWave[b.region] || 1 };
-    return { ok: true };
+    if (BD.isRepeat(s, bossId) && BD.left(s, this.now()) <= 0) return { ok: false, reason: 'bossDaily' };
+    return { ok: true, repeat: BD.isRepeat(s, bossId), left: BD.left(s, this.now()) };
   }
   startBoss(bossId) {
     const c = this.canChallengeBoss(bossId);
@@ -610,6 +612,11 @@ export class Game {
         meta.addPassXp(s, PASS.xp.boss, this.now());
         const b = BOSSES[sess.bossId];
         const d = sess.diff || 'easy';
+        // 반복 처치는 하루 3회만 보상 (첫 처치는 횟수 없음)
+        if (BD.isRepeat(s, sess.bossId, d)) {
+          if (!BD.consume(s, this.now())) { res.noReward = true; return res; }
+          res.dailyLeft = BD.left(s, this.now());
+        }
         const dm = DF.rewardMul(d);
         const rw = killRewards(DF.bossLevel(d, sess.bossId), { boss: true });
         rw.gold = Math.floor(rw.gold * dm.gold); rw.exp = Math.floor(rw.exp * dm.exp);

@@ -14,7 +14,7 @@ const out = (process.env.SHOTS || 'docs/qa/screens') + '/';
   const tx = (fn) => p.evaluate(async (src) => { const g = __asteria.game; const f = new Function('s', 'DF', 'REGIONS', src); const DF = await import('./src/core/difficulty.js'); const { REGIONS } = await import('./src/data/content.js');
     for (let i = 0; i < 60; i++) { const r = await g.transact('qa', (s) => { f(s, DF, REGIONS); return { ok: true }; }); if (r.ok) return true; await new Promise((x) => setTimeout(x, 60)); } return false; }, fn);
   // Lv 100, 이지 all regions open, 9 bosses down, 심연 10 reached (10-보스 not yet)
-  await tx(`s.player.level = 100; s.player.statsUpgrades.atk = 6000; s.player.statsUpgrades.hp = 4000; s.progression.unlockedRegions = REGIONS.map((r) => r.id);
+  await tx(`s.player.level = 100; s.player.statsUpgrades.atk = 20000; s.player.statsUpgrades.hp = 14000; s.progression.unlockedRegions = REGIONS.map((r) => r.id);
     for (const r of REGIONS) { s.progression.maxWave[r.id] = 10; s.stages.stars[r.id + '-10'] = 1; s.stages.claimed[r.id + '-10'] = true; if (r.boss !== 'B10') s.progression.bossCleared[r.boss] = true; }
     s.progression.region = 'void'; s.progression.wave = 7; s.progression.firsts.firstEquip = true;`);
   await p.evaluate(() => { __asteria.game.startFarm(); __asteria.app.setTab('stage'); }); await p.waitForTimeout(700);

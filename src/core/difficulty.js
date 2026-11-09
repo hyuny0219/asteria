@@ -65,7 +65,8 @@ export function enemyMul(d, regionId, n) {
   if (d === 'easy') return null;
   const D = DIFFICULTY[d];
   const i = stepIndex(regionId, n);
-  return { hp: D.hp.base * Math.pow(D.hp.growth, i), atk: D.atk.base * Math.pow(D.atk.growth, i) };
+  const bm = n === 'boss' && D.boss ? D.boss : { hp: 1, atk: 1 };
+  return { hp: D.hp.base * Math.pow(D.hp.growth, i) * bm.hp, atk: D.atk.base * Math.pow(D.atk.growth, i) * bm.atk };
 }
 export const farmLevel = (d, regionId, wave) => (d === 'easy' ? waveLevel(regionId, wave) : DIFFICULTY[d].level);
 export const bossLevel = (d, bossId) => (d === 'easy' ? BOSSES[bossId].level : DIFFICULTY[d].level);

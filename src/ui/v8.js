@@ -1,4 +1,5 @@
 // v8 콘텐츠 UI: 쐐기 던전 (more systems are added below as they land).
+import * as DF from '../core/difficulty.js';
 import { CURRENCY_ICONS, RARITY } from '../data/content.js';
 import { itemIcon, skillIcon } from '../render/assets.js';
 import * as MP from '../core/mplus.js';
@@ -225,8 +226,9 @@ export function worldBossCard(app) {
     h('div', { class: 'kv' }, h('span', { class: 'card-title' }, ico(V8_EMBLEMS.worldboss), h('b', { style: { color: 'var(--text)' } }, `월드 보스 · ${boss.name}`)), h('b', null, c.ok ? '도전 가능' : '대기')),
     h('div', { class: 'kv' }, '시간대(매일)', h('b', null, '12시 · 18시 · 21시 (각 1시간, 1회)')),
     h('div', { class: 'kv' }, '상태', h('b', null, status)),
+    (() => { const sc = WBm.scaleFor(s); return h('div', { class: 'kv', dataset: { k: 'wbScale' } }, '세기', h('b', null, `Lv ${sc.level} · 체력 ×${sc.hp.toFixed(1)} · 공격 ×${sc.atk.toFixed(1)}${sc.from ? ` (${sc.from.d === 'easy' ? '' : DF.diffName(sc.from.d) + ' '}${BOSSES[sc.from.boss].name} 기준)` : ''}`)); })(),
     h('div', { class: 'kv' }, '최고 기록', h('b', null, s.worldBoss.best ? `${s.worldBoss.bestGrade} · 피해 ${fmt(s.worldBoss.best)}` : '없음')),
-    h('p', { class: 'muted', style: { margin: '2px 0 6px' } }, `${WBm.WB.timeSec}초 동안 준 피해로 등급(D~S). 보석·광석, B 이상 장비 뽑기권, A·S는 장비 확정. 보스는 요일마다 바뀌어요.`),
+    h('p', { class: 'muted', style: { margin: '2px 0 6px' } }, `${WBm.WB.timeSec}초 동안 준 피해로 등급(D~S). 세기는 지금까지 잡은 가장 어려운 보스를 따라가요. 보석·광석, B 이상 장비 뽑기권, A·S는 장비 확정. 보스는 요일마다 바뀌어요.`),
     button(c.ok ? '월드 보스 도전' : c.reason === 'used' ? '다음 시간대에 도전' : '시간대가 아니에요', { cls: 'btn btn-primary', disabled: !c.ok || app.game.mode !== 'FARM', busy: true, onClick: async () => fail(await app.game.startWorldBoss()) }));
 }
 

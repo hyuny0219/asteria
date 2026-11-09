@@ -74,6 +74,7 @@ export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0, cls = 'wa
     missions: { day: null, progress: {}, claimed: {}, bonus: false },
     tower: { best: 0 },
     raid: { week: null, tries: 0, best: 0, bestGrade: null },
+    bossDaily: { day: null, used: 0 },   // 지역 보스 반복 처치 하루 3회 (bossdaily.js)
     dungeons: {
       gold: { tickets: BALANCE.dungeon.dailyTickets, lastDay: kstDayIndex(now), best: 0, pendingRun: null, clockWarnings: 0 },
       books: { tickets: BALANCE.dungeon.dailyTickets, lastDay: kstDayIndex(now), best: 0, pendingRun: null, clockWarnings: 0 },

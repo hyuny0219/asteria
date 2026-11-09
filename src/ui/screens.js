@@ -12,6 +12,7 @@ import * as V10 from './v10.js';
 import * as V12 from './v12.js';
 import * as WBM from '../core/worldboss.js';
 import * as G from '../core/gearplus.js';
+import * as BD from '../core/bossdaily.js';
 import * as MAILUI from './mail.js';
 import { jewelName, socketCount } from '../core/crafting.js';
 import { MONSTERS } from '../data/content.js';
@@ -46,6 +47,7 @@ const STAT_INFO = {
   speed: { name: '공격 속도', fmt: (s) => s.aspd.toFixed(2) + '/초' },
 };
 const reasonText = {
+  bossDaily: '오늘 보스 반복 처치 3회를 다 썼어요 (자정에 초기화)',
   'item-cap': '내 레벨까지 올렸어요',
   'no-legend': '고유 효과가 없습니다', 'same': '이미 같은 상태입니다', rarity: '전설·신화 장비에만 이식할 수 있습니다', awaken: '각성 정보가 없습니다', 'awaken-level': '스킬 Lv 10부터 각성할 수 있습니다', loadout: '저장된 프리셋이 없습니다', option: '바꿀 수 있는 옵션이 아닙니다', 'max-rarity': '이미 최고 등급입니다', materials: '같은 부위·같은 등급 장비 2개를 골라 주세요', starShard: '별의 파편이 부족합니다', awakenStone: '각성석이 부족합니다',
   expired: '보관 기간이 지난 우편입니다', 'coupon-unknown': '없는 쿠폰 번호입니다', 'coupon-expired': '사용 기간이 끝난 쿠폰입니다', 'coupon-used': '이미 사용한 쿠폰입니다', 'coupon-empty': '쿠폰 번호를 입력해 주세요',
@@ -722,9 +724,10 @@ export function openBoss(app, bossId = null) {
       h('div', { class: 'kv' }, first ? '최초 처치 보상' : '반복 처치 보상', h('b', null, first ? firstTxt : d !== 'easy' ? '희귀 장비 1개 + 희귀~전설 1개' : '고급/희귀 장비 1개')),
       first && nextR ? h('div', { class: 'kv' }, '다음 지역', h('b', null, pre + nextR.name + ' 개방')) : null,
       first && !nextR && nextD && !DF.diffOpen(s, nextD) ? h('div', { class: 'kv' }, '다음 난이도', h('b', { class: 'd-' + nextD }, `${DF.diffName(nextD)} 난이도 개방`)) : null,
-      h('p', { class: 'muted', style: { margin: '6px 0 0' } }, '실패해도 골드·장비 손실은 없고 직전 사냥 위치로 돌아갑니다.'))),
+      first ? null : h('div', { class: 'kv', dataset: { k: 'bossDaily' } }, '오늘 반복 처치', h('b', null, `${BD.left(s, Date.now())}/${BD.BOSS_DAILY}회 남음`)),
+      h('p', { class: 'muted', style: { margin: '6px 0 0' } }, first ? '처음 잡는 보스는 횟수 제한 없이 도전할 수 있어요. 실패해도 골드·장비 손실은 없고 직전 사냥 위치로 돌아갑니다.' : '이미 잡은 보스는 모든 보스를 합쳐 하루 3회까지 보상을 받아요(이겼을 때만 차감, 자정 초기화). 실패하면 횟수는 그대로예요.'))),
     actions: [
-      button(can.ok ? '무료 도전' : can.reason === 'wave' ? `웨이브 10 도달 필요 (현재 ${can.have}/10)` : why(can), { cls: 'btn btn-primary', disabled: !can.ok || app.game.mode !== 'FARM', onClick: () => {
+      button(can.ok ? (first ? '무료 도전' : `반복 도전 · 오늘 ${can.left}/${BD.BOSS_DAILY}`) : can.reason === 'wave' ? `웨이브 10 도달 필요 (현재 ${can.have}/10)` : why(can), { cls: 'btn btn-primary', disabled: !can.ok || app.game.mode !== 'FARM', onClick: () => {
         const r = app.game.startBoss(bossId);
         if (!r.ok) return fail(r);
         m.close();
@@ -753,7 +756,7 @@ export function openResult(app, r) {
   };
   if (r.kind === 'boss' && r.win) {
     const b = BOSSES[r.bossId];
-    const tiles = [{ icon: itemIcon(CURRENCY_ICONS.gold), value: '+' + fmt(r.gold), label: '골드' }, { icon: itemIcon(CURRENCY_ICONS.exp), value: '+' + fmt(r.exp), label: r.expRes && r.expRes.toPending ? '경험치(보관)' : '경험치' }];
+    const tiles = r.noReward ? [] : [{ icon: itemIcon(CURRENCY_ICONS.gold), value: '+' + fmt(r.gold), label: '골드' }, { icon: itemIcon(CURRENCY_ICONS.exp), value: '+' + fmt(r.exp), label: r.expRes && r.expRes.toPending ? '경험치(보관)' : '경험치' }];
     if (r.ore) tiles.push({ icon: itemIcon(CURRENCY_ICONS.ore), value: '+' + r.ore, label: '강화 광석' });
     if (r.gem) tiles.push({ icon: itemIcon(CURRENCY_ICONS.gem), value: '+' + r.gem, label: '보석' });
     if (r.starShard) tiles.push({ icon: itemIcon(CURRENCY_ICONS.starShard), value: '+' + r.starShard, label: '별의 파편' });
@@ -766,6 +769,7 @@ export function openResult(app, r) {
     actions.push(button(r.unlocked || r.diffUnlocked ? '현재 지역에서 계속' : '파밍으로 돌아가기', { cls: 'btn' + (r.unlocked || r.diffUnlocked ? '' : ' btn-primary'), onClick: () => { m.close(); back(); } }));
     const m = openModal({ id: 'victory', title: r.diffUnlocked ? `${DF.diffName(r.diffUnlocked)} 난이도 개방` : r.first ? `${DF.prefix(r.diff || 'easy')}지역 돌파` : '보스 처치', dismissible: false, body: h('div', { dataset: { screen: 'victory' }, class: 'reveal' },
       h('p', null, `${DF.prefix(r.diff || 'easy')}${b.name} 처치 · ${r.timeSec}초`), rewardTiles(tiles),
+      r.noReward ? h('p', { class: 'warn' }, '오늘 반복 처치 3회를 이미 다 써서 보상이 없어요.') : r.dailyLeft !== undefined ? h('p', { class: 'muted', dataset: { k: 'bossDailyLeft' } }, `오늘 반복 처치 ${r.dailyLeft}/3회 남음`) : null,
       r.diffUnlocked ? h('p', { class: 'okc' }, `${DF.diffName(r.diffUnlocked)} 난이도가 열렸어요. 1-1부터 더 강한 적과 더 좋은 보상이 기다려요. 스테이지 탭 위 난이도 칩으로 언제든 바꿀 수 있어요.`) : null,
       r.overflowed && r.overflowed.length ? h('p', { class: 'warn' }, `보관함이 가득 차 ${r.overflowed.length}개는 임시 보관함에 들어갔습니다.`) : null,
       r.unlocked ? h('p', { class: 'okc' }, `새 지역 개방: ${REGION_BY_ID[r.unlocked].name}`) : null,

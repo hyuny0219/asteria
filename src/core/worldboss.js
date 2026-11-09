@@ -1,8 +1,10 @@
 // 월드 보스 (정해진 시간대 점수제) + 희귀 정예 (사냥터 이름 붙은 정예).
 //
 // 월드 보스: KST 12시·18시·21시에 1시간씩 열리고, 창마다 1번 도전. 60초 동안 준 피해로
-// 등급(D~S)을 매깁니다. 보스는 요일마다 바뀌고(기존 보스 그림), 레벨 = 영웅 레벨. 체력은
-// 보스전 보스의 WB.hpMul배라 사실상 점수제이고, 쓰러뜨리면 바로 S 등급입니다.
+// 등급(D~S)을 매깁니다. 보스는 요일마다 바뀌고(기존 보스 그림).
+// 세기 = '지금까지 잡은 가장 어려운 보스'(난이도 포함) 기준: 그 보스의 레벨·노말/하드 배율에
+// 체력 ×WB.hpMul, 공격 ×WB.atkMul. 영웅 레벨이 더 높으면 영웅 레벨. (예전엔 영웅 레벨만 따라가서
+// 장비가 앞서 나간 영웅에게는 너무 쉬웠음.) 쓰러뜨리면 바로 S 등급입니다.
 // 희귀 정예: 화면을 켜고 사냥하다 스테이지를 깰 때 rareChance 확률로 그 지역의 이름 붙은
 // 희귀 정예 1마리가 나타납니다(동시에 1마리, 방치 정산에는 없음). 처치하면 보석과 희귀
 // 이상 장비 확정, 도감 "희귀 정예" 칸이 채워지고 10종을 모두 잡으면 칭호.
@@ -11,9 +13,10 @@ import { kstDayIndex } from './util.js';
 import { markTx } from './state.js';
 import { makeItem, rollRarity, rollSlot } from './items.js';
 import { rollJewel } from './crafting.js';
+import * as DF from './difficulty.js';
 
 export const WB = Object.freeze({
-  unlockBoss: 'B03', hours: [12, 18, 21], windowMin: 60, timeSec: 60, hpMul: 9,
+  unlockBoss: 'B03', hours: [12, 18, 21], windowMin: 60, timeSec: 60, hpMul: 3, atkMul: 1,
   rotation: ['B04', 'B05', 'B06', 'B07', 'B08', 'B09', 'B03'],
   // grade thresholds as a share of the world boss HP
   grades: [['S', 0.7], ['A', 0.45], ['B', 0.28], ['C', 0.14], ['D', 0]],
@@ -64,9 +67,26 @@ export function beginWorldBoss(state, runId, now) {
   state.worldBoss.tries += 1;
   return { ok: true, window: c.window, bossId: worldBossId(now) };
 }
+// 보상 장비 레벨 (영웅 레벨 기준 그대로)
 export const bossLevel = (state) => Math.max(30, Math.min(100, state.player.level));
+// 가장 어려운 처치 기록: 하드 → 노말 → 이지 순으로, 그 난이도에서 가장 뒤 지역 보스.
+export function frontier(state) {
+  for (const d of [...DF.DIFF_IDS].reverse()) {
+    const t = DF.track(state, d);
+    const r = [...REGIONS].reverse().find((x) => t.bossCleared[x.boss]);
+    if (r) return { d, region: r.id, boss: r.boss };
+  }
+  return null;
+}
+export function scaleFor(state) {
+  const f = frontier(state);
+  const lv = Math.max(30, Math.min(100, Math.max(state.player.level, f ? DF.bossLevel(f.d, f.boss) : 0)));
+  const em = f ? DF.enemyMul(f.d, f.region, 'boss') : null;
+  return { level: lv, hp: WB.hpMul * (em ? em.hp : 1), atk: WB.atkMul * (em ? em.atk : 1), from: f };
+}
 export function battleConfig(state, now) {
-  return { boss: worldBossId(now), level: bossLevel(state), hpMul: WB.hpMul, timeSec: WB.timeSec };
+  const sc = scaleFor(state);
+  return { boss: worldBossId(now), level: sc.level, hpMul: sc.hp, atkMul: sc.atk, timeSec: WB.timeSec, from: sc.from };
 }
 export function gradeFor(share) { return WB.grades.find(([, t]) => share >= t)[0]; }
 
