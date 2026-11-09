@@ -1,5 +1,6 @@
 // App shell: layout (spec 08 table), per-frame updates, and mode → screen routing.
 import { BALANCE, expToNext } from '../data/balance.js';
+import * as EVO from './evo.js';
 import { BOSSES, CLASSES, CURRENCY_ICONS, RARITY, REGION_BY_ID, SKILLS } from '../data/content.js';
 import { BattleRenderer } from '../render/battle.js';
 import { itemIcon, portrait, classPortrait, preloadFor, skillIcon } from '../render/assets.js';
@@ -463,25 +464,25 @@ export class App {
       const id = s.skills.equipped[i];
       if (i >= slots) { bar.appendChild(h('button', { type: 'button', class: 'skill locked', 'aria-label': i === 5 ? '초월 해금 슬롯' : '승급 해금 슬롯', onClick: () => S.go(this, 'quest') }, i === 5 ? '초월' : '승급', h('br'), '해금')); continue; }
       if (!id) { bar.appendChild(h('button', { type: 'button', class: 'skill empty', 'aria-label': '빈 슬롯 - 스킬 편성', onClick: () => this.setTab('skills') }, '+')); continue; }
-      const sk = SKILLS[id];
+      const sk = EVO.sv(s, id);
       const cd = h('span', { class: 'cd', style: { height: '0%' } });
       const cdt = h('span', { class: 'cdt' });
-      const b = h('button', { type: 'button', class: `skill sg-${(s.skills.grades && s.skills.grades[id]) || 'common'}${((s.skills.grades && s.skills.grades[id]) || 'common') === 'common' ? '' : ' sgb'}`, 'aria-label': `${sk.name}${sk.kind === 'passive-counter' ? ' (자동 반응)' : ''}`, onClick: () => this.castSkill(id) }, img(skillIcon(sk.icon), ''), cd, cdt);
+      const b = h('button', { type: 'button', class: `skill sg-${(s.skills.grades && s.skills.grades[id]) || 'common'}${((s.skills.grades && s.skills.grades[id]) || 'common') === 'common' ? '' : ' sgb'}${sk.evoTier ? ' evo' : ''}`, style: sk.tint ? `--evo:${sk.tint}` : '', 'aria-label': `${sk.name}${sk.kind === 'passive-counter' ? ' (자동 반응)' : ''}`, onClick: () => this.castSkill(id) }, EVO.evoIcon(s, id), cd, cdt);
       bar.appendChild(b);
       this.skillEls.push({ id, cd, cdt, b });
     }
     bar.appendChild(h('span', { class: 'skill-divider', 'aria-hidden': 'true' }));
     const gauge = h('i', { style: { width: '0%' } });
     const ultId = prog.ultId(s);
-    const ultSk = SKILLS[ultId];
-    const ult = h('button', { type: 'button', class: `skill ult sg-${(s.skills.grades && s.skills.grades[ultId]) || 'common'}${((s.skills.grades && s.skills.grades[ultId]) || 'common') === 'common' ? '' : ' sgb'}`, 'aria-label': `궁극기 ${ultSk.name}`, onClick: () => this.castSkill(ultId) }, img(skillIcon(ultSk.icon), ''), h('span', { class: 'gauge' }, gauge));
+    const ultSk = EVO.sv(s, ultId);
+    const ult = h('button', { type: 'button', class: `skill ult sg-${(s.skills.grades && s.skills.grades[ultId]) || 'common'}${((s.skills.grades && s.skills.grades[ultId]) || 'common') === 'common' ? '' : ' sgb'}${ultSk.evoTier ? ' evo' : ''}`, style: ultSk.tint ? `--evo:${ultSk.tint}` : '', 'aria-label': `궁극기 ${ultSk.name}`, onClick: () => this.castSkill(ultId) }, EVO.evoIcon(s, ultId), h('span', { class: 'gauge' }, gauge));
     this.ultName = ultSk.name;
     bar.appendChild(ult);
     this.ultEl = { b: ult, gauge };
   }
   castSkill(id) {
     const g = this.game;
-    const sk = SKILLS[id];
+    const sk = EVO.sv(this.state, id);
     if (sk.kind === 'passive-counter') { toast('수호 반격은 방패 돌진의 방어 시간 중 피해를 받으면 자동으로 발동합니다.', 'info', 3200); return; }
     if (!['FARM', 'BOSS', 'DUNGEON', 'PROMOTION_TRIAL'].includes(g.mode)) return;
     const b = g.active;
@@ -523,7 +524,7 @@ export class App {
     if (b && this.skillEls) {
       for (const e of this.skillEls) {
         const left = Math.max(0, (b.hero.cds[e.id] || 0) - b.t);
-        const total = (SKILLS[e.id].cd || 1) * 1000;
+        const total = (EVO.sv(s, e.id).cd || 1) * 1000;
         e.cd.style.height = (left > 0 ? (left / total) * 100 : 0) + '%';
         e.cdt.textContent = left > 0 ? Math.ceil(left / 1000) : '';
       }

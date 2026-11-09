@@ -156,10 +156,10 @@ export class BattleRenderer {
       const x = this.ex(ev.x ?? 260) * this.sx;
       this.pushFx({ kind: 'ring', x, y: this.groundY, r0: 4 * this.u, r1: 34 * this.u, col: '#8FD3FF', w: 2, flat: 0.32, born: this.clock, dur: 360 });
     } else if (ev.type === 'skillStart') {
-      const sk = SKILLS[ev.skill];
-      if (sk) this.toast = { text: sk.name, born: now, ult: false };
+      const sk = battle && typeof battle.skill === 'function' ? battle.skill(ev.skill) : SKILLS[ev.skill];   // v16 진화 이름·색
+      if (sk) this.toast = { text: sk.name, born: now, ult: false, tint: sk.tint || null };
       const P = this.pal();
-      this.pushFx({ kind: 'sigil', x: HERO_X * this.sx, y: this.groundY, r: 34 * this.u, col: P.main, born: this.clock, dur: 520 });
+      this.pushFx({ kind: 'sigil', x: HERO_X * this.sx, y: this.groundY, r: 34 * this.u, col: (sk && sk.tint) || P.main, born: this.clock, dur: 520 });
       this.parts.burst(this.clock, HERO_X * this.sx, this.groundY - 30 * this.u, 8, 50, 520, 2, P.hot, PK.DOT, -90, Math.PI, -Math.PI / 2);
       return 'cast';
     } else if (ev.type === 'ultStart') {
@@ -436,12 +436,12 @@ export class BattleRenderer {
 
   // ---------- ultimate ----------
   startUlt(ev, battle, s, now) {
-    const sk = SKILLS[ev.skill];
+    const sk = battle && typeof battle.skill === 'function' ? battle.skill(ev.skill) : SKILLS[ev.skill];
     const name = sk ? sk.name : '궁극기';
     const simple = !!s.reduceMotion;
     this.cut = { t0: ev.t, name, born: now, skipped: false, simple, impact: false, cls: this.heroCls };
     this.ultHits = 0;
-    if (simple) { this.toast = { text: name, born: now, ult: true }; return; }
+    if (simple) { this.toast = { text: name, born: now, ult: true, tint: (sk && sk.tint) || null }; return; }
     const sp = s.speed === 2 ? 2 : 1;
     const u = this.u, gy = this.groundY, hx = HERO_X * this.sx;
     const c = this.clock;
@@ -1564,8 +1564,8 @@ export class BattleRenderer {
     const w = ctx.measureText(t.text).width + 28, h = t.ult ? 28 : 24, x = Math.max(w / 2 + 6, HERO_X * this.sx);
     ctx.fillStyle = 'rgba(16,13,24,0.82)';
     ctx.beginPath(); ctx.moveTo(x - w / 2 + 8, y - h / 2); ctx.lineTo(x + w / 2, y - h / 2); ctx.lineTo(x + w / 2 - 8, y + h / 2); ctx.lineTo(x - w / 2, y + h / 2); ctx.closePath(); ctx.fill();
-    ctx.strokeStyle = t.ult ? '#EDBD68' : 'rgba(237,189,104,0.6)'; ctx.lineWidth = 1.2; ctx.stroke();
-    this.text(t.text, x, y + 5, t.ult ? 16 : 14, t.ult ? '#FFE6A8' : '#F5EDF0', 'center', 800);
+    ctx.strokeStyle = t.tint || (t.ult ? '#EDBD68' : 'rgba(237,189,104,0.6)'); ctx.lineWidth = t.tint ? 1.6 : 1.2; ctx.stroke();
+    this.text(t.text, x, y + 5, t.ult ? 16 : 14, t.tint || (t.ult ? '#FFE6A8' : '#F5EDF0'), 'center', 800);
     ctx.restore();
   }
 

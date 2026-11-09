@@ -841,3 +841,31 @@ img.sg-up-ico { width: 16px !important; height: 16px !important; margin: 0 4px 0
 .promo-stage.ascend.anim img { animation: ascendRise 1.6s ease-out both; }
 @keyframes ascendRise { 0% { filter: brightness(2.2) drop-shadow(0 0 24px #fff3c8); transform: scale(.96); } 60% { filter: brightness(1.3) drop-shadow(0 0 16px #ffe2a0); } 100% { filter: drop-shadow(0 0 10px rgba(255,226,160,.7)); transform: none; } }
 @media (prefers-reduced-motion: reduce) { .promo-stage.ascend.anim img { animation: none; } }
+
+/* v16 전직별 스킬 진화 */
+.evo-ic { position: relative; display: inline-block; line-height: 0; border-radius: 10px; box-shadow: 0 0 0 2px var(--evo, #EDBD68), 0 0 8px -1px var(--evo, #EDBD68); }
+.evo-ic > img { border-radius: 9px; }
+.evo-ic.evo-t1 { box-shadow: 0 0 0 1.5px var(--evo); }
+.evo-ic.evo-t3, .evo-ic.evo-t4 { box-shadow: 0 0 0 2px var(--evo), 0 0 12px 0 var(--evo); }
+.evo-ic.evo-t4 > img { filter: saturate(1.25) brightness(1.08); }
+.evo-mark { position: absolute; right: -4px; bottom: -4px; min-width: 15px; height: 15px; padding: 0 2px; border-radius: 8px; background: #16121f; color: var(--evo); border: 1px solid var(--evo); font: 800 9px/13px "Noto Sans KR", sans-serif; font-style: normal; text-align: center; }
+.skill.evo > .evo-ic { box-shadow: none; }
+.skill.evo { box-shadow: inset 0 0 0 2px var(--evo); }
+.evo-detail-ic { display: flex; justify-content: center; }
+.evo-detail-ic .evo-ic { border-radius: 16px; }
+.evo-stages { display: grid; gap: 6px; margin: 4px 0 8px; }
+.evo-stage { display: grid; gap: 2px; padding: 7px 9px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); }
+.evo-stage b { color: var(--evo, var(--text)); font-size: 13px; }
+.evo-stage.past { opacity: 0.6; }
+.evo-stage.cur { border-color: var(--evo, #EDBD68); background: color-mix(in srgb, var(--evo, #EDBD68) 12%, transparent); }
+.evo-stage.next b { color: var(--muted); }
+.evo-card-list .evo-line { display: grid; grid-template-columns: 44px 1fr auto; gap: 10px; align-items: center; padding: 6px 0; border-top: 1px solid rgba(255,255,255,0.06); }
+.evo-card-list .evo-line img { width: 40px; height: 40px; }
+.evo-card-list .evo-line b { color: var(--evo, var(--text)); }
+.evo-cards { margin-top: 10px; text-align: left; }
+.evo-card { display: grid; grid-template-columns: 40px 1fr; gap: 10px; align-items: center; padding: 8px 10px; margin-top: 6px; border-radius: 10px; border: 1px solid var(--evo); background: color-mix(in srgb, var(--evo) 10%, #16121f); animation: evoIn 420ms ease-out both; animation-delay: calc(var(--i, 0) * 140ms + 900ms); }
+.evo-card-ic { width: 40px; height: 40px; border-radius: 8px; box-shadow: 0 0 0 2px var(--evo); }
+.evo-names b { color: var(--evo); }
+@keyframes evoIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .evo-card { animation: none; } }
+.reduce-motion .evo-card { animation: none; }

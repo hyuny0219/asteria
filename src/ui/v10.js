@@ -1,4 +1,5 @@
 // v10 UI: 전설 고유 효과(표시·추출·이식·수집), 재련, 등급 올리기, 스킬 각성, 장비·스킬 프리셋.
+import * as EVO from './evo.js';
 import { AWAKEN, AWAKENINGS, EXTRACT, LOADOUT_KINDS, MYTHIC_MUL, RARITY_UP, UNIQUES } from '../data/gearplus.js';
 import { CLASSES, OPTION_NAMES, RARITY, SKILLS, SLOT_NAMES } from '../data/content.js';
 import { BALANCE } from '../data/balance.js';
@@ -202,11 +203,11 @@ export function awakenCard(app) {
       const ok = lv >= AWAKEN.needLevel;
       return h('div', { class: 'awk-row' + (cur !== undefined && ok ? ' on' : ''), dataset: { key: 'awk-' + id } },
         h('span', { class: 'awk-ic' + (cur !== undefined && ok ? ' awk-' + (cur ? 'b' : 'a') : '') }, img(skillIcon(SKILLS[id].icon), '')),
-        h('div', { class: 'awk-body' }, h('div', { class: 't' }, `${SKILLS[id].name} · Lv ${lv}`),
+        h('div', { class: 'awk-body' }, h('div', { class: 't' }, `${EVO.skName(s, id)} · Lv ${lv}`),
           ok ? h('div', { class: 'awk-opts' }, AWAKENINGS[id].map((o, i) => h('button', { type: 'button', class: 'awk-opt', 'aria-pressed': String(cur === i), disabled: cur !== undefined && cur !== i && st.free <= 0 && s.wallet.gem < st.gem, dataset: { awk: `${id}:${i}` }, onClick: async () => {
             if (cur === i) return;
             const r = fail(await app.game.setAwaken(id, i));
-            if (r.ok) toast(`${SKILLS[id].name} 각성: ${o.name}${r.paid ? ` (보석 ${r.paid})` : ''}`, 'good');
+            if (r.ok) toast(`${EVO.skName(s, id)} 각성: ${o.name}${r.paid ? ` (보석 ${r.paid})` : ''}`, 'good');
           } }, h('b', null, img(skillIcon(i ? 'L11' : 'L10'), '', 'awk-em'), `${i ? 'B' : 'A'} · ${o.name}`), h('span', null, o.desc),
             cur !== undefined && cur !== i ? (st.free > 0 ? h('span', { class: 'awk-cost free' }, '오늘 무료 변경') : costChip('gem', st.gem, s.wallet.gem < st.gem)) : null)))
             : h('div', { class: 'muted small' }, `Lv ${AWAKEN.needLevel}에 각성 · ${AWAKENINGS[id].map((o, i) => `${i ? 'B' : 'A'} ${o.name}`).join(' / ')}`)));

@@ -465,6 +465,24 @@ export class Battle {
     return st.atk * mul;
   }
 
+  // v16 진화 폼 보조 효과 (버프·보호·회피 스킬에도 붙음). heal 은 피해 스킬 쪽에서 이미 처리.
+  evoUtility(sk, shieldKind = false) {
+    const h = this.hero;
+    if (!sk) return;
+    if (sk.kind && sk.kind !== 'damage' && sk.kind !== 'ultimate' && sk.heal) this.heal(h.maxHp * sk.heal);
+    if (sk.shieldPct && !shieldKind) h.shield = { amount: Math.max((h.shield && h.shield.until > this.t && h.shield.amount) || 0, Math.floor(h.maxHp * sk.shieldPct)), until: this.t + 6000 };
+    if (sk.critStacks) h.buffs.critStacks = { n: Math.max(sk.critStacks, (h.buffs.critStacks && h.buffs.critStacks.n) || 0), until: this.t + 8000 };
+    if (sk.kind !== 'damage' && sk.kind !== 'ultimate' && sk.guard) h.buffs.guard = { reduce: sk.guard.reduce, until: this.t + sk.guard.sec * 1000 };
+    if (sk.atkBuff) { const cur = h.buffs.atk; if (!cur || cur.until < this.t || cur.mul <= sk.atkBuff.mul) h.buffs.atk = { mul: sk.atkBuff.mul, until: this.t + sk.atkBuff.sec * 1000 }; }
+    if (sk.stunAll || sk.slowAll) {
+      for (const e of this.alive()) {
+        if (e.state === 'approach' && e.x >= 400) continue;
+        if (sk.stunAll) e.stunUntil = Math.max(e.stunUntil, this.t + sk.stunAll * (e.boss ? 400 : 1000));
+        if (sk.slowAll) { e.slowUntil = this.t + sk.slowAll.sec * 1000; e.slowMul = sk.slowAll.mul; }
+      }
+    }
+  }
+
   skillCoef(id) {
     const sk = this.skill(id);
     const lvl = this.heroCfg.skillLevel(id);
@@ -565,13 +583,14 @@ export class Battle {
     else {
       sk = this.skill(ac.skill);
       const md = this.modsFor(ac.skill);
-      if (sk.kind === 'buff') { h.buffs[sk.buff.stat] = { mul: sk.buff.mul + (md.buffMulAdd || 0), until: this.t + (sk.buff.sec + (md.buffSecAdd || 0)) * 1000 }; this.events.push({ type: 'buff', skill: ac.skill, t: this.t }); return; }
-      if (sk.kind === 'shield') { h.shield = { amount: Math.floor(h.maxHp * (sk.shield.pct + (md.shieldAdd || 0))), until: this.t + sk.shield.sec * 1000 }; if (md.heal) this.heal(h.maxHp * md.heal); this.events.push({ type: 'buff', skill: ac.skill, shield: true, t: this.t }); return; }
+      if (sk.kind === 'buff') { h.buffs[sk.buff.stat] = { mul: sk.buff.mul + (md.buffMulAdd || 0), until: this.t + (sk.buff.sec + (md.buffSecAdd || 0)) * 1000 }; this.evoUtility(sk); this.events.push({ type: 'buff', skill: ac.skill, t: this.t }); return; }
+      if (sk.kind === 'shield') { h.shield = { amount: Math.floor(h.maxHp * (sk.shield.pct + (md.shieldAdd || 0))), until: this.t + sk.shield.sec * 1000 }; if (md.heal) this.heal(h.maxHp * md.heal); this.evoUtility(sk, true); this.events.push({ type: 'buff', skill: ac.skill, shield: true, t: this.t }); return; }
       if (sk.kind === 'evade') {
         h.buffs.evade = { until: this.t + (sk.evade.sec + (md.evadeAdd || 0)) * 1000 };
         if (sk.evade.nextCrit) h.buffs.nextCrit = { until: this.t + 6000 };
         if (this.caps.cap_shadowCrit) h.buffs.critStacks = { n: 3, until: this.t + 8000 };
         if (md.critStacks) h.buffs.critStacks = { n: Math.max(md.critStacks, (h.buffs.critStacks && h.buffs.critStacks.n) || 0), until: this.t + 8000 };
+        this.evoUtility(sk);
         this.events.push({ type: 'buff', skill: ac.skill, evade: true, t: this.t });
         return;
       }
@@ -608,6 +627,7 @@ export class Battle {
       if (crit && this.gmods.critGauge) this.addGauge(this.gmods.critGauge);   // 집중
       const killed = this.dealDamage(e, dmg, { crit, action: ac.kind, skill: ac.skill || null, ranged });
       if (killed) kills++;
+      if (sk && sk.lifesteal) this.heal(dmg * sk.lifesteal);   // v16 진화 폼 흡혈
       if (synSkill) { SYN.postHit(this, e, synSkill, { first: synFirst }); synFirst = false; }
       if (st.combo && this.rng() < st.combo && e.state !== 'dying') {
         const d2 = Math.max(1, Math.floor(dmg * 0.5));
@@ -621,6 +641,11 @@ export class Battle {
       for (let i = 0; i < hits; i++) { const a = this.alive().filter((e) => e.state !== 'approach' || e.x < 400); if (!a.length) break; hitOne(a[i % a.length], coef, sk.critBonus || 0); }
     } else {
       for (let i = 0; i < hits; i++) for (const e of targets) hitOne(e, coef, (sk && sk.critBonus) || 0);
+      // v16 진화 폼 주변 피해: 맞힌 대상 말고 붙어 있는 다른 적에게 coef × splash
+      if (sk && sk.splash) {
+        const others = this.alive().filter((e) => !targets.includes(e) && (e.state !== 'approach' || e.x < 400));
+        for (let i = 0; i < hits; i++) for (const e of others) hitOne(e, coef * sk.splash, sk.critBonus || 0);
+      }
     }
     if (sk) {
       const md = this.modsFor(ac.skill);
@@ -637,6 +662,7 @@ export class Battle {
       }
       if (sk.heal) this.heal(h.maxHp * sk.heal);
       if (md.heal) this.heal(h.maxHp * md.heal);
+      if (sk.shieldPct || sk.critStacks) this.evoUtility({ shieldPct: sk.shieldPct, critStacks: sk.critStacks });
       if (md.castShield) h.shield = { amount: Math.max((h.shield && h.shield.amount) || 0, Math.floor(h.maxHp * md.castShield)), until: this.t + 4000 };
       // 쌍화염 · 쌍찌르기: the same skill again 300 ms later at × echo (front target, or all for area skills)
       if (md.echo && !h.echo) h.echo = { at: this.t + 300, coef: coef * md.echo, skill: ac.skill, single: sk.target !== 'all', critBonus: sk.critBonus || 0 };

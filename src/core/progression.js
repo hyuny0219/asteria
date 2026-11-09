@@ -6,6 +6,7 @@ import { BOSSES, BRANCHES, BRANCH_SKILL, BRANCH_SKILL2, CLASS_SKILLS, REGIONS, R
 import { killRewards } from './combat.js';
 import { applyAutoStats } from './economy.js';
 import { OATHS, OATH_BY_ID, OATH_CHANGE_GOLD_MIN } from '../data/oath.js';
+import { evolutionsFor } from './skillforms.js';
 
 const CAP = BALANCE.levelCap;
 const PROMO = BALANCE.promotion;
@@ -181,7 +182,9 @@ export function promote(state, tier, branch = null, now = Date.now()) {
   p.tier = tier;
   state.promotion.tierAt[tier] = now;
   const exp = releasePendingExp(state);
-  return { ok: true, tier, branch: p.branch, name: BRANCHES[p.branch].names[tier - 1], exp, oath: tier === 4 ? state.promotion.oath : undefined };
+  // v16: 이번 전직으로 진화한 스킬 (결과 창은 저장 확정 뒤에 이 목록으로 진화 카드를 보여줌)
+  const evolutions = evolutionsFor(p.cls || 'warrior', p.branch, tier - 1, tier);
+  return { ok: true, tier, branch: p.branch, name: BRANCHES[p.branch].names[tier - 1], exp, oath: tier === 4 ? state.promotion.oath : undefined, evolutions };
 }
 
 export function tierName(state) {

@@ -1,5 +1,6 @@
 // v4 screens: class picker, 뽑기(장비·스킬), 일일 미션, 능력치 포인트, 각인, 탑·레이드·던전 카드,
 // 3차 승급. Every grant goes through game.transact; reveals start only after r.ok.
+import * as EVO from './evo.js';
 import { BALANCE } from '../data/balance.js';
 import { BOSSES, BRANCHES, CLASSES, CLASS_IDS, CLASS_SKILLS, CURRENCY_ICONS, EMBLEMS, RARITY, RUNES, SKILLS, STAT_KEYS, STAT_NAMES, branchesOf } from '../data/content.js';
 import { classPortrait, itemIcon, portrait, promoPortrait, skillIcon, spriteMeta } from '../render/assets.js';
@@ -426,7 +427,8 @@ export function celebratePromotion(app, r) {
   const info = h('div', { class: 'promo-info', style: fast ? null : { opacity: 0, transition: 'opacity 300ms' } },
     h('h3', null, r.tier === 4 ? `초월 · ${r.name}` : `${r.tier}차 승급 · ${r.name}`),
     h('p', null, r.tier === 1 ? `${SKILLS[br.skills[0]].name} 획득 · 4번 슬롯 해금` : r.tier === 2 ? `${SKILLS[br.skills[1]].name} 획득 · 5번 슬롯 해금 · 궁극기 강화` : r.tier === 4 ? `6번 슬롯 해금 · ${SKILLS[prog.tier4Skill(s)] ? SKILLS[prog.tier4Skill(s)].name : ''} · 서약 ${(prog.oathOf(s) || {}).name || ''} · 궁극기 ×2.5` : `최종 궁극기 ${br.finalUlt}`),
-    r.exp && r.exp.amount ? h('p', { class: 'muted' }, `보관 경험치 ${fmtFull(r.exp.amount)} 적용 · ${r.exp.levels}레벨 상승`) : null);
+    r.exp && r.exp.amount ? h('p', { class: 'muted' }, `보관 경험치 ${fmtFull(r.exp.amount)} 적용 · ${r.exp.levels}레벨 상승`) : null,
+    r.evolutions && r.evolutions.length ? EVO.evolutionCards(s.player.cls || 'warrior', r.branch, r.tier - 1, r.tier) : null);   // v16 스킬 진화
   const m = openModal({ id: 'promoPlay', title: r.tier === 4 ? '초월' : '승급 완료', dismissible: false, body: h('div', { dataset: { screen: 'promoPlay' } }, h('div', { class: 'promo-stage' + (r.tier === 4 ? ' ascend' + (fast ? '' : ' anim') : '') }, fig), info),
     actions: [button('계속', { cls: 'btn btn-primary', onClick: () => m.close() })] });
   if (app.state.settings.sound) sfx('rise');

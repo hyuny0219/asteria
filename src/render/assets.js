@@ -96,6 +96,8 @@ export function bgMeta(id) { return meta.backgrounds[id]; }
 export function fxSprite(name) { const f = meta && meta.fx && meta.fx[name]; if (!f) return null; const im = ready(f.file); if (!im) { loadImage(f.file); return null; } return { img: im, ...f }; }
 export const itemIcon = (iconId) => meta.items[iconId].file;
 export const skillIcon = (iconId) => meta.skills[iconId].file;
+// v16 진화 스킬 아이콘 (GPT O6) — 아직 없으면 null (호출 쪽이 기본 아이콘 + 색 테두리로 대신)
+export const evoSkillIcon = (key) => (meta && meta.skills && meta.skills[key] ? meta.skills[key].file : null);
 export const portrait = (id) => meta.portraits[id].file;
 
 // New creatures reuse an existing sprite (content `sprite` field) until their art exists.

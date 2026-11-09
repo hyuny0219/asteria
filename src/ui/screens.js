@@ -17,6 +17,8 @@ import * as STORY from '../core/story.js';
 import * as STORYUI from './story.js';
 import * as V14 from './v14.js';
 import * as SYNUI from './synergy.js';
+import * as EVO from './evo.js';
+import { EVO_SKILLS as EVO_IDS } from '../data/skillforms.js';
 import * as MAILUI from './mail.js';
 import { jewelName, socketCount } from '../core/crafting.js';
 import { MONSTERS } from '../data/content.js';
@@ -453,29 +455,30 @@ export function skillsPanel(app) {
     const locked = i >= slots;
     const unlockText = i === 3 ? '1차 승급(Lv 30)에서 열려요.' : i === 4 ? '2차 승급(Lv 60)에서 열려요.' : '4차 전직 · 초월(Lv 100 · 노말 프로스트 웜)에서 열려요. 다른 갈래의 기술을 쓸 수 있어요.';
     sc.appendChild(h('div', { class: 'skill-line' },
-      locked ? h('span', { class: 'skill locked', style: { width: '44px', height: '44px' } }, icon('lock', 18)) : id ? gradeFramed(img(skillIcon(SKILLS[id].icon), '', awkCls(s, id)), skGrade(s, id)) : h('span', { class: 'skill empty', style: { width: '44px', height: '44px' } }),
-      h('div', null, h('div', { class: 't' }, `${i + 1}번 · ${locked ? '승급 해금' : id ? SKILLS[id].name : '비어 있음'}`, id && !locked ? SYNUI.tagChips(id) : null), locked ? h('div', { class: 'muted' }, unlockText) : id ? lvLine(id) : null),
+      locked ? h('span', { class: 'skill locked', style: { width: '44px', height: '44px' } }, icon('lock', 18)) : id ? gradeFramed(EVO.evoIcon(s, id, awkCls(s, id)), skGrade(s, id)) : h('span', { class: 'skill empty', style: { width: '44px', height: '44px' } }),
+      h('div', null, h('div', { class: 't' }, `${i + 1}번 · ${locked ? '승급 해금' : id ? EVO.skName(s, id) : '비어 있음'}`, id && !locked ? SYNUI.tagChips(id, s) : null), locked ? h('div', { class: 'muted' }, unlockText) : id ? lvLine(id) : null),
       locked ? button('조건', { cls: 'chip-btn', onClick: () => openQuest(app) }) : button('변경', { cls: 'chip-btn', onClick: () => openSkillPicker(app, i) })));
   }
-  sc.appendChild(h('div', { class: 'skill-line' }, gradeFramed(img(skillIcon(SKILLS[ult].icon), '', awkCls(s, ult)), skGrade(s, ult)),
-    h('div', null, h('div', { class: 't' }, `궁극기 · ${SKILLS[ult].name}`, SYNUI.tagChips(ult)), lvLine(ult)),
+  sc.appendChild(h('div', { class: 'skill-line' }, gradeFramed(EVO.evoIcon(s, ult, awkCls(s, ult)), skGrade(s, ult)),
+    h('div', null, h('div', { class: 't' }, `궁극기 · ${EVO.skName(s, ult)}`, SYNUI.tagChips(ult, s)), lvLine(ult)),
     button('상세', { cls: 'chip-btn', onClick: () => openSkillDetail(app, ult) })));
   sc.appendChild(h('div', { class: 'setting-block' }, h('span', null, '궁극기 자동 사용'), h('div', { class: 'seg', role: 'group', 'aria-label': '궁극기 자동 사용' },
     [['OFF', '끔'], ['ELITE_BOSS', '정예·보스'], ['ALWAYS', '항상']].map(([k, l]) => h('button', { type: 'button', 'aria-pressed': String(s.skills.ultAuto === k), onClick: async () => fail(await app.game.setUltAuto(k)) }, l)))));
   sc.appendChild(h('label', { class: 'switch-row' }, h('span', null, '일반 스킬 자동 시전'), h('input', { type: 'checkbox', checked: s.skills.autoCast, onChange: async (e) => fail(await app.game.setAutoCast(e.target.checked)) })));
   sc.appendChild(SYNUI.synergyCard(app, ult));   // v14 시너지
+  sc.appendChild(EVO.evolutionCard(app, openSkillDetail));   // v16 전직별 스킬 진화
   // levels
   sc.appendChild(h('div', { class: 'section-title' }, '스킬 레벨 (스킬북 + 골드)'));
   for (const id of unlocked) {
     const c = prog.skillLevelCost(s, id);
     const have = s.skills.books[id] || 0;
     const ok = c && have >= c.books && s.wallet.gold >= c.gold;
-    sc.appendChild(h('div', { class: 'skill-line', dataset: { key: 'lv-' + id } }, h('button', { type: 'button', class: 'sk-ic-btn', 'aria-label': `${SKILLS[id].name} 상세`, onClick: () => openSkillDetail(app, id) }, gradeFramed(img(skillIcon(SKILLS[id].icon), '', awkCls(s, id)), skGrade(s, id))),
-      h('div', null, h('div', { class: 't' }, gradeTag(s, id), ` ${SKILLS[id].name} Lv ${prog.skillLevel(s, id)}`),
+    sc.appendChild(h('div', { class: 'skill-line', dataset: { key: 'lv-' + id } }, h('button', { type: 'button', class: 'sk-ic-btn', 'aria-label': `${EVO.skName(s, id)} 상세`, onClick: () => openSkillDetail(app, id) }, gradeFramed(EVO.evoIcon(s, id, awkCls(s, id)), skGrade(s, id))),
+      h('div', null, h('div', { class: 't' }, gradeTag(s, id), ` ${EVO.skName(s, id)} Lv ${prog.skillLevel(s, id)}`),
         h('div', { class: 'muted' }, c ? `다음: 스킬북 ${have}/${c.books} · 골드 ${fmt(c.gold)}` : '최대 레벨')),
-      button(c ? '레벨업' : 'MAX', { cls: 'chip-btn' + (ok ? ' hot' : ''), disabled: !ok, busy: true, ariaLabel: `${SKILLS[id].name} 레벨업`, onClick: async () => {
+      button(c ? '레벨업' : 'MAX', { cls: 'chip-btn' + (ok ? ' hot' : ''), disabled: !ok, busy: true, ariaLabel: `${EVO.skName(s, id)} 레벨업`, onClick: async () => {
         const r = fail(await app.game.levelSkill(id));
-        if (r.ok) toast(`${SKILLS[id].name} Lv ${r.level}`, 'good');
+        if (r.ok) toast(`${EVO.skName(s, id)} Lv ${r.level}`, 'good');
       } })));
   }
   sc.appendChild(h('p', { class: 'muted' }, `레벨당 피해 +${Math.round(BALANCE.skills.levelBonusPerLevel * 100)}%. 스킬북은 스킬북 서고 던전·스킬 뽑기·보스에서 얻어요. 스킬 등급(일반~신화)은 스킬 뽑기에서 더 높은 등급 카드가 나오면 올라가요. 아이콘을 누르면 등급 효과를 볼 수 있어요.`));
@@ -495,19 +498,20 @@ function openSkillPicker(app, slotIdx) {
   const s = app.state;
   const options = prog.unlockedSkills(s).filter((id) => SKILLS[id].kind !== 'ultimate');
   if (!options.length) return;
-  const m = openModal({ id: 'skillpick', title: `${slotIdx + 1}번 슬롯`, body: h('div', null, options.map((id) => h('div', { class: 'skill-line' }, img(skillIcon(SKILLS[id].icon), ''),
-    h('div', null, h('div', { class: 't' }, SKILLS[id].name + (s.skills.equipped[slotIdx] === id ? ' · 장착 중' : '')), h('div', { class: 'muted' }, SKILLS[id].desc)),
+  const m = openModal({ id: 'skillpick', title: `${slotIdx + 1}번 슬롯`, body: h('div', null, options.map((id) => h('div', { class: 'skill-line' }, EVO.evoIcon(s, id),
+    h('div', null, h('div', { class: 't' }, EVO.skName(s, id) + (s.skills.equipped[slotIdx] === id ? ' · 장착 중' : '')), h('div', { class: 'muted' }, EVO.sv(s, id).desc)),
     h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px' } },
       button('장착', { cls: 'chip-btn', disabled: s.skills.equipped[slotIdx] === id, busy: true, onClick: async () => { const r = fail(await app.game.setSkillSlot(slotIdx, id)); if (r.ok) m.close(); } }),
       button('상세', { cls: 'chip-btn', onClick: () => openSkillDetail(app, id) }))))) });
 }
 export function openSkillDetail(app, id) {
-  const sk = SKILLS[id];
   const s = app.state;
+  const sk = EVO.sv(s, id);
   const lvl = prog.skillLevel(s, id);
   const coef = sk.coef ? sk.coef * (1 + BALANCE.skills.levelBonusPerLevel * (lvl - 1)) : null;
   openModal({ id: 'skilldetail', title: sk.name, body: h('div', { dataset: { screen: 'skilldetail' } },
-    img(skillIcon(sk.icon), '', 'boss-art'),
+    h('div', { class: 'evo-detail-ic' }, EVO.evoIcon(s, id, 'boss-art')),
+    sk.baseName && sk.baseName !== sk.name ? h('p', { class: 'muted small', style: { textAlign: 'center', margin: '0' } }, `${sk.baseName}의 ${sk.evoTier}차 진화`) : null,
     h('p', null, sk.desc),
     h('div', { class: 'card' },
       h('div', { class: 'kv' }, '스킬 레벨', h('b', null, `${lvl} / ${BALANCE.skills.maxLevel}`)),
@@ -516,6 +520,8 @@ export function openSkillDetail(app, id) {
       sk.internalCd ? h('div', { class: 'kv' }, '내부 대기', h('b', null, `${sk.internalCd}초`)) : null,
       h('div', { class: 'kv' }, '범위', h('b', null, sk.target === 'all' ? '화면의 모든 적' : sk.kind === 'buff' ? '자신' : sk.kind === 'passive-counter' ? '공격한 적' : '전방 단일'))),
     gradeCard(s, id),
+    EVO_IDS.includes(id) ? h('div', { class: 'section-title' }, '진화 단계') : null,
+    EVO_IDS.includes(id) ? EVO.stageRow(s, id) : null,
     h('p', { class: 'muted' }, '레벨당 피해 +8% (합연산). 피해는 공격 동작의 타격 시점에 한 번 계산됩니다.')) });
 }
 // v11 스킬 등급 표: 지금 등급 강조 + 다음 등급 미리보기

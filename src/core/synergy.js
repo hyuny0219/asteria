@@ -5,6 +5,10 @@
 //  - codex: state.synergy = { found: { id: firstAt } }; the first trigger of a combo gives
 //    FIRST_REWARD once (recorded inside Game.transact).
 import { COMBOS, COMBO_IDS, FIRST_REWARD, STATUS, TAGS, TUNE as T, tagsOf } from '../data/synergy.js';
+import { tagsFor } from './skillforms.js';
+
+// v16: 전투 중에는 진화한 스킬의 태그(battle.skill(id).tags)를 씁니다.
+const tg = (b, id) => { const d = b && typeof b.skill === 'function' && id ? b.skill(id) : null; return (d && d.tags) || tagsOf(id); };
 
 export const defaultSynergy = () => ({ found: {} });
 
@@ -16,7 +20,7 @@ export const burning = (b, e) => dotsOf(b, e, 'syn_burn').length > 0;
 export const bleedStacks = (b, e) => dotsOf(b, e, 'syn_bleed').length;
 export const chilled = (b, e) => { const s = e.syn; return !!s && ((s.chill > 0 && s.chillUntil > now(b)) || s.frozenUntil > now(b)); };
 export const frozen = (b, e) => !!e.syn && e.syn.frozenUntil > now(b);
-export const poisoned = (b, e) => e.dots.some((d) => d.until > now(b) && d.skill && !String(d.skill).startsWith('syn_') && tagsOf(d.skill).includes('poison'));
+export const poisoned = (b, e) => e.dots.some((d) => d.until > now(b) && d.skill && !String(d.skill).startsWith('syn_') && tg(b, d.skill).includes('poison'));
 const stunned = (b, e) => e.stunUntil > now(b);
 // distinct debuff kinds on an enemy (약점 공략)
 export function debuffKinds(b, e) {
@@ -65,7 +69,7 @@ function addChill(b, e) {
 
 // before the damage roll: multiplier / forced crit (and combos that change this hit)
 export function preHit(b, e, skill) {
-  const tags = tagsOf(skill);
+  const tags = tg(b, skill);
   const out = { mul: 1, forceCrit: false };
   if (!tags.length || !e || e.state === 'dying') return out;
   if (tags.includes('explode') && burning(b, e) && has(b, 'ignite')) {
@@ -102,7 +106,7 @@ export function preHit(b, e, skill) {
 
 // after the hit landed: statuses, stack combos, lightning chain
 export function postHit(b, e, skill, { first = true } = {}) {
-  const tags = tagsOf(skill);
+  const tags = tg(b, skill);
   if (!tags.length || !e) return;
   // multi-hit skills apply their statuses once per target per cast
   const again = b.synCast ? b.synCast.has(e.uid) : false;
@@ -142,9 +146,10 @@ export function onKill(b, e) {
 }
 
 // combos a kit (equipped skills + ultimate) can make
-export function kitTags(skillIds) { return [...new Set(skillIds.filter(Boolean).flatMap(tagsOf))]; }
-export function combosFor(skillIds) {
-  const tags = new Set(kitTags(skillIds));
+// ctx = { tier, branch } (스킬 화면: 진화한 태그로 계산)
+export function kitTags(skillIds, ctx = null) { return [...new Set(skillIds.filter(Boolean).flatMap((id) => tagsFor(id, ctx)))]; }
+export function combosFor(skillIds, ctx = null) {
+  const tags = new Set(kitTags(skillIds, ctx));
   return COMBO_IDS.filter((id) => COMBOS[id].need.every((n) => n.split('|').some((t) => tags.has(t))));
 }
 
