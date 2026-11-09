@@ -8,7 +8,7 @@ export const floorLevel = (f) => T.levelBase + T.levelPerFloor * f;
 export function floorReward(f) {
   const r = { gem: T.gemsPerFloor, awakenStone: 0, starShard: 0 };
   if (f % 5 === 0) { r.gem += T.every5.gem; r.awakenStone += T.every5.awakenStone; }
-  if (f % 10 === 0 && f >= T.every10.fromFloor) r.starShard += T.every10.starShard;
+  if (f % 10 === 0 && f >= T.every10.fromFloor && f <= (T.every10.toFloor || Infinity)) r.starShard += T.every10.starShard;
   return r;
 }
 export const nextFloor = (state) => (state.tower.best || 0) + 1;

@@ -682,7 +682,9 @@ export class Game {
             const { mythic, ...table } = EQ.bossRarity;
             items.push(makeItem(s, { slot: setSlot(), rarity: 'rare', level: lv, rng: this.rng, source: 'boss', set: b.region }));
             items.push(makeItem(s, { slot: this.rng() < 0.5 ? setSlot() : rollSlot(this.rng), rarity: rollRarity(this.rng, table), level: lv, rng: this.rng, source: 'boss', set: b.region }));
-            if (this.rng() < 0.15 * D.order) { s.wallet.starShard += 1; res.starShard = 1; }
+            // v17: 노말·하드 보스 반복 처치는 그날 첫 승리에 파편이 확정(×난이도), 이후는 15%×난이도 확률
+            if (s.bossDaily && s.bossDaily.used === 1) { s.wallet.starShard += D.order; res.starShard = D.order; res.dailyShard = true; }
+            else if (this.rng() < 0.15 * D.order) { s.wallet.starShard += 1; res.starShard = 1; }
           }
         } else if (cleared.first && !s.progression.firstClearClaimed[sess.bossId]) {
           s.progression.firstClearClaimed[sess.bossId] = sess.id;

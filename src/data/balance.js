@@ -143,15 +143,15 @@ export const BALANCE = Object.freeze({
     books: { name: '스킬북 서고', unlockBoss: 'B03', reward: 'books', booksBase: 3, booksPerStage: 1 / 3 },
   },
   tower: { timeSec: 60, killTarget: 10, levelBase: 5, levelPerFloor: 2, eliteBase: 0.1, elitePerFloor: 0.01,
-    gemsPerFloor: 10, every5: { gem: 50, awakenStone: 2 }, every10: { starShard: 1, fromFloor: 30 } },
+    gemsPerFloor: 10, every5: { gem: 50, awakenStone: 2 }, every10: { starShard: 1, fromFloor: 30, toFloor: 100 } },   // v17: 파편은 100층까지만 (탑 최고층 차이가 파편 차이로 번지지 않게)
   raid: { unlockLevel: 91, unlockBoss: 'B09', weeklyTries: 3, timeSec: 120, boss: 'B10',
     // damage thresholds as multiples of boss max HP
     grades: [['S', 1.0], ['A', 0.7], ['B', 0.45], ['C', 0.25], ['D', 0]],
     rewards: {
-      S: { gem: 300, starShard: 2, items: { legendary: 0.995, mythic: 0.005 } },
+      S: { gem: 300, starShard: 1, items: { legendary: 0.995, mythic: 0.005 } },
       A: { gem: 200, starShard: 1, items: { epic: 0.6, legendary: 0.4 } },
       B: { gem: 120, starShard: 1, items: { epic: 1 } },
-      C: { gem: 80, items: { rare: 1 } },
+      C: { gem: 80, starShard: 1, items: { rare: 1 } },   // v17: C도 파편 1 (약한 직업의 파편 수입)
       D: { gem: 40, items: { uncommon: 1 } },
     } },
   promotion: { tokenFromLevel: 25, tokensRequired: 20, killsPerToken: 5, eligibleEnemyLevel: 21, bossRequired: 'B03', trialTimeSec: 90 },
@@ -160,7 +160,7 @@ export const BALANCE = Object.freeze({
     2: { level: 60, boss: 'B06', awakenStone: 10, goldMinutes: 120, towerFloor: 5 },
     3: { level: 90, boss: 'B09', starShard: 3, trial: 'T03' },
     // v15 4차 전직(초월): Lv 100 · 3차 · 노말 B05 처치 · 재료 · 초월 시련 (docs/DESIGN_V15_TIER4.md)
-    4: { level: 100, boss: 'B05', bossDiff: 'normal', starShard: 18, awakenStone: 150, goldMinutes: 240, trial: 'T04' },
+    4: { level: 100, boss: 'B05', bossDiff: 'normal', starShard: 26, awakenStone: 150, goldMinutes: 240, trial: 'T04' },
   },
   skills: { levelBonusPerLevel: 0.08, maxLevel: 10, booksPerLevel: 2, goldMinutesPerLevel: 3 },
   runes: { slots: 2, maxLevel: 5, perLevel: 0.2 },

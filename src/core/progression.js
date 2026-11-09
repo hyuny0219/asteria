@@ -92,7 +92,7 @@ export function promotionChecklist(state, tier = null) {
     items.push({ id: 'gold', label: '골드', ok: gOk, progress: `${Math.floor(state.wallet.gold)} / ${Math.floor(gold)}`, cost: Math.floor(gold), go: gOk ? null : 'dungeon:gold' });
   } else {
     const ok = state.wallet.starShard >= T.starShard;
-    items.push({ id: 'shard', label: '별의 파편', ok, progress: `${state.wallet.starShard} / ${T.starShard}`, hint: '레이드 · 시련의 탑 30층부터 10층마다 · 타락한 대천사', go: ok ? null : 'tower' });
+    items.push({ id: 'shard', label: '별의 파편', ok, progress: `${state.wallet.starShard} / ${T.starShard}`, hint: '노말 이상 보스 반복 처치(하루 첫 승리 확정) · 레이드 · 시련의 탑 30~100층 10층마다 · 타락한 대천사', go: ok ? null : 'tower' });
     if (tier === 4) {
       const gold = goldPerMinute(T.level) * T.goldMinutes;
       const stOk = state.wallet.awakenStone >= T.awakenStone;

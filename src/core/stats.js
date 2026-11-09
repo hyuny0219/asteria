@@ -81,12 +81,15 @@ export function playerStats(state, opts = {}) {
   // v15 초월 서약 (퍼센트 부분; 전투 효과 fx는 combat.js)
   { const eg = (p.tier || 0) >= 4 && state.promotion && OATH_BY_ID[state.promotion.oath]; if (eg) add(eg.pct); }
   // branch passives for every tier reached
+  let defToAtk = 0;   // v17 기사: 방어력 일부가 공격력으로 (갈래 패시브 defToAtk 합)
+  if (cls.lifesteal) add({ lifesteal: cls.lifesteal });   // v17 도적: 기본 흡혈
   if (p.branch && BRANCHES[p.branch]) {
     const tiers = BRANCHES[p.branch].tiers;
     for (let t = 0; t < Math.min(p.tier || 1, 4); t++) {
       const tp = tiers[t];
       if (!tp) continue;
-      add({ atkPct: tp.atk || 0, hpPct: tp.hp || 0, defPct: tp.def || 0, critChance: tp.crit || 0, critDmg: tp.critDmg || 0, cdr: tp.cdr || 0, aspd: tp.aspd || 0, evade: tp.evade || 0 });
+      add({ atkPct: tp.atk || 0, hpPct: tp.hp || 0, defPct: tp.def || 0, critChance: tp.crit || 0, critDmg: tp.critDmg || 0, cdr: tp.cdr || 0, aspd: tp.aspd || 0, evade: tp.evade || 0, lifesteal: tp.lifesteal || 0 });
+      defToAtk += tp.defToAtk || 0;
     }
   }
   // runes
@@ -121,6 +124,7 @@ export function playerStats(state, opts = {}) {
   atk *= (cls.mods.atk || 1) * (1 + pct.atkPct) * rb.atk;
   hp *= (cls.mods.hp || 1) * Math.max(0.2, 1 + pct.hpPct) * rb.hp;
   def *= (cls.mods.def || 1) * (1 + pct.defPct);
+  if (defToAtk) atk += def * defToAtk;
   crit = Math.max(0, crit + pct.critChance);
   aspd *= 1 + pct.aspd;
   evade += pct.evade;

@@ -258,7 +258,10 @@ export const SKILL_FORMS = Object.freeze({
 //  splash = 단일 스킬이 진화로 얻은 '주변 피해' 비율에 곱하는 배율(무리 사냥 속도 조절).
 export const EVO_SCALE = Object.freeze({
   splash: 1,   // 주변 피해(splash) 비율에 곱하는 배율 — 데이터 값이 곧 실제 값(시뮬로 0.35~0.5에 맞춤)
-  cls: { warrior: 1.0, mage: 0.86, archer: 0.72, rogue: 1.4 },
+  cls: { warrior: 1.0, mage: 0.86, archer: 0.72, rogue: 1.4 },   // 1~2차 (v16 그대로)
+  // v17: 3·4차(노말·초월 구간)부터 — 노말 보스에서 뒤처지던 전사·도적·위자드를 올림
+  late: { warrior: 2.0, mage: 0.86, archer: 0.72, rogue: 1.6 },
+  lateBranch: { wizard: 1.1 },
 });
 
 export const EVO_SKILLS = Object.freeze(Object.keys(SKILL_FORMS));

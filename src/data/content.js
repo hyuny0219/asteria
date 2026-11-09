@@ -150,23 +150,23 @@ export const ULT_IDS = Object.freeze(Object.values(CLASS_SKILLS).map((c) => c.ul
 // ---------- branches (8) × tiers (3) ----------
 const BRANCH_DEFS = {
   knight: { id: 'knight', cls: 'warrior', names: ['흑장미 기사', '팔라딘', '크루세이더', '여명의 성벽'], role: '방패 · 반격', weapon: '큰 방패와 장검', finalUlt: '천상의 심판',
-    tiers: [{ def: 0.15, hp: 0.15 }, { def: 0.1, hp: 0.1 }, { hp: 0.15, atk: 0.1 }, { atk: 0.1, hp: 0.1, def: 0.1 }], skills: ['guardCounter', 'w_judgement'],
+    tiers: [{ def: 0.15, hp: 0.15 }, { def: 0.1, hp: 0.1 }, { hp: 0.1, atk: 0.15, defToAtk: 0.5 }, { atk: 0.15, hp: 0.1, def: 0.1, defToAtk: 0.35 }], skills: ['guardCounter', 'w_judgement'],
     desc: '흰 금속 갑옷과 큰 방패. 방어 시간 중 받는 피해에 반격합니다.' },
   berserker: { id: 'berserker', cls: 'warrior', names: ['진홍의 집행자', '워로드', '블러드 로드', '혈월의 폭군'], role: '대검 · 공격', weapon: '양손 대검', finalUlt: '피의 폭풍',
-    tiers: [{ atk: 0.12 }, { atk: 0.08, crit: 0.03 }, { atk: 0.12, hp: 0.05 }, { atk: 0.15, hp: 0.05 }], skills: ['berserkStrike', 'w_whirl'],
+    tiers: [{ atk: 0.12 }, { atk: 0.08, crit: 0.03 }, { atk: 0.16, hp: 0.05 }, { atk: 0.18, hp: 0.05 }], skills: ['berserkStrike', 'w_whirl'],
     desc: '검은 금속과 비대칭 붉은 코트. 체력이 낮을수록 강해지는 공격형입니다.' },
   wizard: { id: 'wizard', cls: 'mage', names: ['위자드', '아크메이지', '엘리멘탈 마스터', '성좌의 대현자'], role: '원소 · 광역', weapon: '천구 지팡이', finalUlt: '원소 대폭발',
-    tiers: [{ atk: 0.1 }, { atk: 0.08, cdr: 0.05 }, { atk: 0.12 }, { atk: 0.14, cdr: 0.03 }], skills: ['m_chain', 'm_blizzard'], desc: '원소를 다루는 정통 마도사. 광역 피해와 둔화.' },
+    tiers: [{ atk: 0.1 }, { atk: 0.08, cdr: 0.05 }, { atk: 0.15, hp: 0.06 }, { atk: 0.14, cdr: 0.03 }], skills: ['m_chain', 'm_blizzard'], desc: '원소를 다루는 정통 마도사. 광역 피해와 둔화.' },
   warlock: { id: 'warlock', cls: 'mage', names: ['워록', '네크로맨서', '리치 로드', '밤의 주권자'], role: '암흑 · 지속 피해', weapon: '심연의 마도서', finalUlt: '죽음의 군단',
     tiers: [{ atk: 0.06, hp: 0.08 }, { atk: 0.08, hp: 0.05 }, { atk: 0.1, hp: 0.08 }, { atk: 0.12, hp: 0.1 }], skills: ['m_curse', 'm_drain'], desc: '저주와 흡수로 오래 버티며 싸웁니다.' },
   ranger: { id: 'ranger', cls: 'archer', names: ['레인저', '스나이퍼', '호크아이', '별을 꿰는 자'], role: '정밀 · 치명', weapon: '장궁', finalUlt: '매의 눈',
-    tiers: [{ crit: 0.05, atk: 0.05 }, { critDmg: 0.2 }, { atk: 0.1, crit: 0.05 }, { atk: 0.12, critDmg: 0.15 }], skills: ['a_pierce', 'a_snipe'], desc: '한 발 한 발이 치명적인 명사수.' },
+    tiers: [{ crit: 0.05, atk: 0.05 }, { critDmg: 0.2 }, { atk: 0.1, crit: 0.05, hp: 0.15 }, { atk: 0.12, critDmg: 0.15, hp: 0.1 }], skills: ['a_pierce', 'a_snipe'], desc: '한 발 한 발이 치명적인 명사수.' },
   hunter: { id: 'hunter', cls: 'archer', names: ['헌터', '비스트마스터', '와일드 킹', '태고의 사냥꾼'], role: '야성 · 소환', weapon: '가시나무 장궁', finalUlt: '야수의 왕',
     tiers: [{ atk: 0.06, hp: 0.06 }, { atk: 0.08, aspd: 0.05 }, { atk: 0.1, hp: 0.08 }, { atk: 0.12, aspd: 0.05 }], skills: ['a_beast', 'a_pack'], desc: '야수와 함께 사냥합니다.' },
   assassin: { id: 'assassin', cls: 'rogue', names: ['어쌔신', '나이트블레이드', '섀도우', '그믐의 처형자'], role: '암살 · 폭발', weapon: '쌍단검', finalUlt: '그림자 처형',
-    tiers: [{ atk: 0.1 }, { critDmg: 0.25 }, { atk: 0.12, crit: 0.03 }, { atk: 0.14, critDmg: 0.15 }], skills: ['r_execute', 'r_shadowstrike'], desc: '약한 적을 순식간에 끝냅니다.' },
+    tiers: [{ atk: 0.1 }, { critDmg: 0.25 }, { atk: 0.12, crit: 0.03, hp: 0.2, def: 0.1, lifesteal: 0.06 }, { atk: 0.14, critDmg: 0.15, hp: 0.08 }], skills: ['r_execute', 'r_shadowstrike'], desc: '약한 적을 순식간에 끝냅니다.' },
   trickster: { id: 'trickster', cls: 'rogue', names: ['트릭스터', '팬텀', '페이트위버', '천 개의 가면'], role: '기교 · 회피', weapon: '단검과 카드', finalUlt: '운명의 실',
-    tiers: [{ evade: 0.05, atk: 0.05 }, { evade: 0.04, aspd: 0.05 }, { atk: 0.1, evade: 0.04 }, { atk: 0.12, evade: 0.03, aspd: 0.04 }], skills: ['r_smoke', 'r_illusion'], desc: '회피와 환영으로 상대를 농락합니다.' },
+    tiers: [{ evade: 0.05, atk: 0.05 }, { evade: 0.04, aspd: 0.05 }, { atk: 0.1, evade: 0.04, hp: 0.15, def: 0.1, lifesteal: 0.05 }, { atk: 0.12, evade: 0.03, aspd: 0.04, hp: 0.06 }], skills: ['r_smoke', 'r_illusion'], desc: '회피와 환영으로 상대를 농락합니다.' },
 };
 for (const b of Object.values(BRANCH_DEFS)) { b.name = b.names[0]; b.passive = b.tiers[0]; }   // v3 fields
 export const BRANCHES = Object.freeze(BRANCH_DEFS);

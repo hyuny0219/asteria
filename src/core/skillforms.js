@@ -29,7 +29,8 @@ export function skillDef(id, ctx = null) {   // ctx: { tier, branch, cls }
     const m = { ...base, ...over };
     // 밸런스: 기본보다 늘어난 계수·지속 피해만 직업 배율로 조절(진화가 기본보다 약해지지 않음).
     // 단일 스킬이 얻은 광역은 target 'all'이 아니라 splash(주변 적 피해 비율)라 보스 상대로 약해지지 않음.
-    const cls = EVO_SCALE.cls[base.cls] || 1;
+    const late = t >= 3;   // v17: 3·4차는 late 배율(+갈래 덮어쓰기)
+    const cls = (late && EVO_SCALE.lateBranch && EVO_SCALE.lateBranch[ctx.branch]) || (late && EVO_SCALE.late && EVO_SCALE.late[base.cls]) || EVO_SCALE.cls[base.cls] || 1;
     const pw = (x) => (x.coef || 0) * (x.hits || 1);
     let k = 1;
     if (m.coef && base.coef && (over.coef !== undefined || over.hits !== undefined)) {

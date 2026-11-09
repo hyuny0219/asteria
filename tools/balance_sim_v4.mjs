@@ -13,6 +13,7 @@ import { playerStats } from '../src/core/stats.js';
 import { quoteUpgrade, statPointsFree } from '../src/core/economy.js';
 import { enhanceCost } from '../src/core/items.js';
 import { promotionChecklist, tierOf, lockTierAt, unlockedSkills, skillLevelCost, ultId, raidOpen, towerOpen, dungeonOpen, branchesOf, oathOptions } from '../src/core/progression.js';
+import * as BD from '../src/core/bossdaily.js';
 import * as DF from '../src/core/difficulty.js';
 import { missionStatus } from '../src/core/missions.js';
 import { attendanceStatus } from '../src/core/rewards.js';
@@ -65,6 +66,12 @@ async function runOne(seed, cls) {
     const s = g.state;
     if (g.mode === 'RESULT') {
       const r = g.result;
+      // v17 계측: 별의 파편 출처, 노말 보스 실패 원인, 시련 시도
+      const sh0 = m.lastShard ?? 0, sh1 = s.wallet.starShard; if (sh1 > sh0) { const src = r.kind === 'boss' ? (r.diff && r.diff !== 'easy' ? 'nboss' : 'boss') : r.kind; (m.shardIn ||= {})[src] = ((m.shardIn ||= {})[src] || 0) + (sh1 - sh0); }
+      m.lastShard = sh1;
+      if (r.kind === 'boss' && DF.curDiff(s) !== 'easy' && r.bossId === m.repeatBoss && DF.track(s).bossCleared[r.bossId]) { if (r.win) { m.repeatWins = (m.repeatWins || 0) + 1; if (m.repeatWins % 5 === 0) m.repeatDown = Math.max(0, (m.repeatDown || 0) - 1); } else m.repeatDown = (m.repeatDown || 0) + 1; }
+      if (r.kind === 'boss' && !r.win && DF.curDiff(s) !== 'easy') { const k = r.bossId + ':' + (r.reason || 'death'); (m.nFail ||= {})[k] = ((m.nFail ||= {})[k] || 0) + 1; }
+      if (r.kind === 'trial') (m.trials ||= []).push(`T${r.tier}${r.win ? 'W' : 'L'}@${day().toFixed(1)}`);
       if (r.kind === 'boss') { const dp = r.diff && r.diff !== 'easy' ? r.diff[0].toUpperCase() + '_' : ''; m.bossFights.push({ boss: dp + r.bossId, win: r.win, sec: r.timeSec, lv: s.player.level }); if (r.win) { mark('win_' + dp + r.bossId); lastFailPower = 0; } }
       if (r.kind === 'trial' && r.win) mark('trial' + r.tier);
       if (r.kind === 'tower' && !r.win) lastTower = clock;
@@ -171,6 +178,15 @@ async function runOne(seed, cls) {
     if (!BOSSES[reg.boss].raid && !DF.track(g.state).bossCleared[reg.boss] && g.canChallengeBoss(reg.boss).ok && clock - lastBossTry > 300e3 && (!lastFailPower || power > lastFailPower * 1.1)) {
       lastFailPower = power; lastBossTry = clock;
       g.startBoss(reg.boss);
+      return;
+    }
+    // v17: 노말 이상에서는 하루 반복 처치(최대 3회)를 가장 뒤의 잡은 보스로 — 실제 플레이어처럼
+    if (DF.curDiff(g.state) !== 'easy' && BD.left(g.state, clock) > 0 && clock - (m.lastRepeat || 0) > 1800e3) {
+      const t = DF.track(g.state);
+      // 진 보스는 한 단계 낮춰서 (실제 플레이어처럼 이길 만한 보스를 고름)
+      const cleared = REGIONS.filter((r) => t.bossCleared[r.boss]);
+      const pick = cleared[Math.max(0, cleared.length - 1 - (m.repeatDown || 0))];
+      if (pick && g.canChallengeBoss(pick.boss).ok) { m.lastRepeat = clock; m.repeatBoss = pick.boss; g.startBoss(pick.boss); }
     }
   };
   const perDaySec = SESS * SESSION_MIN * 60;
@@ -193,6 +209,7 @@ async function runOne(seed, cls) {
       if (g.mode === "OFFLINE") { const lv0 = g.state.player.level; const pc = g.state.offlineSnapshot.pendingClaim; await g.claimOffline(); if (args.trace && g.state.rebirth.count) console.error("off", lv0, "->", g.state.player.level, pc && pc.exp, pc && pc.reason, pc && pc.farm && pc.farm.level); }
     }
     if (g.state.player.level >= 100) mark('lv100');
+    (m.shardDay ||= []).push(g.state.wallet.starShard); m.lastShard = g.state.wallet.starShard;
     // --snap dir: write the save at the end of each listed day (e.g. --snap-days 3,6,10) for other sims
     if (args.snap) { const days = String(args['snap-days'] || '3,6,10,14').split(',').map(Number); if (days.includes(d + 1)) { const { mkdirSync } = await import('node:fs'); mkdirSync(args.snap, { recursive: true }); writeFileSync(`${args.snap}/${cls}_s${seed}_d${d + 1}.json`, JSON.stringify(g.state)); } }
     if (!args.full && g.state.player.level >= 100 && m.marks.tier3 && (g.state.rebirth.count || 0) >= Number(args.rebirths ?? 1)) break;
@@ -227,6 +244,7 @@ for (const b of Object.keys(BOSSES).filter((x) => !BOSSES[x].raid)) {
 }
 for (const cls of CLASSES) {
   const rs = runs.filter((r) => r.cls === cls);
+  for (const r of rs) console.log(`  ${cls}#${r.seed} t3 ${r.marks.tier3 ?? "—"} B09 ${r.marks.win_B09 ?? "—"} B10 ${r.marks.win_B10 ?? "—"} lv100 ${r.marks.lv100 ?? "—"} final ${r.final.region}/${r.final.wave} · shardIn ${JSON.stringify(r.shardIn || {})} shard@d ${(r.shardDay || []).filter((_, i) => i % 2 === 1).join(',')} · N-boss ${REGIONS.map((x) => r.marks['win_N_' + x.boss] ?? '—').join(',')} · nFail ${JSON.stringify(r.nFail || {})} · trials ${(r.trials || []).filter((x) => x.startsWith('T4')).slice(0, 8).join(' ')} · tower ${r.final.tower}`);
   console.log(`${cls}: final ${rs.map((r) => `L${r.final.level}/T${r.final.tier}/tower${r.final.tower}/${r.final.region}`).join(' ')} · lv100 day ${rs.map((r) => r.marks.lv100 ?? '—').join(',')} · tier4 day ${rs.map((r) => r.marks.tier4 ?? '—').join(',')} · raid ${rs.map((r) => (r.raid || []).join('')).join(' ')} · deaths ${rs.map((r) => r.deaths).join(',')}`);
 }
 { const em = {}; for (let L = 2; L <= 10; L++) { const v = runs.map((r) => r.early && r.early[L]).filter((x) => x !== undefined); em[L] = median(v); } report.earlyMin = em;
