@@ -12,7 +12,8 @@ import { MemorySaver } from '../src/platform/memorySaver.js';
 import { playerStats } from '../src/core/stats.js';
 import { quoteUpgrade, statPointsFree } from '../src/core/economy.js';
 import { enhanceCost } from '../src/core/items.js';
-import { promotionChecklist, tierOf, lockTierAt, unlockedSkills, skillLevelCost, ultId, raidOpen, towerOpen, dungeonOpen, branchesOf } from '../src/core/progression.js';
+import { promotionChecklist, tierOf, lockTierAt, unlockedSkills, skillLevelCost, ultId, raidOpen, towerOpen, dungeonOpen, branchesOf, oathOptions } from '../src/core/progression.js';
+import * as DF from '../src/core/difficulty.js';
 import { missionStatus } from '../src/core/missions.js';
 import { attendanceStatus } from '../src/core/rewards.js';
 import { petPower, achievementStatus } from '../src/core/meta.js';
@@ -64,7 +65,7 @@ async function runOne(seed, cls) {
     const s = g.state;
     if (g.mode === 'RESULT') {
       const r = g.result;
-      if (r.kind === 'boss') { m.bossFights.push({ boss: r.bossId, win: r.win, sec: r.timeSec, lv: s.player.level }); if (r.win) { mark('win_' + r.bossId); lastFailPower = 0; } }
+      if (r.kind === 'boss') { const dp = r.diff && r.diff !== 'easy' ? r.diff[0].toUpperCase() + '_' : ''; m.bossFights.push({ boss: dp + r.bossId, win: r.win, sec: r.timeSec, lv: s.player.level }); if (r.win) { mark('win_' + dp + r.bossId); lastFailPower = 0; } }
       if (r.kind === 'trial' && r.win) mark('trial' + r.tier);
       if (r.kind === 'tower' && !r.win) lastTower = clock;
       if (r.kind === 'raid') { (m.raid ||= []).push(r.grade); }
@@ -146,12 +147,15 @@ async function runOne(seed, cls) {
     }
     // promotion
     const t = tierOf(g.state);
-    if (t < 3) {
+    if (t < 4) {
       const nt = t + 1;
       const cl = promotionChecklist(g.state, nt);
       if (cl.canTrial && clock - lastTrial > 600e3) { lastTrial = clock; if (g.startTrial(nt).ok) return; }
-      if (cl.canPromote) { const r = await g.promote(nt, nt === 1 ? branch : null); if (r.ok) mark('tier' + nt); }
+      // v15 초월: 서약은 직업의 첫 번째(A)
+      if (cl.canPromote) { const r = await g.promote(nt, nt === 1 ? branch : nt === 4 ? oathOptions(g.state)[0].id : null); if (r.ok) mark('tier' + nt); }
     }
+    // v15: 이지 심연의 군주를 잡으면 노말로 넘어가 진행 (--rebirths 0 --full 일 때 의미 있음)
+    if (DF.curDiff(g.state) === 'easy' && DF.diffOpen(g.state, 'normal') && g.state.player.level >= 100 && !Number(args.rebirths ?? 1)) { const r = await g.switchDifficulty('normal'); if (r.ok) mark('normal_start'); }
     // talents: one-toggle auto allocation from tier 1
     if (t >= 1 && !g.state.talents.auto) await g.talentAuto(true);
     // rift: free runs (always take the first blessing)
@@ -164,7 +168,7 @@ async function runOne(seed, cls) {
     const reg = REGIONS.find((r) => r.id === g.state.progression.region);
     const st = playerStats(g.state);
     const power = st.atk * st.hp;
-    if (!BOSSES[reg.boss].raid && !g.state.progression.bossCleared[reg.boss] && g.canChallengeBoss(reg.boss).ok && clock - lastBossTry > 300e3 && (!lastFailPower || power > lastFailPower * 1.1)) {
+    if (!BOSSES[reg.boss].raid && !DF.track(g.state).bossCleared[reg.boss] && g.canChallengeBoss(reg.boss).ok && clock - lastBossTry > 300e3 && (!lastFailPower || power > lastFailPower * 1.1)) {
       lastFailPower = power; lastBossTry = clock;
       g.startBoss(reg.boss);
     }
@@ -201,7 +205,7 @@ async function runOne(seed, cls) {
 const runs = [];
 for (const cls of CLASSES) for (let s = 1; s <= SEEDS; s++) { const t0 = Date.now(); const r = await runOne(s, cls); runs.push(r); console.error(`${cls}#${s} done in ${((Date.now() - t0) / 1000).toFixed(0)}s → L${r.final.level} T${r.final.tier}`); if (args.trace && r.rbTrace) console.error(JSON.stringify(r.rbTrace.filter((_, i) => i % 2 === 0))); }
 
-const keys = ['rebirth1', 'rb_lv50', 'rb_lv100', 'rebirth2', 'rebirth3', 'lv10', 'lv20', 'lv30', 'tier1', 'lv40', 'lv50', 'lv60', 'tier2', 'lv70', 'lv80', 'lv90', 'tier3', 'lv100', ...Object.keys(BOSSES).filter((b) => !BOSSES[b].raid).map((b) => 'win_' + b)];
+const keys = ['rebirth1', 'rb_lv50', 'rb_lv100', 'rebirth2', 'rebirth3', 'lv10', 'lv20', 'lv30', 'tier1', 'lv40', 'lv50', 'lv60', 'tier2', 'lv70', 'lv80', 'lv90', 'tier3', 'lv100', ...Object.keys(BOSSES).filter((b) => !BOSSES[b].raid).map((b) => 'win_' + b), 'normal_start', ...REGIONS.map((r) => 'win_N_' + r.boss), 'trial4', 'tier4'];
 console.log(`balance ${BALANCE.version} · ${CLASSES.join('/')} × ${SEEDS} seeds · ${SESS}×${SESSION_MIN}min/day · max ${DAYS} days (days since start)`);
 console.log('milestone    median   p10     p90     reached');
 const report = { balanceVersion: BALANCE.version, classes: CLASSES, seeds: SEEDS, sessions: SESS, sessionMin: SESSION_MIN, milestones: {}, ttk: {}, bosses: {}, final: [] };
@@ -223,7 +227,7 @@ for (const b of Object.keys(BOSSES).filter((x) => !BOSSES[x].raid)) {
 }
 for (const cls of CLASSES) {
   const rs = runs.filter((r) => r.cls === cls);
-  console.log(`${cls}: final ${rs.map((r) => `L${r.final.level}/T${r.final.tier}/tower${r.final.tower}/${r.final.region}`).join(' ')} · lv100 day ${rs.map((r) => r.marks.lv100 ?? '—').join(',')} · raid ${rs.map((r) => (r.raid || []).join('')).join(' ')} · deaths ${rs.map((r) => r.deaths).join(',')}`);
+  console.log(`${cls}: final ${rs.map((r) => `L${r.final.level}/T${r.final.tier}/tower${r.final.tower}/${r.final.region}`).join(' ')} · lv100 day ${rs.map((r) => r.marks.lv100 ?? '—').join(',')} · tier4 day ${rs.map((r) => r.marks.tier4 ?? '—').join(',')} · raid ${rs.map((r) => (r.raid || []).join('')).join(' ')} · deaths ${rs.map((r) => r.deaths).join(',')}`);
 }
 { const em = {}; for (let L = 2; L <= 10; L++) { const v = runs.map((r) => r.early && r.early[L]).filter((x) => x !== undefined); em[L] = median(v); } report.earlyMin = em;
   console.log('early Lv (min since start, median): ' + Object.entries(em).map(([L, v]) => `Lv${L} ${v?.toFixed(1)}`).join(' · ')); }

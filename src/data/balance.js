@@ -159,6 +159,8 @@ export const BALANCE = Object.freeze({
     1: { level: 30, boss: 'B03', trial: 'T01' },
     2: { level: 60, boss: 'B06', awakenStone: 10, goldMinutes: 120, towerFloor: 5 },
     3: { level: 90, boss: 'B09', starShard: 3, trial: 'T03' },
+    // v15 4차 전직(초월): Lv 100 · 3차 · 노말 B05 처치 · 재료 · 초월 시련 (docs/DESIGN_V15_TIER4.md)
+    4: { level: 100, boss: 'B05', bossDiff: 'normal', starShard: 18, awakenStone: 150, goldMinutes: 240, trial: 'T04' },
   },
   skills: { levelBonusPerLevel: 0.08, maxLevel: 10, booksPerLevel: 2, goldMinutesPerLevel: 3 },
   runes: { slots: 2, maxLevel: 5, perLevel: 0.2 },

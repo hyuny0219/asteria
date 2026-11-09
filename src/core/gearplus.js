@@ -170,7 +170,7 @@ export function resolveLoadout(state, L, unlocked = null) {
     else { equipped[k] = null; if (id) missing.push(k); }
   }
   const skills = (L.skills || []).map((id) => (id && (!unlocked || unlocked.includes(id)) ? id : null));
-  while (skills.length < 5) skills.push(null);
+  while (skills.length < 6) skills.push(null);
   const owned = (state.skills.runes && state.skills.runes.owned) || {};
   const runes = (L.runes || []).map((id) => (id && owned[id] ? id : null));
   return { equipped, skills, runes, missing };

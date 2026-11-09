@@ -47,7 +47,7 @@ test('migration 2 → 3 keeps v3 progress (warrior, tier 1, necklace slot, skill
   assert.equal(m.player.tier, 1);
   assert.equal(m.equipped.necklace, it.id);
   assert.equal(m.inventory[0].slot, 'necklace');
-  assert.equal(m.skills.equipped.length, 5);
+  assert.equal(m.skills.equipped.length, 6);   // v15: 6번 슬롯(초월)까지 채움
   assert.equal(m.skills.equipped[3], 'guardCounter');
   assert.equal(m.skills.levels.strike, 1 + Math.floor(30 / 4) + 1);
   assert.equal(m.promotion.trials[1], true);

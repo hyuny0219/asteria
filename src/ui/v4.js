@@ -32,7 +32,7 @@ export function classArt(cls, cssClass = '') {
 export function currentArt(state, cssClass = '', tier = prog.tierOf(state)) {
   const b = state.player.branch;
   const file = b && tier >= 1 ? promoPortrait(b, tier) : null;
-  if (file) return img(file, BRANCHES[b].names[Math.min(3, tier) - 1], cssClass);
+  if (file) return img(file, BRANCHES[b].names[Math.min(BRANCHES[b].names.length, tier) - 1], cssClass);
   return classArt(state.player.cls || 'warrior', cssClass);
 }
 const pendingTag = (cls) => (CLASSES[cls].artPending ? h('span', { class: 'pending-tag' }, '그림 준비 중') : null);
@@ -335,6 +335,7 @@ export function openRaidResult(app, r, back, itemRewards) {
 
 // ======================= 승급 (tiers 1–3) =======================
 export function openPromotionTier(app, tier) {
+  if (tier === 4) return openAscend(app);
   const s = app.state;
   const br = BRANCHES[s.player.branch];
   const cl = prog.promotionChecklist(s, tier);
@@ -356,6 +357,63 @@ export function openPromotionTier(app, tier) {
       celebratePromotion(app, r);
     } })] });
 }
+// ---------- v15 4차 전직 · 초월 ----------
+const OATH_TEXT = (e) => e.desc;
+function oathCards(app, opts, picked, onPick) {
+  return h('div', { class: 'oath-pick', role: 'radiogroup', 'aria-label': '초월 서약' }, opts.map((e) =>
+    h('button', { type: 'button', class: 'oath-card' + (picked === e.id ? ' on' : ''), role: 'radio', 'aria-checked': String(picked === e.id), dataset: { oath: e.id }, onClick: () => onPick(e.id) },
+      h('b', null, e.name), h('span', null, OATH_TEXT(e)))));
+}
+export function openAscend(app) {
+  const s = app.state;
+  const br = BRANCHES[s.player.branch];
+  const cl = prog.promotionChecklist(s, 4);
+  const name = br.names[3];
+  const opts = prog.oathOptions(s);
+  let pick = null;
+  const sk = prog.tier4Skill(s);
+  const m = openModal({ id: 'promotion', title: `4차 전직 · 초월 · ${name}`, body: h('div'), actions: [] });
+  const render = () => {
+    m.setBody(h('div', { dataset: { screen: 'promotion', tier: '4' } },
+      h('div', { class: 'hero-art ascend-art' }, h('figure', null, currentArt(s), h('figcaption', null, h('b', null, '지금'), h('span', { class: 'muted' }, prog.tierName(s) || ''))),
+        h('figure', { class: 'pick' }, currentArt(s, 'ascend-glow', 3), h('figcaption', null, h('b', null, name), h('span', { class: 'muted' }, '초월')))),
+      h('div', { class: 'card' },
+        h('div', { class: 'kv' }, '전직 능력', h('b', null, passiveText(br.tiers[3]))),
+        sk ? h('div', { class: 'kv' }, '6번 슬롯', h('b', null, `해금 · ${SKILLS[sk].name} 장착 (다른 갈래의 기술)`)) : null,
+        h('div', { class: 'kv' }, '궁극기', h('b', null, `${br.finalUlt} 피해 ×2.5`)),
+        cl.items.filter((i) => i.cost).map((i) => h('div', { class: 'kv' }, `사용: ${i.label}`, h('b', null, fmtFull(i.cost)))),
+        h('div', { class: 'kv' }, '사용: 별의 파편 · 각성석', h('b', null, `${BALANCE.tiers[4].starShard} · ${BALANCE.tiers[4].awakenStone}`))),
+      h('div', { class: 'section-title' }, '초월 서약 고르기 (1개)'),
+      oathCards(app, opts, pick, (id) => { pick = id; render(); }),
+      h('p', { class: 'muted' }, `서약은 나중에 메뉴 → 전직에서 골드로 바꿀 수 있어요. 재료는 확정할 때만 사용됩니다.`)));
+    m.setActions([button(!cl.canPromote ? '조건을 먼저 채우세요' : pick ? `${name}(으)로 초월` : '서약을 고르세요', { cls: 'btn btn-primary', disabled: !cl.canPromote || !pick, busy: true, onClick: async () => {
+      const r = fail(await app.game.promote(4, pick));
+      if (!r.ok) return;
+      m.close();
+      celebratePromotion(app, r);   // 저장 확정 뒤에만 연출
+    } })]);
+  };
+  render();
+}
+export function openOath(app) {
+  const s = app.state;
+  const cur = s.promotion.oath;
+  const opts = prog.oathOptions(s);
+  const cost = prog.oathChangeCost(s);
+  let pick = cur;
+  const m = openModal({ id: 'oath', title: `초월 서약 · ${prog.tierName(s)}`, body: h('div'), actions: [] });
+  const render = () => {
+    m.setBody(h('div', { dataset: { screen: 'oath' } },
+      oathCards(app, opts, pick, (id) => { pick = id; render(); }),
+      h('p', { class: 'muted' }, `지금 서약: ${(prog.oathOf(s) || {}).name || '없음'}. 바꾸는 데 골드 ${fmtFull(cost)}이 들어요.`)));
+    m.setActions([button(pick === cur ? '지금 서약' : `골드 ${fmt(cost)}로 바꾸기`, { cls: 'btn btn-primary', disabled: pick === cur || s.wallet.gold < cost, busy: true, onClick: async () => {
+      const r = fail(await app.game.setOath(pick));
+      if (!r.ok) return;
+      m.close(); toast(`서약을 ${(prog.oathOf(app.state) || {}).name}(으)로 바꿨어요`);
+    } }), button('닫기', { cls: 'btn', onClick: () => m.close() })]);
+  };
+  render();
+}
 export function passiveText(p) {
   const N = { atk: '공격력', hp: '체력', def: '방어력', crit: '치명타', critDmg: '치명 피해', aspd: '공속', cdr: '쿨 감소', evade: '회피' };
   return Object.entries(p).map(([k, v]) => `${N[k] || k} +${Math.round(v * 100)}%`).join(' · ');
@@ -366,10 +424,10 @@ export function celebratePromotion(app, r) {
   const fast = reduce(app);
   const fig = currentArt(s, 'promo-art');
   const info = h('div', { class: 'promo-info', style: fast ? null : { opacity: 0, transition: 'opacity 300ms' } },
-    h('h3', null, `${r.tier}차 승급 · ${r.name}`),
-    h('p', null, r.tier === 1 ? `${SKILLS[br.skills[0]].name} 획득 · 4번 슬롯 해금` : r.tier === 2 ? `${SKILLS[br.skills[1]].name} 획득 · 5번 슬롯 해금 · 궁극기 강화` : `최종 궁극기 ${br.finalUlt}`),
+    h('h3', null, r.tier === 4 ? `초월 · ${r.name}` : `${r.tier}차 승급 · ${r.name}`),
+    h('p', null, r.tier === 1 ? `${SKILLS[br.skills[0]].name} 획득 · 4번 슬롯 해금` : r.tier === 2 ? `${SKILLS[br.skills[1]].name} 획득 · 5번 슬롯 해금 · 궁극기 강화` : r.tier === 4 ? `6번 슬롯 해금 · ${SKILLS[prog.tier4Skill(s)] ? SKILLS[prog.tier4Skill(s)].name : ''} · 서약 ${(prog.oathOf(s) || {}).name || ''} · 궁극기 ×2.5` : `최종 궁극기 ${br.finalUlt}`),
     r.exp && r.exp.amount ? h('p', { class: 'muted' }, `보관 경험치 ${fmtFull(r.exp.amount)} 적용 · ${r.exp.levels}레벨 상승`) : null);
-  const m = openModal({ id: 'promoPlay', title: '승급 완료', dismissible: false, body: h('div', { dataset: { screen: 'promoPlay' } }, h('div', { class: 'promo-stage' }, fig), info),
+  const m = openModal({ id: 'promoPlay', title: r.tier === 4 ? '초월' : '승급 완료', dismissible: false, body: h('div', { dataset: { screen: 'promoPlay' } }, h('div', { class: 'promo-stage' + (r.tier === 4 ? ' ascend' + (fast ? '' : ' anim') : '') }, fig), info),
     actions: [button('계속', { cls: 'btn btn-primary', onClick: () => m.close() })] });
   if (app.state.settings.sound) sfx('rise');
   if (!fast) setTimeout(() => { info.style.opacity = 1; app.renderer && app.renderer.kick(3, 100); }, 900);

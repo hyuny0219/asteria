@@ -436,7 +436,7 @@ export function skillsPanel(app) {
   const s = app.state;
   const root = h('div', { class: 'panel', dataset: { screen: 'skills' }, style: { height: '100%', margin: 0 } });
   const slots = prog.slotCount(s);
-  root.appendChild(h('div', { class: 'panel-head' }, h('h2', null, '스킬'), h('span', { class: 'muted' }, `일반 ${slots}/5칸 + 궁극기`)));
+  root.appendChild(h('div', { class: 'panel-head' }, h('h2', null, '스킬'), h('span', { class: 'muted' }, `일반 ${slots}/6칸 + 궁극기`)));
   const sc = h('div', { class: 'panel-scroll' });
   const unlocked = prog.unlockedSkills(s);
   const ult = prog.ultId(s);
@@ -448,10 +448,10 @@ export function skillsPanel(app) {
     return h('span', { class: 'sk-lv' }, gradeTag(s, id), ` Lv ${lv}/${BALANCE.skills.maxLevel} · 스킬북 ${have}${c ? `/${c.books}` : ''}`);
   };
   sc.appendChild(h('div', { class: 'section-title' }, '편성'));
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 6; i++) {
     const id = eq[i];
     const locked = i >= slots;
-    const unlockText = i === 3 ? '1차 승급(Lv 30)에서 열려요.' : '2차 승급(Lv 60)에서 열려요.';
+    const unlockText = i === 3 ? '1차 승급(Lv 30)에서 열려요.' : i === 4 ? '2차 승급(Lv 60)에서 열려요.' : '4차 전직 · 초월(Lv 100 · 노말 프로스트 웜)에서 열려요. 다른 갈래의 기술을 쓸 수 있어요.';
     sc.appendChild(h('div', { class: 'skill-line' },
       locked ? h('span', { class: 'skill locked', style: { width: '44px', height: '44px' } }, icon('lock', 18)) : id ? gradeFramed(img(skillIcon(SKILLS[id].icon), '', awkCls(s, id)), skGrade(s, id)) : h('span', { class: 'skill empty', style: { width: '44px', height: '44px' } }),
       h('div', null, h('div', { class: 't' }, `${i + 1}번 · ${locked ? '승급 해금' : id ? SKILLS[id].name : '비어 있음'}`, id && !locked ? SYNUI.tagChips(id) : null), locked ? h('div', { class: 'muted' }, unlockText) : id ? lvLine(id) : null),
@@ -651,7 +651,7 @@ export function dungeonPanel(app) {
 export function menuTiles(app) {
   const s = app.state;
   const tier = prog.tierOf(s);
-  const cl = tier < 3 ? prog.promotionChecklist(s) : null;
+  const cl = tier < 4 ? prog.promotionChecklist(s) : null;
   const promoHot = !!cl && (cl.canChoose || cl.canTrial || cl.canPromote);
   const extra = [...V4.v4Tiles(app), ...V5.v5Tiles(app), ...V6.v6Tiles(app), ...V8.v8Tiles(app), ...V10.v10Tiles(app), ...V12.v12Tiles(app)];
   const att = attendanceStatus(s, Date.now());
@@ -659,8 +659,8 @@ export function menuTiles(app) {
     MAILUI.mailTile(app),
     ...extra,
     { id: 'attendance', ic: 'check', t: '출석', s: att.claimedToday ? `오늘 완료 · ${att.count}일` : `${att.index + 1}일차 받기`, dot: att.canClaim, on: () => openAttendance(app) },
-    { id: 'promotion', ic: 'star', t: '승급', s: tier >= 3 ? `${prog.tierName(s)} · 최종` : cl.canChoose || cl.canPromote ? `${cl.tier}차 승급 가능` : cl.canTrial ? '시련 도전 가능' : `${cl.tier}차 · Lv ${[0, 30, 60, 90][cl.tier]}`, dot: promoHot,
-      on: () => (cl && cl.canChoose ? openPromotion(app) : cl && cl.canPromote && tier >= 1 ? V4.openPromotionTier(app, cl.tier) : openQuest(app)) },
+    { id: 'promotion', ic: 'star', t: tier >= 3 ? '전직' : '승급', s: tier >= 4 ? `${prog.tierName(s)} · 서약 ${(prog.oathOf(s) || {}).name || '-'}` : cl.canChoose || cl.canPromote ? (cl.tier === 4 ? '초월 가능' : `${cl.tier}차 승급 가능`) : cl.canTrial ? '시련 도전 가능' : cl.tier === 4 ? '초월 · 노말 프로스트 웜' : `${cl.tier}차 · Lv ${[0, 30, 60, 90][cl.tier]}`, dot: promoHot,
+      on: () => (tier >= 4 ? V4.openOath(app) : cl && cl.canChoose ? openPromotion(app) : cl && cl.canPromote && tier >= 1 ? V4.openPromotionTier(app, cl.tier) : openQuest(app)) },
     { id: 'shop', ic: 'equipment', t: '상점', s: '보석·골드로 구매', on: () => openShop(app) },
     { id: 'classChange', ic: 'growth', t: '클래스 전환', s: (s.player.classChanges || 0) === 0 ? '1회 무료' : `전환권 ${s.wallet.classTicket || 0}장`, on: () => openClassChange(app) },
     { id: 'growth', ic: 'growth', t: '능력치', s: `전투력 ${fmt(powerRating(playerStats(s)))}`, on: () => openGrowth(app) },
@@ -837,10 +837,10 @@ export function openResult(app, r) {
     return m;
   }
   if (r.kind === 'trial') {
-    const t3 = r.tier === 3;
-    const m = openModal({ id: 'trialResult', title: `${t3 ? '영웅의 시련' : '교관 시련'} ${r.win ? '통과' : '실패'}`, dismissible: false, body: h('div', { dataset: { screen: 'quest' } },
-      h('p', null, r.win ? (t3 ? '과거의 자신을 넘어섰습니다. 3차 승급을 확정할 수 있습니다.' : '교관 분신을 꺾었습니다. 이제 갈래를 고를 수 있습니다.') : '재료는 소모되지 않았습니다. 언제든 다시 도전할 수 있습니다.')),
-      actions: [button(r.win ? (t3 ? '3차 승급하기' : '갈래 선택하기') : '확인', { cls: 'btn btn-primary', onClick: () => { m.close(); back(); if (r.win) { if (t3) V4.openPromotionTier(app, 3); else openPromotion(app); } } })] });
+    const t3 = r.tier === 3, t4 = r.tier === 4;
+    const m = openModal({ id: 'trialResult', title: `${t4 ? '초월 시련' : t3 ? '영웅의 시련' : '교관 시련'} ${r.win ? '통과' : '실패'}`, dismissible: false, body: h('div', { dataset: { screen: 'quest' } },
+      h('p', null, r.win ? (t4 ? '끝에 선 자신의 그림자를 꺾었습니다. 이제 서약을 골라 초월할 수 있습니다.' : t3 ? '과거의 자신을 넘어섰습니다. 3차 승급을 확정할 수 있습니다.' : '교관 분신을 꺾었습니다. 이제 갈래를 고를 수 있습니다.') : '재료는 소모되지 않았습니다. 언제든 다시 도전할 수 있습니다.')),
+      actions: [button(r.win ? (t4 ? '초월하기' : t3 ? '3차 승급하기' : '갈래 선택하기') : '확인', { cls: 'btn btn-primary', onClick: () => { m.close(); back(); if (r.win) { if (t3 || t4) V4.openPromotionTier(app, r.tier); else openPromotion(app); } } })] });
     return m;
   }
 }
@@ -898,11 +898,11 @@ export function openQuest(app) {
   const render = () => {
     const s = app.state;
     const tier = prog.tierOf(s);
-    if (tier >= 3) { m.setBody(h('div', { dataset: { screen: 'quest' } }, h('p', null, `최종 승급 ${prog.tierName(s)}에 도달했습니다.`))); m.setActions([button('닫기', { cls: 'btn', onClick: () => m.close() })]); return; }
+    if (tier >= 4) { m.setBody(h('div', { dataset: { screen: 'quest' } }, h('p', null, `초월 ${prog.tierName(s)}에 도달했습니다. 서약은 메뉴의 전직에서 바꿀 수 있어요.`))); m.setActions([button('닫기', { cls: 'btn', onClick: () => m.close() })]); return; }
     const cl = prog.promotionChecklist(s);
     const nextName = s.player.branch ? BRANCHES[s.player.branch].names[cl.tier - 1] : branchesOf(s.player.cls || 'warrior').map((b) => BRANCHES[b].names[0]).join(' / ');
     const body = h('div', { dataset: { screen: 'quest' } },
-      h('h3', { style: { fontSize: '16px', margin: '0 0 4px' } }, `${cl.tier}차 승급 · ${nextName}`),
+      h('h3', { style: { fontSize: '16px', margin: '0 0 4px' } }, cl.tier === 4 ? `4차 전직 · 초월 · ${nextName}` : `${cl.tier}차 승급 · ${nextName}`),
       cl.items.map((it) => h('div', { class: 'check' + (it.ok ? ' ok' : '') },
         h('span', { class: 'mark', 'aria-hidden': 'true' }, it.ok ? icon('check', 18) : ''),
         h('div', { class: 'c' }, h('b', null, it.label + (it.ok ? ' · 완료' : '')), it.hint ? h('span', { class: 'muted' }, it.hint) : null),
@@ -910,13 +910,13 @@ export function openQuest(app) {
         !it.ok && it.go && it.id !== 'trial' && it.id !== 'level' ? button('바로 가기', { cls: 'btn go', onClick: () => go(app, it.go) }) : null)),
       h('div', { class: 'card', style: { marginTop: '10px' } },
         h('div', { class: 'kv' }, '보관 경험치', h('b', null, fmtFull(s.player.pendingExp))),
-        h('p', { class: 'muted', style: { margin: '4px 0 0' } }, `Lv 30 · 60 · 90에서 승급 전까지 새 경험치는 보관되고, 승급 후 순서대로 적용됩니다 (최대 Lv ${BALANCE.levelCap}). 시련에 실패해도 재료는 소모되지 않습니다.`)),
+        h('p', { class: 'muted', style: { margin: '4px 0 0' } }, cl.tier === 4 ? '초월은 Lv 100에서 하는 마지막 전직이에요. 노말 난이도 5지역 보스를 잡고 초월 시련을 통과하면, 재료를 내고 초월 서약 하나를 골라 초월합니다. 시련에 실패해도 재료는 소모되지 않습니다.' : `Lv 30 · 60 · 90에서 승급 전까지 새 경험치는 보관되고, 승급 후 순서대로 적용됩니다 (최대 Lv ${BALANCE.levelCap}). 시련에 실패해도 재료는 소모되지 않습니다.`)),
       h('p', { class: 'muted' }, '시련 상대는 자신의 모습을 은색으로 투영한 연습 상대입니다. 자동 전투만으로도 통과할 수 있습니다.'));
     m.setBody(body);
     m.setActions([
       cl.canChoose ? button('갈래 선택하기', { cls: 'btn btn-primary', onClick: () => { m.close(); openPromotion(app); } })
-        : cl.canPromote ? button(`${cl.tier}차 승급하기`, { cls: 'btn btn-primary', onClick: () => { m.close(); V4.openPromotionTier(app, cl.tier); } })
-        : button(cl.canTrial ? `${cl.tier === 3 ? '영웅의 시련' : '교관 시련'} 시작 (자동 전투)` : '조건을 먼저 채우세요', { cls: 'btn btn-primary', disabled: !cl.canTrial || app.game.mode !== 'FARM', onClick: () => { const r = app.game.startTrial(cl.tier); if (!r.ok) return fail(r); m.close(); } })]);
+        : cl.canPromote ? button(cl.tier === 4 ? '초월하기' : `${cl.tier}차 승급하기`, { cls: 'btn btn-primary', onClick: () => { m.close(); V4.openPromotionTier(app, cl.tier); } })
+        : button(cl.canTrial ? `${cl.tier === 4 ? '초월 시련' : cl.tier === 3 ? '영웅의 시련' : '교관 시련'} 시작 (자동 전투)` : '조건을 먼저 채우세요', { cls: 'btn btn-primary', disabled: !cl.canTrial || app.game.mode !== 'FARM', onClick: () => { const r = app.game.startTrial(cl.tier); if (!r.ok) return fail(r); m.close(); } })]);
   };
   const m = openModal({ id: 'quest', title: '승급 준비', body: h('div'), actions: [] });
   render();
@@ -926,7 +926,8 @@ export function openQuest(app) {
 export function openPromotion(app) {
   const s = app.state;
   const tier = prog.tierOf(s);
-  if (tier >= 1) { const cl = prog.promotionChecklist(s); return tier < 3 && cl.canPromote ? V4.openPromotionTier(app, cl.tier) : openQuest(app); }
+  if (tier >= 4) return V4.openOath(app);
+  if (tier >= 1) { const cl = prog.promotionChecklist(s); return cl.canPromote ? V4.openPromotionTier(app, cl.tier) : openQuest(app); }
   const cls = s.player.cls || 'warrior';
   const ids = branchesOf(cls);
   let pick = null;

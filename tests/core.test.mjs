@@ -168,15 +168,19 @@ test('inventory 200: extra items go to overflow, never deleted', () => {
 });
 
 // v4: 5 slot entries (3 base, 4th at tier 1, 5th at tier 2)
-test('skills: 3 slots before promotion, 4 after tier 1, 5 after tier 2; ult separate', () => {
+test('skills: 3 slots before promotion, 4 after tier 1, 5 after tier 2, 6 after tier 4 (초월); ult separate', () => {
   const s = newGame(T0);
   assert.equal(slotCount(s), 3);
-  assert.equal(s.skills.equipped.length, 5);
+  assert.equal(s.skills.equipped.length, 6);
   assert.equal(s.skills.equipped[3], null);
   s.player.branch = 'knight'; s.player.tier = 1;
   assert.equal(slotCount(s), 4);
   s.player.tier = 2;
   assert.equal(slotCount(s), 5);
+  s.player.tier = 3;
+  assert.equal(slotCount(s), 5);
+  s.player.tier = 4;
+  assert.equal(slotCount(s), 6);
 });
 
 // v4: cap is Lv 100 (was 35)

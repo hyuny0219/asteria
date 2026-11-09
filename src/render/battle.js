@@ -518,7 +518,7 @@ export class BattleRenderer {
   lootPillar(x, rarity) {
     if (!RARITY[rarity] || !Number.isFinite(x)) return;
     const big = rarity !== 'epic';
-    this.pushFx({ kind: 'pillar', x: this.ex(x) * this.sx, y: this.groundY, col: RARITY[rarity].color, big, born: this.clock, dur: big ? 2400 : 1500 });
+    this.pushFx({ kind: 'lootPillar', x: this.ex(x) * this.sx, y: this.groundY, col: RARITY[rarity].color, big, born: this.clock, dur: big ? 2400 : 1500 });
     if (big && !this.getSettings().reduceMotion) this.parts.burst(this.clock, this.ex(x) * this.sx, this.groundY - 20 * this.u, 14, 70, 900, 2.5, RARITY[rarity].color, PK.DOT, -90, Math.PI * 0.6, -Math.PI / 2);
   }
   skipCutin() {
@@ -756,6 +756,8 @@ export class BattleRenderer {
     // shadow
     ctx.fillStyle = 'rgba(0,0,0,0.35)';
     ctx.beginPath(); ctx.ellipse(x + dx, gy + 2, (riding ? 62 : 30) * this.fit * this.figScale, 6 * this.fit * this.figScale, 0, 0, Math.PI * 2); ctx.fill();
+    // v15 초월 오라: 4차 전직 영웅 뒤의 은은한 빛 (캔버스만, 모션 줄이기면 고정)
+    if ((this.heroTier || 0) >= 4 && !h.dead) this.drawAura(x + dx, gy, d, t, motion);
     // v12 탈것: ridden only on travel legs (between phases / stages). Mount first, then the
     // seated rider (GPT N ride_* art, legs forward over the flank) with the measured hips on
     // the measured saddle seat, then nothing else of the standing figure.
@@ -828,6 +830,25 @@ export class BattleRenderer {
   }
 
   // shield / guard bubble, HP bar and ult gauge above the hero (standing or riding)
+  drawAura(x, gy, d, t, motion) {
+    const ctx = this.ctx;
+    const col = { warrior: [255, 206, 120], mage: [150, 190, 255], archer: [160, 235, 150], rogue: [200, 150, 255] }[this.heroCls || 'warrior'] || [255, 220, 160];
+    const pulse = motion ? 0.5 + 0.5 * Math.sin(t / 520) : 0.5;
+    const cy = gy - d.h * 0.48, rx = d.w * 0.62, ry = d.h * 0.62;
+    ctx.save();
+    const g = ctx.createRadialGradient(x, cy, Math.min(rx, ry) * 0.2, x, cy, Math.max(rx, ry));
+    g.addColorStop(0, `rgba(${col[0]},${col[1]},${col[2]},${0.22 + 0.08 * pulse})`);
+    g.addColorStop(0.6, `rgba(${col[0]},${col[1]},${col[2]},${0.08 + 0.04 * pulse})`);
+    g.addColorStop(1, `rgba(${col[0]},${col[1]},${col[2]},0)`);
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.ellipse(x, cy, rx, ry, 0, 0, Math.PI * 2); ctx.fill();
+    // 발밑 고리
+    ctx.strokeStyle = `rgba(${col[0]},${col[1]},${col[2]},${0.45 + 0.2 * pulse})`;
+    ctx.lineWidth = 2 * this.fit;
+    ctx.beginPath(); ctx.ellipse(x, gy + 2, d.w * (0.42 + 0.04 * pulse), 7 * this.fit * this.figScale, 0, 0, Math.PI * 2); ctx.stroke();
+    ctx.restore();
+    this.auraOn = true;   // QA
+  }
   drawHeroOverlays(h, battle, x, gy, d, rideRaise, motion) {
     const ctx = this.ctx;
     // shield / guard bubbles while active
@@ -1098,7 +1119,7 @@ export class BattleRenderer {
           ctx.fillStyle = f.core || '#fff'; this.bladePath(x1, y1, x2, y2, f.w * 0.35); ctx.fill();
           break;
         }
-        case 'pillar': {
+        case 'lootPillar': {
           // rise fast, hold, fade; reduce-motion: a plain fading column
           const up = motion ? clamp01(p / 0.12) : 1;
           const hgt = (f.big ? 230 : 150) * this.u * up;

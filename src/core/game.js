@@ -294,7 +294,7 @@ export class Game {
       const skills = r.skills.slice(0, s.skills.equipped.length).map((id, i) => (i < prog.slotCount(s) ? id : null));
       view = { ...s, equipped: r.equipped, skills: { ...s.skills, equipped: skills, runes: s.skills.runes ? { ...s.skills.runes, equipped: r.runes.length ? r.runes : s.skills.runes.equipped } : s.skills.runes } };
     }
-    return { stats: playerStats(view, { preset, rift: opts.rift || null }), pet: s.pets ? meta.petPower(s) : null, skills: view.skills, branch: s.player.branch, cls, tier: prog.tierOf(s), ult: CLASS_SKILLS[cls].ult, range: CLASSES[cls].range, skillLevel: (id) => prog.skillLevel(s, id), loadout: L ? L.name : null };
+    return { stats: playerStats(view, { preset, rift: opts.rift || null }), pet: s.pets ? meta.petPower(s) : null, skills: view.skills, branch: s.player.branch, cls, tier: prog.tierOf(s), ult: CLASS_SKILLS[cls].ult, range: CLASSES[cls].range, skillLevel: (id) => prog.skillLevel(s, id), loadout: L ? L.name : null, oath: (prog.oathOf(s) || {}).fx || null };
   }
   syncHero() {
     if (this.farm) this.farm.updateStats(this.heroCfg({}));
@@ -828,6 +828,7 @@ export class Game {
   markSeen(ids) { for (const it of this.state.inventory) if (ids.includes(it.id)) it.isNew = false; }
   choosePromotion(branch, opts) { return this.transact('promotion', (s) => prog.choosePromotion(s, branch, opts)); }
   promote(tier, branch = null) { return this.transact('promotion', (s) => prog.promote(s, tier, branch, this.now())); }
+  setOath(id) { return this.transact('oath', (s) => prog.setOath(s, id)); }
   // Class is chosen once, at the very start (before real progress).
   chooseClass(cls) {
     return this.transact('chooseClass', (s) => {

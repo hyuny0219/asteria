@@ -9,6 +9,7 @@
 import { ROLES, ROLE_TABLE, PREFIXES, PREFIX_IDS } from '../data/roles.js';
 import { BALANCE, curve } from '../data/balance.js';
 import { BOSSES, MONSTERS, SKILLS, TRIALS, ULT_IDS } from '../data/content.js';
+import { skillDef } from './skillforms.js';
 const NO_MODS = Object.freeze({});
 const NO_THEME = Object.freeze({});
 import { clamp } from './util.js';
@@ -103,7 +104,7 @@ export class Battle {
     if (this.mp) { this.timerMs = o.mplus.timeSec * 1000; }
     this.killTarget = o.kind === 'mplus' ? o.mplus.trash + 1 : o.kind === 'dungeon' ? (o.dungeon.killTarget || T.dungeon.killTarget) : o.kind === 'tower' ? T.tower.killTarget : o.kind === 'rift' ? o.rift.killTarget : Infinity;
     this.timeLimitMs = o.kind === 'boss' ? C.bossTimeoutSec * 1000
-      : o.kind === 'trial' ? T.promotion.trialTimeSec * 1000
+      : o.kind === 'trial' ? ((TRIALS[(o.trial && o.trial.tier) || 1] || {}).timeSec || T.promotion.trialTimeSec) * 1000
       : o.kind === 'dungeon' ? T.dungeon.stageTimeSec * 1000
       : o.kind === 'tower' ? T.tower.timeSec * 1000
       : o.kind === 'raid' ? T.raid.timeSec * 1000
@@ -134,6 +135,11 @@ export class Battle {
   // v10 skill mods (전설 고유 효과 + 스킬 각성): per skill id, '*' = whole kit
   modsFor(id) { const sm = this.heroCfg.stats && this.heroCfg.stats.skillMods; return (sm && id && sm[id]) || NO_MODS; }
   get gmods() { return this.modsFor('*'); }
+  // 스킬 정의는 전부 여기로: 전직 단계·갈래별 스킬 형태(skillforms.js)
+  skill(id) { const hc = this.heroCfg || {}; return skillDef(id, { tier: hc.tier || 0, branch: hc.branch || null, cls: hc.cls || null }); }
+  // v15 초월 서약 전투 효과 (heroCfg.oath = OATHS[..].fx)
+  get ofx() { return (this.heroCfg && this.heroCfg.oath) || {}; }
+  get synMul() { return this.ofx.synMul || 1; }
   get curse() { return this.kind === 'rift' ? this.cfg.rift.curse : null; }
 
   setHero(h, reset = false) {
@@ -415,7 +421,7 @@ export class Battle {
       for (const d of e.dots) {
         if (this.t >= d.nextAt && this.t <= d.until) {
           d.nextAt += 1000;
-          const dmg = damageFormula(this.heroAtk(), d.coef, e.defense, e.level, false, this.rng());
+          const dmg = damageFormula(this.heroAtk(), d.coef * (this.ofx.dotMul || 1), e.defense, e.level, false, this.rng());   // 초월 서약 · 맹독
           this.dealDamage(e, dmg, { crit: false, action: 'dot', skill: d.skill });
           if (e.state === 'dying') break;
         }
@@ -460,10 +466,10 @@ export class Battle {
   }
 
   skillCoef(id) {
-    const sk = SKILLS[id];
+    const sk = this.skill(id);
     const lvl = this.heroCfg.skillLevel(id);
     let c = sk.coef * (1 + BALANCE.skills.levelBonusPerLevel * (lvl - 1));
-    if (isUlt(id)) { const tier = this.heroCfg.tier || (this.heroCfg.branch ? 1 : 0); if (tier >= 3) c *= 2; else if (tier >= 2) c *= 1.5; }
+    if (isUlt(id)) { const tier = this.heroCfg.tier || (this.heroCfg.branch ? 1 : 0); if (tier >= 4) c *= 2.5; else if (tier >= 3) c *= 2; else if (tier >= 2) c *= 1.5; }
     if (this.caps.cap_beast2 && (id === 'a_beast' || id === 'a_pack')) c *= 2;
     const m = this.modsFor(id);
     if (m.coefMul) c *= m.coefMul;
@@ -472,7 +478,7 @@ export class Battle {
   cooldownMs(id) {
     let cdr = this.heroCfg.stats.cdr || 0;
     if (this.hero.buffs.mythCdr) cdr = 1 - (1 - cdr) * 0.5;
-    return SKILLS[id].cd * 1000 * (1 - Math.min(0.7, cdr)) * (this.modsFor(id).cdMul || 1);
+    return this.skill(id).cd * 1000 * (1 - Math.min(0.7, cdr)) * (this.modsFor(id).cdMul || 1);
   }
 
   chooseAction() {
@@ -494,7 +500,7 @@ export class Battle {
     if (hc.skills.autoCast) {
       for (const id of hc.skills.equipped) {
         if (!id || !this.skillReady(id)) continue;
-        const sk = SKILLS[id];
+        const sk = this.skill(id);
         if (sk.kind === 'buff' && h.buffs[sk.buff.stat] && h.buffs[sk.buff.stat].until - t > 2000) continue;
         if (sk.kind === 'shield' && h.shield) continue;
         if (sk.kind === 'evade' && !this.alive().some((e) => e.state === 'telegraph' || e.boss)) continue;   // save dodges for real threats
@@ -506,7 +512,7 @@ export class Battle {
   }
 
   skillReady(id) {
-    const sk = SKILLS[id];
+    const sk = this.skill(id);
     if (!sk || sk.kind === 'passive-counter' || sk.kind === 'ultimate') return false;
     if (!this.heroCfg.skills.equipped.includes(id)) return false;
     return (this.hero.cds[id] || 0) <= this.t;
@@ -557,7 +563,7 @@ export class Battle {
     let sk = null, coef = 1, targets = [], hits = 1;
     if (ac.kind === 'attack') { targets = front ? [front] : []; }
     else {
-      sk = SKILLS[ac.skill];
+      sk = this.skill(ac.skill);
       const md = this.modsFor(ac.skill);
       if (sk.kind === 'buff') { h.buffs[sk.buff.stat] = { mul: sk.buff.mul + (md.buffMulAdd || 0), until: this.t + (sk.buff.sec + (md.buffSecAdd || 0)) * 1000 }; this.events.push({ type: 'buff', skill: ac.skill, t: this.t }); return; }
       if (sk.kind === 'shield') { h.shield = { amount: Math.floor(h.maxHp * (sk.shield.pct + (md.shieldAdd || 0))), until: this.t + sk.shield.sec * 1000 }; if (md.heal) this.heal(h.maxHp * md.heal); this.events.push({ type: 'buff', skill: ac.skill, shield: true, t: this.t }); return; }
@@ -596,7 +602,8 @@ export class Battle {
       let cc = c;
       if (sk && sk.executeBelow && e.hp / e.maxHp <= sk.executeBelow) cc *= 2;
       if (e.boss && this.gmods.bossMul) cc *= 1 + this.gmods.bossMul;   // 거인 사냥꾼
-      if (pre) cc *= pre.mul;
+      if (e.boss && this.ofx.bossMul) cc *= 1 + this.ofx.bossMul;       // 초월 서약 · 파괴
+      if (pre) cc *= 1 + (pre.mul - 1) * this.synMul;                     // 초월 서약 · 원소 공명
       const dmg = damageFormula(atk, cc, e.defense, e.level, crit, this.rng(), st.critMul);
       if (crit && this.gmods.critGauge) this.addGauge(this.gmods.critGauge);   // 집중
       const killed = this.dealDamage(e, dmg, { crit, action: ac.kind, skill: ac.skill || null, ranged });
@@ -800,6 +807,7 @@ export class Battle {
     const guard = h.buffs.guard;
     if (guard) dmg = Math.max(1, Math.floor(dmg * (1 - guard.reduce)));
     if (st.dmgTaken) dmg = Math.max(1, Math.floor(dmg * (1 - st.dmgTaken)));
+    if (this.ofx.lowHpGuard && h.hp / h.maxHp < 0.35) dmg = Math.max(1, Math.floor(dmg * (1 - this.ofx.lowHpGuard)));   // 초월 서약 · 불굴
     if (h.shield) {
       const ab = Math.min(h.shield.amount, dmg);
       h.shield.amount -= ab; dmg -= ab;

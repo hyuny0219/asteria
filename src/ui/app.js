@@ -456,9 +456,12 @@ export class App {
     const s = this.state;
     const slots = prog.slotCount(s);
     this.skillEls = [];
-    for (let i = 0; i < 5; i++) {
+    // v15: 3차 이후엔 6번(초월) 칸까지 보여줌 — 좁은 화면에 맞게 한 단계 작은 크기
+    const shown = prog.tierOf(s) >= 3 ? 6 : 5;
+    bar.classList.toggle('six', shown === 6);
+    for (let i = 0; i < shown; i++) {
       const id = s.skills.equipped[i];
-      if (i >= slots) { bar.appendChild(h('button', { type: 'button', class: 'skill locked', 'aria-label': '승급 해금 슬롯', onClick: () => S.go(this, 'quest') }, '승급', h('br'), '해금')); continue; }
+      if (i >= slots) { bar.appendChild(h('button', { type: 'button', class: 'skill locked', 'aria-label': i === 5 ? '초월 해금 슬롯' : '승급 해금 슬롯', onClick: () => S.go(this, 'quest') }, i === 5 ? '초월' : '승급', h('br'), '해금')); continue; }
       if (!id) { bar.appendChild(h('button', { type: 'button', class: 'skill empty', 'aria-label': '빈 슬롯 - 스킬 편성', onClick: () => this.setTab('skills') }, '+')); continue; }
       const sk = SKILLS[id];
       const cd = h('span', { class: 'cd', style: { height: '0%' } });
@@ -563,7 +566,7 @@ export class App {
     else if (m === 'DUNGEON' && this.game.session && this.game.session.kind === 'mplus') { E.where.textContent = MPLUS.dungeons[this.game.session.dungeon].name; E.prog.textContent = `쐐기 +${this.game.session.key}`; }
     else if (m === 'DUNGEON' && this.game.session && this.game.session.kind === 'tower') { E.where.textContent = '시련의 탑'; E.prog.textContent = `${this.game.session.floor}층`; }
     else if (m === 'DUNGEON') { E.where.textContent = BALANCE.dungeons[this.game.session.type || 'quarry'].name; E.prog.textContent = `${this.game.session.stage}단계`; }
-    else if (m === 'PROMOTION_TRIAL') { E.where.textContent = (this.game.session && this.game.session.tier === 3) ? '영웅의 시련' : '교관 시련'; E.prog.textContent = '승급 시련'; }
+    else if (m === 'PROMOTION_TRIAL') { const tt = this.game.session && this.game.session.tier; E.where.textContent = tt === 4 ? '초월 시련' : tt === 3 ? '영웅의 시련' : '교관 시련'; E.prog.textContent = tt === 4 ? '4차 전직' : '승급 시련'; }
     else { E.where.textContent = region.name; E.prog.textContent = DF.prefix(DF.curDiff(s)) + stageLabel(region.id, s.progression.wave); pv = s.progression.waveKills / BALANCE.combat.waveKillTarget; }
     E.progBar.style.width = Math.round(Math.min(1, pv) * 100) + '%';
     E.miniTxt.textContent = `${E.where.textContent} ${E.prog.textContent}`;

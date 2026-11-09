@@ -1,10 +1,11 @@
-// EXP / level (Lv 1–100), promotion tiers 1–3 (Lv 30 / 60 / 90), skill unlocks and
+// EXP / level (Lv 1–100), promotion tiers 1–3 (Lv 30 / 60 / 90) + 4 (초월, Lv 100 · 노말 B05), skill unlocks and
 // levels, region unlocks and the single "next goal".
 import * as DF from './difficulty.js';
 import { BALANCE, expToNext } from '../data/balance.js';
 import { BOSSES, BRANCHES, BRANCH_SKILL, BRANCH_SKILL2, CLASS_SKILLS, REGIONS, REGION_BY_ID, SKILLS, branchesOf } from '../data/content.js';
 import { killRewards } from './combat.js';
 import { applyAutoStats } from './economy.js';
+import { OATHS, OATH_BY_ID, OATH_CHANGE_GOLD_MIN } from '../data/oath.js';
 
 const CAP = BALANCE.levelCap;
 const PROMO = BALANCE.promotion;
@@ -19,7 +20,8 @@ export function lockTierAt(state) {
   return tierOf(state) >= i + 1 ? 0 : i + 1;
 }
 export const isPromotionLocked = (state) => lockTierAt(state) > 0;
-export const nextTier = (state) => Math.min(3, tierOf(state) + 1);
+export const MAX_TIER = 4;
+export const nextTier = (state) => Math.min(MAX_TIER, tierOf(state) + 1);
 
 // Apply EXP exactly once per reward. Returns {levels, toPending, discarded}.
 export function gainExp(state, amount) {
@@ -64,6 +66,9 @@ export function onTokenKill(state, enemyLevel) {
   return 0;
 }
 
+// 초월(4차) 6번 슬롯 스킬: 같은 직업의 다른 갈래 1차 스킬 ('다른 길의 기술')
+export const siblingBranch = (state) => branchesOf(state.player.cls || 'warrior').find((b) => b !== state.player.branch) || null;
+export const tier4Skill = (state) => { const b = siblingBranch(state); return b ? BRANCH_SKILL[b] : null; };
 const trialDone = (state, tier) => !!(state.promotion.trials && state.promotion.trials[tier]) || (tier === 1 && !!state.promotion.trialCleared);
 
 // Checklist for a tier (default: the next one). Every unmet item has a `go` shortcut.
@@ -87,9 +92,20 @@ export function promotionChecklist(state, tier = null) {
   } else {
     const ok = state.wallet.starShard >= T.starShard;
     items.push({ id: 'shard', label: '별의 파편', ok, progress: `${state.wallet.starShard} / ${T.starShard}`, hint: '레이드 · 시련의 탑 30층부터 10층마다 · 타락한 대천사', go: ok ? null : 'tower' });
+    if (tier === 4) {
+      const gold = goldPerMinute(T.level) * T.goldMinutes;
+      const stOk = state.wallet.awakenStone >= T.awakenStone;
+      const gOk = state.wallet.gold >= gold;
+      items.push({ id: 'awaken', label: '각성석', ok: stOk, progress: `${state.wallet.awakenStone} / ${T.awakenStone}`, hint: `Lv ${BALANCE.monster.rewards.awakenFromLevel}+ 정예 · 시련의 탑 5층마다 2개`, go: stOk ? null : 'tower' });
+      items.push({ id: 'gold', label: '골드', ok: gOk, progress: `${Math.floor(state.wallet.gold)} / ${Math.floor(gold)}`, cost: Math.floor(gold), go: gOk ? null : 'dungeon:gold' });
+    }
   }
-  const bossOk = !!state.progression.bossCleared[T.boss];
-  items.push({ id: 'boss', label: `${BOSSES[T.boss].name} 처치`, ok: bossOk, progress: bossOk ? '완료' : '미완료', go: bossOk ? null : `boss:${T.boss}` });
+  const bossOk = T.bossDiff ? !!DF.track(state, T.bossDiff).bossCleared[T.boss] : !!state.progression.bossCleared[T.boss];
+  items.push({ id: 'boss', label: `${T.bossDiff ? DF.prefix(T.bossDiff) : ''}${BOSSES[T.boss].name} 처치`, ok: bossOk, progress: bossOk ? '완료' : '미완료', go: bossOk ? null : T.bossDiff ? 'world' : `boss:${T.boss}` });
+  if (tier === 4) {
+    const lvOk3 = tierOf(state) >= 3;
+    items.unshift({ id: 'tier3', label: '3차 승급', ok: lvOk3, progress: lvOk3 ? '완료' : '미완료', go: lvOk3 ? null : 'quest' });
+  }
   const pre = items.every((i) => i.ok);
   if (tier === 2) {
     const ok = (state.tower.best || 0) >= T.towerFloor;
@@ -98,7 +114,7 @@ export function promotionChecklist(state, tier = null) {
   let canTrial = false;
   if (T.trial) {
     const ok = trialDone(state, tier);
-    items.push({ id: 'trial', label: tier === 1 ? '교관 시련' : '영웅의 시련 · 과거의 자신', ok, progress: ok ? '완료' : pre ? '도전 가능' : '앞 조건 필요', go: ok ? null : `trial:${tier}` });
+    items.push({ id: 'trial', label: tier === 1 ? '교관 시련' : tier === 4 ? '초월 시련 · 초월자의 그림자' : '영웅의 시련 · 과거의 자신', ok, progress: ok ? '완료' : pre ? '도전 가능' : '앞 조건 필요', go: ok ? null : `trial:${tier}` });
     canTrial = pre && !ok && cur === tier - 1;
   }
   const all = items.every((i) => i.ok);
@@ -148,12 +164,24 @@ export function promote(state, tier, branch = null, now = Date.now()) {
     eq[4] = BRANCH_SKILL2[p.branch];
   } else if (tier === 3) {
     state.wallet.starShard -= TIERS[3].starShard;
+  } else if (tier === 4) {
+    const T = TIERS[4];
+    const oath = branch;   // tier 4: the 2nd argument is the 초월 서약 id
+    if (!oath || !OATH_BY_ID[oath] || !(OATHS[p.cls || 'warrior'] || []).some((e) => e.id === oath)) return { ok: false, reason: 'oath' };
+    state.wallet.starShard -= T.starShard;
+    state.wallet.awakenStone -= T.awakenStone;
+    state.wallet.gold -= goldPerMinute(T.level) * T.goldMinutes;
+    state.promotion.oath = oath;
+    const eq = state.skills.equipped;
+    while (eq.length < 6) eq.push(null);
+    const sk = tier4Skill(state);
+    if (sk && !eq.includes(sk)) eq[5] = sk;
   }
   if (state.wallet.gold < 0 || state.wallet.awakenStone < 0 || state.wallet.starShard < 0) throw new Error('negative wallet');
   p.tier = tier;
   state.promotion.tierAt[tier] = now;
   const exp = releasePendingExp(state);
-  return { ok: true, tier, branch: p.branch, name: BRANCHES[p.branch].names[tier - 1], exp };
+  return { ok: true, tier, branch: p.branch, name: BRANCHES[p.branch].names[tier - 1], exp, oath: tier === 4 ? state.promotion.oath : undefined };
 }
 
 export function tierName(state) {
@@ -171,9 +199,25 @@ export function unlockedSkills(state) {
   const t = tierOf(state);
   if (t >= 1 && state.player.branch) out.push(BRANCH_SKILL[state.player.branch]);
   if (t >= 2 && state.player.branch) out.push(BRANCH_SKILL2[state.player.branch]);
+  if (t >= 4 && state.player.branch) { const sk = tier4Skill(state); if (sk) out.push(sk); }
   return out;
 }
-export const slotCount = (state) => 3 + (tierOf(state) >= 1 ? 1 : 0) + (tierOf(state) >= 2 ? 1 : 0);
+export const slotCount = (state) => 3 + (tierOf(state) >= 1 ? 1 : 0) + (tierOf(state) >= 2 ? 1 : 0) + (tierOf(state) >= 4 ? 1 : 0);
+
+// ---------- 초월 서약 ----------
+export const oathOptions = (state) => OATHS[state.player.cls || 'warrior'] || [];
+export const oathOf = (state) => (tierOf(state) >= 4 && state.promotion.oath && OATH_BY_ID[state.promotion.oath]) || null;
+export const oathChangeCost = (state) => Math.floor(goldPerMinute(state.player.level) * OATH_CHANGE_GOLD_MIN);
+export function setOath(state, id) {
+  if (tierOf(state) < 4) return { ok: false, reason: 'tier' };
+  if (!oathOptions(state).some((e) => e.id === id)) return { ok: false, reason: 'oath' };
+  if (state.promotion.oath === id) return { ok: false, reason: 'same' };
+  const cost = oathChangeCost(state);
+  if (state.wallet.gold < cost) return { ok: false, reason: 'gold', need: cost };
+  state.wallet.gold -= cost;
+  state.promotion.oath = id;
+  return { ok: true, oath: id, cost };
+}
 
 export function skillLevel(state, id) { return (state.skills.levels && state.skills.levels[id]) || 1; }
 export function skillLevelCost(state, id) {
@@ -232,6 +276,13 @@ export function nextGoal(state) {
     if (todo) return { id: 'promo', text: `${lock}차 승급 준비 · ${todo.label}`, action: todo.go || 'quest', progress: todo.progress };
     return { id: 'promo', text: lock === 1 ? '서약 각성 분기 선택' : `${lock}차 승급하기`, action: 'promotion' };
   }
+  // v15 초월: 노말 B05까지 잡았으면 남은 조건을 바로 가리킴
+  if (tierOf(state) === 3 && state.player.level >= TIERS[4].level && DF.track(state, TIERS[4].bossDiff).bossCleared[TIERS[4].boss]) {
+    const cl = promotionChecklist(state, 4);
+    const todo = cl.items.find((i) => !i.ok);
+    if (todo) return { id: 'promo', text: `초월 준비 · ${todo.label}`, action: todo.id === 'trial' ? 'quest' : todo.go || 'quest', progress: todo.progress };
+    return { id: 'promo', text: '4차 전직 · 초월하기', action: 'promotion' };
+  }
   const region = REGION_BY_ID[p.region];
   const d = DF.curDiff(state);
   const t = DF.track(state, d);
@@ -246,7 +297,7 @@ export function nextGoal(state) {
   const nd = DF.DIFF_IDS[DF.DIFFICULTY[d].order + 1];
   if (nd && DF.diffOpen(state, nd) && !Object.keys(DF.track(state, nd).bossCleared).length && (DF.track(state, nd).maxWave[REGIONS[0].id] || 1) <= 1) return { id: 'diff', text: `${DF.diffName(nd)} 난이도 1-1 시작`, action: 'world' };
   const nt = nextTier(state);
-  if (tierOf(state) < 3 && state.player.level >= BALANCE.tiers[nt].level - 5) {
+  if (tierOf(state) < 4 && state.player.level >= BALANCE.tiers[nt].level - 5) {
     const cl = promotionChecklist(state, nt);
     const todo = cl.items.find((i) => !i.ok && i.id !== 'level');
     if (todo) return { id: 'promo', text: `${nt}차 승급 준비 · ${todo.label}`, action: todo.go || 'quest', progress: todo.progress };

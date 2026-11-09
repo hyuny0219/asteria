@@ -4,6 +4,7 @@
 //   5. % sources summed: equipment options, sets, branch tier passives, runes, class mods
 //   6. × (1 + sum%) on ATK/HP/DEF    7. combat buffs (applied by combat at hit time)
 //   8. caps (crit 60%, crit dmg ×2.5, attack speed 3.0/s, evade 40%, cooldown 40%)
+import { OATH_BY_ID } from '../data/oath.js';
 import { BALANCE } from '../data/balance.js';
 import { BRANCHES, CLASSES, RUNES, SETS, SET_SLOTS } from '../data/content.js';
 import { itemOptions, itemStats } from './items.js';
@@ -77,11 +78,14 @@ export function playerStats(state, opts = {}) {
     add(jewelBonus(it));   // v8 보옥
   }
   for (const sb of activeSetBonuses(state)) add(sb.bonus);
+  // v15 초월 서약 (퍼센트 부분; 전투 효과 fx는 combat.js)
+  { const eg = (p.tier || 0) >= 4 && state.promotion && OATH_BY_ID[state.promotion.oath]; if (eg) add(eg.pct); }
   // branch passives for every tier reached
   if (p.branch && BRANCHES[p.branch]) {
     const tiers = BRANCHES[p.branch].tiers;
-    for (let t = 0; t < Math.min(p.tier || 1, 3); t++) {
+    for (let t = 0; t < Math.min(p.tier || 1, 4); t++) {
       const tp = tiers[t];
+      if (!tp) continue;
       add({ atkPct: tp.atk || 0, hpPct: tp.hp || 0, defPct: tp.def || 0, critChance: tp.crit || 0, critDmg: tp.critDmg || 0, cdr: tp.cdr || 0, aspd: tp.aspd || 0, evade: tp.evade || 0 });
     }
   }

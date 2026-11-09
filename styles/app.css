@@ -826,3 +826,18 @@ img.sg-up-ico { width: 16px !important; height: 16px !important; margin: 0 4px 0
 .syn-row { display: grid; gap: 1px; }
 .syn-row.unknown b, .syn-entry.unknown b { letter-spacing: 2px; }
 .syn-entry { margin: 6px 0; }
+/* v15 초월: 6칸 스킬바 · 서약 카드 · 초월 연출 */
+.skills.six { gap: 5px; padding: 0 8px; }
+.skills.six .skill { width: 40px; height: 40px; }
+.skills.six .skill.ult { width: 44px; height: 44px; }
+.skills.six .skill.locked { font-size: 11px; }
+.oath-pick { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.oath-card { text-align: left; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel); color: inherit; display: flex; flex-direction: column; gap: 4px; cursor: pointer; }
+.oath-card b { font-size: 15px; }
+.oath-card span { font-size: 12px; color: var(--muted); line-height: 1.4; }
+.oath-card.on { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(216,182,117,.35); }
+.ascend-glow { filter: drop-shadow(0 0 10px rgba(255,226,160,.75)); }
+.promo-stage.ascend { background: radial-gradient(circle at 50% 60%, rgba(255,226,160,.28), transparent 65%); border-radius: 12px; }
+.promo-stage.ascend.anim img { animation: ascendRise 1.6s ease-out both; }
+@keyframes ascendRise { 0% { filter: brightness(2.2) drop-shadow(0 0 24px #fff3c8); transform: scale(.96); } 60% { filter: brightness(1.3) drop-shadow(0 0 16px #ffe2a0); } 100% { filter: drop-shadow(0 0 10px rgba(255,226,160,.7)); transform: none; } }
+@media (prefers-reduced-motion: reduce) { .promo-stage.ascend.anim img { animation: none; } }

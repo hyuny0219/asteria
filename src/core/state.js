@@ -61,7 +61,7 @@ export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0, cls = 'wa
     worldBoss: defaultWorldBoss(),        // 월드 보스 기록 + 희귀 정예 도감 (worldboss.js)   // 스테이지 지도 (schema 7): best stars, first-clear claimed, auto-advance
     notices: {},            // one-time notices shown after load: { slotEnhance: { refund, levels } }
     skills: {
-      equipped: [...CLASS_SKILLS[cls].base, null, null],   // 5 slots: 3 base, 4th at tier 1, 5th at tier 2
+      equipped: [...CLASS_SKILLS[cls].base, null, null, null],   // 6 slots: 3 base, 4th at tier 1, 5th at tier 2, 6th at tier 4 (v15 초월)
       ultAuto: 'ELITE_BOSS',                     // OFF | ELITE_BOSS | ALWAYS
       autoCast: true,
       levels: {},                                // skillId → 1..10 (missing = 1)
@@ -95,7 +95,7 @@ export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0, cls = 'wa
       firsts: {},                                // tutorial goals: firstUpgrade, firstEquip, ...
     },
     dungeon: { tickets: BALANCE.dungeon.dailyTickets, lastDay: kstDayIndex(now), best: 0, pendingRun: null, clockWarnings: 0 },
-    promotion: { trialCleared: false, trials: {}, branchChosenAt: null, tierAt: {} },
+    promotion: { trialCleared: false, trials: {}, branchChosenAt: null, tierAt: {}, oath: null },   // oath: v15 초월 서약 id
     offlineSnapshot: { lastActiveAt: now, pendingClaim: null },
     transactions: { lastClaimId: null, lastClaimAt: null, applied: [] },   // recent tx ids (bounded)
     settings: {
@@ -257,6 +257,8 @@ export function migrate(s) {
   if (cur.player.classChanges === undefined) cur.player.classChanges = 0;
   for (const it of [...(cur.inventory || []), ...(cur.overflow || [])]) refreshLook(it);
   for (const k of Object.keys(d.skills)) if (cur.skills[k] === undefined) cur.skills[k] = d.skills[k];
+  if (Array.isArray(cur.skills.equipped)) while (cur.skills.equipped.length < 6) cur.skills.equipped.push(null);   // v15 6번 슬롯
+  if (cur.promotion && cur.promotion.oath === undefined) cur.promotion.oath = null;
   for (const k of Object.keys(d.dungeons)) if (!cur.dungeons[k]) cur.dungeons[k] = d.dungeons[k];
   for (const k of Object.keys(d.player)) if (cur.player[k] === undefined) cur.player[k] = d.player[k];
   for (const k of Object.keys(d.slotEnhance)) { cur.slotEnhance[k] ||= 0; cur.slotEnhanceOre[k] ||= 0; }
