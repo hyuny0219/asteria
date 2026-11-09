@@ -16,7 +16,7 @@ import { GRADE_NAME } from '../data/skillgrade.js';
 import { fmt, fmtFull, fmtPct } from '../core/util.js';
 import { sfx } from '../platform/audio.js';
 import { button, closeAllModals, GRADE_UP_ICON, gradeFramed, h, icon, img, modalOpen, openModal, toast } from './dom.js';
-import { costChip, fail, go, openBoss, openWorld, rewardTiles } from './screens.js';
+import { costChip, fail, go, lootDim, openBoss, openWorld, rewardTiles } from './screens.js';
 
 const reduce = (app) => app.state.settings.reduceMotion;
 const curIcon = (k) => img(itemIcon(CURRENCY_ICONS[k]), '');
@@ -166,6 +166,7 @@ function showDrawResults(app, isEq, r, after) {
   const m = openModal({ id: 'gachaResult', title: `${isEq ? '장비' : '스킬'} 뽑기 결과 · ${res.length}회`, body: h('div', { dataset: { screen: 'gachaResult' } }, head, upLine, grid, ...extra),
     onClose: after, actions: [button('확인', { cls: 'btn btn-primary', onClick: () => m.close() })] });
   if (!fast && order(bestR) >= 4) setTimeout(() => app.renderer && app.renderer.kick(2, 90), 200);
+  if (order(bestR) >= 4 && RARITY[bestR]) lootDim(bestR === 'mythic' ? 'mythic' : 'legendary');   // v14: 결과(저장 완료) 위에서만
 }
 
 // ======================= 일일 미션 =======================

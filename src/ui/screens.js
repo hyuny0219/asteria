@@ -13,6 +13,8 @@ import * as V12 from './v12.js';
 import * as WBM from '../core/worldboss.js';
 import * as G from '../core/gearplus.js';
 import * as BD from '../core/bossdaily.js';
+import * as STORY from '../core/story.js';
+import * as STORYUI from './story.js';
 import * as MAILUI from './mail.js';
 import { jewelName, socketCount } from '../core/crafting.js';
 import { MONSTERS } from '../data/content.js';
@@ -736,13 +738,33 @@ export function openBoss(app, bossId = null) {
 }
 
 // ======================= S09 victory / S10 defeat / dungeon & trial results =======================
+// v14 드롭 연출: 영웅은 등급색 테두리, 전설·신화는 잠깐 화면이 어두워지고 카드가 뒤집히며 공개.
+// rewardTiles는 항상 저장이 끝난 결과(transact ok)로만 그려지므로 연출이 저장보다 먼저 시작하지 않습니다.
+const HI = new Set(['legendary', 'mythic']);
 export function rewardTiles(list) {
-  return h('div', { class: 'rewards reveal' }, list.map((r, i) => {
-    const el = h('div', { class: 'reward', style: { animationDelay: `${350 + i * 60}ms` } }, img(r.icon, ''), h('b', null, r.value), r.label);
-    return el;
+  const big = list.some((r) => HI.has(r.rarity));
+  if (big) lootDim(list.find((r) => r.rarity === 'mythic') ? 'mythic' : 'legendary');
+  let k = 0;
+  return h('div', { class: 'rewards reveal' + (big ? ' has-flip' : '') }, list.map((r, i) => {
+    if (r.rarity && HI.has(r.rarity)) {
+      const delay = 700 + (k++) * 450;
+      return h('div', { class: `reward flip r-${r.rarity}`, dataset: { rarity: r.rarity }, style: { animationDelay: `${350 + i * 60}ms`, '--flip-delay': `${delay}ms` } },
+        h('div', { class: 'flip-in' },
+          h('div', { class: 'flip-back', 'aria-hidden': 'true' }, h('span', null, RARITY[r.rarity].mark)),
+          h('div', { class: 'flip-front' }, img(r.icon, ''), h('b', null, r.value), r.label)));
+    }
+    return h('div', { class: 'reward' + (r.rarity ? ` r-${r.rarity}` : ''), style: { animationDelay: `${350 + i * 60}ms` } }, img(r.icon, ''), h('b', null, r.value), r.label);
   }));
 }
-export function itemRewards(items) { return items.map((it) => ({ icon: itemIcon(it.look), value: rarityLabel(it.rarity), label: it.name })); }
+// 전설·신화 공개 전 짧게 화면을 어둡게 (모션 줄이기면 단순 페이드)
+export function lootDim(rarity) {
+  if (typeof document === 'undefined') return;
+  const old = document.querySelector('.loot-dim'); if (old) old.remove();
+  const d = h('div', { class: `loot-dim r-${rarity}`, 'aria-hidden': 'true' });
+  document.body.appendChild(d);
+  setTimeout(() => d.remove(), 1300);
+}
+export function itemRewards(items) { return items.map((it) => ({ icon: itemIcon(it.look), value: rarityLabel(it.rarity), label: it.name, rarity: it.rarity })); }
 
 export function openResult(app, r) {
   if (r.saveFailed) {
@@ -754,6 +776,9 @@ export function openResult(app, r) {
     const res = app.game.returnToFarm();
     if (res.ok) app.applyView();
   };
+  if (r.kind === 'boss' && r.win && r.ending) {   // v14: 이지 심연의 군주 첫 처치 → 엔딩 카드 뒤 결과 창
+    return STORYUI.openEnding(app, () => openResult(app, { ...r, ending: false }));
+  }
   if (r.kind === 'boss' && r.win) {
     const b = BOSSES[r.bossId];
     const tiles = r.noReward ? [] : [{ icon: itemIcon(CURRENCY_ICONS.gold), value: '+' + fmt(r.gold), label: '골드' }, { icon: itemIcon(CURRENCY_ICONS.exp), value: '+' + fmt(r.exp), label: r.expRes && r.expRes.toPending ? '경험치(보관)' : '경험치' }];
@@ -768,8 +793,11 @@ export function openResult(app, r) {
     if (r.unlocked) actions.push(button(`${REGION_BY_ID[r.unlocked].name}(으)로 이동`, { cls: 'btn btn-primary', busy: true, onClick: async () => { m.close(); back(); await app.game.setFarm(r.unlocked, 1, true); } }));
     actions.push(button(r.unlocked || r.diffUnlocked ? '현재 지역에서 계속' : '파밍으로 돌아가기', { cls: 'btn' + (r.unlocked || r.diffUnlocked ? '' : ' btn-primary'), onClick: () => { m.close(); back(); } }));
     const m = openModal({ id: 'victory', title: r.diffUnlocked ? `${DF.diffName(r.diffUnlocked)} 난이도 개방` : r.first ? `${DF.prefix(r.diff || 'easy')}지역 돌파` : '보스 처치', dismissible: false, body: h('div', { dataset: { screen: 'victory' }, class: 'reveal' },
-      h('p', null, `${DF.prefix(r.diff || 'easy')}${b.name} 처치 · ${r.timeSec}초`), rewardTiles(tiles),
+      h('p', null, `${DF.prefix(r.diff || 'easy')}${b.name} 처치 · ${r.timeSec}초`),
+      r.lore ? h('p', { class: 'story-lore', dataset: { k: 'lore' } }, r.lore) : null,
+      rewardTiles(tiles),
       r.noReward ? h('p', { class: 'warn' }, '오늘 반복 처치 3회를 이미 다 써서 보상이 없어요.') : r.dailyLeft !== undefined ? h('p', { class: 'muted', dataset: { k: 'bossDailyLeft' } }, `오늘 반복 처치 ${r.dailyLeft}/3회 남음`) : null,
+      r.diffUnlocked ? h('p', { class: 'story-lore' }, STORY.DIFF_STORY[r.diffUnlocked]) : null,
       r.diffUnlocked ? h('p', { class: 'okc' }, `${DF.diffName(r.diffUnlocked)} 난이도가 열렸어요. 1-1부터 더 강한 적과 더 좋은 보상이 기다려요. 스테이지 탭 위 난이도 칩으로 언제든 바꿀 수 있어요.`) : null,
       r.overflowed && r.overflowed.length ? h('p', { class: 'warn' }, `보관함이 가득 차 ${r.overflowed.length}개는 임시 보관함에 들어갔습니다.`) : null,
       r.unlocked ? h('p', { class: 'okc' }, `새 지역 개방: ${REGION_BY_ID[r.unlocked].name}`) : null,

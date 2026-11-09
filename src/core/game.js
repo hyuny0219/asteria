@@ -40,6 +40,7 @@ import * as worldboss from './worldboss.js';
 import * as craft from './crafting.js';
 import * as mail from './mail.js';
 import * as BD from './bossdaily.js';
+import * as story from './story.js';
 import { PASS } from '../data/meta.js';
 import { deepClone, makeRng, uid } from './util.js';
 
@@ -261,6 +262,7 @@ export class Game {
   steedSummon(kind, n) { return this.transact('steedSummon', (s) => steeds.summon(s, kind, n, this.rng)).then((r) => { if (r.ok) this.syncHero(); return r; }); }
   levelUpItem(id, steps) { return this.transact('itemLevel', (s) => gear.levelUpItem(s, id, steps)); }
   reforge(id, optIdx) { return this.transact('reforge', (s) => gear.reforge(s, id, optIdx, this.rng)); }
+  storySeen(key) { return this.transact('story', (s) => ({ ok: true, fresh: story.markSeen(s, key, this.now()) })); }
   rarityUp(baseId, matIds) { return this.transact('rarityUp', (s) => gear.rarityUp(s, baseId, matIds, this.rng)); }
   bulkRarityUp(maxTo, slot = null) { return this.transact('bulkRarityUp', (s) => gear.bulkRarityUp(s, maxTo, slot, this.rng)); }
   claimAllExpeditions() { return this.transact('expClaim', (s) => expedition.claimAll(s, this.now())); }
@@ -429,7 +431,10 @@ export class Game {
       this.emit('reward', { gold: r.gold, exp: r.exp, expRes, loot, token: tok, advanced, enemy: e, supplyEq: r.supplyEq, supplySk: r.supplySk, rare: r.rare });
       if (expRes.levels) { this.syncHero(); this.emit('levelUp', { level: s.player.level }); this.checkpoint('levelUp'); }
       if (e.fieldBoss) this.checkpoint('fieldBoss');
-      if (loot.items.length) this.checkpoint('loot');
+      // v14: 영웅 이상은 저장이 끝난 뒤에만 연출 (lootSaved) — 보상 저장 확정 전 획득 연출 금지
+      const hi = loot.items.filter((i) => i.rarity === 'epic' || i.rarity === 'legendary' || i.rarity === 'mythic');
+      if (hi.length) this.saveLoot(hi, e.x);
+      else if (loot.items.length) this.checkpoint('loot');
     } else if (ev.type === 'heroDown') {
       s.progression.counters.deaths++;
       if (this.active === this.farm) this.stageRun().deaths++;
@@ -628,6 +633,7 @@ export class Game {
         const cleared = prog.onBossCleared(s, sess.bossId, d);
         if (REGION_BY_ID[BOSSES[sess.bossId].region]?.boss === sess.bossId) res.stage = stages.recordClear(s, BOSSES[sess.bossId].region, 'boss', { deaths: 0, timeSec: ev.t / 1000 }, d);
         res.first = cleared.first;
+        if (cleared.first) Object.assign(res, story.onBossFirstClear(s, sess.bossId, d, this.now()));   // v14 보스 기록·엔딩
         res.unlocked = cleared.unlocked;
         res.diffUnlocked = cleared.diffUnlocked;
         const items = [];
@@ -910,6 +916,22 @@ export class Game {
     if (!this.state) return { ok: false };
     this.state.rngSeed = this.rng.state();
     return this.commitState(this.state, label);
+  }
+
+  // Notable farm drops: commit (waiting briefly if another save is running), then announce.
+  async saveLoot(items, x) {
+    for (let i = 0; i < 30; i++) {
+      if (!this.state || this.mode === 'CONFLICT') return { ok: false };
+      if (!this.busy) {
+        this.busy = true;
+        let c;
+        try { c = await this.commit('loot'); } finally { this.busy = false; }
+        if (c && c.ok) this.emit('lootSaved', { items, x });
+        return c;
+      }
+      await new Promise((r) => setTimeout(r, 100));
+    }
+    return { ok: false, reason: 'busy' };
   }
 
   // Routine progress (kills, gold). Live state is saved as-is.

@@ -11,6 +11,8 @@ import { fmt, fmtFull, fmtPct } from '../core/util.js';
 import { sfx } from '../platform/audio.js';
 import { button, h, img, openModal, toast } from './dom.js';
 import { fail, rewardTiles } from './screens.js';
+import * as STORY from '../core/story.js';
+import * as STORYUI from './story.js';
 
 // emblems from icons_v5 (V00–V15)
 export const V6_ICONS = Object.freeze({ talents: 'V00', rebirth: 'V01', rift: 'V02', blessing: 'V03', codexMonster: 'V04', codexItem: 'V05', achievement: 'V06', title: 'V07', pass: 'V08', craft: 'V09', petEgg: 'V10', petFood: 'V11', curse: 'V12', relic: 'V13', essence: 'V14', crown: 'V15' });
@@ -275,6 +277,7 @@ export function v6Tiles(app) {
     { id: 'pass', em: V6_ICONS.pass, t: '시즌 패스', s: `무료 · Lv ${ps.level}/${PASS.levels}`, dot: ps.claimable > 0, on: () => openPass(app) },
     { id: 'achievements', em: V6_ICONS.achievement, t: '업적·칭호', s: ach ? `받기 ${ach}개` : `${Object.keys(s.achievements.claimed).length}/${ACHIEVEMENTS.length}`, dot: ach > 0, on: () => openAchievements(app) },
     { id: 'pets', em: V6_ICONS.petEgg, t: '동료', s: s.pets.active ? `${PETS[s.pets.active].name} 동행` : s.pets.eggs ? `알 ${s.pets.eggs}개` : `${Object.keys(s.pets.owned).length}/6`, dot: s.pets.eggs > 0, on: () => openPets(app) },
+    { id: 'story', em: V6_ICONS.crown, t: '이야기', s: `기록 ${STORY.journal(s).length}개`, on: () => STORYUI.openJournal(app) },
     { id: 'codex', em: V6_ICONS.codexMonster, t: '도감', s: `${M.codexTiersTotal(s)}단계 · 장비 ${Object.keys(s.codex.items).length}`, on: () => openCodex(app) },
     { id: 'craft', em: V6_ICONS.craft, t: '신화 제작', s: M.craftOpen(s) ? (M.craftQuote(s).ok ? '제작 가능' : '재료 모으는 중') : 'Lv 90부터', dot: M.craftQuote(s).ok, on: () => openCraft(app) },
   ];

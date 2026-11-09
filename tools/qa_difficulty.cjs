@@ -39,6 +39,10 @@ const out = (process.env.SHOTS || 'docs/qa/screens') + '/';
   await p.evaluate(() => { __asteria.game.state.settings.speed = 4; });
   await p.waitForFunction(() => __asteria.game.mode === 'RESULT', null, { timeout: 120000 });
   await p.waitForTimeout(500);
+  // v14: 이지 심연의 군주 첫 처치는 엔딩 카드(3–4장)를 넘긴 뒤 결과 창
+  const endCards = await p.evaluate(() => document.querySelectorAll('.modal [data-screen="ending"]').length);
+  check('B10 first clear shows the ending first', endCards === 1, { endCards });
+  for (let k = 0; k < 6 && await p.$('[data-act="ending-next"]'); k++) { await p.click('[data-act="ending-next"]'); await p.waitForTimeout(250); }
   const vic = await p.evaluate(() => ({ win: __asteria.game.result.win, du: __asteria.game.result.diffUnlocked, title: document.querySelector('.modal h2, .modal-title')?.textContent, btn: !!document.querySelector('[data-act="diff-start"]'), raid: __asteria.game.state.raid.tries, b10: __asteria.game.state.progression.bossCleared.B10 }));
   check('B10 stage boss win opens 노말 (raid tries untouched)', vic.win && vic.du === 'normal' && vic.btn && vic.raid === raidTries0 && vic.b10, vic);
   await p.screenshot({ path: out + 'diff_unlock_390x844.png' });

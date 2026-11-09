@@ -16,7 +16,7 @@
 // - ultimate cut-in (dim + diagonal banner with portrait + name) is timed on battle
 //   time from 'ultStart' so it lines up with the 700 ms impact; tap skips the banner.
 import { HERO_X } from '../core/combat.js';
-import { CLASSES, SKILLS } from '../data/content.js';
+import { CLASSES, RARITY, SKILLS } from '../data/content.js';
 import { bgMeta, fxSprite, classPortrait, enemyMeta, heroFrames, loadImage, outlined, petMeta, promoPortrait, ready, scaledImage, spriteMeta } from './assets.js';
 import { Particles, PK } from './particles.js';
 import { fmt } from '../core/util.js';
@@ -502,6 +502,13 @@ export class BattleRenderer {
   }
 
   // tap on the battle: skip the cut-in banner (the ultimate itself still plays)
+  // v14 드롭 빛기둥: 영웅 이상 장비가 저장된 뒤, 처치 위치에 등급색 빛기둥
+  lootPillar(x, rarity) {
+    if (!RARITY[rarity] || !Number.isFinite(x)) return;
+    const big = rarity !== 'epic';
+    this.pushFx({ kind: 'pillar', x: this.ex(x) * this.sx, y: this.groundY, col: RARITY[rarity].color, big, born: this.clock, dur: big ? 2400 : 1500 });
+    if (big && !this.getSettings().reduceMotion) this.parts.burst(this.clock, this.ex(x) * this.sx, this.groundY - 20 * this.u, 14, 70, 900, 2.5, RARITY[rarity].color, PK.DOT, -90, Math.PI * 0.6, -Math.PI / 2);
+  }
   skipCutin() {
     if (this.cut && !this.cut.simple && !this.cut.skipped) { this.cut.skipped = true; return true; }
     return false;
@@ -1071,6 +1078,20 @@ export class BattleRenderer {
           ctx.globalAlpha = 1 - p * p;
           ctx.fillStyle = f.col; this.bladePath(x1, y1, x2, y2, f.w); ctx.fill();
           ctx.fillStyle = f.core || '#fff'; this.bladePath(x1, y1, x2, y2, f.w * 0.35); ctx.fill();
+          break;
+        }
+        case 'pillar': {
+          // rise fast, hold, fade; reduce-motion: a plain fading column
+          const up = motion ? clamp01(p / 0.12) : 1;
+          const hgt = (f.big ? 230 : 150) * this.u * up;
+          const w = (f.big ? 26 : 18) * this.u * (motion ? 1 + 0.15 * Math.sin(now / 90) : 1);
+          ctx.globalAlpha = motion ? (p < 0.6 ? 1 : 1 - (p - 0.6) / 0.4) : 1 - p;
+          ctx.globalCompositeOperation = 'lighter';
+          const g = ctx.createLinearGradient(0, f.y, 0, f.y - hgt);
+          g.addColorStop(0, f.col); g.addColorStop(0.5, f.col + '88'); g.addColorStop(1, f.col + '00');
+          ctx.fillStyle = g; ctx.fillRect(f.x - w / 2, f.y - hgt, w, hgt);
+          ctx.fillStyle = 'rgba(255,248,230,0.55)'; ctx.fillRect(f.x - w / 7, f.y - hgt * 0.9, w / 3.5, hgt * 0.9);
+          ctx.beginPath(); ctx.ellipse(f.x, f.y, w * 1.4, w * 0.35, 0, 0, Math.PI * 2); ctx.fillStyle = f.col + 'aa'; ctx.fill();
           break;
         }
         case 'ring': {

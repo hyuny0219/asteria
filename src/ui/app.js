@@ -8,6 +8,7 @@ import { fmt } from '../core/util.js';
 import { button, clear, closeAllModals, h, icon, img, initModals, initToasts, modalOpen, openModal, toast } from './dom.js';
 import * as S from './screens.js';
 import * as V4 from './v4.js';
+import * as STORYUI from './story.js';
 import { sfx } from '../platform/audio.js';
 import * as FS from './fullscreen.js';
 import { titleName } from '../core/meta.js';
@@ -156,13 +157,23 @@ export class App {
     g.on('reward', (r) => {
       this.panelDirty = true;
       // common drops only light the 장비 tab dot; uncommon+ get a short toast
-      const notable = r.loot ? r.loot.items.filter((i) => i.rarity !== 'common' && i.rarity !== 'uncommon') : [];
+      // (영웅 이상은 저장 후 lootSaved에서 등급색 토스트·빛기둥)
+      const notable = r.loot ? r.loot.items.filter((i) => i.rarity === 'rare') : [];
       if (notable.length) this.announce(`${RARITY[notable[0].rarity].name} 장비 획득: ${notable[0].name}`);
       if (notable.length) toast(`장비 획득 · ${notable.map((i) => `${RARITY[i.rarity].name} ${RARITY[i.rarity].mark} ${i.name}`).join(', ')}`, 'good', 1800);
       if (r.rare) toast(`희귀 정예 처치 · 보석 +${r.rare.gem} · ${RARITY[r.rare.item.rarity].name} ${r.rare.item.name}${r.rare.first ? ' · 도감 등록' : ''}${r.rare.title ? ' · 칭호 획득!' : ''}`, 'good', 3200);
       if (r.supplyEq || r.supplySk) toast(`사냥 보급 · ${[r.supplyEq ? '장비 뽑기권 +1' : '', r.supplySk ? '스킬 뽑기권 +1' : ''].filter(Boolean).join(', ')}`, 'good', 1800);
       if (r.token) toast(`시련의 증표 +1 (${this.state.wallet.token}/${BALANCE.promotion.tokensRequired})`, 'good', 1800);
       if (r.expRes && r.expRes.toPending && !this._pendingToast) { this._pendingToast = true; toast(`Lv ${this.state.player.level}: 승급 전까지 경험치는 보관됩니다.`, 'info', 3500); }
+    });
+    g.on('lootSaved', ({ items, x }) => {
+      const order = ['epic', 'legendary', 'mythic'];
+      const top = items.reduce((a, i) => (order.indexOf(i.rarity) > order.indexOf(a) ? i.rarity : a), 'epic');
+      this.panelDirty = true;
+      this.announce(`${RARITY[top].name} 장비 획득: ${items[0].name}`);
+      toast(`${top === 'epic' ? '장비 획득' : top === 'legendary' ? '전설 장비 획득!' : '신화 장비 획득!!'} · ${items.map((i) => `${RARITY[i.rarity].name} ${RARITY[i.rarity].mark} ${i.name}`).join(', ')}`, 'good loot-' + top, top === 'epic' ? 2200 : 3600);
+      if (this.renderer && this.game.active === this.game.farm) this.renderer.lootPillar(x, top);
+      if (top !== 'epic' && this.state.settings.sound) sfx('bell');
     });
     g.on('levelUp', ({ level }) => { toast(`레벨 업! Lv ${level}`, 'good'); this.announce(`레벨 ${level} 달성`); this.panelDirty = true; this.structural = true; this.buildSkills(); });
     g.on('combat', (ev) => { if (ev.type === 'rareElite') { toast(`희귀 정예 출현! ${ev.name}`, 'good', 3200); this.announce(`희귀 정예 ${ev.name} 출현`); } if (ev.type === 'fieldBoss') toast(`${ev.name} 출현! 처치하면 보석과 상위 장비`, 'good', 3000); if (ev.type === 'enrage') this.announce('보스 광폭화', true); });
@@ -176,7 +187,9 @@ export class App {
     g.on('mode', ({ mode, prev }) => this.onMode(mode, prev));
     g.on('result', (r) => S.openResult(this, r));
     g.on('session', (sess) => this.onSession(sess));
-    g.on('farmChanged', () => { this.panelDirty = true; this.preload(); });
+    g.on('farmChanged', () => { this.panelDirty = true; this.preload(); setTimeout(() => STORYUI.maybeIntro(this), 400); });
+    // v14 지역·난이도 첫 입장 이야기: 다른 창이 없을 때 한 번 (출석·복귀 창이 먼저)
+    if (!this._storyTimer) this._storyTimer = setInterval(() => { try { STORYUI.maybeIntro(this); } catch (e) { /* ignore */ } }, 1500);
     // stage clear (emitted only after its commit): stars + first-clear reward
     g.on('stageClear', (r) => {
       const rw = r.reward ? ` · 보석 +${r.reward.gem} 광석 +${r.reward.ore} 골드 +${fmt(r.reward.gold)}` : '';

@@ -75,6 +75,7 @@ export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0, cls = 'wa
     tower: { best: 0 },
     raid: { week: null, tries: 0, best: 0, bestGrade: null },
     bossDaily: { day: null, used: 0 },   // 지역 보스 반복 처치 하루 3회 (bossdaily.js)
+    story: { seen: {} },                 // v14 이야기 (story.js): 지역 소개·보스 기록·엔딩 본 시각
     dungeons: {
       gold: { tickets: BALANCE.dungeon.dailyTickets, lastDay: kstDayIndex(now), best: 0, pendingRun: null, clockWarnings: 0 },
       books: { tickets: BALANCE.dungeon.dailyTickets, lastDay: kstDayIndex(now), best: 0, pendingRun: null, clockWarnings: 0 },
@@ -233,6 +234,17 @@ export function migrate(s) {
     const fn = MIGRATIONS[cur.schemaVersion];
     if (!fn) throw new Error(`no migration from ${cur.schemaVersion}`);
     cur = fn(cur);
+  }
+  // v14 이야기: 이미 지나온 지역·보스는 '본 것'으로 채워 팝업 없이 이야기 메뉴에서 읽을 수 있게
+  if (!cur.story || typeof cur.story !== 'object' || !cur.story.seen) {
+    const seen = {};
+    const at = cur.savedAt || Date.now();
+    const pr = cur.progression || {};
+    for (const r of pr.unlockedRegions || []) seen['r:' + r] = at;
+    for (const [b, ok] of Object.entries(pr.bossCleared || {})) if (ok) seen['b:' + b] = at;
+    if (pr.bossCleared && pr.bossCleared.B10) seen.end = at;
+    for (const k of ['normal', 'hard']) { const t = cur.diff && cur.diff.tracks && cur.diff.tracks[k]; if ((cur.diff && cur.diff.cur === k) || (t && Object.keys(t.maxWave || {}).some((x) => (t.maxWave[x] || 1) > 1))) seen['d:' + k] = at; }
+    cur.story = { seen };
   }
   // fill fields added later in the same schema with defaults (forward-compatible)
   const d = newGame(cur.createdAt || Date.now(), cur.rngSeed);
