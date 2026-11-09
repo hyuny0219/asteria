@@ -4,7 +4,7 @@ import { AWAKEN, AWAKENINGS, EXTRACT, IMPRINT, ITEM_LEVEL, LOADOUT_DEFAULT_MAP, 
 import { BALANCE } from '../data/balance.js';
 import { GRADE_BONUS, GRADE_EFFECT } from '../data/skillgrade.js';
 import { SKILLS } from '../data/content.js';
-import { lookFor, MYTHIC_UNIQUE_KEYS, rollLegend, rollOneOption } from './items.js';
+import { lookFor, mainScore, MYTHIC_UNIQUE_KEYS, rollLegend, rollOneOption } from './items.js';
 import { hashString, kstDayIndex, makeRng } from './util.js';
 import { returnJewels } from './crafting.js';
 
@@ -292,6 +292,74 @@ export function rarityUp(state, baseId, matIds, rng) {
   const drop = new Set(q.mats.map((m) => m.id));
   state.inventory = state.inventory.filter((i) => !drop.has(i.id));
   return { ok: true, item: it, from, to: q.to, added: extra };
+}
+
+// ---------- 전체 합성 (등급 올리기 일괄) ----------
+// 같은 부위·등급끼리 3개씩 묶어 한 단계 위로. 낮은 등급부터 차례로, 결과물이 다시 재료가 됩니다(연쇄).
+// 본체 = 점수 높은 쪽, 재료 = 점수 낮은 쪽. 잠금·장착·저장된 프리셋 장비는 손대지 않아요.
+// 광석·별의 파편이 모자라면 거기서 멈춥니다. 미리보기와 실행이 같은 계획을 씁니다.
+export const BULK_TARGETS = ['uncommon', 'rare', 'epic', 'legendary', 'mythic'];
+const RANK = { common: 0, uncommon: 1, rare: 2, epic: 3, legendary: 4, mythic: 5 };
+function presetIds(state) {
+  const out = new Set();
+  for (const L of (state.loadouts && state.loadouts.list) || []) if (L.saved) for (const id of Object.values(L.gear || {})) if (id) out.add(id);
+  return out;
+}
+export function bulkRarityUpPlan(state, maxTo = 'epic', slot = null) {
+  if (!BULK_TARGETS.includes(maxTo)) return { ok: false, reason: 'target' };
+  const keep = presetIds(state);
+  const sl = (it) => (it.slot === 'accessory' ? 'necklace' : it.slot);
+  const excluded = state.inventory.filter((i) => (i.locked || isEquipped(state, i.id) || keep.has(i.id)) && (!slot || sl(i) === slot)).length;
+  const pool = state.inventory.filter((i) => !i.locked && !isEquipped(state, i.id) && !keep.has(i.id) && RANK[i.rarity] < RANK[maxTo] && (!slot || sl(i) === slot))
+    .map((i) => ({ id: i.id, slot: sl(i), rarity: i.rarity, score: mainScore(i) + i.level * 0.001 }));
+  let ore = state.wallet.ore, star = state.wallet.starShard || 0;
+  const steps = [];
+  const used = { ore: 0, starShard: 0 };
+  let stopped = null;
+  const order = Object.keys(RANK).filter((r) => RANK[r] < RANK[maxTo]);
+  for (const r of order) {
+    const to = RARITY_UP.next[r];
+    const slots = [...new Set(pool.filter((p) => p.rarity === r).map((p) => p.slot))].sort();
+    for (const s of slots) {
+      const g = pool.filter((p) => p.rarity === r && p.slot === s).sort((a, b) => b.score - a.score || (a.id < b.id ? -1 : 1));
+      const k = Math.floor(g.length / 3);
+      const bases = g.slice(0, k), mats = g.slice(g.length - 2 * k);
+      for (let i = 0; i < k; i++) {
+        const cOre = RARITY_UP.ore[to] || 0, cStar = RARITY_UP.starShard[to] || 0;
+        if (ore < cOre || star < cStar) { stopped = ore < cOre ? 'ore' : 'starShard'; break; }
+        ore -= cOre; star -= cStar; used.ore += cOre; used.starShard += cStar;
+        const m2 = [mats[2 * i], mats[2 * i + 1]];
+        steps.push({ baseId: bases[i].id, matIds: m2.map((m) => m.id), slot: s, from: r, to });
+        bases[i].rarity = to;   // 결과물이 다음 등급의 재료 후보가 됨
+        for (const m of m2) pool.splice(pool.indexOf(m), 1);
+      }
+      if (stopped) break;
+    }
+    if (stopped) break;
+  }
+  const byTo = steps.reduce((m, st) => ((m[st.to] = (m[st.to] || 0) + 1), m), {});
+  const consumed = steps.length * 2;
+  const result = {};   // 합성 후 남는 결과물 등급별 개수 (중간 단계로 다시 쓰인 것 제외)
+  const finals = new Map();
+  for (const st of steps) finals.set(st.baseId, st.to);
+  for (const st of steps) for (const id of st.matIds) finals.delete(id);
+  for (const r of finals.values()) result[r] = (result[r] || 0) + 1;
+  return { ok: steps.length > 0, reason: steps.length ? null : (stopped || 'none'), steps, cost: used, byTo, result, consumed, stopped, maxTo, excluded };
+}
+export function bulkRarityUp(state, maxTo, slot, rng) {
+  const plan = bulkRarityUpPlan(state, maxTo, slot);
+  if (!plan.ok) return plan;
+  const done = [];
+  for (const st of plan.steps) {
+    const r = rarityUp(state, st.baseId, st.matIds, rng);
+    if (!r.ok) break;   // 계획과 다르면 거기서 멈춤 (이미 한 것은 유지)
+    done.push({ id: r.item.id, from: r.from, to: r.to });
+  }
+  const finals = new Map();
+  for (const d of done) finals.set(d.id, d.to);
+  for (const st of plan.steps.slice(0, done.length)) for (const id of st.matIds) finals.delete(id);
+  const items = [...finals.keys()].map((id) => find(state, id)).filter(Boolean);
+  return { ok: done.length > 0, count: done.length, consumed: done.length * 2, items, plan, cost: plan.steps.slice(0, done.length).reduce((c, st) => ((c.ore += RARITY_UP.ore[st.to] || 0), (c.starShard += RARITY_UP.starShard[st.to] || 0), c), { ore: 0, starShard: 0 }) };
 }
 
 export { EQ_SLOTS as LOADOUT_SLOTS };

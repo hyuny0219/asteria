@@ -11,6 +11,7 @@ import { bonusText, GRADE_EFFECT, GRADE_NAME, gradeIndex, SKILL_GRADES } from '.
 import * as V10 from './v10.js';
 import * as V12 from './v12.js';
 import * as WBM from '../core/worldboss.js';
+import * as G from '../core/gearplus.js';
 import * as MAILUI from './mail.js';
 import { jewelName, socketCount } from '../core/crafting.js';
 import { MONSTERS } from '../data/content.js';
@@ -205,7 +206,9 @@ export function equipmentPanel(app) {
   const grid = h('div', { class: 'grid4 inv' });
   for (const it of items.slice(0, 200)) grid.appendChild(itemTile(app, it, { onClick: () => openCompare(app, it.id) }));
   sc.appendChild(grid);
-  sc.appendChild(h('div', { style: { marginTop: '10px' } }, button('일괄 분해', { cls: 'btn', onClick: () => openDismantle(app) })));
+  sc.appendChild(h('div', { class: 'inv-bulk', style: { marginTop: '10px' } },
+    button('전체 합성', { cls: 'btn', dataset: { act: 'bulkFuse' }, onClick: () => openBulkFuse(app) }),
+    button('일괄 분해', { cls: 'btn', onClick: () => openDismantle(app) })));
   const AD = [['off', '끔'], ['common', '일반'], ['uncommon', '고급 이하'], ['rare', '희귀 이하']];
   sc.appendChild(h('div', { class: 'setting-block' }, h('span', null, '자동 분해 (새로 얻은 장비 · 잠금·장착 제외)'), h('div', { class: 'seg', role: 'group', 'aria-label': '자동 분해' },
     AD.map(([k, l]) => h('button', { type: 'button', 'aria-pressed': String((s.settings.autoDismantle || 'off') === k), onClick: async () => { fail(await app.game.setAutoDismantle(k)); } }, l)))));
@@ -354,6 +357,47 @@ export function openDismantle(app, preset = null) {
     } }), button('취소', { cls: 'btn', onClick: () => m.close() })]);
   };
   const m = openModal({ id: 'dismantle', title: '분해 전 확인', body: h('div'), actions: [] });
+  render();
+}
+
+// ======================= 전체 합성 (등급 올리기 일괄) =======================
+const FUSE_SLOTS = { all: null, weapon: 'weapon', helmet: 'helmet', armor: 'armor', gloves: 'gloves', boots: 'boots', necklace: 'necklace', ring: 'ring' };
+export function openBulkFuse(app) {
+  let maxTo = app.fuseTo || 'epic';
+  const slotKey = app.eqFilter && app.eqFilter in FUSE_SLOTS ? app.eqFilter : 'all';
+  const slot = FUSE_SLOTS[slotKey];
+  const m = openModal({ id: 'bulkFuse', title: '전체 합성', body: h('div'), actions: [] });
+  const render = () => {
+    const s = app.state;
+    const q = G.bulkRarityUpPlan(s, maxTo, slot);
+    const order = ['uncommon', 'rare', 'epic', 'legendary', 'mythic'];
+    m.setBody(h('div', { dataset: { screen: 'bulkFuse' } },
+      h('p', { class: 'modal-desc' }, `같은 부위·같은 등급 장비 3개를 1개로 합쳐 한 등급 올립니다(등급 올리기를 한 번에). 낮은 등급부터 차례로 합치고, 새로 올라간 장비도 다시 재료가 돼요. 셋 중 좋은 장비가 남고 옵션 1줄이 붙습니다.${slot ? ` 지금은 ${SLOT_NAMES[slot] || '반지'}만 합성해요.` : ''}`),
+      h('div', { class: 'section-title' }, '여기까지 올리기'),
+      h('div', { class: 'seg', role: 'group', 'aria-label': '최고 결과 등급' }, order.map((r) =>
+        h('button', { type: 'button', dataset: { to: r }, 'aria-pressed': String(maxTo === r), onClick: () => { maxTo = r; app.fuseTo = r; render(); } }, RARITY[r].name))),
+      h('div', { class: 'card', style: { marginTop: '10px' } },
+        h('div', { class: 'kv' }, '합성 횟수', h('b', { dataset: { k: 'count' } }, `${q.steps.length}회`)),
+        h('div', { class: 'kv' }, '재료로 사라지는 장비', h('b', null, `${q.consumed}개`)),
+        ...order.filter((r) => q.result[r]).map((r) => h('div', { class: 'kv' }, `결과 ${rarityLabel(r)}`, h('b', null, `${q.result[r]}개`))),
+        h('div', { class: 'kv' }, '비용', h('b', null, `강화 광석 ${fmtFull(q.cost.ore)}${q.cost.starShard ? ` · 별의 파편 ${q.cost.starShard}` : ''}`)),
+        h('div', { class: 'kv' }, '제외(잠금·장착·프리셋)', h('b', null, `${q.excluded}개`))),
+      q.stopped ? h('p', { class: 'warn' }, q.stopped === 'ore' ? '강화 광석이 모자라서 가능한 만큼만 합성해요.' : '별의 파편이 모자라서 신화 합성은 가능한 만큼만 해요.') : null,
+      !q.steps.length ? h('p', { class: 'muted' }, q.reason === 'ore' || q.reason === 'starShard' ? '비용이 모자라 합성할 수 없어요.' : '합칠 수 있는 장비(같은 부위·등급 3개)가 없어요.') : null,
+      h('p', { class: 'warn' }, '합성은 되돌릴 수 없습니다. 재료 장비에 박힌 보옥은 가방으로 돌아와요. 아끼는 장비는 잠가 두세요.')));
+    m.setActions([button(q.steps.length ? `${q.steps.length}회 합성` : '합성할 장비 없음', { cls: 'btn btn-primary', disabled: !q.steps.length, busy: true, onClick: async () => {
+      const r = fail(await app.game.bulkRarityUp(maxTo, slot));
+      if (!r.ok) return;
+      m.close();
+      const items = r.items.slice().sort((a, b) => rarityOrder(b.rarity) - rarityOrder(a.rarity) || b.level - a.level);
+      const res = openModal({ id: 'bulkFuseDone', title: '합성 완료', body: h('div', { dataset: { screen: 'bulkFuseDone' } },
+        h('p', { class: 'modal-desc' }, `${r.count}회 합성 · 장비 ${r.consumed}개 사용 · 강화 광석 -${fmtFull(r.cost.ore)}${r.cost.starShard ? ` · 별의 파편 -${r.cost.starShard}` : ''}`),
+        h('div', { class: 'grid4' }, items.slice(0, 24).map((it) => itemTile(app, it, {}))),
+        items.length > 24 ? h('p', { class: 'muted' }, `외 ${items.length - 24}개`) : null), actions: [] });
+      res.setActions([button('확인', { cls: 'btn btn-primary', onClick: () => res.close() })]);
+      if (app.state.settings.sound) sfx('bell');
+    } }), button('취소', { cls: 'btn', onClick: () => m.close() })]);
+  };
   render();
 }
 

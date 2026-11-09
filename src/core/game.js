@@ -261,6 +261,7 @@ export class Game {
   levelUpItem(id, steps) { return this.transact('itemLevel', (s) => gear.levelUpItem(s, id, steps)); }
   reforge(id, optIdx) { return this.transact('reforge', (s) => gear.reforge(s, id, optIdx, this.rng)); }
   rarityUp(baseId, matIds) { return this.transact('rarityUp', (s) => gear.rarityUp(s, baseId, matIds, this.rng)); }
+  bulkRarityUp(maxTo, slot = null) { return this.transact('bulkRarityUp', (s) => gear.bulkRarityUp(s, maxTo, slot, this.rng)); }
   claimAllExpeditions() { return this.transact('expClaim', (s) => expedition.claimAll(s, this.now())); }
   claimMplusVault() { return this.transact('mplusVault', (s) => mplus.claimVault(s, this.now())); }
   riftPick(id) { return this.transact('riftPick', (s) => rift.pickBlessing(s, id)); }
