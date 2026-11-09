@@ -6,7 +6,7 @@ export const DIFF_IDS = Object.freeze(['easy', 'normal', 'hard']);
 export const DIFFICULTY = Object.freeze({
   easy: { id: 'easy', name: '이지', order: 0 },
   normal: {
-    id: 'normal', name: '노말', order: 1, level: 100, minPlayerLevel: 90,
+    id: 'normal', name: '노말', order: 1, level: 100, minPlayerLevel: 0,
     hp: { base: 1, growth: 1.02 }, atk: { base: 1.5, growth: 1.02 },
     gold: 1.6, exp: 1.5, drop: 1.25, firstClear: 2,
     // per-kill drop rarity (replaces the easy table) and repeat boss table
@@ -14,7 +14,7 @@ export const DIFFICULTY = Object.freeze({
     bossFirst: { epic: 0.85, legendary: 0.15 },
   },
   hard: {
-    id: 'hard', name: '하드', order: 2, level: 100, minPlayerLevel: 90,
+    id: 'hard', name: '하드', order: 2, level: 100, minPlayerLevel: 0,
     hp: { base: 2.5, growth: 1.022 }, atk: { base: 5, growth: 1.022 },
     gold: 2.4, exp: 2, drop: 1.5, firstClear: 3,
     rarity: { common: 0.12, uncommon: 0.33, rare: 0.35, epic: 0.18, legendary: 0.02 },

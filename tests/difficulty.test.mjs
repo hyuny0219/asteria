@@ -71,11 +71,9 @@ test('onBossCleared on 노말 writes the 노말 track only and reports the unloc
   assert.equal(raidOpen(s), true);
 });
 
-test('switching difficulty parks and restores each farm position; Lv 90 gate', () => {
+test('switching difficulty parks and restores each farm position; no level gate (보스만 잡으면 열림)', () => {
   const s = clearedEasy();
-  s.player.level = 80;
-  assert.equal(DF.switchDiff(s, 'normal').reason, 'level');
-  s.player.level = 100;
+  s.player.level = 61;
   assert.equal(DF.switchDiff(s, 'hard').reason, 'locked');
   const a = DF.switchDiff(s, 'normal');
   assert.deepEqual([a.ok, a.region, a.wave], [true, 'meadow', 1]);
