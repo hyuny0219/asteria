@@ -1,6 +1,6 @@
 {
- "startedAt": "2026-11-09T11:14:18.130Z",
- "base": "http://localhost:8432/",
+ "startedAt": "2026-11-09T11:33:04.598Z",
+ "base": "http://localhost:8433/",
  "viewports": [
   [
    390,
@@ -234,12 +234,16 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "synergy",
     "awaken",
     "runes"
    ],
    "tiny": [
     "3",
-    "일반"
+    "출혈",
+    "일반",
+    "신성",
+    "폭발"
    ],
    "errors": []
   },
@@ -256,6 +260,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "synergy",
     "awaken",
     "runes",
     "skilldetail",
@@ -264,11 +269,11 @@
    ],
    "tiny": [
     "3",
+    "출혈",
     "일반",
-    "희귀",
-    "다음",
-    "영웅",
-    "전설"
+    "신성",
+    "폭발",
+    "희귀"
    ],
    "errors": []
   },
@@ -1041,6 +1046,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "synergy",
     "awaken",
     "runes",
     "growth",
@@ -1049,8 +1055,9 @@
    ],
    "tiny": [
     "3",
-    "전설",
+    "출혈",
     "희귀",
+    "신성",
     "영웅",
     "일반"
    ],
@@ -1522,12 +1529,16 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "synergy",
     "awaken",
     "runes"
    ],
    "tiny": [
     "3",
-    "일반"
+    "출혈",
+    "일반",
+    "신성",
+    "폭발"
    ],
    "errors": []
   },
@@ -1544,6 +1555,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "synergy",
     "awaken",
     "runes",
     "skilldetail",
@@ -1552,11 +1564,11 @@
    ],
    "tiny": [
     "3",
+    "출혈",
     "일반",
-    "희귀",
-    "다음",
-    "영웅",
-    "전설"
+    "신성",
+    "폭발",
+    "희귀"
    ],
    "errors": []
   },
@@ -2329,6 +2341,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "synergy",
     "awaken",
     "runes",
     "growth",
@@ -2337,8 +2350,11 @@
    ],
    "tiny": [
     "3",
-    "일반",
-    "희귀"
+    "출혈",
+    "희귀",
+    "신성",
+    "영웅",
+    "폭발"
    ],
    "errors": []
   },
@@ -2801,12 +2817,16 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "synergy",
     "awaken",
     "runes"
    ],
    "tiny": [
     "3",
-    "일반"
+    "출혈",
+    "일반",
+    "신성",
+    "폭발"
    ],
    "errors": []
   },
@@ -2823,6 +2843,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "synergy",
     "awaken",
     "runes",
     "skilldetail",
@@ -2831,11 +2852,11 @@
    ],
    "tiny": [
     "3",
+    "출혈",
     "일반",
-    "희귀",
-    "다음",
-    "영웅",
-    "전설"
+    "신성",
+    "폭발",
+    "희귀"
    ],
    "errors": []
   },
@@ -3608,6 +3629,7 @@
    "brokenImg": [],
    "screens": [
     "skills",
+    "synergy",
     "awaken",
     "runes",
     "growth",
@@ -3616,9 +3638,11 @@
    ],
    "tiny": [
     "3",
-    "희귀",
-    "영웅",
-    "일반"
+    "출혈",
+    "일반",
+    "신성",
+    "폭발",
+    "희귀"
    ],
    "errors": []
   },
@@ -3938,8 +3962,8 @@
    "name": "reload keeps the same pending claim",
    "pass": true,
    "detail": {
-    "first": "claim_mw960wb4_10cdqsw",
-    "after": "claim_mw960wb4_10cdqsw"
+    "first": "claim_mw96p0b4_6mdezg",
+    "after": "claim_mw96p0b4_6mdezg"
    }
   },
   {
@@ -4021,7 +4045,7 @@
     "k0": 1,
     "k1": {
      "kills": 1,
-     "acc": 16.59999999999991,
+     "acc": 0,
      "mode": "FARM"
     }
    }
@@ -4116,7 +4140,7 @@
   }
  ],
  "errors": [],
- "finishedAt": "2026-11-09T11:17:00.689Z",
+ "finishedAt": "2026-11-09T11:35:42.927Z",
  "summary": {
   "screenChecks": 141,
   "screenPass": 141,
