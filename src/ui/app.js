@@ -9,6 +9,7 @@ import { button, clear, closeAllModals, h, icon, img, initModals, initToasts, mo
 import * as S from './screens.js';
 import * as V4 from './v4.js';
 import * as STORYUI from './story.js';
+import * as V14 from './v14.js';
 import { sfx } from '../platform/audio.js';
 import * as FS from './fullscreen.js';
 import { titleName } from '../core/meta.js';
@@ -88,6 +89,7 @@ export class App {
     E.viewBtn = button('일러스트', { cls: 'mini-btn', ariaLabel: '보기 전환', onClick: () => this.toggleView() });
     E.speedBtn = button('×1', { cls: 'mini-btn', ariaLabel: '전투 배속', onClick: () => this.toggleSpeed() });
     E.autoBadge = h('span', { class: 'badge' }, '자동 전투');
+    E.themeChip = h('button', { type: 'button', class: 'badge theme-chip', 'aria-label': '이번 주 테마', dataset: { act: 'themeChip' }, onClick: () => V14.openTheme(this) }, V14.chipText());
     E.sessionBar = h('div', { class: 'session-bar' });
     E.riftChips = h('div', { class: 'rift-chips', 'aria-label': '균열 효과' });
     // immersive HUD for special fights (boss / dungeon / rift / tower / raid / trial)
@@ -98,7 +100,7 @@ export class App {
       h('div', { class: 'imm-info' }, E.hudTitle, E.hudInfo, h('span', { class: 'imm-time', 'aria-hidden': 'true' }, E.hudTime)));
     E.battle = h('section', { class: 'battle', 'aria-label': '전투' }, E.canvas, E.portrait,
       h('div', { class: 'topstrip' }, h('span', { class: 'spacer' }), E.worldBtn, E.bossBtn),
-      h('div', { class: 'overlay-tl' }, E.autoBadge), h('div', { class: 'overlay-tr' }, E.speedBtn, E.viewBtn), E.sessionBar, E.riftChips, E.hud, E.liveText);
+      h('div', { class: 'overlay-tl' }, E.autoBadge, E.themeChip), h('div', { class: 'overlay-tr' }, E.speedBtn, E.viewBtn), E.sessionBar, E.riftChips, E.hud, E.liveText);
     app.appendChild(E.battle);
     // skills 64
     E.skills = h('div', { class: 'skills', role: 'toolbar', 'aria-label': '스킬' });
@@ -574,6 +576,8 @@ export class App {
     E.bossBtn.textContent = m === 'BOSS' || m === 'DUNGEON' || m === 'PROMOTION_TRIAL' ? '전투 중' : DF.track(s).bossCleared[bossId] ? (can.ok ? `보스 재도전 ${can.left}/3` : '보스 · 오늘 3회 완료') : can.ok ? '보스 도전!' : `보스 · ${stageLabel(region.id, 10)} 필요`;
     E.bossBtn.classList.toggle('hot', can.ok && !DF.track(s).bossCleared[bossId]);
     E.speedBtn.textContent = s.settings.speed === 2 ? '×2' : '×1';
+    const tc = V14.chipText(); if (E.themeChip.textContent !== tc) E.themeChip.textContent = tc;
+    E.themeChip.hidden = m !== 'FARM' && m !== 'DEFEAT';
     E.autoBadge.textContent = m === 'DEFEAT' ? '재정비 중' : m === 'BOSS' ? '보스전' : m === 'DUNGEON' ? '던전' : m === 'PROMOTION_TRIAL' ? '시련' : `자동 전투 · ×${s.settings.speed}`;
     // portrait live summary (same simulation)
     const vf = s.progression.verifiedFarm;

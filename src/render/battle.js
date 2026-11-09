@@ -15,6 +15,7 @@
 // - slow motion slows only the effect clock (particles / slashes), never the battle.
 // - ultimate cut-in (dim + diagonal banner with portrait + name) is timed on battle
 //   time from 'ultStart' so it lines up with the 700 ms impact; tap skips the banner.
+import { PREFIXES, ROLES } from '../data/roles.js';
 import { HERO_X } from '../core/combat.js';
 import { CLASSES, RARITY, SKILLS } from '../data/content.js';
 import { bgMeta, fxSprite, classPortrait, enemyMeta, heroFrames, loadImage, outlined, petMeta, promoPortrait, ready, scaledImage, spriteMeta } from './assets.js';
@@ -141,6 +142,9 @@ export class BattleRenderer {
     }
     if (ev.type === 'miss') {
       this.pushNumber({ x: HERO_X, y: 0.38, text: '회피', miss: true, born: now, dx: 0 });
+    } else if (ev.type === 'enemyHeal') {
+      const e = battle.enemies.find((q) => q.uid === ev.enemy);
+      if (e && s.damageNumbers === 'all') this.pushNumber({ x: e.x, y: 0.42, text: '+' + fmt(ev.amount), dot: '#7FE0A0', born: now, dx: 0 });
     } else if (ev.type === 'enrage') {
       this.kick(3, 140);
     } else if (ev.type === 'skillStart') {
@@ -985,7 +989,13 @@ export class BattleRenderer {
     if (e.elite) {
       ctx.fillStyle = '#EDBD68';
       ctx.beginPath(); ctx.moveTo(x - bw / 2 - 8, top + 2.5); ctx.lineTo(x - bw / 2 - 4, top - 1.5); ctx.lineTo(x - bw / 2, top + 2.5); ctx.lineTo(x - bw / 2 - 4, top + 6.5); ctx.fill();
-      this.text(e.rare ? `희귀 · ${e.name}` : e.fieldBoss ? '필드 보스' : '정예', x, top - 6, 12, e.rare ? '#C38BFF' : e.fieldBoss ? '#F2A04A' : '#EDBD68', 'center', 700, true);
+      this.text(e.rare ? `희귀 · ${e.name}` : e.fieldBoss ? '필드 보스' : e.prefix && PREFIXES[e.prefix] ? `${PREFIXES[e.prefix].name} 정예` : '정예', x, top - 6, 12, e.rare ? '#C38BFF' : e.fieldBoss ? '#F2A04A' : '#EDBD68', 'center', 700, true);
+    }
+    // v14 역할 표시 (돌격은 기본이라 생략): 글자 + 기호, 색만으로 구분하지 않음
+    if (e.role && e.role !== 'charge' && ROLES[e.role]) {
+      const R = ROLES[e.role];
+      const col = e.role === 'healer' ? '#7FE0A0' : e.role === 'bomber' ? '#FF8A6B' : '#9CC8FF';
+      this.text(`${R.glyph} ${R.name}`, x, e.elite ? top - 21 : top - 6, 11, col, 'center', 700, true);
     }
   }
 
@@ -995,8 +1005,8 @@ export class BattleRenderer {
     if (!p) return;
     const total = p.impactAt - e.stateAt;
     const prog = Math.min(1, (battle.t - e.stateAt) / Math.max(1, total));
-    const heavy = p.heavy;
-    const shape = heavy ? e.def.heavy.shape : 'line';
+    const heavy = p.heavy || p.blast;
+    const shape = p.blast ? 'circle' : heavy ? e.def.heavy.shape : 'line';
     const hx = HERO_X * this.sx;
     ctx.save();
     ctx.lineWidth = heavy ? 2.5 : 1.5;
@@ -1022,7 +1032,7 @@ export class BattleRenderer {
     ctx.fillStyle = heavy ? '#EDBD68' : '#F5EDF0';
     ctx.beginPath(); ctx.moveTo(x, iy - 11); ctx.lineTo(x + 10, iy + 7); ctx.lineTo(x - 10, iy + 7); ctx.closePath(); ctx.fill();
     this.text('!', x, iy + 5, 12, '#100D18', 'center', 900);
-    if (heavy) this.text(e.def.heavy.name, x, iy - 16, 13, '#EDBD68', 'center', 700);
+    if (heavy) this.text(p.blast ? '자폭' : e.def.heavy.name, x, iy - 16, 13, p.blast ? '#FF8A6B' : '#EDBD68', 'center', 700);
     ctx.restore();
   }
 

@@ -812,3 +812,8 @@ img.sg-up-ico { width: 16px !important; height: 16px !important; margin: 0 4px 0
 .story-thumb { flex: 0 0 64px; height: 48px; border-radius: 6px; background: #120e19 center/cover no-repeat; }
 .story-thumb-boss { flex: 0 0 64px; width: 64px; height: 56px; object-fit: contain; }
 @keyframes storyin { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+/* v14 주간 테마 */
+.theme-chip { color: var(--gold); cursor: pointer; font-family: inherit; min-height: 32px; min-width: 32px; }
+.theme-chip[hidden] { display: none; }
+.theme-card .bar-mini { height: 6px; border-radius: 3px; background: rgba(255,255,255,.08); overflow: hidden; margin: 4px 0 0; }
+.theme-card .bar-mini > span { display: block; height: 100%; background: var(--gold); }

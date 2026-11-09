@@ -6,9 +6,11 @@
 // time; quarry/gold/books), 'tower' (floor), 'raid' (120 s damage score), 'trial'
 // (instructor / past self). The battle emits events; game.js turns 'kill' / 'victory'
 // / 'defeat' into state changes.
+import { ROLES, ROLE_TABLE, PREFIXES, PREFIX_IDS } from '../data/roles.js';
 import { BALANCE, curve } from '../data/balance.js';
 import { BOSSES, MONSTERS, SKILLS, TRIALS, ULT_IDS } from '../data/content.js';
 const NO_MODS = Object.freeze({});
+const NO_THEME = Object.freeze({});
 import { clamp } from './util.js';
 
 const C = BALANCE.combat;
@@ -160,14 +162,15 @@ export class Battle {
     const level = f.levelFn();
     const ids = f.monsters;
     const id = ids[this.rng.int(0, ids.length - 1)];
-    const elite = f.eliteAllowed() && this.rng() < M.elite.chance;
+    const tm = this.themeMod();
+    const elite = f.eliteAllowed() && this.rng() < M.elite.chance * (tm.eliteChanceMul || 1);
     this.addEnemy(MONSTERS[id], level, { elite, mul: f.mulFn ? f.mulFn() : null });
   }
   // 희귀 정예: a named elite joins the farm field (one at a time, never with a field boss)
   spawnRare(rare, level) {
     if (this.kind !== 'farm' || this.enemies.some((e) => e.fieldBoss || e.rare)) return null;
     const def = MONSTERS[rare.base];
-    const e = this.addEnemy({ ...def, name: rare.name }, level + 2, { elite: true, mul: this.cfg.farm.mulFn ? this.cfg.farm.mulFn() : null });
+    const e = this.addEnemy({ ...def, name: rare.name }, level + 2, { elite: true, plain: true, mul: this.cfg.farm.mulFn ? this.cfg.farm.mulFn() : null });
     e.maxHp = e.hp = Math.floor(e.hp * 5);
     e.atk = Math.floor(e.atk * 1.3);
     e.rare = rare.id;
@@ -179,13 +182,33 @@ export class Battle {
     if (this.kind !== 'farm' || this.enemies.some((e) => e.fieldBoss)) return null;
     const ids = this.cfg.farm.monsters;
     const def = MONSTERS[ids[this.rng.int(0, ids.length - 1)]];
-    const e = this.addEnemy({ ...def, name: `필드 보스 · ${def.name}` }, level, { elite: true, fieldBoss: true, mul: this.cfg.farm.mulFn ? this.cfg.farm.mulFn() : null });
+    const e = this.addEnemy({ ...def, name: `필드 보스 · ${def.name}` }, level, { elite: true, fieldBoss: true, plain: true, mul: this.cfg.farm.mulFn ? this.cfg.farm.mulFn() : null });
     this.events.push({ type: 'fieldBoss', enemy: e.uid, name: e.name, t: this.t });
     return e;
   }
   // mul: 노말/하드 scaling { hp, atk } (difficulty.js)
-  addEnemy(def, level, { elite = false, boss = false, fieldBoss = false, mul = null } = {}) {
+  // v14 주간 테마 규칙 (사냥터 화면 전투에만)
+  themeMod() { return (this.kind === 'farm' && this.cfg.farm && this.cfg.farm.themeFn && this.cfg.farm.themeFn()) || NO_THEME; }
+  // v14 역할: 레벨 조건을 넘은 역할 중 가중치로 하나
+  rollRole(level) {
+    const pool = ROLE_TABLE.filter(([, minLv]) => level >= minLv);
+    const tot = pool.reduce((a, [, , w]) => a + w, 0);
+    let r = this.rng() * tot;
+    for (const [id, , w] of pool) { r -= w; if (r < 0) return id; }
+    return pool[pool.length - 1][0];
+  }
+  addEnemy(def, level, { elite = false, boss = false, fieldBoss = false, mul = null, plain = false } = {}) {
     const st = monsterStats(level, { elite, boss, fieldBoss });
+    const role = boss || fieldBoss || plain ? null : this.rollRole(level);
+    const prefix = elite && !boss && !fieldBoss && !plain ? PREFIX_IDS[Math.floor(this.rng() * PREFIX_IDS.length)] : null;
+    if (role) { st.hp = Math.max(1, Math.floor(st.hp * ROLES[role].hp)); st.atk = Math.floor(st.atk * ROLES[role].atk); }
+    if (prefix && PREFIXES[prefix].hp) st.hp = Math.floor(st.hp * PREFIXES[prefix].hp);
+    if (!boss) {
+      const tm = this.themeMod();
+      if (tm.hpMul) st.hp = Math.max(1, Math.floor(st.hp * tm.hpMul));
+      if (tm.atkMul) st.atk = Math.floor(st.atk * tm.atkMul);
+      if (elite && tm.eliteHpMul) st.hp = Math.floor(st.hp * tm.eliteHpMul);
+    }
     if (mul) { st.hp = Math.floor(st.hp * mul.hp); st.atk = Math.floor(st.atk * mul.atk); }
     if (this.mp) {
       const a = this.mp.aff;
@@ -200,7 +223,8 @@ export class Battle {
       st.atk = Math.floor(st.atk * r.statMul * (r.curse === 'c_fury' ? 1.3 : 1));
     }
     const e = {
-      uid: ++this.enemySeq, def, id: def.id, name: def.name, level, elite, boss, fieldBoss,
+      uid: ++this.enemySeq, def, id: def.id, name: def.name, level, elite, boss, fieldBoss, role, prefix,
+      healAt: role === 'healer' ? this.t + ROLES.healer.healEverySec * 1000 : Infinity,
       hp: st.hp, maxHp: st.hp, atk: st.atk, defense: st.def,
       x: boss ? SLOT_X[0] + 20 : SPAWN_X, px: boss ? SLOT_X[0] + 20 : SPAWN_X,
       state: boss ? 'ready' : 'approach', stateAt: this.t,
@@ -261,6 +285,12 @@ export class Battle {
   }
 
   alive() { return this.enemies.filter((e) => e.state !== 'dying'); }
+  // v14: 원거리 영웅은 붙어 있는 치유사를 먼저 노림 (없으면 맨 앞)
+  heroFront() {
+    const f = this.front();
+    if (!f || this.heroCfg.range !== 'ranged') return f;
+    return this.alive().find((e) => e.role === 'healer' && e.state !== 'approach') || f;
+  }
   front() {
     const a = this.alive().filter((e) => e.state !== 'approach' || e.x <= SLOT_X[0] + 1);
     return a.sort((x, y) => x.x - y.x)[0] || null;
@@ -306,7 +336,7 @@ export class Battle {
     if (this.kind === 'farm' || this.kind === 'dungeon' || this.kind === 'tower' || this.kind === 'rift' || this.kind === 'mplus') {
       if (this.alive().length < C.maxEnemiesOnField && t >= this.nextSpawnAt && (!this.phase || this.phaseRoom())) {
         if (this.kind === 'farm') this.spawnFarmEnemy(); else this.spawnSessionEnemy();
-        this.nextSpawnAt = t + C.spawnGapSec * 1000;
+        this.nextSpawnAt = t + C.spawnGapSec * 1000 * (this.themeMod().spawnGapMul || 1);
       }
     }
     this.moveEnemies();
@@ -522,7 +552,7 @@ export class Battle {
   resolveHeroImpact(ac) {
     const h = this.hero;
     const st = this.heroCfg.stats;
-    const front = this.front();
+    const front = this.heroFront();
     let sk = null, coef = 1, targets = [], hits = 1;
     if (ac.kind === 'attack') { targets = front ? [front] : []; }
     else {
@@ -602,6 +632,8 @@ export class Battle {
     const U = C.ultCharge;
     let charge = 0;
     if (ac.kind === 'attack' && targets.length) charge += U.perAttack;
+    const ig = this.themeMod().ignite;   // v14 화염 주간: 기본 공격이 3초 화상 (새로 맞으면 갱신)
+    if (ig && ac.kind === 'attack') for (const e of targets) if (e.state !== 'dying') { e.dots = e.dots.filter((d) => d.skill !== 'ignite'); e.dots.push({ coef: ig.coef, until: this.t + ig.sec * 1000, nextAt: this.t + 1000, skill: 'ignite' }); }
     charge += Math.min(kills * U.perKill, U.killChargeCapPerAction);
     if (ac.kind === 'ult') charge = Math.min(kills * U.perKill, U.killChargeCapPerAction);
     this.addGauge(charge);
@@ -610,7 +642,7 @@ export class Battle {
   resolveEcho(e) {
     const st = this.heroCfg.stats;
     const atk = this.heroAtk();
-    const list = e.single ? [this.front()].filter((x) => x && x.state !== 'dying') : this.alive().filter((x) => x.state !== 'approach' || x.x < 400);
+    const list = e.single ? [this.heroFront()].filter((x) => x && x.state !== 'dying') : this.alive().filter((x) => x.state !== 'approach' || x.x < 400);
     for (const t of list) {
       const crit = this.rng() < Math.min(1, st.crit + (e.critBonus || 0));
       this.dealDamage(t, damageFormula(atk, e.coef, t.defense, t.level, crit, this.rng(), st.critMul), { crit, action: e.single || !isUlt(e.skill) ? 'skill' : 'ult', skill: e.skill });
@@ -625,6 +657,13 @@ export class Battle {
     this.damageDealt += dmg;
     this.events.push({ type: 'hit', by: 'hero', target: e.uid, dmg, crit, action, skill, ranged, t: this.t, x: e.x });
     if (st.lifesteal) this.heal(dmg * st.lifesteal);
+    if (e.prefix === 'thorns' && action !== 'thorns' && !this.hero.dead) {   // v14 가시: 받은 피해 일부를 되돌림
+      const P = PREFIXES.thorns;
+      const back = Math.max(1, Math.floor(Math.min(dmg * P.reflect, this.hero.maxHp * P.reflectCap)));
+      this.hero.hp -= back;
+      this.events.push({ type: 'hit', by: 'enemy', target: 'hero', source: e.uid, dmg: back, heavy: false, thorns: true, t: this.t });
+      if (this.hero.hp <= 0) this.heroDown();
+    }
     if (this.caps.cap_berserk && this.hero.hp / this.hero.maxHp <= 0.5) this.heal(dmg * 0.03);
     if (e.boss && !e.enraged && e.hp > 0 && e.hp / e.maxHp < C.enrage.below && !e.trial) {
       e.enraged = true;
@@ -656,6 +695,15 @@ export class Battle {
     e.state = 'dying';
     e.dieAt = this.t + 420;
     this.kills++;
+    if (e.prefix === 'split' && !this.over) {   // v14 분열하는: 작은 조각 2마리 (역할·접두사 없음)
+      const S = PREFIXES.split.split;
+      for (let i = 0; i < S.n; i++) {
+        const c = this.addEnemy({ ...e.def, name: e.def.name + ' 조각' }, e.level, { plain: true });
+        c.maxHp = c.hp = Math.max(1, Math.floor(e.maxHp * S.hp));
+        c.atk = Math.floor(e.atk * S.atk);
+        c.x = c.px = e.x + 16 + i * 24; c.shard = true;
+      }
+    }
     this.events.push({ type: 'kill', enemy: { uid: e.uid, id: e.id, level: e.level, elite: e.elite, boss: e.boss, fieldBoss: !!e.fieldBoss, trial: !!e.trial, rare: e.rare || null }, t: this.t });
     if (this.heroCfg.stats.mythHeal && this.rng() < 0.1) this.heal(this.hero.maxHp * 0.2);
     const kc = this.gmods.killCdrMs;   // 전장의 흐름
@@ -671,13 +719,24 @@ export class Battle {
     for (const e of this.alive()) {
       if (e.state === 'approach') continue;   // v13: 붙은 적은 모두 공격 (맨 앞 외에는 sideAtkMul)
       if (e.stunUntil > t) { if (e.pending) e.pending.impactAt += TICK; continue; }
+      if (e.role === 'healer' && t >= e.healAt) {   // v14 치유사: 가장 다친 아군 회복
+        e.healAt = t + ROLES.healer.healEverySec * 1000;
+        const hurt = this.alive().filter((x) => x.hp < x.maxHp).sort((a, b) => a.hp / a.maxHp - b.hp / b.maxHp)[0];
+        if (hurt) { const v = Math.floor(hurt.maxHp * ROLES.healer.healPct); hurt.hp = Math.min(hurt.maxHp, hurt.hp + v); this.events.push({ type: 'enemyHeal', enemy: hurt.uid, by: e.uid, amount: v, t }); }
+      }
+      if (e.role === 'bomber' && !e.pending && e !== front) continue;   // 자폭병은 맨 앞에 서야 터짐
       if (e.pending) {
         if (t >= e.pending.impactAt) {
           const p = e.pending;
           e.pending = null;
           e.state = 'attack'; e.stateAt = t;
-          this.enemyHits(e, p.mult * (e === this.front() || e.boss ? 1 : C.sideAtkMul), p.heavy);
+          const full = e === this.front() || e.boss || p.blast || (e.role && ROLES[e.role].backFull);
+          this.enemyHits(e, p.mult * (full ? 1 : C.sideAtkMul), p.heavy);
+          if (p.blast) { if (e.state !== 'dying') { e.blasted = true; this.kill(e); } continue; }   // 자폭: 터진 뒤 쓰러짐
           let interval = C.enemyAttackIntervalSec * 1000;
+          if (e.prefix === 'swift') interval /= PREFIXES.swift.atkSpeed;
+          const tm = this.themeMod();
+          if (tm.enemyAtkSpeed && !e.boss) interval /= tm.enemyAtkSpeed;
           if (e.enraged) interval *= C.enrage.intervalMul;
           if (this.curse === 'c_haste') interval *= 0.75;
           if (e.slowUntil > t) interval /= e.slowMul;
@@ -692,6 +751,13 @@ export class Battle {
         e.state = 'telegraph'; e.stateAt = t;
         e.heavyAt = t + hv.everySec * 1000 * (e.enraged ? C.enrage.intervalMul : 1) + hv.telegraphMs;
         this.events.push({ type: 'telegraph', enemy: e.uid, heavy: true, name: hv.name, shape: hv.shape, ms: hv.telegraphMs, t });
+        continue;
+      }
+      if (e.role === 'bomber' && t >= e.nextAttackAt) {
+        const B = ROLES.bomber;
+        e.pending = { impactAt: t + B.blastMs, mult: B.blastMult, heavy: false, blast: true };
+        e.state = 'telegraph'; e.stateAt = t;
+        this.events.push({ type: 'telegraph', enemy: e.uid, heavy: false, blast: true, name: '자폭', shape: 'circle', ms: B.blastMs, t });
         continue;
       }
       if (t >= e.nextAttackAt) {
@@ -726,6 +792,7 @@ export class Battle {
     if (h.hp - dmg <= 0 && this.caps.cap_secondWind && !this.secondWindUsed) { this.secondWindUsed = true; dmg = 0; h.hp = Math.max(h.hp, Math.floor(h.maxHp * 0.3)); this.events.push({ type: 'buff', skill: 'secondWind', t: this.t }); }
     h.hp -= dmg;
     h.hitFxUntil = this.t + 240;
+    if (e.prefix === 'vamp' && dmg > 0 && e.state !== 'dying') e.hp = Math.min(e.maxHp, e.hp + Math.floor(dmg * PREFIXES.vamp.lifesteal));   // v14 흡혈하는
     if (st.thorns && dmg > 0 && e.state !== 'dying') this.dealDamage(e, Math.max(1, Math.floor(dmg * st.thorns)), { crit: false, action: 'thorns', skill: null });
     this.events.push({ type: 'hit', by: 'enemy', target: 'hero', source: e.uid, dmg, heavy, guarded: !!guard, t: this.t });
     const w = this.hitChargeWindow;

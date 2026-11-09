@@ -41,6 +41,7 @@ import * as craft from './crafting.js';
 import * as mail from './mail.js';
 import * as BD from './bossdaily.js';
 import * as story from './story.js';
+import * as TH from './theme.js';
 import { PASS } from '../data/meta.js';
 import { deepClone, makeRng, uid } from './util.js';
 
@@ -266,6 +267,7 @@ export class Game {
   rarityUp(baseId, matIds) { return this.transact('rarityUp', (s) => gear.rarityUp(s, baseId, matIds, this.rng)); }
   bulkRarityUp(maxTo, slot = null) { return this.transact('bulkRarityUp', (s) => gear.bulkRarityUp(s, maxTo, slot, this.rng)); }
   claimAllExpeditions() { return this.transact('expClaim', (s) => expedition.claimAll(s, this.now())); }
+  claimTheme() { return this.transact('themeClaim', (s) => TH.claim(s, this.now())); }
   claimMplusVault() { return this.transact('mplusVault', (s) => mplus.claimVault(s, this.now())); }
   riftPick(id) { return this.transact('riftPick', (s) => rift.pickBlessing(s, id)); }
   riftEnd() { return this.transact('riftEnd', (s) => rift.endRun(s, this.now(), this.rng, this.bookSkills(s))); }
@@ -311,6 +313,7 @@ export class Game {
         eliteAllowed: () => this.state.progression.wave >= BALANCE.monster.elite.fromWave,
         killsFn: () => this.state.progression.waveKills,
         stageFn: () => DF.curDiff(this.state) + ':' + this.state.progression.region + '-' + this.state.progression.wave,
+        themeFn: () => TH.mod(this.now()),   // v14 주간 테마 규칙 (화면 사냥만)
       },
     });
     this.active = this.farm;
@@ -368,7 +371,11 @@ export class Game {
     if (ev.type === 'kill') {
       const e = ev.enemy;
       const r = killRewards(e.level, { elite: e.elite, fieldBoss: e.fieldBoss });
-      const mul = rewards.farmMultipliers(s, this.now());
+      const mul = { ...rewards.farmMultipliers(s, this.now()) };
+      const tb = TH.bonus(this.now());   // v14 주간 테마 보너스 (방치 정산에는 없음)
+      mul.gold *= tb.gold || 1; mul.exp *= tb.exp || 1;
+      TH.track(s, 'kills', 1, this.now());
+      if (e.elite && !e.fieldBoss) TH.track(s, 'elites', 1, this.now());
       const pst = playerStats(s);
       const gp = (1 + (pst.goldPct || 0)) * pst.rebirth.gold;
       const pm = BALANCE.phase.rewardMul;   // v12: travel legs between phases → richer kills
@@ -379,7 +386,7 @@ export class Game {
       meta.trackPassKill(s, this.now());
       const SP = BALANCE.supply;
       if (e.fieldBoss) { s.wallet.gem += SP.fieldBossGem; s.wallet.eqTicket += SP.fieldBossEqTicket; s.progression.counters.fieldBosses++; r.gem = SP.fieldBossGem; r.eqTicket = SP.fieldBossEqTicket; }
-      else if (e.elite && this.rng() < SP.eliteGemChance) { s.wallet.gem += SP.eliteGem; r.gem = SP.eliteGem; }
+      else if (e.elite && this.rng() < SP.eliteGemChance * (tb.eliteGem || 1)) { s.wallet.gem += SP.eliteGem; r.gem = SP.eliteGem; }
       // 사냥 보급: every N foreground kills → gems / draw tickets
       s.supply ||= { kills: 0 };
       const sk = ++s.supply.kills;
@@ -391,6 +398,7 @@ export class Game {
       const loot = this.rollLoot(e);
       if (e.rare) {   // 희귀 정예: gems + a rare-or-better piece, codex, title at 10/10
         const rr = worldboss.onRareKill(s, e.rare, e.level, this.rng);
+        TH.track(s, 'rares', 1, this.now());
         const added = eco.addItems(s, [rr.item]);
         loot.items = loot.items.concat(added.stored, added.overflowed);
         r.rare = { id: e.rare, gem: rr.gem, item: rr.item, first: rr.first, title: rr.title };
@@ -408,7 +416,8 @@ export class Game {
         const run = this.stageRun();
         this.queueStageClear(p.region, p.wave, { deaths: run.deaths, timeSec: run.ms / 1000 });
         this.run = null;
-        const rare = this.farm === this.active && worldboss.rollRare(p.region, this.rng);
+        TH.track(s, 'stages', 1, this.now());
+        const rare = this.farm === this.active && worldboss.rollRare(p.region, this.rng, TH.mod(this.now()).rareChanceMul || 1);
         if (rare) this.farm.spawnRare(rare, DF.farmLevel(DF.curDiff(s), p.region, p.wave));
         if (p.holdKills > 0) { /* holding after a retreat */ }
         else if (p.wave < 10 && p.autoAdvance !== false) { p.wave++; advanced = true; }
@@ -501,13 +510,14 @@ export class Game {
     } else {
       const d = DF.curDiff(s);
       const D = DF.DIFFICULTY[d];
-      const chance = (e.elite ? EQ.eliteDropChance : EQ.dropChance) * (1 + (playerStats(s).dropPct || 0)) * DF.rewardMul(d).drop;
+      const tb = TH.bonus(this.now());
+      const chance = (e.elite ? EQ.eliteDropChance * (tb.eliteDrop || 1) : EQ.dropChance) * (1 + (playerStats(s).dropPct || 0)) * DF.rewardMul(d).drop;
       // 노말/하드: one richer table for every farm drop (elites still drop more often)
       const table = d !== 'easy' ? D.rarity : e.elite ? EQ.eliteRarity : EQ.rarityConditional;
       if (this.rng() < chance) items.push(makeItem(s, { slot: rollSlot(this.rng), rarity: rollRarity(this.rng, table), level: e.level, rng: this.rng }));
     }
     const R = BALANCE.monster.rewards;
-    if (e.elite && this.rng() < R.oreChanceElite) ore += 1 + Math.floor(e.level / 8);
+    if (e.elite && this.rng() < R.oreChanceElite) ore += Math.round((1 + Math.floor(e.level / 8)) * (TH.bonus(this.now()).ore || 1));
     if (e.elite && e.level >= R.awakenFromLevel && this.rng() < R.awakenChanceElite) { awaken = 1; s.wallet.awakenStone += 1; }
     s.wallet.ore += ore;
     const added = eco.addItems(s, items);
@@ -613,6 +623,7 @@ export class Game {
         const res = { ok: true, win, bossId: sess.bossId, timeSec: Math.round(ev.t / 1000), reason: ev.reason };
         if (!win) { s.progression.counters.bossLosses++; return res; }
         s.progression.counters.bossWins++;
+        TH.track(s, 'bossWins', 1, this.now());
         meta.trackKill(s, sess.bossId);
         meta.addPassXp(s, PASS.xp.boss, this.now());
         const b = BOSSES[sess.bossId];

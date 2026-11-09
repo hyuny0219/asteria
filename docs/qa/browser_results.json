@@ -1,6 +1,6 @@
 {
- "startedAt": "2026-11-09T10:03:16.871Z",
- "base": "http://localhost:8411/",
+ "startedAt": "2026-11-09T11:14:18.130Z",
+ "base": "http://localhost:8432/",
  "viewports": [
   [
    390,
@@ -746,6 +746,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -776,6 +777,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -808,6 +810,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -840,6 +843,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -872,6 +876,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -904,6 +909,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -936,6 +942,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -968,6 +975,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -1000,6 +1008,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -1040,8 +1049,9 @@
    ],
    "tiny": [
     "3",
-    "희귀",
     "전설",
+    "희귀",
+    "영웅",
     "일반"
    ],
    "errors": []
@@ -1086,6 +1096,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -1163,6 +1174,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -1198,6 +1210,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -1233,6 +1246,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -2020,6 +2034,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -2050,6 +2065,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -2082,6 +2098,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -2114,6 +2131,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -2146,6 +2164,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -2178,6 +2197,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -2210,6 +2230,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -2242,6 +2263,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -2274,6 +2296,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -2315,7 +2338,6 @@
    "tiny": [
     "3",
     "일반",
-    "전설",
     "희귀"
    ],
    "errors": []
@@ -2360,6 +2382,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -2437,6 +2460,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -2472,6 +2496,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -2507,6 +2532,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -3287,6 +3313,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -3317,6 +3344,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -3349,6 +3377,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -3381,6 +3410,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -3413,6 +3443,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -3445,6 +3476,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -3477,6 +3509,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -3509,6 +3542,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -3541,6 +3575,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -3581,8 +3616,9 @@
    ],
    "tiny": [
     "3",
-    "일반",
-    "희귀"
+    "희귀",
+    "영웅",
+    "일반"
    ],
    "errors": []
   },
@@ -3625,6 +3661,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -3702,6 +3739,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -3737,6 +3775,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -3772,6 +3811,7 @@
    "screens": [
     "dungeon",
     "hunt",
+    "theme",
     "worldBoss",
     "mplus",
     "tower",
@@ -3898,8 +3938,8 @@
    "name": "reload keeps the same pending claim",
    "pass": true,
    "detail": {
-    "first": "claim_mw93hmd9_gqewls",
-    "after": "claim_mw93hmd9_gqewls"
+    "first": "claim_mw960wb4_10cdqsw",
+    "after": "claim_mw960wb4_10cdqsw"
    }
   },
   {
@@ -3981,7 +4021,7 @@
     "k0": 1,
     "k1": {
      "kills": 1,
-     "acc": 49.90000000000009,
+     "acc": 16.59999999999991,
      "mode": "FARM"
     }
    }
@@ -4076,7 +4116,7 @@
   }
  ],
  "errors": [],
- "finishedAt": "2026-11-09T10:06:04.092Z",
+ "finishedAt": "2026-11-09T11:17:00.689Z",
  "summary": {
   "screenChecks": 141,
   "screenPass": 141,

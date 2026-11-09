@@ -15,6 +15,7 @@ import * as G from '../core/gearplus.js';
 import * as BD from '../core/bossdaily.js';
 import * as STORY from '../core/story.js';
 import * as STORYUI from './story.js';
+import * as V14 from './v14.js';
 import * as MAILUI from './mail.js';
 import { jewelName, socketCount } from '../core/crafting.js';
 import { MONSTERS } from '../data/content.js';
@@ -627,6 +628,7 @@ export function dungeonPanel(app) {
     sc.appendChild(h('p', { class: 'muted small' }, '재료 던전은 입장할 때 입장권 1장을 씁니다. 한 번 깬 단계는 "소탕"으로 바로 보상을 받을 수 있어요. 시간 안에 실패하면 보상 30%, 전투 중 앱이 꺼지면 입장권을 돌려드려요.'));
   } else if (tab === 'challenge') {
     sc.appendChild(huntCard(app));
+    sc.appendChild(V14.themeCard(app));
     sc.appendChild(advDecorate(V8.worldBossCard(app), 'worldboss', { fig: WBM.worldBossId(Date.now()) }));
     add(V8.mplusCard(app), 'mplus');
     add(V4.towerCard(app), 'tower');

@@ -127,7 +127,7 @@ export const RARE_RULES = Object.freeze({ chance: 0.03, gem: 40, rarity: { rare:
 export const rareCount = (state) => Object.keys((state.worldBoss && state.worldBoss.rares) || {}).length;
 
 // a stage was cleared in the foreground: maybe a rare elite appears (returns its def or null)
-export function rollRare(region, rng) { return rng() < RARE_RULES.chance ? RARES[region] || null : null; }
+export function rollRare(region, rng, mul = 1) { return rng() < RARE_RULES.chance * mul ? RARES[region] || null : null; }
 
 export function onRareKill(state, rareId, level, rng) {
   const w = state.worldBoss || (state.worldBoss = defaultWorldBoss());
