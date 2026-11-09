@@ -877,7 +877,7 @@ export class BattleRenderer {
   rideMeta() {
     const sm = spriteMeta() && spriteMeta().steeds;
     if (!sm) return null;
-    const cls = this.heroCls || 'warrior', b = this.heroBranch, tier = Math.min(3, Math.max(1, this.heroTier || 1));
+    const cls = this.heroCls || 'warrior', b = this.heroBranch, tier = Math.min(4, Math.max(1, this.heroTier || 1));
     for (let t = tier; b && t >= 1; t--) {
       const e = sm[`ride_${t === 1 ? b : `${b}_t${t}`}_${cls}`];
       if (e) return e;

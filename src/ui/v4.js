@@ -3,7 +3,7 @@
 import * as EVO from './evo.js';
 import { BALANCE } from '../data/balance.js';
 import { BOSSES, BRANCHES, CLASSES, CLASS_IDS, CLASS_SKILLS, CURRENCY_ICONS, EMBLEMS, RARITY, RUNES, SKILLS, STAT_KEYS, STAT_NAMES, branchesOf } from '../data/content.js';
-import { classPortrait, itemIcon, portrait, promoPortrait, skillIcon, spriteMeta } from '../render/assets.js';
+import { classPortrait, itemIcon, OATH_ICON, portrait, promoPortrait, skillIcon, spriteMeta, uiIcon } from '../render/assets.js';
 import * as prog from '../core/progression.js';
 import { nextLevelAt, quoteDraw, rateTable, skillRateTable, summonLevel } from '../core/gacha.js';
 import { missionStatus } from '../core/missions.js';
@@ -360,10 +360,11 @@ export function openPromotionTier(app, tier) {
 }
 // ---------- v15 4차 전직 · 초월 ----------
 const OATH_TEXT = (e) => e.desc;
+const uiImg = (key, cls) => { const f = uiIcon(key); return f ? img(f, '', cls) : null; };
 function oathCards(app, opts, picked, onPick) {
   return h('div', { class: 'oath-pick', role: 'radiogroup', 'aria-label': '초월 서약' }, opts.map((e) =>
     h('button', { type: 'button', class: 'oath-card' + (picked === e.id ? ' on' : ''), role: 'radio', 'aria-checked': String(picked === e.id), dataset: { oath: e.id }, onClick: () => onPick(e.id) },
-      h('b', null, e.name), h('span', null, OATH_TEXT(e)))));
+      uiImg(OATH_ICON[e.id], 'oath-ic'), h('b', null, e.name), h('span', null, OATH_TEXT(e)))));
 }
 export function openAscend(app) {
   const s = app.state;
@@ -379,8 +380,9 @@ export function openAscend(app) {
       h('div', { class: 'hero-art ascend-art' }, h('figure', null, currentArt(s), h('figcaption', null, h('b', null, '지금'), h('span', { class: 'muted' }, prog.tierName(s) || ''))),
         h('figure', { class: 'pick' }, currentArt(s, 'ascend-glow', 4), h('figcaption', null, h('b', null, name), h('span', { class: 'muted' }, '초월')))),
       h('div', { class: 'card' },
+        h('div', { class: 'ascend-head' }, uiImg('tier4_emblem', 'ascend-emblem'), h('b', null, `${name} · 초월`)),
         h('div', { class: 'kv' }, '전직 능력', h('b', null, passiveText(br.tiers[3]))),
-        sk ? h('div', { class: 'kv' }, '6번 슬롯', h('b', null, `해금 · ${SKILLS[sk].name} 장착 (다른 갈래의 기술)`)) : null,
+        sk ? h('div', { class: 'kv' }, h('span', { class: 'kv-ic' }, uiImg('slot6_key', 'kv-icon'), '6번 슬롯'), h('b', null, `해금 · ${SKILLS[sk].name} 장착 (다른 갈래의 기술)`)) : null,
         h('div', { class: 'kv' }, '궁극기', h('b', null, `${br.finalUlt} 피해 ×2.5`)),
         cl.items.filter((i) => i.cost).map((i) => h('div', { class: 'kv' }, `사용: ${i.label}`, h('b', null, fmtFull(i.cost)))),
         h('div', { class: 'kv' }, '사용: 별의 파편 · 각성석', h('b', null, `${BALANCE.tiers[4].starShard} · ${BALANCE.tiers[4].awakenStone}`))),
@@ -406,8 +408,8 @@ export function openOath(app) {
   const render = () => {
     m.setBody(h('div', { dataset: { screen: 'oath' } },
       oathCards(app, opts, pick, (id) => { pick = id; render(); }),
-      h('p', { class: 'muted' }, `지금 서약: ${(prog.oathOf(s) || {}).name || '없음'}. 바꾸는 데 골드 ${fmtFull(cost)}이 들어요.`)));
-    m.setActions([button(pick === cur ? '지금 서약' : `골드 ${fmt(cost)}로 바꾸기`, { cls: 'btn btn-primary', disabled: pick === cur || s.wallet.gold < cost, busy: true, onClick: async () => {
+      h('p', { class: 'muted oath-now' }, cur ? uiImg(OATH_ICON[cur], 'kv-icon') : null, `지금 서약: ${(prog.oathOf(s) || {}).name || '없음'}. 바꾸는 데 골드 ${fmtFull(cost)}이 들어요.`)));
+    m.setActions([button(pick === cur ? '지금 서약' : h('span', { class: 'btn-ic' }, uiImg('oath_swap', 'btn-icon'), `골드 ${fmt(cost)}로 바꾸기`), { cls: 'btn btn-primary oath-swap', dataset: { act: 'oathSwap' }, disabled: pick === cur || s.wallet.gold < cost, busy: true, onClick: async () => {
       const r = fail(await app.game.setOath(pick));
       if (!r.ok) return;
       m.close(); toast(`서약을 ${(prog.oathOf(app.state) || {}).name}(으)로 바꿨어요`);

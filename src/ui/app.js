@@ -3,7 +3,7 @@ import { BALANCE, expToNext } from '../data/balance.js';
 import * as EVO from './evo.js';
 import { BOSSES, CLASSES, CURRENCY_ICONS, RARITY, REGION_BY_ID, SKILLS } from '../data/content.js';
 import { BattleRenderer } from '../render/battle.js';
-import { itemIcon, portrait, classPortrait, preloadFor, skillIcon } from '../render/assets.js';
+import { itemIcon, portrait, classPortrait, preloadFor, skillIcon, uiIcon } from '../render/assets.js';
 import * as prog from '../core/progression.js';
 import { fmt } from '../core/util.js';
 import { button, clear, closeAllModals, h, icon, img, initModals, initToasts, modalOpen, openModal, toast } from './dom.js';
@@ -462,7 +462,12 @@ export class App {
     bar.classList.toggle('six', shown === 6);
     for (let i = 0; i < shown; i++) {
       const id = s.skills.equipped[i];
-      if (i >= slots) { bar.appendChild(h('button', { type: 'button', class: 'skill locked', 'aria-label': i === 5 ? '초월 해금 슬롯' : '승급 해금 슬롯', onClick: () => S.go(this, 'quest') }, i === 5 ? '초월' : '승급', h('br'), '해금')); continue; }
+      if (i >= slots) {
+        const key = i === 5 && uiIcon('slot6_key');
+        bar.appendChild(h('button', { type: 'button', class: 'skill locked' + (key ? ' locked-ic' : ''), 'aria-label': i === 5 ? '초월 해금 슬롯' : '승급 해금 슬롯', onClick: () => S.go(this, 'quest') },
+          ...(key ? [img(key, '', 'slot-key'), h('span', { class: 'slot-cap' }, '초월')] : [i === 5 ? '초월' : '승급', h('br'), '해금'])));
+        continue;
+      }
       if (!id) { bar.appendChild(h('button', { type: 'button', class: 'skill empty', 'aria-label': '빈 슬롯 - 스킬 편성', onClick: () => this.setTab('skills') }, '+')); continue; }
       const sk = EVO.sv(s, id);
       const cd = h('span', { class: 'cd', style: { height: '0%' } });

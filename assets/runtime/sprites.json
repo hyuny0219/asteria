@@ -314,7 +314,84 @@
   "gpt_o/poses_trickster_t4.png": {
    "status": "GPT_O_POSE_SHEET",
    "note": "4차 8 key poses (O2), real alpha, adaptive grid + component ownership"
-  }
+  },
+  "gpt_o/knight_t3_cycle.png": {
+   "status": "GPT_O3_CYCLE",
+   "note": "3차 walk 4 + attack 4 (O3), real alpha"
+  },
+  "gpt_o/knight_t4_cycle.png": {
+   "status": "GPT_O3_CYCLE",
+   "note": "4차 walk 4 + attack 4 (O3), real alpha"
+  },
+  "gpt_o/berserker_t3_cycle.png": {
+   "status": "GPT_O3_CYCLE",
+   "note": "3차 walk 4 + attack 4 (O3), real alpha"
+  },
+  "gpt_o/berserker_t4_cycle.png": {
+   "status": "GPT_O3_CYCLE",
+   "note": "4차 walk 4 + attack 4 (O3), real alpha"
+  },
+  "gpt_o/wizard_t3_cycle.png": {
+   "status": "GPT_O3_CYCLE",
+   "note": "3차 walk 4 + attack 4 (O3), real alpha"
+  },
+  "gpt_o/wizard_t4_cycle.png": {
+   "status": "GPT_O3_CYCLE",
+   "note": "4차 walk 4 + attack 4 (O3), real alpha"
+  },
+  "gpt_o/warlock_t3_cycle.png": {
+   "status": "GPT_O3_CYCLE",
+   "note": "3차 walk 4 + attack 4 (O3), real alpha"
+  },
+  "gpt_o/warlock_t4_cycle.png": {
+   "status": "GPT_O3_CYCLE",
+   "note": "4차 walk 4 + attack 4 (O3), real alpha"
+  },
+  "gpt_o/ranger_t3_cycle.png": {
+   "status": "GPT_O3_CYCLE",
+   "note": "3차 walk 4 + attack 4 (O3), real alpha"
+  },
+  "gpt_o/ranger_t4_cycle.png": {
+   "status": "GPT_O3_CYCLE",
+   "note": "4차 walk 4 + attack 4 (O3), real alpha"
+  },
+  "gpt_o/hunter_t3_cycle.png": {
+   "status": "GPT_O3_CYCLE",
+   "note": "3차 walk 4 + attack 4 (O3), real alpha"
+  },
+  "gpt_o/hunter_t4_cycle.png": {
+   "status": "GPT_O3_CYCLE",
+   "note": "4차 walk 4 + attack 4 (O3), real alpha"
+  },
+  "gpt_o/assassin_t3_cycle.png": {
+   "status": "GPT_O3_CYCLE",
+   "note": "3차 walk 4 + attack 4 (O3), real alpha"
+  },
+  "gpt_o/assassin_t4_cycle.png": {
+   "status": "GPT_O3_CYCLE",
+   "note": "4차 walk 4 + attack 4 (O3), real alpha"
+  },
+  "gpt_o/trickster_t3_cycle.png": {
+   "status": "GPT_O3_CYCLE",
+   "note": "3차 walk 4 + attack 4 (O3), real alpha"
+  },
+  "gpt_o/trickster_t4_cycle.png": {
+   "status": "GPT_O3_CYCLE",
+   "note": "4차 walk 4 + attack 4 (O3), real alpha"
+  },
+  "gpt_o/ride_t34_a.png": {
+   "status": "GPT_O4_RIDE",
+   "note": "3차·4차 seated rider poses (O4)"
+  },
+  "gpt_o/ride_t34_b.png": {
+   "status": "GPT_O4_RIDE",
+   "note": "3차·4차 seated rider poses (O4)"
+  },
+  "gpt_o/icons_o5.png": {
+   "status": "GPT_O5_ICONS",
+   "note": "서약 8 + 초월 문장·시련·6번 칸·서약 바꾸기"
+  },
+  "gpt_o6": "GPT package O6 (진화 스킬 아이콘)"
  },
  "monsters": {
   "M01": {
@@ -17336,23 +17413,23 @@
    "pose": "walk1",
    "file": "assets/runtime/hero_cyc_assassin_t3_walk1.webp",
    "size": [
-    229,
-    289
+    197,
+    288
    ],
-   "scale": 0.6651,
-   "bodyHeightPx": 280.0,
+   "scale": 0.6715,
+   "bodyHeightPx": 280.7,
    "pivot": [
-    159.3,
-    284.0
+    90.0,
+    284.7
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    29,
+    52,
+    286,
+    421
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/assassin_t3_cycle.png",
+   "source": "gpt_o/assassin_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_assassin_t3_walk2": {
@@ -17360,23 +17437,23 @@
    "pose": "walk2",
    "file": "assets/runtime/hero_cyc_assassin_t3_walk2.webp",
    "size": [
-    217,
-    293
+    200,
+    289
    ],
-   "scale": 0.6651,
+   "scale": 0.6715,
    "bodyHeightPx": 282.0,
    "pivot": [
-    113.4,
-    286.0
+    99.4,
+    285.4
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    405,
+    50,
+    290,
+    422
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/assassin_t3_cycle.png",
+   "source": "gpt_o/assassin_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_assassin_t3_walk3": {
@@ -17384,23 +17461,23 @@
    "pose": "walk3",
    "file": "assets/runtime/hero_cyc_assassin_t3_walk3.webp",
    "size": [
-    218,
-    285
+    201,
+    281
    ],
-   "scale": 0.6651,
-   "bodyHeightPx": 275.3,
+   "scale": 0.6715,
+   "bodyHeightPx": 273.3,
    "pivot": [
-    150.0,
-    279.3
+    94.0,
+    277.3
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    793,
+    62,
+    292,
+    410
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/assassin_t3_cycle.png",
+   "source": "gpt_o/assassin_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_assassin_t3_walk4": {
@@ -17408,23 +17485,23 @@
    "pose": "walk4",
    "file": "assets/runtime/hero_cyc_assassin_t3_walk4.webp",
    "size": [
-    213,
-    289
+    194,
+    285
    ],
-   "scale": 0.6651,
+   "scale": 0.6715,
    "bodyHeightPx": 277.3,
    "pivot": [
-    113.1,
-    282.0
+    96.7,
+    281.3
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    1183,
+    55,
+    281,
+    416
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/assassin_t3_cycle.png",
+   "source": "gpt_o/assassin_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_assassin_t3_atk1": {
@@ -17432,23 +17509,23 @@
    "pose": "atk1",
    "file": "assets/runtime/hero_cyc_assassin_t3_atk1.webp",
    "size": [
-    225,
-    266
+    203,
+    254
    ],
-   "scale": 0.6651,
-   "bodyHeightPx": 256.7,
+   "scale": 0.6715,
+   "bodyHeightPx": 245.8,
    "pivot": [
-    139.9,
-    260.7
+    91.3,
+    250.5
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    30,
+    605,
+    295,
+    370
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/assassin_t3_cycle.png",
+   "source": "gpt_o/assassin_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_assassin_t3_atk2": {
@@ -17456,23 +17533,23 @@
    "pose": "atk2",
    "file": "assets/runtime/hero_cyc_assassin_t3_atk2.webp",
    "size": [
-    245,
-    266
+    218,
+    263
    ],
-   "scale": 0.6651,
-   "bodyHeightPx": 256.7,
+   "scale": 0.6715,
+   "bodyHeightPx": 255.2,
    "pivot": [
-    139.0,
-    260.7
+    94.0,
+    259.9
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    387,
+    590,
+    317,
+    384
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/assassin_t3_cycle.png",
+   "source": "gpt_o/assassin_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_assassin_t3_atk3": {
@@ -17480,23 +17557,23 @@
    "pose": "atk3",
    "file": "assets/runtime/hero_cyc_assassin_t3_atk3.webp",
    "size": [
-    245,
-    266
+    306,
+    250
    ],
-   "scale": 0.6651,
-   "bodyHeightPx": 256.7,
+   "scale": 0.6715,
+   "bodyHeightPx": 242.4,
    "pivot": [
-    130.7,
-    261.4
+    149.7,
+    247.1
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": true,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    737,
+    608,
+    447,
+    365
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/assassin_t3_cycle.png",
+   "source": "gpt_o/assassin_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_assassin_t3_atk4": {
@@ -17504,23 +17581,23 @@
    "pose": "atk4",
    "file": "assets/runtime/hero_cyc_assassin_t3_atk4.webp",
    "size": [
-    218,
-    266
+    212,
+    276
    ],
-   "scale": 0.6651,
-   "bodyHeightPx": 256.7,
+   "scale": 0.6715,
+   "bodyHeightPx": 268.6,
    "pivot": [
-    131.1,
-    260.7
+    101.4,
+    271.9
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    1177,
+    576,
+    307,
+    403
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/assassin_t3_cycle.png",
+   "source": "gpt_o/assassin_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_berserker_t2_walk1": {
@@ -17720,23 +17797,23 @@
    "pose": "walk1",
    "file": "assets/runtime/hero_cyc_berserker_t3_walk1.webp",
    "size": [
-    264,
-    291
+    215,
+    290
    ],
-   "scale": 0.7692,
+   "scale": 0.7035,
    "bodyHeightPx": 280.0,
    "pivot": [
-    145.0,
-    284.6
+    123.1,
+    285.6
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    21,
+    66,
+    298,
+    404
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/berserker_t3_cycle.png",
+   "source": "gpt_o/berserker_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_berserker_t3_walk2": {
@@ -17744,23 +17821,23 @@
    "pose": "walk2",
    "file": "assets/runtime/hero_cyc_berserker_t3_walk2.webp",
    "size": [
-    253,
-    292
+    182,
+    291
    ],
-   "scale": 0.7692,
-   "bodyHeightPx": 280.8,
+   "scale": 0.7035,
+   "bodyHeightPx": 280.7,
    "pivot": [
-    96.5,
-    285.4
+    95.0,
+    286.3
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    438,
+    64,
+    250,
+    405
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/berserker_t3_cycle.png",
+   "source": "gpt_o/berserker_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_berserker_t3_walk3": {
@@ -17768,23 +17845,23 @@
    "pose": "walk3",
    "file": "assets/runtime/hero_cyc_berserker_t3_walk3.webp",
    "size": [
-    268,
-    290
+    215,
+    291
    ],
-   "scale": 0.7692,
-   "bodyHeightPx": 280.0,
+   "scale": 0.7035,
+   "bodyHeightPx": 281.4,
    "pivot": [
-    164.1,
-    284.6
+    115.4,
+    287.0
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    795,
+    65,
+    297,
+    405
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/berserker_t3_cycle.png",
+   "source": "gpt_o/berserker_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_berserker_t3_walk4": {
@@ -17792,23 +17869,23 @@
    "pose": "walk4",
    "file": "assets/runtime/hero_cyc_berserker_t3_walk4.webp",
    "size": [
-    252,
-    291
+    183,
+    290
    ],
-   "scale": 0.7692,
-   "bodyHeightPx": 280.0,
+   "scale": 0.7035,
+   "bodyHeightPx": 281.4,
    "pivot": [
-    112.3,
-    284.6
+    95.7,
+    286.3
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    1203,
+    64,
+    252,
+    404
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/berserker_t3_cycle.png",
+   "source": "gpt_o/berserker_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_berserker_t3_atk1": {
@@ -17816,23 +17893,23 @@
    "pose": "atk1",
    "file": "assets/runtime/hero_cyc_berserker_t3_atk1.webp",
    "size": [
-    254,
-    314
+    235,
+    270
    ],
-   "scale": 0.7692,
-   "bodyHeightPx": 302.3,
+   "scale": 0.7035,
+   "bodyHeightPx": 258.2,
    "pivot": [
-    160.2,
-    307.7
+    97.8,
+    265.9
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    25,
+    607,
+    326,
+    376
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/berserker_t3_cycle.png",
+   "source": "gpt_o/berserker_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_berserker_t3_atk2": {
@@ -17840,23 +17917,23 @@
    "pose": "atk2",
    "file": "assets/runtime/hero_cyc_berserker_t3_atk2.webp",
    "size": [
-    294,
-    268
+    227,
+    314
    ],
-   "scale": 0.7692,
-   "bodyHeightPx": 256.9,
+   "scale": 0.7035,
+   "bodyHeightPx": 307.4,
    "pivot": [
-    120.9,
-    261.5
+    111.2,
+    311.0
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    394,
+    544,
+    314,
+    439
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/berserker_t3_cycle.png",
+   "source": "gpt_o/berserker_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_berserker_t3_atk3": {
@@ -17864,23 +17941,23 @@
    "pose": "atk3",
    "file": "assets/runtime/hero_cyc_berserker_t3_atk3.webp",
    "size": [
-    293,
-    236
+    289,
+    269
    ],
-   "scale": 0.7692,
-   "bodyHeightPx": 224.6,
+   "scale": 0.7035,
+   "bodyHeightPx": 254.7,
    "pivot": [
-    184.9,
-    230.0
+    120.3,
+    264.5
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    752,
+    609,
+    403,
+    374
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/berserker_t3_cycle.png",
+   "source": "gpt_o/berserker_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_berserker_t3_atk4": {
@@ -17888,23 +17965,23 @@
    "pose": "atk4",
    "file": "assets/runtime/hero_cyc_berserker_t3_atk4.webp",
    "size": [
-    279,
-    261
+    193,
+    271
    ],
-   "scale": 0.7692,
-   "bodyHeightPx": 250.0,
+   "scale": 0.7035,
+   "bodyHeightPx": 261.7,
    "pivot": [
-    134.4,
-    254.6
+    102.0,
+    267.3
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    1188,
+    609,
+    267,
+    377
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/berserker_t3_cycle.png",
+   "source": "gpt_o/berserker_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_hunter_t2_walk1": {
@@ -18104,192 +18181,192 @@
    "pose": "walk1",
    "file": "assets/runtime/hero_cyc_hunter_t3_walk1.webp",
    "size": [
-    209,
-    288
+    198,
+    304
    ],
-   "scale": 0.6452,
+   "scale": 0.6604,
    "bodyHeightPx": 280.0,
    "pivot": [
-    114.0,
-    283.2
+    87.8,
+    300.5
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    37,
+    14,
+    292,
+    452
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/hunter_t3_cycle.png",
-   "matte": "estimated"
+   "source": "gpt_o/hunter_t3_cycle.png",
+   "matte": "alpha"
   },
   "cyc_hunter_t3_walk2": {
    "id": "cyc_hunter_t3_walk2",
    "pose": "walk2",
    "file": "assets/runtime/hero_cyc_hunter_t3_walk2.webp",
    "size": [
-    181,
-    288
+    184,
+    305
    ],
-   "scale": 0.6452,
-   "bodyHeightPx": 280.0,
+   "scale": 0.6604,
+   "bodyHeightPx": 279.3,
    "pivot": [
-    118.9,
-    283.2
+    87.2,
+    301.1
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    432,
+    14,
+    271,
+    454
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/hunter_t3_cycle.png",
-   "matte": "estimated"
+   "source": "gpt_o/hunter_t3_cycle.png",
+   "matte": "alpha"
   },
   "cyc_hunter_t3_walk3": {
    "id": "cyc_hunter_t3_walk3",
    "pose": "walk3",
    "file": "assets/runtime/hero_cyc_hunter_t3_walk3.webp",
    "size": [
-    190,
-    286
+    211,
+    304
    ],
-   "scale": 0.6452,
-   "bodyHeightPx": 278.7,
+   "scale": 0.6604,
+   "bodyHeightPx": 273.4,
    "pivot": [
-    107.3,
-    281.9
+    91.8,
+    299.8
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    799,
+    15,
+    312,
+    452
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/hunter_t3_cycle.png",
-   "matte": "estimated"
+   "source": "gpt_o/hunter_t3_cycle.png",
+   "matte": "alpha"
   },
   "cyc_hunter_t3_walk4": {
    "id": "cyc_hunter_t3_walk4",
    "pose": "walk4",
    "file": "assets/runtime/hero_cyc_hunter_t3_walk4.webp",
    "size": [
-    167,
-    289
+    183,
+    304
    ],
-   "scale": 0.6452,
-   "bodyHeightPx": 281.3,
+   "scale": 0.6604,
+   "bodyHeightPx": 274.7,
    "pivot": [
-    104.5,
-    284.5
+    85.5,
+    300.5
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    1202,
+    15,
+    269,
+    453
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/hunter_t3_cycle.png",
-   "matte": "estimated"
+   "source": "gpt_o/hunter_t3_cycle.png",
+   "matte": "alpha"
   },
   "cyc_hunter_t3_atk1": {
    "id": "cyc_hunter_t3_atk1",
    "pose": "atk1",
    "file": "assets/runtime/hero_cyc_hunter_t3_atk1.webp",
    "size": [
-    195,
-    288
+    211,
+    302
    ],
-   "scale": 0.6452,
-   "bodyHeightPx": 279.4,
+   "scale": 0.6604,
+   "bodyHeightPx": 266.1,
    "pivot": [
-    112.2,
-    282.6
+    93.8,
+    297.8
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    30,
+    532,
+    311,
+    449
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/hunter_t3_cycle.png",
-   "matte": "estimated"
+   "source": "gpt_o/hunter_t3_cycle.png",
+   "matte": "alpha"
   },
   "cyc_hunter_t3_atk2": {
    "id": "cyc_hunter_t3_atk2",
    "pose": "atk2",
    "file": "assets/runtime/hero_cyc_hunter_t3_atk2.webp",
    "size": [
-    226,
-    297
+    208,
+    303
    ],
-   "scale": 0.6452,
-   "bodyHeightPx": 289.0,
+   "scale": 0.6604,
+   "bodyHeightPx": 264.2,
    "pivot": [
-    138.3,
-    292.3
+    94.4,
+    299.8
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    396,
+    530,
+    307,
+    451
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/hunter_t3_cycle.png",
-   "matte": "estimated"
+   "source": "gpt_o/hunter_t3_cycle.png",
+   "matte": "alpha"
   },
   "cyc_hunter_t3_atk3": {
    "id": "cyc_hunter_t3_atk3",
    "pose": "atk3",
    "file": "assets/runtime/hero_cyc_hunter_t3_atk3.webp",
    "size": [
-    240,
-    294
+    255,
+    302
    ],
-   "scale": 0.6452,
-   "bodyHeightPx": 285.8,
+   "scale": 0.6604,
+   "bodyHeightPx": 264.2,
    "pivot": [
-    140.1,
-    289.0
+    93.1,
+    297.8
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    776,
+    532,
+    378,
+    449
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/hunter_t3_cycle.png",
-   "matte": "estimated"
+   "source": "gpt_o/hunter_t3_cycle.png",
+   "matte": "alpha"
   },
   "cyc_hunter_t3_atk4": {
    "id": "cyc_hunter_t3_atk4",
    "pose": "atk4",
    "file": "assets/runtime/hero_cyc_hunter_t3_atk4.webp",
    "size": [
-    188,
-    288
+    194,
+    298
    ],
-   "scale": 0.6452,
-   "bodyHeightPx": 280.0,
+   "scale": 0.6604,
+   "bodyHeightPx": 266.1,
    "pivot": [
-    124.0,
-    283.2
+    89.8,
+    294.5
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    1189,
+    538,
+    286,
+    443
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/hunter_t3_cycle.png",
-   "matte": "estimated"
+   "source": "gpt_o/hunter_t3_cycle.png",
+   "matte": "alpha"
   },
   "cyc_knight_t2_walk1": {
    "id": "cyc_knight_t2_walk1",
@@ -18488,23 +18565,23 @@
    "pose": "walk1",
    "file": "assets/runtime/hero_cyc_knight_t3_walk1.webp",
    "size": [
-    223,
-    290
+    236,
+    292
    ],
-   "scale": 0.7198,
+   "scale": 0.7671,
    "bodyHeightPx": 280.0,
    "pivot": [
-    140.4,
-    284.3
+    131.9,
+    287.7
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    30,
+    67,
+    299,
+    372
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/knight_t3_cycle.png",
+   "source": "gpt_o/knight_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_knight_t3_walk2": {
@@ -18512,23 +18589,23 @@
    "pose": "walk2",
    "file": "assets/runtime/hero_cyc_knight_t3_walk2.webp",
    "size": [
-    205,
+    215,
     292
    ],
-   "scale": 0.7198,
-   "bodyHeightPx": 281.4,
+   "scale": 0.7671,
+   "bodyHeightPx": 280.8,
    "pivot": [
-    118.0,
-    285.8
+    114.3,
+    287.7
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    420,
+    67,
+    272,
+    372
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/knight_t3_cycle.png",
+   "source": "gpt_o/knight_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_knight_t3_walk3": {
@@ -18536,23 +18613,23 @@
    "pose": "walk3",
    "file": "assets/runtime/hero_cyc_knight_t3_walk3.webp",
    "size": [
-    222,
-    291
+    239,
+    292
    ],
-   "scale": 0.7198,
-   "bodyHeightPx": 280.7,
+   "scale": 0.7671,
+   "bodyHeightPx": 279.2,
    "pivot": [
-    166.1,
-    285.0
+    135.8,
+    286.9
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    798,
+    68,
+    303,
+    372
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/knight_t3_cycle.png",
+   "source": "gpt_o/knight_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_knight_t3_walk4": {
@@ -18560,23 +18637,23 @@
    "pose": "walk4",
    "file": "assets/runtime/hero_cyc_knight_t3_walk4.webp",
    "size": [
-    208,
-    292
+    199,
+    293
    ],
-   "scale": 0.7198,
-   "bodyHeightPx": 281.4,
+   "scale": 0.7671,
+   "bodyHeightPx": 280.8,
    "pivot": [
-    115.2,
-    285.8
+    105.9,
+    288.4
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    1206,
+    67,
+    252,
+    374
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/knight_t3_cycle.png",
+   "source": "gpt_o/knight_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_knight_t3_atk1": {
@@ -18584,23 +18661,23 @@
    "pose": "atk1",
    "file": "assets/runtime/hero_cyc_knight_t3_atk1.webp",
    "size": [
-    213,
-    279
+    247,
+    295
    ],
-   "scale": 0.7198,
-   "bodyHeightPx": 270.6,
+   "scale": 0.7671,
+   "bodyHeightPx": 282.3,
    "pivot": [
-    132.0,
-    274.2
+    148.1,
+    290.0
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    15,
+    577,
+    314,
+    376
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/knight_t3_cycle.png",
+   "source": "gpt_o/knight_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_knight_t3_atk2": {
@@ -18608,23 +18685,23 @@
    "pose": "atk2",
    "file": "assets/runtime/hero_cyc_knight_t3_atk2.webp",
    "size": [
-    238,
-    279
+    257,
+    334
    ],
-   "scale": 0.7198,
-   "bodyHeightPx": 269.2,
+   "scale": 0.7671,
+   "bodyHeightPx": 311.5,
    "pivot": [
-    123.4,
-    273.5
+    147.3,
+    329.9
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    374,
+    526,
+    327,
+    427
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/knight_t3_cycle.png",
+   "source": "gpt_o/knight_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_knight_t3_atk3": {
@@ -18632,23 +18709,23 @@
    "pose": "atk3",
    "file": "assets/runtime/hero_cyc_knight_t3_atk3.webp",
    "size": [
-    276,
-    279
+    338,
+    292
    ],
-   "scale": 0.7198,
-   "bodyHeightPx": 268.5,
+   "scale": 0.7671,
+   "bodyHeightPx": 280.0,
    "pivot": [
-    150.9,
-    272.8
+    135.8,
+    287.7
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": true,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    752,
+    580,
+    432,
+    372
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/knight_t3_cycle.png",
+   "source": "gpt_o/knight_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_knight_t3_atk4": {
@@ -18656,23 +18733,23 @@
    "pose": "atk4",
    "file": "assets/runtime/hero_cyc_knight_t3_atk4.webp",
    "size": [
-    251,
-    279
+    232,
+    294
    ],
-   "scale": 0.7198,
-   "bodyHeightPx": 268.5,
+   "scale": 0.7671,
+   "bodyHeightPx": 283.8,
    "pivot": [
-    155.3,
-    273.5
+    137.3,
+    290.0
    ],
-   "touchesCellEdge": {
-    "left": true,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    1181,
+    577,
+    295,
+    375
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/knight_t3_cycle.png",
+   "source": "gpt_o/knight_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_ranger_t2_walk1": {
@@ -18872,192 +18949,192 @@
    "pose": "walk1",
    "file": "assets/runtime/hero_cyc_ranger_t3_walk1.webp",
    "size": [
-    196,
-    289
+    193,
+    311
    ],
-   "scale": 0.6683,
+   "scale": 0.7125,
    "bodyHeightPx": 280.0,
    "pivot": [
-    128.1,
-    284.0
+    95.5,
+    306.4
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    67,
+    41,
+    263,
+    428
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/ranger_t3_cycle.png",
-   "matte": "estimated"
+   "source": "gpt_o/ranger_t3_cycle.png",
+   "matte": "alpha"
   },
   "cyc_ranger_t3_walk2": {
    "id": "cyc_ranger_t3_walk2",
    "pose": "walk2",
    "file": "assets/runtime/hero_cyc_ranger_t3_walk2.webp",
    "size": [
-    168,
-    293
+    174,
+    311
    ],
-   "scale": 0.6683,
-   "bodyHeightPx": 284.0,
+   "scale": 0.7125,
+   "bodyHeightPx": 281.4,
    "pivot": [
-    86.1,
-    287.4
+    93.3,
+    307.8
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    453,
+    40,
+    236,
+    429
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/ranger_t3_cycle.png",
-   "matte": "estimated"
+   "source": "gpt_o/ranger_t3_cycle.png",
+   "matte": "alpha"
   },
   "cyc_ranger_t3_walk3": {
    "id": "cyc_ranger_t3_walk3",
    "pose": "walk3",
    "file": "assets/runtime/hero_cyc_ranger_t3_walk3.webp",
    "size": [
-    209,
-    287
+    204,
+    310
    ],
-   "scale": 0.6683,
-   "bodyHeightPx": 278.7,
+   "scale": 0.7125,
+   "bodyHeightPx": 279.3,
    "pivot": [
-    128.3,
-    282.0
+    96.2,
+    306.4
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    821,
+    42,
+    278,
+    427
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/ranger_t3_cycle.png",
-   "matte": "estimated"
+   "source": "gpt_o/ranger_t3_cycle.png",
+   "matte": "alpha"
   },
   "cyc_ranger_t3_walk4": {
    "id": "cyc_ranger_t3_walk4",
    "pose": "walk4",
    "file": "assets/runtime/hero_cyc_ranger_t3_walk4.webp",
    "size": [
-    166,
-    287
+    161,
+    310
    ],
-   "scale": 0.6683,
-   "bodyHeightPx": 279.3,
+   "scale": 0.7125,
+   "bodyHeightPx": 280.0,
    "pivot": [
-    90.5,
-    282.7
+    86.9,
+    306.4
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    1238,
+    42,
+    218,
+    427
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/ranger_t3_cycle.png",
-   "matte": "estimated"
+   "source": "gpt_o/ranger_t3_cycle.png",
+   "matte": "alpha"
   },
   "cyc_ranger_t3_atk1": {
    "id": "cyc_ranger_t3_atk1",
    "pose": "atk1",
    "file": "assets/runtime/hero_cyc_ranger_t3_atk1.webp",
    "size": [
-    197,
-    287
+    210,
+    318
    ],
-   "scale": 0.6683,
-   "bodyHeightPx": 278.0,
+   "scale": 0.7125,
+   "bodyHeightPx": 279.3,
    "pivot": [
-    130.9,
-    282.0
+    100.5,
+    314.9
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    60,
+    545,
+    287,
+    439
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/ranger_t3_cycle.png",
-   "matte": "estimated"
+   "source": "gpt_o/ranger_t3_cycle.png",
+   "matte": "alpha"
   },
   "cyc_ranger_t3_atk2": {
    "id": "cyc_ranger_t3_atk2",
    "pose": "atk2",
    "file": "assets/runtime/hero_cyc_ranger_t3_atk2.webp",
    "size": [
-    213,
-    300
+    219,
+    318
    ],
-   "scale": 0.6683,
-   "bodyHeightPx": 292.0,
+   "scale": 0.7125,
+   "bodyHeightPx": 274.3,
    "pivot": [
-    144.6,
-    295.4
+    91.2,
+    314.2
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    434,
+    545,
+    300,
+    438
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/ranger_t3_cycle.png",
-   "matte": "estimated"
+   "source": "gpt_o/ranger_t3_cycle.png",
+   "matte": "alpha"
   },
   "cyc_ranger_t3_atk3": {
    "id": "cyc_ranger_t3_atk3",
    "pose": "atk3",
    "file": "assets/runtime/hero_cyc_ranger_t3_atk3.webp",
    "size": [
-    211,
-    299
+    238,
+    317
    ],
-   "scale": 0.6683,
-   "bodyHeightPx": 290.7,
+   "scale": 0.7125,
+   "bodyHeightPx": 275.7,
    "pivot": [
-    143.5,
-    294.7
+    103.3,
+    313.5
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    795,
+    546,
+    326,
+    437
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/ranger_t3_cycle.png",
-   "matte": "estimated"
+   "source": "gpt_o/ranger_t3_cycle.png",
+   "matte": "alpha"
   },
   "cyc_ranger_t3_atk4": {
    "id": "cyc_ranger_t3_atk4",
    "pose": "atk4",
    "file": "assets/runtime/hero_cyc_ranger_t3_atk4.webp",
    "size": [
-    192,
-    283
+    184,
+    308
    ],
-   "scale": 0.6683,
-   "bodyHeightPx": 274.7,
+   "scale": 0.7125,
+   "bodyHeightPx": 277.9,
    "pivot": [
-    129.2,
-    278.0
+    101.2,
+    304.9
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    1213,
+    558,
+    250,
+    425
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/ranger_t3_cycle.png",
-   "matte": "estimated"
+   "source": "gpt_o/ranger_t3_cycle.png",
+   "matte": "alpha"
   },
   "cyc_trickster_t2_walk1": {
    "id": "cyc_trickster_t2_walk1",
@@ -19256,23 +19333,23 @@
    "pose": "walk1",
    "file": "assets/runtime/hero_cyc_trickster_t3_walk1.webp",
    "size": [
-    224,
+    211,
     289
    ],
-   "scale": 0.6763,
+   "scale": 0.7161,
    "bodyHeightPx": 280.0,
    "pivot": [
-    150.2,
-    284.1
+    96.0,
+    285.0
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    36,
+    51,
+    286,
+    396
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/trickster_t3_cycle.png",
+   "source": "gpt_o/trickster_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_trickster_t3_walk2": {
@@ -19280,23 +19357,23 @@
    "pose": "walk2",
    "file": "assets/runtime/hero_cyc_trickster_t3_walk2.webp",
    "size": [
-    143,
+    195,
     288
    ],
-   "scale": 0.6763,
-   "bodyHeightPx": 278.6,
+   "scale": 0.7161,
+   "bodyHeightPx": 280.0,
    "pivot": [
-    78.8,
-    282.7
+    110.3,
+    284.3
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    400,
+    50,
+    264,
+    394
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/trickster_t3_cycle.png",
+   "source": "gpt_o/trickster_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_trickster_t3_walk3": {
@@ -19304,23 +19381,23 @@
    "pose": "walk3",
    "file": "assets/runtime/hero_cyc_trickster_t3_walk3.webp",
    "size": [
-    213,
-    288
+    220,
+    286
    ],
-   "scale": 0.6763,
-   "bodyHeightPx": 278.6,
+   "scale": 0.7161,
+   "bodyHeightPx": 277.9,
    "pivot": [
-    131.7,
-    282.7
+    99.5,
+    282.9
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    793,
+    52,
+    299,
+    392
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/trickster_t3_cycle.png",
+   "source": "gpt_o/trickster_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_trickster_t3_walk4": {
@@ -19328,23 +19405,23 @@
    "pose": "walk4",
    "file": "assets/runtime/hero_cyc_trickster_t3_walk4.webp",
    "size": [
-    145,
-    288
+    187,
+    289
    ],
-   "scale": 0.6763,
-   "bodyHeightPx": 278.6,
+   "scale": 0.7161,
+   "bodyHeightPx": 280.7,
    "pivot": [
-    90.3,
-    282.7
+    111.0,
+    285.0
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    1182,
+    50,
+    253,
+    395
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/trickster_t3_cycle.png",
+   "source": "gpt_o/trickster_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_trickster_t3_atk1": {
@@ -19352,23 +19429,23 @@
    "pose": "atk1",
    "file": "assets/runtime/hero_cyc_trickster_t3_atk1.webp",
    "size": [
-    216,
-    257
+    198,
+    281
    ],
-   "scale": 0.6763,
-   "bodyHeightPx": 247.5,
+   "scale": 0.7161,
+   "bodyHeightPx": 272.1,
    "pivot": [
-    127.6,
-    251.6
+    96.0,
+    277.1
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    40,
+    563,
+    268,
+    385
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/trickster_t3_cycle.png",
+   "source": "gpt_o/trickster_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_trickster_t3_atk2": {
@@ -19376,23 +19453,23 @@
    "pose": "atk2",
    "file": "assets/runtime/hero_cyc_trickster_t3_atk2.webp",
    "size": [
-    246,
-    256
+    259,
+    274
    ],
-   "scale": 0.6763,
-   "bodyHeightPx": 246.2,
+   "scale": 0.7161,
+   "bodyHeightPx": 265.7,
    "pivot": [
-    134.0,
-    250.9
+    109.6,
+    270.7
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    372,
+    572,
+    354,
+    375
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/trickster_t3_cycle.png",
+   "source": "gpt_o/trickster_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_trickster_t3_atk3": {
@@ -19400,23 +19477,23 @@
    "pose": "atk3",
    "file": "assets/runtime/hero_cyc_trickster_t3_atk3.webp",
    "size": [
-    260,
-    250
+    338,
+    259
    ],
-   "scale": 0.6763,
-   "bodyHeightPx": 240.1,
+   "scale": 0.7161,
+   "bodyHeightPx": 247.8,
    "pivot": [
-    135.0,
-    244.2
+    147.5,
+    254.9
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    739,
+    584,
+    464,
+    354
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/trickster_t3_cycle.png",
+   "source": "gpt_o/trickster_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_trickster_t3_atk4": {
@@ -19424,23 +19501,23 @@
    "pose": "atk4",
    "file": "assets/runtime/hero_cyc_trickster_t3_atk4.webp",
    "size": [
-    229,
-    255
+    195,
+    283
    ],
-   "scale": 0.6763,
-   "bodyHeightPx": 246.2,
+   "scale": 0.7161,
+   "bodyHeightPx": 274.3,
    "pivot": [
-    138.7,
-    250.2
+    103.8,
+    279.3
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    1193,
+    561,
+    264,
+    387
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/trickster_t3_cycle.png",
+   "source": "gpt_o/trickster_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_warlock_t2_walk1": {
@@ -19640,23 +19717,23 @@
    "pose": "walk1",
    "file": "assets/runtime/hero_cyc_warlock_t3_walk1.webp",
    "size": [
-    220,
-    289
+    215,
+    310
    ],
-   "scale": 0.6573,
-   "bodyHeightPx": 280.0,
+   "scale": 0.6948,
+   "bodyHeightPx": 280.7,
    "pivot": [
-    139.2,
-    283.9
+    98.0,
+    305.7
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    35,
+    9,
+    301,
+    438
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/warlock_t3_cycle.png",
+   "source": "gpt_o/warlock_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_warlock_t3_walk2": {
@@ -19664,23 +19741,23 @@
    "pose": "walk2",
    "file": "assets/runtime/hero_cyc_warlock_t3_walk2.webp",
    "size": [
-    195,
-    287
+    180,
+    308
    ],
-   "scale": 0.6573,
-   "bodyHeightPx": 276.7,
+   "scale": 0.6948,
+   "bodyHeightPx": 281.4,
    "pivot": [
-    99.2,
-    282.0
+    90.3,
+    305.0
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    427,
+    10,
+    251,
+    436
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/warlock_t3_cycle.png",
+   "source": "gpt_o/warlock_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_warlock_t3_walk3": {
@@ -19688,23 +19765,23 @@
    "pose": "walk3",
    "file": "assets/runtime/hero_cyc_warlock_t3_walk3.webp",
    "size": [
-    206,
-    285
+    205,
+    308
    ],
-   "scale": 0.6573,
-   "bodyHeightPx": 274.1,
+   "scale": 0.6948,
+   "bodyHeightPx": 284.2,
    "pivot": [
-    148.4,
-    278.7
+    100.7,
+    304.3
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    798,
+    10,
+    287,
+    436
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/warlock_t3_cycle.png",
+   "source": "gpt_o/warlock_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_warlock_t3_walk4": {
@@ -19712,23 +19789,23 @@
    "pose": "walk4",
    "file": "assets/runtime/hero_cyc_warlock_t3_walk4.webp",
    "size": [
-    193,
-    284
+    167,
+    308
    ],
-   "scale": 0.6573,
-   "bodyHeightPx": 274.1,
+   "scale": 0.6948,
+   "bodyHeightPx": 284.9,
    "pivot": [
-    105.8,
-    278.7
+    82.7,
+    305.0
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    1216,
+    10,
+    232,
+    436
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/warlock_t3_cycle.png",
+   "source": "gpt_o/warlock_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_warlock_t3_atk1": {
@@ -19736,23 +19813,23 @@
    "pose": "atk1",
    "file": "assets/runtime/hero_cyc_warlock_t3_atk1.webp",
    "size": [
-    191,
-    287
+    229,
+    314
    ],
-   "scale": 0.6573,
-   "bodyHeightPx": 278.0,
+   "scale": 0.6948,
+   "bodyHeightPx": 284.9,
    "pivot": [
-    94.5,
-    282.0
+    111.9,
+    310.6
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    28,
+    520,
+    321,
+    444
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/warlock_t3_cycle.png",
+   "source": "gpt_o/warlock_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_warlock_t3_atk2": {
@@ -19760,23 +19837,23 @@
    "pose": "atk2",
    "file": "assets/runtime/hero_cyc_warlock_t3_atk2.webp",
    "size": [
-    222,
-    287
+    259,
+    303
    ],
-   "scale": 0.6573,
-   "bodyHeightPx": 278.0,
+   "scale": 0.6948,
+   "bodyHeightPx": 279.3,
    "pivot": [
-    121.2,
-    282.6
+    116.7,
+    298.8
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    387,
+    535,
+    365,
+    428
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/warlock_t3_cycle.png",
+   "source": "gpt_o/warlock_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_warlock_t3_atk3": {
@@ -19784,23 +19861,23 @@
    "pose": "atk3",
    "file": "assets/runtime/hero_cyc_warlock_t3_atk3.webp",
    "size": [
-    244,
-    287
+    281,
+    288
    ],
-   "scale": 0.6573,
-   "bodyHeightPx": 277.4,
+   "scale": 0.6948,
+   "bodyHeightPx": 275.8,
    "pivot": [
-    116.4,
-    282.0
+    106.3,
+    284.2
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": true,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    773,
+    558,
+    397,
+    406
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/warlock_t3_cycle.png",
+   "source": "gpt_o/warlock_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_warlock_t3_atk4": {
@@ -19808,23 +19885,23 @@
    "pose": "atk4",
    "file": "assets/runtime/hero_cyc_warlock_t3_atk4.webp",
    "size": [
-    198,
-    289
+    220,
+    320
    ],
-   "scale": 0.6573,
-   "bodyHeightPx": 280.0,
+   "scale": 0.6948,
+   "bodyHeightPx": 291.8,
    "pivot": [
-    99.4,
-    283.9
+    102.1,
+    315.4
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    1180,
+    513,
+    309,
+    452
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/warlock_t3_cycle.png",
+   "source": "gpt_o/warlock_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_wizard_t2_walk1": {
@@ -20024,23 +20101,23 @@
    "pose": "walk1",
    "file": "assets/runtime/hero_cyc_wizard_t3_walk1.webp",
    "size": [
-    211,
-    290
+    181,
+    304
    ],
-   "scale": 0.6667,
+   "scale": 0.6573,
    "bodyHeightPx": 280.0,
    "pivot": [
-    123.6,
-    284.7
+    80.2,
+    300.4
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    47,
+    14,
+    268,
+    454
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/wizard_t3_cycle.png",
+   "source": "gpt_o/wizard_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_wizard_t3_walk2": {
@@ -20048,23 +20125,23 @@
    "pose": "walk2",
    "file": "assets/runtime/hero_cyc_wizard_t3_walk2.webp",
    "size": [
-    195,
-    291
+    176,
+    302
    ],
-   "scale": 0.6667,
-   "bodyHeightPx": 282.0,
+   "scale": 0.6573,
+   "bodyHeightPx": 278.7,
    "pivot": [
-    86.0,
-    286.0
+    82.8,
+    297.7
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    437,
+    14,
+    260,
+    451
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/wizard_t3_cycle.png",
+   "source": "gpt_o/wizard_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_wizard_t3_walk3": {
@@ -20072,23 +20149,23 @@
    "pose": "walk3",
    "file": "assets/runtime/hero_cyc_wizard_t3_walk3.webp",
    "size": [
-    200,
-    290
+    189,
+    299
    ],
-   "scale": 0.6667,
-   "bodyHeightPx": 280.7,
+   "scale": 0.6573,
+   "bodyHeightPx": 274.7,
    "pivot": [
-    130.0,
-    284.7
+    88.7,
+    295.8
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    809,
+    15,
+    279,
+    447
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/wizard_t3_cycle.png",
+   "source": "gpt_o/wizard_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_wizard_t3_walk4": {
@@ -20096,23 +20173,23 @@
    "pose": "walk4",
    "file": "assets/runtime/hero_cyc_wizard_t3_walk4.webp",
    "size": [
-    186,
-    291
+    177,
+    302
    ],
-   "scale": 0.6667,
-   "bodyHeightPx": 281.3,
+   "scale": 0.6573,
+   "bodyHeightPx": 278.0,
    "pivot": [
-    71.0,
-    286.0
+    81.5,
+    297.7
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    1209,
+    14,
+    261,
+    451
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/wizard_t3_cycle.png",
+   "source": "gpt_o/wizard_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_wizard_t3_atk1": {
@@ -20120,23 +20197,23 @@
    "pose": "atk1",
    "file": "assets/runtime/hero_cyc_wizard_t3_atk1.webp",
    "size": [
-    193,
-    289
+    185,
+    302
    ],
-   "scale": 0.6667,
-   "bodyHeightPx": 279.3,
+   "scale": 0.6573,
+   "bodyHeightPx": 274.7,
    "pivot": [
-    101.0,
-    284.0
+    94.6,
+    298.4
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    35,
+    523,
+    273,
+    452
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/wizard_t3_cycle.png",
+   "source": "gpt_o/wizard_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_wizard_t3_atk2": {
@@ -20144,23 +20221,23 @@
    "pose": "atk2",
    "file": "assets/runtime/hero_cyc_wizard_t3_atk2.webp",
    "size": [
-    213,
-    287
+    241,
+    289
    ],
-   "scale": 0.6667,
-   "bodyHeightPx": 278.0,
+   "scale": 0.6573,
+   "bodyHeightPx": 270.1,
    "pivot": [
-    111.0,
-    282.0
+    101.2,
+    285.3
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    370,
+    543,
+    359,
+    431
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/wizard_t3_cycle.png",
+   "source": "gpt_o/wizard_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_wizard_t3_atk3": {
@@ -20168,23 +20245,23 @@
    "pose": "atk3",
    "file": "assets/runtime/hero_cyc_wizard_t3_atk3.webp",
    "size": [
-    239,
-    289
+    281,
+    276
    ],
-   "scale": 0.6667,
-   "bodyHeightPx": 278.7,
+   "scale": 0.6573,
+   "bodyHeightPx": 257.7,
    "pivot": [
-    113.3,
-    283.3
+    107.8,
+    272.1
    ],
-   "touchesCellEdge": {
-    "left": false,
-    "right": true,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    749,
+    562,
+    419,
+    412
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/wizard_t3_cycle.png",
+   "source": "gpt_o/wizard_t3_cycle.png",
    "matte": "alpha"
   },
   "cyc_wizard_t3_atk4": {
@@ -20192,23 +20269,23 @@
    "pose": "atk4",
    "file": "assets/runtime/hero_cyc_wizard_t3_atk4.webp",
    "size": [
-    223,
-    288
+    197,
+    304
    ],
-   "scale": 0.6667,
-   "bodyHeightPx": 278.7,
+   "scale": 0.6573,
+   "bodyHeightPx": 277.4,
    "pivot": [
-    136.0,
-    282.7
+    95.3,
+    300.4
    ],
-   "touchesCellEdge": {
-    "left": true,
-    "right": false,
-    "top": false,
-    "bottom": false
-   },
+   "sourceRect": [
+    1180,
+    520,
+    292,
+    454
+   ],
    "status": "RUNTIME_CYCLE_FRAME",
-   "source": "gpt_j4/wizard_t3_cycle.png",
+   "source": "gpt_o/wizard_t3_cycle.png",
    "matte": "alpha"
   },
   "pose_promo_knight_t4_idle": {
@@ -22666,6 +22743,1542 @@
    "flying": false,
    "mirrored": false,
    "status": "RUNTIME_KEY_POSE"
+  },
+  "cyc_knight_t4_walk1": {
+   "id": "cyc_knight_t4_walk1",
+   "pose": "walk1",
+   "file": "assets/runtime/hero_cyc_knight_t4_walk1.webp",
+   "size": [
+    224,
+    295
+   ],
+   "scale": 0.7447,
+   "bodyHeightPx": 280.0,
+   "pivot": [
+    110.2,
+    288.9
+   ],
+   "sourceRect": [
+    44,
+    56,
+    293,
+    388
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/knight_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_knight_t4_walk2": {
+   "id": "cyc_knight_t4_walk2",
+   "pose": "walk2",
+   "file": "assets/runtime/hero_cyc_knight_t4_walk2.webp",
+   "size": [
+    196,
+    294
+   ],
+   "scale": 0.7447,
+   "bodyHeightPx": 280.0,
+   "pivot": [
+    100.5,
+    288.9
+   ],
+   "sourceRect": [
+    448,
+    56,
+    255,
+    387
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/knight_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_knight_t4_walk3": {
+   "id": "cyc_knight_t4_walk3",
+   "pose": "walk3",
+   "file": "assets/runtime/hero_cyc_knight_t4_walk3.webp",
+   "size": [
+    231,
+    289
+   ],
+   "scale": 0.7447,
+   "bodyHeightPx": 277.8,
+   "pivot": [
+    102.8,
+    283.7
+   ],
+   "sourceRect": [
+    804,
+    63,
+    302,
+    380
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/knight_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_knight_t4_walk4": {
+   "id": "cyc_knight_t4_walk4",
+   "pose": "walk4",
+   "file": "assets/runtime/hero_cyc_knight_t4_walk4.webp",
+   "size": [
+    194,
+    290
+   ],
+   "scale": 0.7447,
+   "bodyHeightPx": 277.8,
+   "pivot": [
+    101.3,
+    283.7
+   ],
+   "sourceRect": [
+    1216,
+    62,
+    252,
+    381
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/knight_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_knight_t4_atk1": {
+   "id": "cyc_knight_t4_atk1",
+   "pose": "atk1",
+   "file": "assets/runtime/hero_cyc_knight_t4_atk1.webp",
+   "size": [
+    233,
+    314
+   ],
+   "scale": 0.7447,
+   "bodyHeightPx": 289.7,
+   "pivot": [
+    103.5,
+    309.0
+   ],
+   "sourceRect": [
+    32,
+    540,
+    305,
+    413
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/knight_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_knight_t4_atk2": {
+   "id": "cyc_knight_t4_atk2",
+   "pose": "atk2",
+   "file": "assets/runtime/hero_cyc_knight_t4_atk2.webp",
+   "size": [
+    269,
+    283
+   ],
+   "scale": 0.7447,
+   "bodyHeightPx": 269.6,
+   "pivot": [
+    111.0,
+    278.5
+   ],
+   "sourceRect": [
+    416,
+    578,
+    353,
+    372
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/knight_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_knight_t4_atk3": {
+   "id": "cyc_knight_t4_atk3",
+   "pose": "atk3",
+   "file": "assets/runtime/hero_cyc_knight_t4_atk3.webp",
+   "size": [
+    320,
+    280
+   ],
+   "scale": 0.7447,
+   "bodyHeightPx": 265.9,
+   "pivot": [
+    121.4,
+    275.5
+   ],
+   "sourceRect": [
+    774,
+    579,
+    422,
+    368
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/knight_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_knight_t4_atk4": {
+   "id": "cyc_knight_t4_atk4",
+   "pose": "atk4",
+   "file": "assets/runtime/hero_cyc_knight_t4_atk4.webp",
+   "size": [
+    208,
+    284
+   ],
+   "scale": 0.7447,
+   "bodyHeightPx": 271.1,
+   "pivot": [
+    103.5,
+    280.0
+   ],
+   "sourceRect": [
+    1200,
+    576,
+    271,
+    374
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/knight_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_berserker_t4_walk1": {
+   "id": "cyc_berserker_t4_walk1",
+   "pose": "walk1",
+   "file": "assets/runtime/hero_cyc_berserker_t4_walk1.webp",
+   "size": [
+    258,
+    290
+   ],
+   "scale": 0.733,
+   "bodyHeightPx": 280.0,
+   "pivot": [
+    107.0,
+    285.9
+   ],
+   "sourceRect": [
+    25,
+    65,
+    344,
+    388
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/berserker_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_berserker_t4_walk2": {
+   "id": "cyc_berserker_t4_walk2",
+   "pose": "walk2",
+   "file": "assets/runtime/hero_cyc_berserker_t4_walk2.webp",
+   "size": [
+    239,
+    294
+   ],
+   "scale": 0.733,
+   "bodyHeightPx": 283.7,
+   "pivot": [
+    125.3,
+    289.5
+   ],
+   "sourceRect": [
+    407,
+    60,
+    318,
+    393
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/berserker_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_berserker_t4_walk3": {
+   "id": "cyc_berserker_t4_walk3",
+   "pose": "walk3",
+   "file": "assets/runtime/hero_cyc_berserker_t4_walk3.webp",
+   "size": [
+    267,
+    290
+   ],
+   "scale": 0.733,
+   "bodyHeightPx": 280.0,
+   "pivot": [
+    109.9,
+    286.6
+   ],
+   "sourceRect": [
+    791,
+    65,
+    356,
+    388
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/berserker_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_berserker_t4_walk4": {
+   "id": "cyc_berserker_t4_walk4",
+   "pose": "walk4",
+   "file": "assets/runtime/hero_cyc_berserker_t4_walk4.webp",
+   "size": [
+    242,
+    295
+   ],
+   "scale": 0.733,
+   "bodyHeightPx": 284.4,
+   "pivot": [
+    116.5,
+    290.3
+   ],
+   "sourceRect": [
+    1189,
+    59,
+    322,
+    394
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/berserker_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_berserker_t4_atk1": {
+   "id": "cyc_berserker_t4_atk1",
+   "pose": "atk1",
+   "file": "assets/runtime/hero_cyc_berserker_t4_atk1.webp",
+   "size": [
+    229,
+    344
+   ],
+   "scale": 0.733,
+   "bodyHeightPx": 335.7,
+   "pivot": [
+    113.6,
+    340.1
+   ],
+   "sourceRect": [
+    19,
+    519,
+    304,
+    461
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/berserker_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_berserker_t4_atk2": {
+   "id": "cyc_berserker_t4_atk2",
+   "pose": "atk2",
+   "file": "assets/runtime/hero_cyc_berserker_t4_atk2.webp",
+   "size": [
+    284,
+    255
+   ],
+   "scale": 0.733,
+   "bodyHeightPx": 246.3,
+   "pivot": [
+    134.1,
+    251.4
+   ],
+   "sourceRect": [
+    375,
+    639,
+    379,
+    340
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/berserker_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_berserker_t4_atk3": {
+   "id": "cyc_berserker_t4_atk3",
+   "pose": "atk3",
+   "file": "assets/runtime/hero_cyc_berserker_t4_atk3.webp",
+   "size": [
+    295,
+    250
+   ],
+   "scale": 0.733,
+   "bodyHeightPx": 234.6,
+   "pivot": [
+    115.1,
+    245.5
+   ],
+   "sourceRect": [
+    762,
+    648,
+    394,
+    333
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/berserker_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_berserker_t4_atk4": {
+   "id": "cyc_berserker_t4_atk4",
+   "pose": "atk4",
+   "file": "assets/runtime/hero_cyc_berserker_t4_atk4.webp",
+   "size": [
+    251,
+    265
+   ],
+   "scale": 0.733,
+   "bodyHeightPx": 255.1,
+   "pivot": [
+    100.4,
+    261.7
+   ],
+   "sourceRect": [
+    1186,
+    628,
+    334,
+    354
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/berserker_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_wizard_t4_walk1": {
+   "id": "cyc_wizard_t4_walk1",
+   "pose": "walk1",
+   "file": "assets/runtime/hero_cyc_wizard_t4_walk1.webp",
+   "size": [
+    199,
+    306
+   ],
+   "scale": 0.6667,
+   "bodyHeightPx": 280.0,
+   "pivot": [
+    101.3,
+    302.7
+   ],
+   "sourceRect": [
+    22,
+    10,
+    291,
+    451
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/wizard_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_wizard_t4_walk2": {
+   "id": "cyc_wizard_t4_walk2",
+   "pose": "walk2",
+   "file": "assets/runtime/hero_cyc_wizard_t4_walk2.webp",
+   "size": [
+    175,
+    307
+   ],
+   "scale": 0.6667,
+   "bodyHeightPx": 288.7,
+   "pivot": [
+    75.3,
+    303.3
+   ],
+   "sourceRect": [
+    432,
+    9,
+    254,
+    452
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/wizard_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_wizard_t4_walk3": {
+   "id": "cyc_wizard_t4_walk3",
+   "pose": "walk3",
+   "file": "assets/runtime/hero_cyc_wizard_t4_walk3.webp",
+   "size": [
+    201,
+    306
+   ],
+   "scale": 0.6667,
+   "bodyHeightPx": 288.7,
+   "pivot": [
+    100.7,
+    302.7
+   ],
+   "sourceRect": [
+    781,
+    9,
+    293,
+    451
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/wizard_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_wizard_t4_walk4": {
+   "id": "cyc_wizard_t4_walk4",
+   "pose": "walk4",
+   "file": "assets/runtime/hero_cyc_wizard_t4_walk4.webp",
+   "size": [
+    176,
+    305
+   ],
+   "scale": 0.6667,
+   "bodyHeightPx": 287.3,
+   "pivot": [
+    74.7,
+    300.7
+   ],
+   "sourceRect": [
+    1206,
+    12,
+    256,
+    449
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/wizard_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_wizard_t4_atk1": {
+   "id": "cyc_wizard_t4_atk1",
+   "pose": "atk1",
+   "file": "assets/runtime/hero_cyc_wizard_t4_atk1.webp",
+   "size": [
+    193,
+    311
+   ],
+   "scale": 0.6667,
+   "bodyHeightPx": 284.7,
+   "pivot": [
+    93.3,
+    306.7
+   ],
+   "sourceRect": [
+    31,
+    515,
+    282,
+    458
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/wizard_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_wizard_t4_atk2": {
+   "id": "cyc_wizard_t4_atk2",
+   "pose": "atk2",
+   "file": "assets/runtime/hero_cyc_wizard_t4_atk2.webp",
+   "size": [
+    218,
+    295
+   ],
+   "scale": 0.6667,
+   "bodyHeightPx": 272.0,
+   "pivot": [
+    99.3,
+    291.3
+   ],
+   "sourceRect": [
+    375,
+    538,
+    319,
+    435
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/wizard_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_wizard_t4_atk3": {
+   "id": "cyc_wizard_t4_atk3",
+   "pose": "atk3",
+   "file": "assets/runtime/hero_cyc_wizard_t4_atk3.webp",
+   "size": [
+    271,
+    264
+   ],
+   "scale": 0.6667,
+   "bodyHeightPx": 252.7,
+   "pivot": [
+    98.7,
+    260.0
+   ],
+   "sourceRect": [
+    749,
+    585,
+    398,
+    388
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/wizard_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_wizard_t4_atk4": {
+   "id": "cyc_wizard_t4_atk4",
+   "pose": "atk4",
+   "file": "assets/runtime/hero_cyc_wizard_t4_atk4.webp",
+   "size": [
+    193,
+    311
+   ],
+   "scale": 0.6667,
+   "bodyHeightPx": 283.3,
+   "pivot": [
+    90.7,
+    306.7
+   ],
+   "sourceRect": [
+    1182,
+    515,
+    281,
+    458
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/wizard_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_warlock_t4_walk1": {
+   "id": "cyc_warlock_t4_walk1",
+   "pose": "walk1",
+   "file": "assets/runtime/hero_cyc_warlock_t4_walk1.webp",
+   "size": [
+    215,
+    302
+   ],
+   "scale": 0.6813,
+   "bodyHeightPx": 280.0,
+   "pivot": [
+    121.9,
+    298.4
+   ],
+   "sourceRect": [
+    23,
+    15,
+    307,
+    435
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/warlock_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_warlock_t4_walk2": {
+   "id": "cyc_warlock_t4_walk2",
+   "pose": "walk2",
+   "file": "assets/runtime/hero_cyc_warlock_t4_walk2.webp",
+   "size": [
+    202,
+    302
+   ],
+   "scale": 0.6813,
+   "bodyHeightPx": 278.0,
+   "pivot": [
+    115.8,
+    297.7
+   ],
+   "sourceRect": [
+    413,
+    16,
+    288,
+    435
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/warlock_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_warlock_t4_walk3": {
+   "id": "cyc_warlock_t4_walk3",
+   "pose": "walk3",
+   "file": "assets/runtime/hero_cyc_warlock_t4_walk3.webp",
+   "size": [
+    200,
+    284
+   ],
+   "scale": 0.6813,
+   "bodyHeightPx": 273.2,
+   "pivot": [
+    119.2,
+    280.0
+   ],
+   "sourceRect": [
+    790,
+    42,
+    286,
+    409
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/warlock_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_warlock_t4_walk4": {
+   "id": "cyc_warlock_t4_walk4",
+   "pose": "walk4",
+   "file": "assets/runtime/hero_cyc_warlock_t4_walk4.webp",
+   "size": [
+    204,
+    296
+   ],
+   "scale": 0.6813,
+   "bodyHeightPx": 275.9,
+   "pivot": [
+    102.2,
+    291.6
+   ],
+   "sourceRect": [
+    1200,
+    25,
+    292,
+    426
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/warlock_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_warlock_t4_atk1": {
+   "id": "cyc_warlock_t4_atk1",
+   "pose": "atk1",
+   "file": "assets/runtime/hero_cyc_warlock_t4_atk1.webp",
+   "size": [
+    208,
+    307
+   ],
+   "scale": 0.6813,
+   "bodyHeightPx": 278.6,
+   "pivot": [
+    107.6,
+    302.5
+   ],
+   "sourceRect": [
+    39,
+    527,
+    298,
+    442
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/warlock_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_warlock_t4_atk2": {
+   "id": "cyc_warlock_t4_atk2",
+   "pose": "atk2",
+   "file": "assets/runtime/hero_cyc_warlock_t4_atk2.webp",
+   "size": [
+    228,
+    288
+   ],
+   "scale": 0.6813,
+   "bodyHeightPx": 278.0,
+   "pivot": [
+    121.3,
+    283.4
+   ],
+   "sourceRect": [
+    395,
+    558,
+    326,
+    415
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/warlock_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_warlock_t4_atk3": {
+   "id": "cyc_warlock_t4_atk3",
+   "pose": "atk3",
+   "file": "assets/runtime/hero_cyc_warlock_t4_atk3.webp",
+   "size": [
+    259,
+    283
+   ],
+   "scale": 0.6813,
+   "bodyHeightPx": 272.5,
+   "pivot": [
+    124.7,
+    279.3
+   ],
+   "sourceRect": [
+    766,
+    562,
+    372,
+    407
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/warlock_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_warlock_t4_atk4": {
+   "id": "cyc_warlock_t4_atk4",
+   "pose": "atk4",
+   "file": "assets/runtime/hero_cyc_warlock_t4_atk4.webp",
+   "size": [
+    202,
+    308
+   ],
+   "scale": 0.6813,
+   "bodyHeightPx": 281.4,
+   "pivot": [
+    100.8,
+    303.2
+   ],
+   "sourceRect": [
+    1196,
+    528,
+    289,
+    444
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/warlock_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_ranger_t4_walk1": {
+   "id": "cyc_ranger_t4_walk1",
+   "pose": "walk1",
+   "file": "assets/runtime/hero_cyc_ranger_t4_walk1.webp",
+   "size": [
+    202,
+    308
+   ],
+   "scale": 0.6763,
+   "bodyHeightPx": 280.0,
+   "pivot": [
+    105.5,
+    304.3
+   ],
+   "sourceRect": [
+    28,
+    28,
+    290,
+    448
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/ranger_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_ranger_t4_walk2": {
+   "id": "cyc_ranger_t4_walk2",
+   "pose": "walk2",
+   "file": "assets/runtime/hero_cyc_ranger_t4_walk2.webp",
+   "size": [
+    190,
+    308
+   ],
+   "scale": 0.6763,
+   "bodyHeightPx": 280.0,
+   "pivot": [
+    103.5,
+    304.3
+   ],
+   "sourceRect": [
+    429,
+    28,
+    273,
+    448
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/ranger_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_ranger_t4_walk3": {
+   "id": "cyc_ranger_t4_walk3",
+   "pose": "walk3",
+   "file": "assets/runtime/hero_cyc_ranger_t4_walk3.webp",
+   "size": [
+    192,
+    307
+   ],
+   "scale": 0.6763,
+   "bodyHeightPx": 280.0,
+   "pivot": [
+    102.1,
+    303.7
+   ],
+   "sourceRect": [
+    810,
+    28,
+    276,
+    446
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/ranger_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_ranger_t4_walk4": {
+   "id": "cyc_ranger_t4_walk4",
+   "pose": "walk4",
+   "file": "assets/runtime/hero_cyc_ranger_t4_walk4.webp",
+   "size": [
+    188,
+    308
+   ],
+   "scale": 0.6763,
+   "bodyHeightPx": 281.4,
+   "pivot": [
+    107.5,
+    305.0
+   ],
+   "sourceRect": [
+    1200,
+    28,
+    270,
+    448
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/ranger_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_ranger_t4_atk1": {
+   "id": "cyc_ranger_t4_atk1",
+   "pose": "atk1",
+   "file": "assets/runtime/hero_cyc_ranger_t4_atk1.webp",
+   "size": [
+    200,
+    308
+   ],
+   "scale": 0.6763,
+   "bodyHeightPx": 280.7,
+   "pivot": [
+    111.6,
+    304.3
+   ],
+   "sourceRect": [
+    36,
+    544,
+    287,
+    447
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/ranger_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_ranger_t4_atk2": {
+   "id": "cyc_ranger_t4_atk2",
+   "pose": "atk2",
+   "file": "assets/runtime/hero_cyc_ranger_t4_atk2.webp",
+   "size": [
+    218,
+    308
+   ],
+   "scale": 0.6763,
+   "bodyHeightPx": 284.7,
+   "pivot": [
+    112.3,
+    303.7
+   ],
+   "sourceRect": [
+    399,
+    544,
+    314,
+    447
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/ranger_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_ranger_t4_atk3": {
+   "id": "cyc_ranger_t4_atk3",
+   "pose": "atk3",
+   "file": "assets/runtime/hero_cyc_ranger_t4_atk3.webp",
+   "size": [
+    258,
+    311
+   ],
+   "scale": 0.6763,
+   "bodyHeightPx": 286.8,
+   "pivot": [
+    114.3,
+    307.1
+   ],
+   "sourceRect": [
+    780,
+    539,
+    374,
+    452
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/ranger_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_ranger_t4_atk4": {
+   "id": "cyc_ranger_t4_atk4",
+   "pose": "atk4",
+   "file": "assets/runtime/hero_cyc_ranger_t4_atk4.webp",
+   "size": [
+    201,
+    308
+   ],
+   "scale": 0.6763,
+   "bodyHeightPx": 281.4,
+   "pivot": [
+    119.7,
+    304.3
+   ],
+   "sourceRect": [
+    1187,
+    543,
+    289,
+    448
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/ranger_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_hunter_t4_walk1": {
+   "id": "cyc_hunter_t4_walk1",
+   "pose": "walk1",
+   "file": "assets/runtime/hero_cyc_hunter_t4_walk1.webp",
+   "size": [
+    214,
+    307
+   ],
+   "scale": 0.6983,
+   "bodyHeightPx": 280.0,
+   "pivot": [
+    96.4,
+    302.3
+   ],
+   "sourceRect": [
+    38,
+    25,
+    298,
+    431
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/hunter_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_hunter_t4_walk2": {
+   "id": "cyc_hunter_t4_walk2",
+   "pose": "walk2",
+   "file": "assets/runtime/hero_cyc_hunter_t4_walk2.webp",
+   "size": [
+    197,
+    308
+   ],
+   "scale": 0.6983,
+   "bodyHeightPx": 286.3,
+   "pivot": [
+    95.7,
+    304.4
+   ],
+   "sourceRect": [
+    426,
+    23,
+    274,
+    433
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/hunter_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_hunter_t4_walk3": {
+   "id": "cyc_hunter_t4_walk3",
+   "pose": "walk3",
+   "file": "assets/runtime/hero_cyc_hunter_t4_walk3.webp",
+   "size": [
+    203,
+    306
+   ],
+   "scale": 0.6983,
+   "bodyHeightPx": 275.8,
+   "pivot": [
+    99.9,
+    301.6
+   ],
+   "sourceRect": [
+    814,
+    24,
+    283,
+    430
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/hunter_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_hunter_t4_walk4": {
+   "id": "cyc_hunter_t4_walk4",
+   "pose": "walk4",
+   "file": "assets/runtime/hero_cyc_hunter_t4_walk4.webp",
+   "size": [
+    196,
+    307
+   ],
+   "scale": 0.6983,
+   "bodyHeightPx": 286.3,
+   "pivot": [
+    99.2,
+    303.0
+   ],
+   "sourceRect": [
+    1197,
+    23,
+    272,
+    432
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/hunter_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_hunter_t4_atk1": {
+   "id": "cyc_hunter_t4_atk1",
+   "pose": "atk1",
+   "file": "assets/runtime/hero_cyc_hunter_t4_atk1.webp",
+   "size": [
+    211,
+    309
+   ],
+   "scale": 0.6983,
+   "bodyHeightPx": 284.9,
+   "pivot": [
+    106.8,
+    305.1
+   ],
+   "sourceRect": [
+    30,
+    547,
+    294,
+    434
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/hunter_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_hunter_t4_atk2": {
+   "id": "cyc_hunter_t4_atk2",
+   "pose": "atk2",
+   "file": "assets/runtime/hero_cyc_hunter_t4_atk2.webp",
+   "size": [
+    237,
+    320
+   ],
+   "scale": 0.6983,
+   "bodyHeightPx": 288.4,
+   "pivot": [
+    106.1,
+    315.6
+   ],
+   "sourceRect": [
+    397,
+    532,
+    332,
+    450
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/hunter_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_hunter_t4_atk3": {
+   "id": "cyc_hunter_t4_atk3",
+   "pose": "atk3",
+   "file": "assets/runtime/hero_cyc_hunter_t4_atk3.webp",
+   "size": [
+    280,
+    320
+   ],
+   "scale": 0.6983,
+   "bodyHeightPx": 294.7,
+   "pivot": [
+    109.6,
+    315.6
+   ],
+   "sourceRect": [
+    779,
+    532,
+    393,
+    450
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/hunter_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_hunter_t4_atk4": {
+   "id": "cyc_hunter_t4_atk4",
+   "pose": "atk4",
+   "file": "assets/runtime/hero_cyc_hunter_t4_atk4.webp",
+   "size": [
+    207,
+    304
+   ],
+   "scale": 0.6983,
+   "bodyHeightPx": 284.9,
+   "pivot": [
+    106.1,
+    300.9
+   ],
+   "sourceRect": [
+    1189,
+    552,
+    289,
+    428
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/hunter_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_assassin_t4_walk1": {
+   "id": "cyc_assassin_t4_walk1",
+   "pose": "walk1",
+   "file": "assets/runtime/hero_cyc_assassin_t4_walk1.webp",
+   "size": [
+    203,
+    288
+   ],
+   "scale": 0.6829,
+   "bodyHeightPx": 280.7,
+   "pivot": [
+    98.3,
+    284.8
+   ],
+   "sourceRect": [
+    27,
+    54,
+    289,
+    414
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/assassin_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_assassin_t4_walk2": {
+   "id": "cyc_assassin_t4_walk2",
+   "pose": "walk2",
+   "file": "assets/runtime/hero_cyc_assassin_t4_walk2.webp",
+   "size": [
+    180,
+    288
+   ],
+   "scale": 0.6829,
+   "bodyHeightPx": 280.0,
+   "pivot": [
+    94.9,
+    284.1
+   ],
+   "sourceRect": [
+    429,
+    55,
+    255,
+    414
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/assassin_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_assassin_t4_walk3": {
+   "id": "cyc_assassin_t4_walk3",
+   "pose": "walk3",
+   "file": "assets/runtime/hero_cyc_assassin_t4_walk3.webp",
+   "size": [
+    201,
+    277
+   ],
+   "scale": 0.6829,
+   "bodyHeightPx": 269.1,
+   "pivot": [
+    104.5,
+    273.2
+   ],
+   "sourceRect": [
+    791,
+    70,
+    286,
+    398
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/assassin_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_assassin_t4_walk4": {
+   "id": "cyc_assassin_t4_walk4",
+   "pose": "walk4",
+   "file": "assets/runtime/hero_cyc_assassin_t4_walk4.webp",
+   "size": [
+    181,
+    288
+   ],
+   "scale": 0.6829,
+   "bodyHeightPx": 280.0,
+   "pivot": [
+    96.0,
+    284.1
+   ],
+   "sourceRect": [
+    1195,
+    55,
+    257,
+    413
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/assassin_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_assassin_t4_atk1": {
+   "id": "cyc_assassin_t4_atk1",
+   "pose": "atk1",
+   "file": "assets/runtime/hero_cyc_assassin_t4_atk1.webp",
+   "size": [
+    210,
+    260
+   ],
+   "scale": 0.6829,
+   "bodyHeightPx": 252.7,
+   "pivot": [
+    107.2,
+    256.8
+   ],
+   "sourceRect": [
+    11,
+    605,
+    300,
+    373
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/assassin_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_assassin_t4_atk2": {
+   "id": "cyc_assassin_t4_atk2",
+   "pose": "atk2",
+   "file": "assets/runtime/hero_cyc_assassin_t4_atk2.webp",
+   "size": [
+    235,
+    268
+   ],
+   "scale": 0.6829,
+   "bodyHeightPx": 260.2,
+   "pivot": [
+    107.2,
+    264.3
+   ],
+   "sourceRect": [
+    375,
+    595,
+    336,
+    385
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/assassin_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_assassin_t4_atk3": {
+   "id": "cyc_assassin_t4_atk3",
+   "pose": "atk3",
+   "file": "assets/runtime/hero_cyc_assassin_t4_atk3.webp",
+   "size": [
+    257,
+    279
+   ],
+   "scale": 0.6829,
+   "bodyHeightPx": 271.1,
+   "pivot": [
+    125.7,
+    275.2
+   ],
+   "sourceRect": [
+    741,
+    584,
+    368,
+    401
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/assassin_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_assassin_t4_atk4": {
+   "id": "cyc_assassin_t4_atk4",
+   "pose": "atk4",
+   "file": "assets/runtime/hero_cyc_assassin_t4_atk4.webp",
+   "size": [
+    208,
+    288
+   ],
+   "scale": 0.6829,
+   "bodyHeightPx": 279.3,
+   "pivot": [
+    105.9,
+    283.4
+   ],
+   "sourceRect": [
+    1177,
+    572,
+    297,
+    413
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/assassin_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_trickster_t4_walk1": {
+   "id": "cyc_trickster_t4_walk1",
+   "pose": "walk1",
+   "file": "assets/runtime/hero_cyc_trickster_t4_walk1.webp",
+   "size": [
+    213,
+    290
+   ],
+   "scale": 0.6796,
+   "bodyHeightPx": 280.0,
+   "pivot": [
+    95.1,
+    285.4
+   ],
+   "sourceRect": [
+    30,
+    35,
+    306,
+    418
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/trickster_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_trickster_t4_walk2": {
+   "id": "cyc_trickster_t4_walk2",
+   "pose": "walk2",
+   "file": "assets/runtime/hero_cyc_trickster_t4_walk2.webp",
+   "size": [
+    179,
+    291
+   ],
+   "scale": 0.6796,
+   "bodyHeightPx": 280.7,
+   "pivot": [
+    93.1,
+    286.8
+   ],
+   "sourceRect": [
+    420,
+    34,
+    255,
+    420
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/trickster_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_trickster_t4_walk3": {
+   "id": "cyc_trickster_t4_walk3",
+   "pose": "walk3",
+   "file": "assets/runtime/hero_cyc_trickster_t4_walk3.webp",
+   "size": [
+    211,
+    282
+   ],
+   "scale": 0.6796,
+   "bodyHeightPx": 273.2,
+   "pivot": [
+    104.0,
+    278.6
+   ],
+   "sourceRect": [
+    787,
+    44,
+    303,
+    407
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/trickster_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_trickster_t4_walk4": {
+   "id": "cyc_trickster_t4_walk4",
+   "pose": "walk4",
+   "file": "assets/runtime/hero_cyc_trickster_t4_walk4.webp",
+   "size": [
+    174,
+    288
+   ],
+   "scale": 0.6796,
+   "bodyHeightPx": 278.6,
+   "pivot": [
+    93.8,
+    284.1
+   ],
+   "sourceRect": [
+    1198,
+    38,
+    248,
+    416
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/trickster_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_trickster_t4_atk1": {
+   "id": "cyc_trickster_t4_atk1",
+   "pose": "atk1",
+   "file": "assets/runtime/hero_cyc_trickster_t4_atk1.webp",
+   "size": [
+    193,
+    288
+   ],
+   "scale": 0.6796,
+   "bodyHeightPx": 278.0,
+   "pivot": [
+    106.7,
+    284.1
+   ],
+   "sourceRect": [
+    16,
+    550,
+    276,
+    416
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/trickster_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_trickster_t4_atk2": {
+   "id": "cyc_trickster_t4_atk2",
+   "pose": "atk2",
+   "file": "assets/runtime/hero_cyc_trickster_t4_atk2.webp",
+   "size": [
+    234,
+    285
+   ],
+   "scale": 0.6796,
+   "bodyHeightPx": 275.2,
+   "pivot": [
+    96.5,
+    282.0
+   ],
+   "sourceRect": [
+    375,
+    552,
+    336,
+    412
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/trickster_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_trickster_t4_atk3": {
+   "id": "cyc_trickster_t4_atk3",
+   "pose": "atk3",
+   "file": "assets/runtime/hero_cyc_trickster_t4_atk3.webp",
+   "size": [
+    287,
+    281
+   ],
+   "scale": 0.6796,
+   "bodyHeightPx": 270.5,
+   "pivot": [
+    108.1,
+    276.6
+   ],
+   "sourceRect": [
+    729,
+    559,
+    415,
+    405
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/trickster_t4_cycle.png",
+   "matte": "alpha"
+  },
+  "cyc_trickster_t4_atk4": {
+   "id": "cyc_trickster_t4_atk4",
+   "pose": "atk4",
+   "file": "assets/runtime/hero_cyc_trickster_t4_atk4.webp",
+   "size": [
+    190,
+    286
+   ],
+   "scale": 0.6796,
+   "bodyHeightPx": 276.6,
+   "pivot": [
+    106.0,
+    282.7
+   ],
+   "sourceRect": [
+    1169,
+    552,
+    272,
+    413
+   ],
+   "status": "RUNTIME_CYCLE_FRAME",
+   "source": "gpt_o/trickster_t4_cycle.png",
+   "matte": "alpha"
   }
  },
  "items": {
@@ -28244,6 +29857,1286 @@
    ],
    "status": "RUNTIME_ICON",
    "source": "gpt_k/icons_v8.png"
+  },
+  "skill_evo_knight_strike_t1": {
+   "id": "skill_evo_knight_strike_t1",
+   "file": "assets/runtime/skill_evo_knight_strike_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r1c1"
+  },
+  "skill_evo_knight_strike_t2": {
+   "id": "skill_evo_knight_strike_t2",
+   "file": "assets/runtime/skill_evo_knight_strike_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r1c2"
+  },
+  "skill_evo_knight_strike_t3": {
+   "id": "skill_evo_knight_strike_t3",
+   "file": "assets/runtime/skill_evo_knight_strike_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r1c3"
+  },
+  "skill_evo_knight_strike_t4": {
+   "id": "skill_evo_knight_strike_t4",
+   "file": "assets/runtime/skill_evo_knight_strike_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r1c4"
+  },
+  "skill_evo_berserker_strike_t1": {
+   "id": "skill_evo_berserker_strike_t1",
+   "file": "assets/runtime/skill_evo_berserker_strike_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r1c5"
+  },
+  "skill_evo_berserker_strike_t2": {
+   "id": "skill_evo_berserker_strike_t2",
+   "file": "assets/runtime/skill_evo_berserker_strike_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r1c6"
+  },
+  "skill_evo_berserker_strike_t3": {
+   "id": "skill_evo_berserker_strike_t3",
+   "file": "assets/runtime/skill_evo_berserker_strike_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r1c7"
+  },
+  "skill_evo_berserker_strike_t4": {
+   "id": "skill_evo_berserker_strike_t4",
+   "file": "assets/runtime/skill_evo_berserker_strike_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r1c8"
+  },
+  "skill_evo_knight_shieldCharge_t1": {
+   "id": "skill_evo_knight_shieldCharge_t1",
+   "file": "assets/runtime/skill_evo_knight_shieldCharge_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r2c1"
+  },
+  "skill_evo_knight_shieldCharge_t2": {
+   "id": "skill_evo_knight_shieldCharge_t2",
+   "file": "assets/runtime/skill_evo_knight_shieldCharge_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r2c2"
+  },
+  "skill_evo_knight_shieldCharge_t3": {
+   "id": "skill_evo_knight_shieldCharge_t3",
+   "file": "assets/runtime/skill_evo_knight_shieldCharge_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r2c3"
+  },
+  "skill_evo_knight_shieldCharge_t4": {
+   "id": "skill_evo_knight_shieldCharge_t4",
+   "file": "assets/runtime/skill_evo_knight_shieldCharge_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r2c4"
+  },
+  "skill_evo_berserker_shieldCharge_t1": {
+   "id": "skill_evo_berserker_shieldCharge_t1",
+   "file": "assets/runtime/skill_evo_berserker_shieldCharge_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r2c5"
+  },
+  "skill_evo_berserker_shieldCharge_t2": {
+   "id": "skill_evo_berserker_shieldCharge_t2",
+   "file": "assets/runtime/skill_evo_berserker_shieldCharge_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r2c6"
+  },
+  "skill_evo_berserker_shieldCharge_t3": {
+   "id": "skill_evo_berserker_shieldCharge_t3",
+   "file": "assets/runtime/skill_evo_berserker_shieldCharge_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r2c7"
+  },
+  "skill_evo_berserker_shieldCharge_t4": {
+   "id": "skill_evo_berserker_shieldCharge_t4",
+   "file": "assets/runtime/skill_evo_berserker_shieldCharge_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r2c8"
+  },
+  "skill_evo_knight_warCry_t1": {
+   "id": "skill_evo_knight_warCry_t1",
+   "file": "assets/runtime/skill_evo_knight_warCry_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r3c1"
+  },
+  "skill_evo_knight_warCry_t2": {
+   "id": "skill_evo_knight_warCry_t2",
+   "file": "assets/runtime/skill_evo_knight_warCry_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r3c2"
+  },
+  "skill_evo_knight_warCry_t3": {
+   "id": "skill_evo_knight_warCry_t3",
+   "file": "assets/runtime/skill_evo_knight_warCry_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r3c3"
+  },
+  "skill_evo_knight_warCry_t4": {
+   "id": "skill_evo_knight_warCry_t4",
+   "file": "assets/runtime/skill_evo_knight_warCry_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r3c4"
+  },
+  "skill_evo_berserker_warCry_t1": {
+   "id": "skill_evo_berserker_warCry_t1",
+   "file": "assets/runtime/skill_evo_berserker_warCry_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r3c5"
+  },
+  "skill_evo_berserker_warCry_t2": {
+   "id": "skill_evo_berserker_warCry_t2",
+   "file": "assets/runtime/skill_evo_berserker_warCry_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r3c6"
+  },
+  "skill_evo_berserker_warCry_t3": {
+   "id": "skill_evo_berserker_warCry_t3",
+   "file": "assets/runtime/skill_evo_berserker_warCry_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r3c7"
+  },
+  "skill_evo_berserker_warCry_t4": {
+   "id": "skill_evo_berserker_warCry_t4",
+   "file": "assets/runtime/skill_evo_berserker_warCry_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r3c8"
+  },
+  "skill_evo_knight_starSlash_t1": {
+   "id": "skill_evo_knight_starSlash_t1",
+   "file": "assets/runtime/skill_evo_knight_starSlash_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r4c1"
+  },
+  "skill_evo_knight_starSlash_t2": {
+   "id": "skill_evo_knight_starSlash_t2",
+   "file": "assets/runtime/skill_evo_knight_starSlash_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r4c2"
+  },
+  "skill_evo_knight_starSlash_t3": {
+   "id": "skill_evo_knight_starSlash_t3",
+   "file": "assets/runtime/skill_evo_knight_starSlash_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r4c3"
+  },
+  "skill_evo_knight_starSlash_t4": {
+   "id": "skill_evo_knight_starSlash_t4",
+   "file": "assets/runtime/skill_evo_knight_starSlash_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r4c4"
+  },
+  "skill_evo_berserker_starSlash_t1": {
+   "id": "skill_evo_berserker_starSlash_t1",
+   "file": "assets/runtime/skill_evo_berserker_starSlash_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r4c5"
+  },
+  "skill_evo_berserker_starSlash_t2": {
+   "id": "skill_evo_berserker_starSlash_t2",
+   "file": "assets/runtime/skill_evo_berserker_starSlash_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r4c6"
+  },
+  "skill_evo_berserker_starSlash_t3": {
+   "id": "skill_evo_berserker_starSlash_t3",
+   "file": "assets/runtime/skill_evo_berserker_starSlash_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r4c7"
+  },
+  "skill_evo_berserker_starSlash_t4": {
+   "id": "skill_evo_berserker_starSlash_t4",
+   "file": "assets/runtime/skill_evo_berserker_starSlash_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_warrior.png r4c8"
+  },
+  "skill_evo_wizard_m_fireball_t1": {
+   "id": "skill_evo_wizard_m_fireball_t1",
+   "file": "assets/runtime/skill_evo_wizard_m_fireball_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r1c1"
+  },
+  "skill_evo_wizard_m_fireball_t2": {
+   "id": "skill_evo_wizard_m_fireball_t2",
+   "file": "assets/runtime/skill_evo_wizard_m_fireball_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r1c2"
+  },
+  "skill_evo_wizard_m_fireball_t3": {
+   "id": "skill_evo_wizard_m_fireball_t3",
+   "file": "assets/runtime/skill_evo_wizard_m_fireball_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r1c3"
+  },
+  "skill_evo_wizard_m_fireball_t4": {
+   "id": "skill_evo_wizard_m_fireball_t4",
+   "file": "assets/runtime/skill_evo_wizard_m_fireball_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r1c4"
+  },
+  "skill_evo_warlock_m_fireball_t1": {
+   "id": "skill_evo_warlock_m_fireball_t1",
+   "file": "assets/runtime/skill_evo_warlock_m_fireball_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r1c5"
+  },
+  "skill_evo_warlock_m_fireball_t2": {
+   "id": "skill_evo_warlock_m_fireball_t2",
+   "file": "assets/runtime/skill_evo_warlock_m_fireball_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r1c6"
+  },
+  "skill_evo_warlock_m_fireball_t3": {
+   "id": "skill_evo_warlock_m_fireball_t3",
+   "file": "assets/runtime/skill_evo_warlock_m_fireball_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r1c7"
+  },
+  "skill_evo_warlock_m_fireball_t4": {
+   "id": "skill_evo_warlock_m_fireball_t4",
+   "file": "assets/runtime/skill_evo_warlock_m_fireball_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r1c8"
+  },
+  "skill_evo_wizard_m_frost_t1": {
+   "id": "skill_evo_wizard_m_frost_t1",
+   "file": "assets/runtime/skill_evo_wizard_m_frost_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r2c1"
+  },
+  "skill_evo_wizard_m_frost_t2": {
+   "id": "skill_evo_wizard_m_frost_t2",
+   "file": "assets/runtime/skill_evo_wizard_m_frost_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r2c2"
+  },
+  "skill_evo_wizard_m_frost_t3": {
+   "id": "skill_evo_wizard_m_frost_t3",
+   "file": "assets/runtime/skill_evo_wizard_m_frost_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r2c3"
+  },
+  "skill_evo_wizard_m_frost_t4": {
+   "id": "skill_evo_wizard_m_frost_t4",
+   "file": "assets/runtime/skill_evo_wizard_m_frost_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r2c4"
+  },
+  "skill_evo_warlock_m_frost_t1": {
+   "id": "skill_evo_warlock_m_frost_t1",
+   "file": "assets/runtime/skill_evo_warlock_m_frost_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r2c5"
+  },
+  "skill_evo_warlock_m_frost_t2": {
+   "id": "skill_evo_warlock_m_frost_t2",
+   "file": "assets/runtime/skill_evo_warlock_m_frost_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r2c6"
+  },
+  "skill_evo_warlock_m_frost_t3": {
+   "id": "skill_evo_warlock_m_frost_t3",
+   "file": "assets/runtime/skill_evo_warlock_m_frost_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r2c7"
+  },
+  "skill_evo_warlock_m_frost_t4": {
+   "id": "skill_evo_warlock_m_frost_t4",
+   "file": "assets/runtime/skill_evo_warlock_m_frost_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r2c8"
+  },
+  "skill_evo_wizard_m_shield_t1": {
+   "id": "skill_evo_wizard_m_shield_t1",
+   "file": "assets/runtime/skill_evo_wizard_m_shield_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r3c1"
+  },
+  "skill_evo_wizard_m_shield_t2": {
+   "id": "skill_evo_wizard_m_shield_t2",
+   "file": "assets/runtime/skill_evo_wizard_m_shield_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r3c2"
+  },
+  "skill_evo_wizard_m_shield_t3": {
+   "id": "skill_evo_wizard_m_shield_t3",
+   "file": "assets/runtime/skill_evo_wizard_m_shield_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r3c3"
+  },
+  "skill_evo_wizard_m_shield_t4": {
+   "id": "skill_evo_wizard_m_shield_t4",
+   "file": "assets/runtime/skill_evo_wizard_m_shield_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r3c4"
+  },
+  "skill_evo_warlock_m_shield_t1": {
+   "id": "skill_evo_warlock_m_shield_t1",
+   "file": "assets/runtime/skill_evo_warlock_m_shield_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r3c5"
+  },
+  "skill_evo_warlock_m_shield_t2": {
+   "id": "skill_evo_warlock_m_shield_t2",
+   "file": "assets/runtime/skill_evo_warlock_m_shield_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r3c6"
+  },
+  "skill_evo_warlock_m_shield_t3": {
+   "id": "skill_evo_warlock_m_shield_t3",
+   "file": "assets/runtime/skill_evo_warlock_m_shield_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r3c7"
+  },
+  "skill_evo_warlock_m_shield_t4": {
+   "id": "skill_evo_warlock_m_shield_t4",
+   "file": "assets/runtime/skill_evo_warlock_m_shield_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r3c8"
+  },
+  "skill_evo_wizard_m_meteor_t1": {
+   "id": "skill_evo_wizard_m_meteor_t1",
+   "file": "assets/runtime/skill_evo_wizard_m_meteor_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r4c1"
+  },
+  "skill_evo_wizard_m_meteor_t2": {
+   "id": "skill_evo_wizard_m_meteor_t2",
+   "file": "assets/runtime/skill_evo_wizard_m_meteor_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r4c2"
+  },
+  "skill_evo_wizard_m_meteor_t3": {
+   "id": "skill_evo_wizard_m_meteor_t3",
+   "file": "assets/runtime/skill_evo_wizard_m_meteor_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r4c3"
+  },
+  "skill_evo_wizard_m_meteor_t4": {
+   "id": "skill_evo_wizard_m_meteor_t4",
+   "file": "assets/runtime/skill_evo_wizard_m_meteor_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r4c4"
+  },
+  "skill_evo_warlock_m_meteor_t1": {
+   "id": "skill_evo_warlock_m_meteor_t1",
+   "file": "assets/runtime/skill_evo_warlock_m_meteor_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r4c5"
+  },
+  "skill_evo_warlock_m_meteor_t2": {
+   "id": "skill_evo_warlock_m_meteor_t2",
+   "file": "assets/runtime/skill_evo_warlock_m_meteor_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r4c6"
+  },
+  "skill_evo_warlock_m_meteor_t3": {
+   "id": "skill_evo_warlock_m_meteor_t3",
+   "file": "assets/runtime/skill_evo_warlock_m_meteor_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r4c7"
+  },
+  "skill_evo_warlock_m_meteor_t4": {
+   "id": "skill_evo_warlock_m_meteor_t4",
+   "file": "assets/runtime/skill_evo_warlock_m_meteor_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_mage.png r4c8"
+  },
+  "skill_evo_ranger_a_aim_t1": {
+   "id": "skill_evo_ranger_a_aim_t1",
+   "file": "assets/runtime/skill_evo_ranger_a_aim_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r1c1"
+  },
+  "skill_evo_ranger_a_aim_t2": {
+   "id": "skill_evo_ranger_a_aim_t2",
+   "file": "assets/runtime/skill_evo_ranger_a_aim_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r1c2"
+  },
+  "skill_evo_ranger_a_aim_t3": {
+   "id": "skill_evo_ranger_a_aim_t3",
+   "file": "assets/runtime/skill_evo_ranger_a_aim_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r1c3"
+  },
+  "skill_evo_ranger_a_aim_t4": {
+   "id": "skill_evo_ranger_a_aim_t4",
+   "file": "assets/runtime/skill_evo_ranger_a_aim_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r1c4"
+  },
+  "skill_evo_hunter_a_aim_t1": {
+   "id": "skill_evo_hunter_a_aim_t1",
+   "file": "assets/runtime/skill_evo_hunter_a_aim_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r1c5"
+  },
+  "skill_evo_hunter_a_aim_t2": {
+   "id": "skill_evo_hunter_a_aim_t2",
+   "file": "assets/runtime/skill_evo_hunter_a_aim_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r1c6"
+  },
+  "skill_evo_hunter_a_aim_t3": {
+   "id": "skill_evo_hunter_a_aim_t3",
+   "file": "assets/runtime/skill_evo_hunter_a_aim_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r1c7"
+  },
+  "skill_evo_hunter_a_aim_t4": {
+   "id": "skill_evo_hunter_a_aim_t4",
+   "file": "assets/runtime/skill_evo_hunter_a_aim_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r1c8"
+  },
+  "skill_evo_ranger_a_multi_t1": {
+   "id": "skill_evo_ranger_a_multi_t1",
+   "file": "assets/runtime/skill_evo_ranger_a_multi_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r2c1"
+  },
+  "skill_evo_ranger_a_multi_t2": {
+   "id": "skill_evo_ranger_a_multi_t2",
+   "file": "assets/runtime/skill_evo_ranger_a_multi_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r2c2"
+  },
+  "skill_evo_ranger_a_multi_t3": {
+   "id": "skill_evo_ranger_a_multi_t3",
+   "file": "assets/runtime/skill_evo_ranger_a_multi_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r2c3"
+  },
+  "skill_evo_ranger_a_multi_t4": {
+   "id": "skill_evo_ranger_a_multi_t4",
+   "file": "assets/runtime/skill_evo_ranger_a_multi_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r2c4"
+  },
+  "skill_evo_hunter_a_multi_t1": {
+   "id": "skill_evo_hunter_a_multi_t1",
+   "file": "assets/runtime/skill_evo_hunter_a_multi_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r2c5"
+  },
+  "skill_evo_hunter_a_multi_t2": {
+   "id": "skill_evo_hunter_a_multi_t2",
+   "file": "assets/runtime/skill_evo_hunter_a_multi_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r2c6"
+  },
+  "skill_evo_hunter_a_multi_t3": {
+   "id": "skill_evo_hunter_a_multi_t3",
+   "file": "assets/runtime/skill_evo_hunter_a_multi_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r2c7"
+  },
+  "skill_evo_hunter_a_multi_t4": {
+   "id": "skill_evo_hunter_a_multi_t4",
+   "file": "assets/runtime/skill_evo_hunter_a_multi_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r2c8"
+  },
+  "skill_evo_ranger_a_leap_t1": {
+   "id": "skill_evo_ranger_a_leap_t1",
+   "file": "assets/runtime/skill_evo_ranger_a_leap_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r3c1"
+  },
+  "skill_evo_ranger_a_leap_t2": {
+   "id": "skill_evo_ranger_a_leap_t2",
+   "file": "assets/runtime/skill_evo_ranger_a_leap_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r3c2"
+  },
+  "skill_evo_ranger_a_leap_t3": {
+   "id": "skill_evo_ranger_a_leap_t3",
+   "file": "assets/runtime/skill_evo_ranger_a_leap_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r3c3"
+  },
+  "skill_evo_ranger_a_leap_t4": {
+   "id": "skill_evo_ranger_a_leap_t4",
+   "file": "assets/runtime/skill_evo_ranger_a_leap_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r3c4"
+  },
+  "skill_evo_hunter_a_leap_t1": {
+   "id": "skill_evo_hunter_a_leap_t1",
+   "file": "assets/runtime/skill_evo_hunter_a_leap_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r3c5"
+  },
+  "skill_evo_hunter_a_leap_t2": {
+   "id": "skill_evo_hunter_a_leap_t2",
+   "file": "assets/runtime/skill_evo_hunter_a_leap_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r3c6"
+  },
+  "skill_evo_hunter_a_leap_t3": {
+   "id": "skill_evo_hunter_a_leap_t3",
+   "file": "assets/runtime/skill_evo_hunter_a_leap_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r3c7"
+  },
+  "skill_evo_hunter_a_leap_t4": {
+   "id": "skill_evo_hunter_a_leap_t4",
+   "file": "assets/runtime/skill_evo_hunter_a_leap_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r3c8"
+  },
+  "skill_evo_ranger_a_rain_t1": {
+   "id": "skill_evo_ranger_a_rain_t1",
+   "file": "assets/runtime/skill_evo_ranger_a_rain_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r4c1"
+  },
+  "skill_evo_ranger_a_rain_t2": {
+   "id": "skill_evo_ranger_a_rain_t2",
+   "file": "assets/runtime/skill_evo_ranger_a_rain_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r4c2"
+  },
+  "skill_evo_ranger_a_rain_t3": {
+   "id": "skill_evo_ranger_a_rain_t3",
+   "file": "assets/runtime/skill_evo_ranger_a_rain_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r4c3"
+  },
+  "skill_evo_ranger_a_rain_t4": {
+   "id": "skill_evo_ranger_a_rain_t4",
+   "file": "assets/runtime/skill_evo_ranger_a_rain_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r4c4"
+  },
+  "skill_evo_hunter_a_rain_t1": {
+   "id": "skill_evo_hunter_a_rain_t1",
+   "file": "assets/runtime/skill_evo_hunter_a_rain_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r4c5"
+  },
+  "skill_evo_hunter_a_rain_t2": {
+   "id": "skill_evo_hunter_a_rain_t2",
+   "file": "assets/runtime/skill_evo_hunter_a_rain_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r4c6"
+  },
+  "skill_evo_hunter_a_rain_t3": {
+   "id": "skill_evo_hunter_a_rain_t3",
+   "file": "assets/runtime/skill_evo_hunter_a_rain_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r4c7"
+  },
+  "skill_evo_hunter_a_rain_t4": {
+   "id": "skill_evo_hunter_a_rain_t4",
+   "file": "assets/runtime/skill_evo_hunter_a_rain_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_archer.png r4c8"
+  },
+  "skill_evo_assassin_r_stab_t1": {
+   "id": "skill_evo_assassin_r_stab_t1",
+   "file": "assets/runtime/skill_evo_assassin_r_stab_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r1c1"
+  },
+  "skill_evo_assassin_r_stab_t2": {
+   "id": "skill_evo_assassin_r_stab_t2",
+   "file": "assets/runtime/skill_evo_assassin_r_stab_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r1c2"
+  },
+  "skill_evo_assassin_r_stab_t3": {
+   "id": "skill_evo_assassin_r_stab_t3",
+   "file": "assets/runtime/skill_evo_assassin_r_stab_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r1c3"
+  },
+  "skill_evo_assassin_r_stab_t4": {
+   "id": "skill_evo_assassin_r_stab_t4",
+   "file": "assets/runtime/skill_evo_assassin_r_stab_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r1c4"
+  },
+  "skill_evo_trickster_r_stab_t1": {
+   "id": "skill_evo_trickster_r_stab_t1",
+   "file": "assets/runtime/skill_evo_trickster_r_stab_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r1c5"
+  },
+  "skill_evo_trickster_r_stab_t2": {
+   "id": "skill_evo_trickster_r_stab_t2",
+   "file": "assets/runtime/skill_evo_trickster_r_stab_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r1c6"
+  },
+  "skill_evo_trickster_r_stab_t3": {
+   "id": "skill_evo_trickster_r_stab_t3",
+   "file": "assets/runtime/skill_evo_trickster_r_stab_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r1c7"
+  },
+  "skill_evo_trickster_r_stab_t4": {
+   "id": "skill_evo_trickster_r_stab_t4",
+   "file": "assets/runtime/skill_evo_trickster_r_stab_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r1c8"
+  },
+  "skill_evo_assassin_r_poison_t1": {
+   "id": "skill_evo_assassin_r_poison_t1",
+   "file": "assets/runtime/skill_evo_assassin_r_poison_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r2c1"
+  },
+  "skill_evo_assassin_r_poison_t2": {
+   "id": "skill_evo_assassin_r_poison_t2",
+   "file": "assets/runtime/skill_evo_assassin_r_poison_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r2c2"
+  },
+  "skill_evo_assassin_r_poison_t3": {
+   "id": "skill_evo_assassin_r_poison_t3",
+   "file": "assets/runtime/skill_evo_assassin_r_poison_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r2c3"
+  },
+  "skill_evo_assassin_r_poison_t4": {
+   "id": "skill_evo_assassin_r_poison_t4",
+   "file": "assets/runtime/skill_evo_assassin_r_poison_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r2c4"
+  },
+  "skill_evo_trickster_r_poison_t1": {
+   "id": "skill_evo_trickster_r_poison_t1",
+   "file": "assets/runtime/skill_evo_trickster_r_poison_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r2c5"
+  },
+  "skill_evo_trickster_r_poison_t2": {
+   "id": "skill_evo_trickster_r_poison_t2",
+   "file": "assets/runtime/skill_evo_trickster_r_poison_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r2c6"
+  },
+  "skill_evo_trickster_r_poison_t3": {
+   "id": "skill_evo_trickster_r_poison_t3",
+   "file": "assets/runtime/skill_evo_trickster_r_poison_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r2c7"
+  },
+  "skill_evo_trickster_r_poison_t4": {
+   "id": "skill_evo_trickster_r_poison_t4",
+   "file": "assets/runtime/skill_evo_trickster_r_poison_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r2c8"
+  },
+  "skill_evo_assassin_r_shadow_t1": {
+   "id": "skill_evo_assassin_r_shadow_t1",
+   "file": "assets/runtime/skill_evo_assassin_r_shadow_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r3c1"
+  },
+  "skill_evo_assassin_r_shadow_t2": {
+   "id": "skill_evo_assassin_r_shadow_t2",
+   "file": "assets/runtime/skill_evo_assassin_r_shadow_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r3c2"
+  },
+  "skill_evo_assassin_r_shadow_t3": {
+   "id": "skill_evo_assassin_r_shadow_t3",
+   "file": "assets/runtime/skill_evo_assassin_r_shadow_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r3c3"
+  },
+  "skill_evo_assassin_r_shadow_t4": {
+   "id": "skill_evo_assassin_r_shadow_t4",
+   "file": "assets/runtime/skill_evo_assassin_r_shadow_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r3c4"
+  },
+  "skill_evo_trickster_r_shadow_t1": {
+   "id": "skill_evo_trickster_r_shadow_t1",
+   "file": "assets/runtime/skill_evo_trickster_r_shadow_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r3c5"
+  },
+  "skill_evo_trickster_r_shadow_t2": {
+   "id": "skill_evo_trickster_r_shadow_t2",
+   "file": "assets/runtime/skill_evo_trickster_r_shadow_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r3c6"
+  },
+  "skill_evo_trickster_r_shadow_t3": {
+   "id": "skill_evo_trickster_r_shadow_t3",
+   "file": "assets/runtime/skill_evo_trickster_r_shadow_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r3c7"
+  },
+  "skill_evo_trickster_r_shadow_t4": {
+   "id": "skill_evo_trickster_r_shadow_t4",
+   "file": "assets/runtime/skill_evo_trickster_r_shadow_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r3c8"
+  },
+  "skill_evo_assassin_r_blades_t1": {
+   "id": "skill_evo_assassin_r_blades_t1",
+   "file": "assets/runtime/skill_evo_assassin_r_blades_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r4c1"
+  },
+  "skill_evo_assassin_r_blades_t2": {
+   "id": "skill_evo_assassin_r_blades_t2",
+   "file": "assets/runtime/skill_evo_assassin_r_blades_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r4c2"
+  },
+  "skill_evo_assassin_r_blades_t3": {
+   "id": "skill_evo_assassin_r_blades_t3",
+   "file": "assets/runtime/skill_evo_assassin_r_blades_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r4c3"
+  },
+  "skill_evo_assassin_r_blades_t4": {
+   "id": "skill_evo_assassin_r_blades_t4",
+   "file": "assets/runtime/skill_evo_assassin_r_blades_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r4c4"
+  },
+  "skill_evo_trickster_r_blades_t1": {
+   "id": "skill_evo_trickster_r_blades_t1",
+   "file": "assets/runtime/skill_evo_trickster_r_blades_t1.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r4c5"
+  },
+  "skill_evo_trickster_r_blades_t2": {
+   "id": "skill_evo_trickster_r_blades_t2",
+   "file": "assets/runtime/skill_evo_trickster_r_blades_t2.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r4c6"
+  },
+  "skill_evo_trickster_r_blades_t3": {
+   "id": "skill_evo_trickster_r_blades_t3",
+   "file": "assets/runtime/skill_evo_trickster_r_blades_t3.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r4c7"
+  },
+  "skill_evo_trickster_r_blades_t4": {
+   "id": "skill_evo_trickster_r_blades_t4",
+   "file": "assets/runtime/skill_evo_trickster_r_blades_t4.webp",
+   "size": [
+    96,
+    96
+   ],
+   "status": "RUNTIME_ICON",
+   "source": "gpt_o6/evo_icons_rogue.png r4c8"
   }
  },
  "backgrounds": {
@@ -32688,13 +35581,13 @@
   },
   "ride_knight_t3_warrior": {
    "file": "assets/runtime/steed_ride_knight_t3_warrior.webp",
-   "w": 245,
-   "h": 324,
-   "hx": 0.538,
-   "hy": 0.586,
-   "hipFromTop": 0.576,
+   "w": 238,
+   "h": 338,
+   "hx": 0.645,
+   "hy": 0.591,
+   "hipFromTop": 0.596,
    "cellH": 400.0,
-   "source": "gpt_n/ride_serin.png cell 4"
+   "source": "gpt_o/ride_t34_a.png row 1 cell 1"
   },
   "ride_berserker_warrior": {
    "file": "assets/runtime/steed_ride_berserker_warrior.webp",
@@ -32718,13 +35611,13 @@
   },
   "ride_berserker_t3_warrior": {
    "file": "assets/runtime/steed_ride_berserker_t3_warrior.webp",
-   "w": 260,
-   "h": 324,
-   "hx": 0.562,
-   "hy": 0.588,
-   "hipFromTop": 0.576,
+   "w": 252,
+   "h": 380,
+   "hx": 0.661,
+   "hy": 0.616,
+   "hipFromTop": 0.596,
    "cellH": 400.0,
-   "source": "gpt_n/ride_serin.png cell 7"
+   "source": "gpt_o/ride_t34_a.png row 1 cell 2"
   },
   "ride_base_mage": {
    "file": "assets/runtime/steed_ride_base_mage.webp",
@@ -32758,13 +35651,13 @@
   },
   "ride_wizard_t3_mage": {
    "file": "assets/runtime/steed_ride_wizard_t3_mage.webp",
-   "w": 245,
-   "h": 358,
-   "hx": 0.562,
-   "hy": 0.563,
-   "hipFromTop": 0.566,
+   "w": 249,
+   "h": 379,
+   "hx": 0.636,
+   "hy": 0.621,
+   "hipFromTop": 0.596,
    "cellH": 400.0,
-   "source": "gpt_n/ride_elena.png cell 4"
+   "source": "gpt_o/ride_t34_a.png row 2 cell 1"
   },
   "ride_warlock_mage": {
    "file": "assets/runtime/steed_ride_warlock_mage.webp",
@@ -32788,13 +35681,13 @@
   },
   "ride_warlock_t3_mage": {
    "file": "assets/runtime/steed_ride_warlock_t3_mage.webp",
-   "w": 253,
-   "h": 351,
-   "hx": 0.562,
-   "hy": 0.572,
-   "hipFromTop": 0.566,
+   "w": 255,
+   "h": 377,
+   "hx": 0.645,
+   "hy": 0.592,
+   "hipFromTop": 0.596,
    "cellH": 400.0,
-   "source": "gpt_n/ride_elena.png cell 7"
+   "source": "gpt_o/ride_t34_a.png row 2 cell 2"
   },
   "ride_base_archer": {
    "file": "assets/runtime/steed_ride_base_archer.webp",
@@ -32828,13 +35721,13 @@
   },
   "ride_ranger_t3_archer": {
    "file": "assets/runtime/steed_ride_ranger_t3_archer.webp",
-   "w": 219,
-   "h": 357,
-   "hx": 0.496,
-   "hy": 0.593,
-   "hipFromTop": 0.566,
+   "w": 271,
+   "h": 370,
+   "hx": 0.597,
+   "hy": 0.59,
+   "hipFromTop": 0.605,
    "cellH": 400.0,
-   "source": "gpt_n/ride_lyra.png cell 4"
+   "source": "gpt_o/ride_t34_b.png row 1 cell 1"
   },
   "ride_hunter_archer": {
    "file": "assets/runtime/steed_ride_hunter_archer.webp",
@@ -32858,13 +35751,13 @@
   },
   "ride_hunter_t3_archer": {
    "file": "assets/runtime/steed_ride_hunter_t3_archer.webp",
-   "w": 230,
-   "h": 354,
-   "hx": 0.525,
-   "hy": 0.587,
-   "hipFromTop": 0.566,
+   "w": 271,
+   "h": 382,
+   "hx": 0.594,
+   "hy": 0.607,
+   "hipFromTop": 0.605,
    "cellH": 400.0,
-   "source": "gpt_n/ride_lyra.png cell 7"
+   "source": "gpt_o/ride_t34_b.png row 1 cell 2"
   },
   "ride_base_rogue": {
    "file": "assets/runtime/steed_ride_base_rogue.webp",
@@ -32898,13 +35791,13 @@
   },
   "ride_assassin_t3_rogue": {
    "file": "assets/runtime/steed_ride_assassin_t3_rogue.webp",
-   "w": 259,
-   "h": 363,
-   "hx": 0.545,
-   "hy": 0.566,
-   "hipFromTop": 0.57,
+   "w": 254,
+   "h": 361,
+   "hx": 0.637,
+   "hy": 0.582,
+   "hipFromTop": 0.605,
    "cellH": 400.0,
-   "source": "gpt_n/ride_nox.png cell 4"
+   "source": "gpt_o/ride_t34_b.png row 2 cell 1"
   },
   "ride_trickster_rogue": {
    "file": "assets/runtime/steed_ride_trickster_rogue.webp",
@@ -32928,13 +35821,13 @@
   },
   "ride_trickster_t3_rogue": {
    "file": "assets/runtime/steed_ride_trickster_t3_rogue.webp",
-   "w": 253,
-   "h": 365,
-   "hx": 0.515,
-   "hy": 0.567,
-   "hipFromTop": 0.57,
+   "w": 250,
+   "h": 359,
+   "hx": 0.662,
+   "hy": 0.582,
+   "hipFromTop": 0.605,
    "cellH": 400.0,
-   "source": "gpt_n/ride_nox.png cell 7"
+   "source": "gpt_o/ride_t34_b.png row 2 cell 2"
   },
   "wing_rose_up": {
    "file": "assets/runtime/steed_wing_rose_up.webp",
@@ -33194,6 +36087,86 @@
    "file": "assets/runtime/steed_hero.webp",
    "w": 960,
    "h": 480
+  },
+  "ride_knight_t4_warrior": {
+   "file": "assets/runtime/steed_ride_knight_t4_warrior.webp",
+   "w": 266,
+   "h": 384,
+   "hx": 0.644,
+   "hy": 0.612,
+   "hipFromTop": 0.596,
+   "cellH": 400.0,
+   "source": "gpt_o/ride_t34_a.png row 1 cell 3"
+  },
+  "ride_berserker_t4_warrior": {
+   "file": "assets/runtime/steed_ride_berserker_t4_warrior.webp",
+   "w": 255,
+   "h": 368,
+   "hx": 0.663,
+   "hy": 0.637,
+   "hipFromTop": 0.596,
+   "cellH": 400.0,
+   "source": "gpt_o/ride_t34_a.png row 1 cell 4"
+  },
+  "ride_wizard_t4_mage": {
+   "file": "assets/runtime/steed_ride_wizard_t4_mage.webp",
+   "w": 262,
+   "h": 381,
+   "hx": 0.655,
+   "hy": 0.615,
+   "hipFromTop": 0.596,
+   "cellH": 400.0,
+   "source": "gpt_o/ride_t34_a.png row 2 cell 3"
+  },
+  "ride_warlock_t4_mage": {
+   "file": "assets/runtime/steed_ride_warlock_t4_mage.webp",
+   "w": 258,
+   "h": 377,
+   "hx": 0.648,
+   "hy": 0.606,
+   "hipFromTop": 0.596,
+   "cellH": 400.0,
+   "source": "gpt_o/ride_t34_a.png row 2 cell 4"
+  },
+  "ride_ranger_t4_archer": {
+   "file": "assets/runtime/steed_ride_ranger_t4_archer.webp",
+   "w": 285,
+   "h": 384,
+   "hx": 0.611,
+   "hy": 0.606,
+   "hipFromTop": 0.605,
+   "cellH": 400.0,
+   "source": "gpt_o/ride_t34_b.png row 1 cell 3"
+  },
+  "ride_hunter_t4_archer": {
+   "file": "assets/runtime/steed_ride_hunter_t4_archer.webp",
+   "w": 274,
+   "h": 388,
+   "hx": 0.59,
+   "hy": 0.612,
+   "hipFromTop": 0.605,
+   "cellH": 400.0,
+   "source": "gpt_o/ride_t34_b.png row 1 cell 4"
+  },
+  "ride_assassin_t4_rogue": {
+   "file": "assets/runtime/steed_ride_assassin_t4_rogue.webp",
+   "w": 267,
+   "h": 363,
+   "hx": 0.655,
+   "hy": 0.585,
+   "hipFromTop": 0.605,
+   "cellH": 400.0,
+   "source": "gpt_o/ride_t34_b.png row 2 cell 3"
+  },
+  "ride_trickster_t4_rogue": {
+   "file": "assets/runtime/steed_ride_trickster_t4_rogue.webp",
+   "w": 274,
+   "h": 378,
+   "hx": 0.63,
+   "hy": 0.601,
+   "hipFromTop": 0.605,
+   "cellH": 400.0,
+   "source": "gpt_o/ride_t34_b.png row 2 cell 4"
   }
  },
  "gradeFrames": {
@@ -33245,6 +36218,80 @@
    "file": "assets/runtime/frame_sg_up.webp",
    "w": 115,
    "h": 128
+  }
+ },
+ "uiIcons": {
+  "oath_warrior_a": {
+   "file": "assets/runtime/icon_oath_warrior_a.webp",
+   "w": 128,
+   "h": 128,
+   "source": "gpt_o/icons_o5.png cell 1"
+  },
+  "oath_warrior_b": {
+   "file": "assets/runtime/icon_oath_warrior_b.webp",
+   "w": 128,
+   "h": 128,
+   "source": "gpt_o/icons_o5.png cell 2"
+  },
+  "oath_mage_a": {
+   "file": "assets/runtime/icon_oath_mage_a.webp",
+   "w": 128,
+   "h": 128,
+   "source": "gpt_o/icons_o5.png cell 3"
+  },
+  "oath_mage_b": {
+   "file": "assets/runtime/icon_oath_mage_b.webp",
+   "w": 128,
+   "h": 128,
+   "source": "gpt_o/icons_o5.png cell 4"
+  },
+  "oath_archer_a": {
+   "file": "assets/runtime/icon_oath_archer_a.webp",
+   "w": 128,
+   "h": 128,
+   "source": "gpt_o/icons_o5.png cell 5"
+  },
+  "oath_archer_b": {
+   "file": "assets/runtime/icon_oath_archer_b.webp",
+   "w": 128,
+   "h": 128,
+   "source": "gpt_o/icons_o5.png cell 6"
+  },
+  "oath_rogue_a": {
+   "file": "assets/runtime/icon_oath_rogue_a.webp",
+   "w": 128,
+   "h": 128,
+   "source": "gpt_o/icons_o5.png cell 7"
+  },
+  "oath_rogue_b": {
+   "file": "assets/runtime/icon_oath_rogue_b.webp",
+   "w": 128,
+   "h": 128,
+   "source": "gpt_o/icons_o5.png cell 8"
+  },
+  "tier4_emblem": {
+   "file": "assets/runtime/icon_tier4_emblem.webp",
+   "w": 128,
+   "h": 128,
+   "source": "gpt_o/icons_o5.png cell 9"
+  },
+  "tier4_trial": {
+   "file": "assets/runtime/icon_tier4_trial.webp",
+   "w": 128,
+   "h": 128,
+   "source": "gpt_o/icons_o5.png cell 10"
+  },
+  "slot6_key": {
+   "file": "assets/runtime/icon_slot6_key.webp",
+   "w": 128,
+   "h": 128,
+   "source": "gpt_o/icons_o5.png cell 11"
+  },
+  "oath_swap": {
+   "file": "assets/runtime/icon_oath_swap.webp",
+   "w": 128,
+   "h": 128,
+   "source": "gpt_o/icons_o5.png cell 12"
   }
  }
 }

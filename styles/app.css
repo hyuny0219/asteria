@@ -869,3 +869,17 @@ img.sg-up-ico { width: 16px !important; height: 16px !important; margin: 0 4px 0
 @keyframes evoIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .evo-card { animation: none; } }
 .reduce-motion .evo-card { animation: none; }
+/* v15 GPT O5 icons */
+.oath-card .oath-ic { width: 44px; height: 44px; object-fit: contain; align-self: flex-start; }
+.oath-card.on .oath-ic { filter: drop-shadow(0 0 6px rgba(216,182,117,.55)); }
+.ascend-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.ascend-emblem { width: 40px; height: 40px; object-fit: contain; }
+.kv-ic { display: inline-flex; align-items: center; gap: 6px; }
+.kv-icon { width: 22px; height: 22px; object-fit: contain; vertical-align: middle; }
+.oath-now { display: flex; align-items: center; gap: 6px; }
+.btn-ic { display: inline-flex; align-items: center; gap: 6px; }
+.btn-icon { width: 22px; height: 22px; object-fit: contain; }
+.trial-emblem { display: block; width: 72px; height: 72px; object-fit: contain; margin: 0 auto 6px; }
+.skill.locked.locked-ic { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0; }
+.skill.locked .slot-key { width: 60%; height: auto; max-height: 60%; object-fit: contain; opacity: .9; }
+.skill.locked .slot-cap { font-size: 10px; line-height: 1; }

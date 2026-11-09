@@ -44,7 +44,7 @@ export function promoKey(branch, tier = 1) {
 // (tools/extract_gpt_a01.py → pose_promo_<branch>_<pose>), tiers 2/3 from GPT A02
 // (tools/extract_gpt_a02.py → pose_promo_<branch>_t<tier>_<pose>). A form without a
 // pose sheet falls back to its single figure + tweens.
-const CYCLE_TIERS = [2];   // add 3 / 4 when GPT O3 cycles are extracted
+const CYCLE_TIERS = [2, 3, 4];   // t2 = GPT J4, t3/t4 = GPT O3 (tools/extract_gpt_o3.py)
 const POSE_NAMES = ['idle', 'step', 'anticipation', 'thrust', 'recovery', 'hit', 'cast', 'victory'];
 export function promoPoses(branch, tier = 1) {
   if (!branch || !meta) return null;
@@ -56,9 +56,8 @@ export function promoPoses(branch, tier = 1) {
   if (!H[pre + 'idle']) return null;
   const out = { promo: null };
   for (const n of POSE_NAMES) out[n] = H[pre + n] || H[pre + 'idle'];
-  // GPT J4: walk 4 + basic attack 4 (cyc_<branch>_t<tier>_*). Only tier 2 still matches its pose
-  // sheet: tier 3 was redrawn in GPT O1 (the J4 t3 cycles show the old design) and tier 4 has no
-  // cycles yet, so 3/4 animate with the key poses until the O3 cycles arrive (O3_CYCLE_TIERS).
+  // walk 4 + basic attack 4 (cyc_<branch>_t<tier>_*): tier 2 from GPT J4, tiers 3/4 from GPT O3
+  // (the J4 tier-3 frames were replaced together with the O1 redraw). Missing frames → key poses.
   const cp = `cyc_${branch}_t${t}_`;
   if (CYCLE_TIERS.includes(t) && H[cp + 'walk1']) out.cycle = { walk: [1, 2, 3, 4].map((i) => H[cp + 'walk' + i]), atk: [1, 2, 3, 4].map((i) => H[cp + 'atk' + i]) };
   return out;
@@ -99,6 +98,10 @@ export function bgMeta(id) { return meta.backgrounds[id]; }
 export function fxSprite(name) { const f = meta && meta.fx && meta.fx[name]; if (!f) return null; const im = ready(f.file); if (!im) { loadImage(f.file); return null; } return { img: im, ...f }; }
 export const itemIcon = (iconId) => meta.items[iconId].file;
 export const skillIcon = (iconId) => meta.skills[iconId].file;
+// GPT O5 UI icons (서약 · 초월 문장 · 초월 시련 · 6번 칸 · 서약 바꾸기) — null when not extracted
+export const uiIcon = (key) => (meta && meta.uiIcons && meta.uiIcons[key] ? meta.uiIcons[key].file : null);
+export const OATH_ICON = { w_unyield: 'oath_warrior_a', w_ruin: 'oath_warrior_b', m_reson: 'oath_mage_a', m_warp: 'oath_mage_b',
+  a_rapid: 'oath_archer_a', a_snipe: 'oath_archer_b', r_clone: 'oath_rogue_a', r_venom: 'oath_rogue_b' };
 // v16 진화 스킬 아이콘 (GPT O6) — 아직 없으면 null (호출 쪽이 기본 아이콘 + 색 테두리로 대신)
 export const evoSkillIcon = (key) => (meta && meta.skills && meta.skills[key] ? meta.skills[key].file : null);
 export const portrait = (id) => meta.portraits[id].file;

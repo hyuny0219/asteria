@@ -23,7 +23,7 @@ import * as MAILUI from './mail.js';
 import { jewelName, socketCount } from '../core/crafting.js';
 import { MONSTERS } from '../data/content.js';
 const MONSTERS_NAME = (id) => (MONSTERS[id] ? MONSTERS[id].name : id);
-import { bgMeta, classPortrait, itemIcon, portrait, skillIcon, spriteMeta } from '../render/assets.js';
+import { bgMeta, classPortrait, itemIcon, portrait, skillIcon, spriteMeta, uiIcon } from '../render/assets.js';
 import { dismantleQuote, enhanceQuote, isEquipped, quoteUpgrade, recommend, selectForDismantle, upgradeCost, upgradeRoom } from '../core/economy.js';
 import { autoGrowReserve } from '../core/autogrow.js';
 import { killRewards } from '../core/combat.js';
@@ -845,6 +845,7 @@ export function openResult(app, r) {
   if (r.kind === 'trial') {
     const t3 = r.tier === 3, t4 = r.tier === 4;
     const m = openModal({ id: 'trialResult', title: `${t4 ? '초월 시련' : t3 ? '영웅의 시련' : '교관 시련'} ${r.win ? '통과' : '실패'}`, dismissible: false, body: h('div', { dataset: { screen: 'quest' } },
+      t4 && uiIcon('tier4_trial') ? img(uiIcon('tier4_trial'), '', 'trial-emblem') : null,
       h('p', null, r.win ? (t4 ? '끝에 선 자신의 그림자를 꺾었습니다. 이제 서약을 골라 초월할 수 있습니다.' : t3 ? '과거의 자신을 넘어섰습니다. 3차 승급을 확정할 수 있습니다.' : '교관 분신을 꺾었습니다. 이제 갈래를 고를 수 있습니다.') : '재료는 소모되지 않았습니다. 언제든 다시 도전할 수 있습니다.')),
       actions: [button(r.win ? (t4 ? '초월하기' : t3 ? '3차 승급하기' : '갈래 선택하기') : '확인', { cls: 'btn btn-primary', onClick: () => { m.close(); back(); if (r.win) { if (t3 || t4) V4.openPromotionTier(app, r.tier); else openPromotion(app); } } })] });
     return m;
@@ -922,7 +923,7 @@ export function openQuest(app) {
     m.setActions([
       cl.canChoose ? button('갈래 선택하기', { cls: 'btn btn-primary', onClick: () => { m.close(); openPromotion(app); } })
         : cl.canPromote ? button(cl.tier === 4 ? '초월하기' : `${cl.tier}차 승급하기`, { cls: 'btn btn-primary', onClick: () => { m.close(); V4.openPromotionTier(app, cl.tier); } })
-        : button(cl.canTrial ? `${cl.tier === 4 ? '초월 시련' : cl.tier === 3 ? '영웅의 시련' : '교관 시련'} 시작 (자동 전투)` : '조건을 먼저 채우세요', { cls: 'btn btn-primary', disabled: !cl.canTrial || app.game.mode !== 'FARM', onClick: () => { const r = app.game.startTrial(cl.tier); if (!r.ok) return fail(r); m.close(); } })]);
+        : button(cl.canTrial ? (cl.tier === 4 && uiIcon('tier4_trial') ? h('span', { class: 'btn-ic' }, img(uiIcon('tier4_trial'), '', 'btn-icon'), '초월 시련 시작 (자동 전투)') : `${cl.tier === 4 ? '초월 시련' : cl.tier === 3 ? '영웅의 시련' : '교관 시련'} 시작 (자동 전투)`) : '조건을 먼저 채우세요', { cls: 'btn btn-primary', disabled: !cl.canTrial || app.game.mode !== 'FARM', onClick: () => { const r = app.game.startTrial(cl.tier); if (!r.ok) return fail(r); m.close(); } })]);
   };
   const m = openModal({ id: 'quest', title: '승급 준비', body: h('div'), actions: [] });
   render();
