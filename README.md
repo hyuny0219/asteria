@@ -75,6 +75,7 @@ python3 tools/extract_gpt_g.py                  # GPT G 금고·서고·시련�
 python3 tools/extract_gpt_h.py                  # GPT H 세린 8포즈(찌르기 보정·투명 배경)
 python3 tools/extract_gpt_l.py                  # GPT L 고유 효과·추출·이식·재련·등급·각성 아이콘
 python3 tools/extract_gpt_k.py                  # GPT K 보옥 5·버프 음식 3·콘텐츠 문장 4 (skill_Q00~Q11)
+- `python3 tools/extract_gpt_o.py` — GPT O1·O2: 3차 다시 그리기 + 4차 초월 8포즈 16장 (`assets/source/gpt_o/poses_<계열>_t3|t4.png` → `hero_pose_promo_<계열>_t3|t4_*`, 초상 `portrait_promo_*`)
 python3 tools/extract_gpt_m.py                  # GPT M 스킬 등급 테두리 4종 + 등급 상승 문장 → frame_sg_*.webp
 python3 tools/extract_gpt_n.py                  # GPT N 탈것 8·탄 자세 28·날개 8·아이콘 22·탈것 머리 그림 → steed_*.webp, icon_*.webp
 python3 tools/extract_gpt_i.py                  # GPT I 스테이지 지도 → map_*.webp + 노드 좌표

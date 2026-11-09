@@ -695,6 +695,7 @@ export class BattleRenderer {
     const ctx = this.ctx;
     const h = battle.hero;
     const frames = heroFrames(branch, this.heroCls || 'warrior', this.heroTier || 1);
+    this.heroArtT4 = !!(frames && frames.idle && frames.idle.tier === 4);   // GPT O2 art → softer aura
     const t = this.rt;
     let pose = 'idle', dx = 0, dy = 0, alpha = 1, rot = 0, scl = 1, step = 0;
     const ac = h.action;
@@ -834,16 +835,18 @@ export class BattleRenderer {
     const ctx = this.ctx;
     const col = { warrior: [255, 206, 120], mage: [150, 190, 255], archer: [160, 235, 150], rogue: [200, 150, 255] }[this.heroCls || 'warrior'] || [255, 220, 160];
     const pulse = motion ? 0.5 + 0.5 * Math.sin(t / 520) : 0.5;
-    const cy = gy - d.h * 0.48, rx = d.w * 0.62, ry = d.h * 0.62;
+    // GPT O2 그림이 초월 느낌을 직접 담으면서(떠 있는 조각·별·가면) 오라는 뒤에 깔리는 정도로 약하게
+    const art = this.heroArtT4 !== false;
+    const cy = gy - d.h * 0.48, rx = d.w * (art ? 0.5 : 0.62), ry = d.h * (art ? 0.52 : 0.62);
     ctx.save();
     const g = ctx.createRadialGradient(x, cy, Math.min(rx, ry) * 0.2, x, cy, Math.max(rx, ry));
-    g.addColorStop(0, `rgba(${col[0]},${col[1]},${col[2]},${0.22 + 0.08 * pulse})`);
-    g.addColorStop(0.6, `rgba(${col[0]},${col[1]},${col[2]},${0.08 + 0.04 * pulse})`);
+    g.addColorStop(0, `rgba(${col[0]},${col[1]},${col[2]},${(art ? 0.1 : 0.22) + (art ? 0.04 : 0.08) * pulse})`);
+    g.addColorStop(0.6, `rgba(${col[0]},${col[1]},${col[2]},${(art ? 0.04 : 0.08) + 0.03 * pulse})`);
     g.addColorStop(1, `rgba(${col[0]},${col[1]},${col[2]},0)`);
     ctx.fillStyle = g;
     ctx.beginPath(); ctx.ellipse(x, cy, rx, ry, 0, 0, Math.PI * 2); ctx.fill();
     // 발밑 고리
-    ctx.strokeStyle = `rgba(${col[0]},${col[1]},${col[2]},${0.45 + 0.2 * pulse})`;
+    ctx.strokeStyle = `rgba(${col[0]},${col[1]},${col[2]},${(art ? 0.28 : 0.45) + (art ? 0.12 : 0.2) * pulse})`;
     ctx.lineWidth = 2 * this.fit;
     ctx.beginPath(); ctx.ellipse(x, gy + 2, d.w * (0.42 + 0.04 * pulse), 7 * this.fit * this.figScale, 0, 0, Math.PI * 2); ctx.stroke();
     ctx.restore();

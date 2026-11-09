@@ -377,7 +377,7 @@ export function openAscend(app) {
   const render = () => {
     m.setBody(h('div', { dataset: { screen: 'promotion', tier: '4' } },
       h('div', { class: 'hero-art ascend-art' }, h('figure', null, currentArt(s), h('figcaption', null, h('b', null, '지금'), h('span', { class: 'muted' }, prog.tierName(s) || ''))),
-        h('figure', { class: 'pick' }, currentArt(s, 'ascend-glow', 3), h('figcaption', null, h('b', null, name), h('span', { class: 'muted' }, '초월')))),
+        h('figure', { class: 'pick' }, currentArt(s, 'ascend-glow', 4), h('figcaption', null, h('b', null, name), h('span', { class: 'muted' }, '초월')))),
       h('div', { class: 'card' },
         h('div', { class: 'kv' }, '전직 능력', h('b', null, passiveText(br.tiers[3]))),
         sk ? h('div', { class: 'kv' }, '6번 슬롯', h('b', null, `해금 · ${SKILLS[sk].name} 장착 (다른 갈래의 기술)`)) : null,

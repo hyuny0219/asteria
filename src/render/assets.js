@@ -31,10 +31,10 @@ export function failed(src) { const e = cache.get(src); return !!(e && e.failed)
 
 // Serin (warrior) has 8 key poses. Elena / Lira / Nox have one authored figure per
 // costume (base, tier-1 branch), drawn static with the lunge/trail tweens.
-// Costume for a branch at a tier: tier-3 / tier-2 figure when it exists, else tier 1.
+// Costume for a branch at a tier: tier-4 / 3 / 2 figure when it exists, else tier 1.
 export function promoKey(branch, tier = 1) {
   if (!branch || !meta) return null;
-  for (let t = Math.min(3, Math.max(1, tier)); t >= 1; t--) {
+  for (let t = Math.min(4, Math.max(1, tier)); t >= 1; t--) {
     const k = t === 1 ? 'promo_' + branch : `promo_${branch}_t${t}`;
     if (meta.hero[k]) return k;
   }
@@ -44,6 +44,7 @@ export function promoKey(branch, tier = 1) {
 // (tools/extract_gpt_a01.py → pose_promo_<branch>_<pose>), tiers 2/3 from GPT A02
 // (tools/extract_gpt_a02.py → pose_promo_<branch>_t<tier>_<pose>). A form without a
 // pose sheet falls back to its single figure + tweens.
+const CYCLE_TIERS = [2];   // add 3 / 4 when GPT O3 cycles are extracted
 const POSE_NAMES = ['idle', 'step', 'anticipation', 'thrust', 'recovery', 'hit', 'cast', 'victory'];
 export function promoPoses(branch, tier = 1) {
   if (!branch || !meta) return null;
@@ -55,9 +56,11 @@ export function promoPoses(branch, tier = 1) {
   if (!H[pre + 'idle']) return null;
   const out = { promo: null };
   for (const n of POSE_NAMES) out[n] = H[pre + n] || H[pre + 'idle'];
-  // GPT J4: walk 4 + basic attack 4 for tier-2/3 forms (cyc_<branch>_t<tier>_*)
+  // GPT J4: walk 4 + basic attack 4 (cyc_<branch>_t<tier>_*). Only tier 2 still matches its pose
+  // sheet: tier 3 was redrawn in GPT O1 (the J4 t3 cycles show the old design) and tier 4 has no
+  // cycles yet, so 3/4 animate with the key poses until the O3 cycles arrive (O3_CYCLE_TIERS).
   const cp = `cyc_${branch}_t${t}_`;
-  if (t > 1 && H[cp + 'walk1']) out.cycle = { walk: [1, 2, 3, 4].map((i) => H[cp + 'walk' + i]), atk: [1, 2, 3, 4].map((i) => H[cp + 'atk' + i]) };
+  if (CYCLE_TIERS.includes(t) && H[cp + 'walk1']) out.cycle = { walk: [1, 2, 3, 4].map((i) => H[cp + 'walk' + i]), atk: [1, 2, 3, 4].map((i) => H[cp + 'atk' + i]) };
   return out;
 }
 export function heroFrames(branch, cls = 'warrior', tier = 1) {
