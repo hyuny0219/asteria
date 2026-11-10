@@ -48,11 +48,16 @@ import { deepClone, makeRng, uid } from './util.js';
 
 const TICK = BALANCE.combat.tickMs;
 const EQ = BALANCE.equipment;
+const CLOCK_FUTURE_MAX_MS = 7 * 86400e3;
 
 export class Game {
   constructor({ saver, now = () => Date.now(), log = () => {} }) {
     this.saver = saver;
-    this.now = now;
+    // v18 단조 시계: 기기 시계를 과거로 돌려도 게임 시간은 뒤로 가지 않음 (일일 횟수·입장권 재충전 악용 차단).
+    // 마지막 저장 시각보다 이전이면 그 시각에 멈춰 있다가, 실제 시간이 따라잡으면 다시 흐름.
+    this.rawNow = now;
+    this.clockMax = 0;
+    this.now = () => { const t = this.rawNow(); if (t > this.clockMax) this.clockMax = t; return this.clockMax; };
     this.log = log;
     this.mode = 'BOOT';
     this.listeners = {};
@@ -86,6 +91,7 @@ export class Game {
   // Continue loading with a given state (null = new game). Also used after
   // restoring previousGood or wiping a corrupt save.
   async start(loaded) {
+    if (loaded) this.anchorClock(loaded);
     this.state = loaded || newGame(this.now());
     if (loaded && this.loadInfo && this.loadInfo.status !== 'ok') this.state.diagnostics.recovered++;
     this.rng = makeRng(this.state.rngSeed);
@@ -103,7 +109,8 @@ export class Game {
     if (mpRefund) this.notices.push({ type: 'mplusRefund', ...mpRefund });
     const refund = dun.recoverPendingRun(this.state);
     if (refund) this.notices.push({ type: 'dungeonRefund', ...refund });
-    if (tickets.rollback) this.notices.push({ type: 'clockRollback' });
+    if (tickets.rollback || this.clockRolledBack) this.notices.push({ type: 'clockRollback' });
+    if (this.clockRolledBack) this.state.diagnostics.clockRollbacks++;
     if (!isNew) rewards.prepareReturn(this.state, this.state.offlineSnapshot.lastActiveAt, this.now(), uid('ret'));
     this.startFarm();
     const pending = this.state.offlineSnapshot.pendingClaim;
@@ -120,6 +127,18 @@ export class Game {
     if (!c.ok && this.mode !== 'CONFLICT') this.emit('saveError', { reason: 'load', error: c.error });
     this.emit('loaded', { isNew, notices: this.notices });
     return { status: 'ok', isNew };
+  }
+
+  // 저장된 마지막 시각을 시계의 바닥으로 삼음. 7일 넘게 미래로 저장된 세이브(시계 고장 등)는
+  // 영원히 멈추지 않게 기기 시계를 따름.
+  anchorClock(st) {
+    const prev = Math.max(st.savedAt || 0, (st.offlineSnapshot && st.offlineSnapshot.lastActiveAt) || 0);
+    const raw = this.rawNow();
+    this.clockRolledBack = false;
+    if (!Number.isFinite(prev) || prev <= raw) return;
+    if (prev - raw > CLOCK_FUTURE_MAX_MS) return;
+    this.clockMax = Math.max(this.clockMax, prev);
+    if (prev - raw > 60000) this.clockRolledBack = true;
   }
 
   prepareOffline() {

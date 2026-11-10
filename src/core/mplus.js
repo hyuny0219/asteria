@@ -88,14 +88,17 @@ export function beginRun(state, dungeon, runId, now) {
   return { ok: true, run: m.run };
 }
 
-// Crash / reload during a run: the try comes back, the key does not move.
+// 도전 중 앱 종료·새로고침: 실패로 처리합니다 (v18 — 지기 직전에 앱을 꺼서 횟수·열쇠를 지키던 허점 차단).
+// 도전 횟수는 돌려주지 않고 열쇠 −1, 실패 보상(광석)은 지급.
 export function recoverRun(state) {
   const m = state.mplus;
   if (!m || !m.run) return null;
   const run = m.run;
-  if (run.rewarded) m.runsToday = Math.max(0, m.runsToday - 1);
   m.run = null;
-  return { dungeon: run.dungeon, key: run.key };
+  m.key = Math.max(MPLUS.minKey, run.key - 1);
+  const ore = run.rewarded ? MPLUS.reward.failOrePerKey * run.key : 0;
+  if (ore) state.wallet.ore += ore;
+  return { dungeon: run.dungeon, key: run.key, newKey: m.key, ore, abandoned: true };
 }
 
 const RARITY_BY_KEY = [

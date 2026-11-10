@@ -16,6 +16,7 @@ import { rewardMul, DIFFICULTY } from './difficulty.js';
 import { makeItem, rollRarity, rollSlot } from './items.js';
 import { hashString, makeRng } from './util.js';
 import { playerStats } from './stats.js';
+import { FOODS } from './crafting.js';
 
 const O = BALANCE.offline;
 const EQ = BALANCE.equipment;
@@ -77,6 +78,18 @@ export function ratePerSecond(vf0) {
   };
 }
 
+// 방치 구간 [from, from + sec] 중 버프 음식이 켜져 있던 비율과, 그 비율만큼의 경험치·골드 보너스
+export function foodOverlap(state, from, sec) {
+  const f = state.craft && state.craft.food;
+  const none = { frac: 0, expPct: 0, goldPct: 0, id: null };
+  if (!f || !FOODS[f.id] || !(sec > 0)) return none;
+  const overlap = Math.max(0, Math.min(f.until, from + sec * 1000) - from) / 1000;
+  const frac = Math.min(1, overlap / sec);
+  if (!frac) return none;
+  const b = FOODS[f.id].bonus;
+  return { frac, expPct: (b.expPct || 0) * frac, goldPct: (b.goldPct || 0) * frac, id: f.id };
+}
+
 // Pure computation of a claim. Deterministic for a given claimId.
 export function computeClaim(state, now, claimId) {
   const last = state.offlineSnapshot.lastActiveAt;
@@ -95,11 +108,14 @@ export function computeClaim(state, now, claimId) {
   if (!rate) { claim.reason = 'unverified'; return claim; }
   if (applied < O.minSeconds) { claim.reason = 'short'; return claim; }
   // permanent bonuses count offline (환생 배율, 특성 방치 효율·경험치); temporary buffs do not
-  const pst = playerStats(state);
+  // 버프 음식은 방치 구간과 겹친 시간만큼만 (예: 30분 남은 수프 + 12시간 방치 → 경험치 보너스 30분/12시간)
+  const pst = playerStats(state, { now: Infinity });   // 음식 제외한 영구 수치
+  const fb = foodOverlap(state, last, applied);
   claim.efficiency = O.efficiency + (pst.offlinePct || 0);
   const k = applied * claim.efficiency;
-  claim.exp = Math.floor(rate.exp * k * (1 + (pst.expPct || 0)) * pst.rebirth.exp);
-  claim.gold = Math.floor(rate.gold * k * pst.rebirth.gold);
+  claim.exp = Math.floor(rate.exp * k * (1 + (pst.expPct || 0) + fb.expPct) * pst.rebirth.exp);
+  claim.gold = Math.floor(rate.gold * k * (1 + fb.goldPct) * pst.rebirth.gold);
+  if (fb.frac > 0) claim.food = { id: fb.id, sec: Math.floor(fb.frac * applied) };
   // items: expected count, sampled deterministically from the claim id
   const rng = makeRng(hashString(claimId));
   const expected = rate.items * k;

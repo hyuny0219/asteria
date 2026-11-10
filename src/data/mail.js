@@ -26,4 +26,11 @@ export const OPS_MAIL = Object.freeze([
     body: '이동 구간에서 함께 달릴 검은 군마와 흑장미 깃털 날개를 보내 드려요. 소환권과 먹이·깃털도 넣었어요.',
     rewards: { mount: 'horse', wing: 'rose', mountTicket: 3, wingTicket: 3, mountFood: 60, wingFeather: 60 },
   },
+  {
+    id: 'v18-support',
+    from: KST(2026, 11, 10), to: KST(2027, 1, 1),
+    title: '운영 지원 보급품',
+    body: '초월을 향한 길에 보태 쓰세요. 강화 광석과 장비 · 스킬 뽑기권을 넉넉히 담았어요.',
+    rewards: { ore: 30000, eqTicket: 50, skTicket: 30 },
+  },
 ]);

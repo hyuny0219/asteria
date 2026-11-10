@@ -32,7 +32,7 @@ test('쐐기: key moves +1/+2/+3 by time left, 0 overtime, -1 on fail (min 2)', 
   assert.equal(s.mplus.key, 2);
 });
 
-test('쐐기: 3 rewarded runs a day, crash refunds the try, weekly vault next week', () => {
+test('쐐기: 3 rewarded runs a day, app close mid-run counts as a fail, weekly vault next week', () => {
   const s = open(newGame(T0));
   const rng = makeRng(4);
   for (let i = 0; i < 3; i++) { MP.beginRun(s, 'quarry', 'a' + i, T0); MP.finishRun(s, 'a' + i, { win: true, timeSec: 85 }, T0, rng); }
@@ -42,8 +42,13 @@ test('쐐기: 3 rewarded runs a day, crash refunds the try, weekly vault next we
   const s2 = open(newGame(T0));
   MP.beginRun(s2, 'gold', 'c1', T0);
   assert.equal(MP.rewardedLeft(s2, T0), 2);
-  assert.deepEqual(MP.recoverRun(s2), { dungeon: 'gold', key: 2 });
-  assert.equal(MP.rewardedLeft(s2, T0), 3); assert.equal(s2.mplus.run, null);
+  s2.mplus.key = 4; s2.mplus.run.key = 4;
+  const ore0 = s2.wallet.ore;
+  const rec = MP.recoverRun(s2);
+  assert.equal(rec.abandoned, true); assert.equal(rec.newKey, 3);   // v18: 앱 종료 = 실패 (열쇠 −1)
+  assert.equal(s2.mplus.key, 3); assert.equal(s2.wallet.ore - ore0, rec.ore); assert.ok(rec.ore > 0);
+  assert.equal(MP.rewardedLeft(s2, T0), 2); assert.equal(s2.mplus.run, null);   // 횟수는 돌려주지 않음
+  assert.equal(MP.recoverRun(s2), null);
   // vault
   const best = s.mplus.weekBest;
   assert.ok(best >= 2);

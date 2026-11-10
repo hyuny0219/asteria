@@ -183,8 +183,8 @@ function enter() {
   app.renderer.resize();
   for (const n of game.notices || []) {
     if (n.type === 'dungeonRefund') import('./ui/dom.js').then((d) => d.toast(`중단된 채석장 ${n.stage}단계 도전의 입장권 1장을 돌려드렸습니다.`, 'info', 4000));
-    if (n.type === 'mplusRefund') import('./ui/dom.js').then((d) => d.toast(`중단된 쐐기 던전(+${n.key}) 도전 횟수를 돌려드렸습니다. 열쇠는 그대로예요.`, 'info', 4000));
-    if (n.type === 'clockRollback') import('./ui/dom.js').then((d) => d.toast('기기 시계가 과거로 바뀌어 입장권 충전을 건너뛰었습니다.', 'error', 4000));
+    if (n.type === 'mplusRefund') import('./ui/dom.js').then((d) => d.toast(`중단된 쐐기 던전(+${n.key})은 실패로 처리했어요. 열쇠 +${n.newKey}${n.ore ? ` · 광석 ${n.ore}` : ''}`, 'info', 4500));
+    if (n.type === 'clockRollback') import('./ui/dom.js').then((d) => d.toast('기기 시계가 마지막 접속보다 과거예요. 실제 시간이 따라잡을 때까지 일일 충전·초기화가 멈춥니다.', 'error', 5000));
   }
   if (game.mode === 'OFFLINE') app.onMode('OFFLINE');
   else app.showDailyPopups();

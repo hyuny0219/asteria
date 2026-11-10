@@ -18,7 +18,7 @@ test('운영 우편: delivered once per profile inside its window', () => {
   // after the v8 window only the welcome mail arrives
   const late = newGame(KST(2026, 12, 2));
   M.refreshMail(late, KST(2026, 12, 2));
-  assert.deepEqual(late.mail.list.map((x) => x.id).sort(), ['ops-v12-steeds', 'ops-welcome']);
+  assert.deepEqual(late.mail.list.map((x) => x.id).sort(), ['ops-v12-steeds', 'ops-v18-support', 'ops-welcome']);   // v18 보급품은 11/10부터
 });
 
 test('old saves (no mail block) get one after migrate', () => {
@@ -42,15 +42,15 @@ test('claim / claim all grant once; claimed mail is cleaned after 7 days, unclai
   assert.equal(s.mounts.equipped, 'horse');
   assert.equal(s.wings.equipped, 'rose');
   M.refreshMail(s, T0 + 6 * DAY);
-  assert.equal(s.mail.list.length, 3);
+  assert.equal(s.mail.list.length, 4);               // 3 claimed + v18 보급품 (11/14 도착, 미수령)
   M.refreshMail(s, T0 + 8 * DAY);
-  assert.equal(s.mail.list.length, 0);
+  assert.equal(s.mail.list.length, 1);               // claimed ones cleaned, v18 stays
   // expiry of an unclaimed mail
   M.sendMail(s, { title: 't', rewards: { gem: 5 }, now: T0 });
-  assert.equal(M.unclaimedCount(s, T0), 1);
+  assert.equal(M.unclaimedCount(s, T0), 2);
   const e = M.refreshMail(s, T0 + 31 * DAY);
   assert.equal(e.expired, 1);
-  assert.equal(s.mail.list.length, 0);
+  assert.equal(s.mail.list.length, 1);               // v18 (arrived +6 days) expires at +36
 });
 
 test('mail can carry an item and pet rewards', () => {
@@ -97,7 +97,7 @@ test('Game: refreshMail saves only when something changes; coupon → mail → c
   clock += 31 * 86400000;
   const r3 = await g.refreshMail();
   assert.equal(r3.ok, true); assert.ok(!r3.noop);
-  assert.equal(g.state.mail.list.length, 0);          // both expired unclaimed
+  assert.equal(g.state.mail.list.length, 1);          // all three expired unclaimed; v18 보급품 arrives on this refresh
   g.state.mail.list.length = 0;
   const c = await g.redeemCoupon('asteria-2026');
   assert.equal(c.ok, true);
