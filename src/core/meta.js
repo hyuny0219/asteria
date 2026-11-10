@@ -57,6 +57,7 @@ export function codexBonus(state) {
 export const codexItemTotal = () => CODEX.itemSlots.length * RARITIES.length;
 
 // ---------- 업적 ----------
+const GRADE_RANK = { D: 1, C: 2, B: 3, A: 4, S: 5 };
 export function measure(state, key) {
   const c = state.progression.counters;
   if (key === 'peakLevel') return Math.max(state.player.peakLevel || 1, state.player.level);
@@ -71,6 +72,23 @@ export function measure(state, key) {
   if (key === 'attendance') return state.attendance.count || 0;
   if (key === 'codexTiers') return codexTiersTotal(state);
   if (key === 'pets') return Object.keys(state.pets.owned).length;
+  // v18.2
+  if (key === 'tier') return state.player.tier || 0;
+  if (key === 'skillMax') return Object.values(state.skills.levels || {}).filter((v) => v >= 10).length;
+  if (key === 'awaken') return Object.keys(state.skills.awaken || {}).length;
+  if (key === 'fieldBosses') return c.fieldBosses || 0;
+  if (key === 'deaths') return c.deaths || 0;
+  if (key === 'dismantled') return c.dismantled || 0;
+  if (key === 'rares') return Object.keys((state.worldBoss && state.worldBoss.rares) || {}).length;
+  if (key.startsWith('dboss:')) { const [, d, b] = key.split(':'); const t = state.diff && state.diff.tracks && state.diff.tracks[d]; return t && t.bossCleared && t.bossCleared[b] ? 1 : 0; }
+  if (key === 'mplus') { const m = state.mplus; return m ? Math.max(0, ...Object.values(m.best || {})) : 0; }
+  if (key === 'raidGrade') return GRADE_RANK[state.raid && state.raid.bestGrade] || 0;
+  if (key === 'wbGrade') return GRADE_RANK[state.worldBoss && state.worldBoss.bestGrade] || 0;
+  if (key === 'itemCodex') return Object.keys(state.codex.items || {}).length;
+  if (key === 'steeds') return Object.keys((state.mounts && state.mounts.owned) || {}).length + Object.keys((state.wings && state.wings.owned) || {}).length;
+  if (key === 'uniques') return Object.keys((state.gearPlus && state.gearPlus.vault) || {}).length;
+  if (key === 'synergy') return Object.keys((state.synergy && state.synergy.found) || {}).length;
+  if (key.startsWith('story:')) return state.story && state.story.seen && state.story.seen[key.slice(6)] ? 1 : 0;
   return 0;
 }
 export function achievementStatus(state) {

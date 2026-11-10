@@ -1,7 +1,7 @@
 // v5 part 2 screens: 도감, 업적·칭호, 무료 시즌 패스, 동료, 신화 제작.
 // Every grant goes through game.transact; reveals start only after r.ok.
 import { steedIcon } from './v12.js';
-import { ACHIEVEMENTS, CODEX, CODEX_MONSTERS, CRAFT, PASS, PETS, PET_RULES, TITLES } from '../data/meta.js';
+import { ACHIEVEMENTS, ACH_CATS, achCat, CODEX, CODEX_MONSTERS, CRAFT, PASS, PETS, PET_RULES, TITLES } from '../data/meta.js';
 import { BOSSES, CURRENCY_ICONS, MONSTERS, RARITY, REGION_BY_ID, SLOT_NAMES } from '../data/content.js';
 import * as WBm from '../core/worldboss.js';
 import { itemIcon, petImage, skillIcon, spriteMeta } from '../render/assets.js';
@@ -19,7 +19,7 @@ export const V6_ICONS = Object.freeze({ talents: 'V00', rebirth: 'V01', rift: 'V
 const ico = (id, cls = 'emblem') => { try { return img(skillIcon(V6_ICONS[id] || id), '', cls); } catch { return null; } };
 const STAT_KO = { atkPct: '공격력', hpPct: '체력', defPct: '방어력', goldPct: '골드 획득', critChance: '치명 확률', critDmg: '치명 피해', ultCharge: '궁극기 충전', regen: '초당 회복', evade: '회피', expPct: '경험치' };
 export const bonusText = (b) => Object.entries(b || {}).map(([k, v]) => `${STAT_KO[k] || k} +${fmtPct(v, v < 0.01 ? 2 : 1)}`).join(' · ');
-const REWARD_KO = { gem: '보석', eqTicket: '장비 뽑기권', skTicket: '스킬 뽑기권', petEgg: '정령 알', petFood: '정령 먹이', essence: '환생 정수', ore: '강화 광석', gold: '골드', ticket: '입장권', mountFood: '탈것 먹이', wingFeather: '날개 깃털', mountTicket: '탈것 소환권', wingTicket: '날개 소환권' };
+const REWARD_KO = { gem: '보석', eqTicket: '장비 뽑기권', skTicket: '스킬 뽑기권', petEgg: '정령 알', petFood: '정령 먹이', essence: '환생 정수', ore: '강화 광석', gold: '골드', ticket: '입장권', mountFood: '탈것 먹이', wingFeather: '날개 깃털', mountTicket: '탈것 소환권', wingTicket: '날개 소환권', starShard: '별의 파편', awakenStone: '각성석' };
 export const rewardText = (rw) => Object.entries(rw || {}).map(([k, v]) => (k === 'title' ? `칭호 「${TITLES[v].name}」` : k === 'titles' ? v.map((t) => `칭호 「${TITLES[t].name}」`).join(' · ') : `${REWARD_KO[k] || k} +${fmt(v)}`)).join(' · ');
 function rewardIcons(rw) {
   const out = [];
@@ -109,15 +109,26 @@ export function openCodex(app, tab = 'monster') {
 // ======================= 업적 · 칭호 =======================
 export function openAchievements(app, tab = 'ach') {
   let m;
+  let cat = 'all';
   const render = () => {
     const s = app.state;
     const tabs = h('div', { class: 'seg', role: 'tablist', 'aria-label': '업적 · 칭호' },
       h('button', { type: 'button', role: 'tab', 'aria-selected': String(tab === 'ach'), 'aria-pressed': String(tab === 'ach'), onClick: () => { tab = 'ach'; render(); } }, `업적 ${Object.keys(s.achievements.claimed).length}/${ACHIEVEMENTS.length}`),
       h('button', { type: 'button', role: 'tab', 'aria-selected': String(tab === 'title'), 'aria-pressed': String(tab === 'title'), onClick: () => { tab = 'title'; render(); } }, `칭호 ${s.titles.owned.length}/${Object.keys(TITLES).length}`));
-    let list;
+    let list, filters = null;
     if (tab === 'ach') {
-      const st = M.achievementStatus(s).sort((a, b) => (b.done && !b.claimed) - (a.done && !a.claimed) || a.claimed - b.claimed);
-      list = h('div', null, st.map((a) => h('div', { class: 'check' + (a.claimed ? ' ok' : ''), dataset: { key: 'ach-' + a.id } },
+      const all = M.achievementStatus(s);
+      const st = all.filter((a) => cat === 'all' || (cat === 'ready' ? a.done && !a.claimed : achCat(a) === cat))
+        .sort((a, b) => (b.done && !b.claimed) - (a.done && !a.claimed) || a.claimed - b.claimed || (b.value / b.goal) - (a.value / a.goal));
+      const cnt = (f) => all.filter(f);
+      const chip = (id, name, arr) => h('button', { type: 'button', class: 'chip-btn' + (cat === id ? ' hot' : ''), 'aria-pressed': String(cat === id), dataset: { key: 'achcat-' + id }, onClick: () => { cat = id; render(); } },
+        `${name} ${arr.filter((a) => a.claimed).length}/${arr.length}`);
+      const ready = cnt((a) => a.done && !a.claimed).length;
+      filters = h('div', { class: 'ach-cats' },
+        chip('all', '전체', all),
+        ready ? h('button', { type: 'button', class: 'chip-btn hot' + (cat === 'ready' ? ' on' : ''), 'aria-pressed': String(cat === 'ready'), dataset: { key: 'achcat-ready' }, onClick: () => { cat = 'ready'; render(); } }, `받기 가능 ${ready}`) : null,
+        ACH_CATS.map((c) => chip(c.id, c.name, cnt((a) => achCat(a) === c.id))));
+      list = h('div', null, st.length ? null : h('p', { class: 'muted' }, '해당하는 업적이 없어요.'), st.map((a) => h('div', { class: 'check' + (a.claimed ? ' ok' : ''), dataset: { key: 'ach-' + a.id } },
         h('span', { class: 'mark', 'aria-hidden': 'true' }, a.claimed ? '✓' : ''),
         h('div', { class: 'c' }, h('b', null, a.name), h('span', { class: 'muted' }, `${a.desc} · ${rewardText(a.reward)}${a.title ? ` · 칭호 「${TITLES[a.title].name}」` : ''}`),
           h('div', { class: 'pbar gold', role: 'progressbar', 'aria-label': a.name, 'aria-valuenow': String(a.value), 'aria-valuemax': String(a.goal) }, h('i', { style: { width: `${(a.value / a.goal) * 100}%` } }))),
@@ -132,13 +143,13 @@ export function openAchievements(app, tab = 'ach') {
         const src = ACHIEVEMENTS.find((a) => a.title === id);
         return h('div', { class: 'check' + (on ? ' ok' : ''), dataset: { key: 'title-' + id } },
           h('span', { class: 'mark', 'aria-hidden': 'true' }, on ? '✓' : ''),
-          h('div', { class: 'c' }, h('b', null, owned ? t.name : '???'), h('span', { class: 'muted' }, `${bonusText(t.bonus)} · ${src ? `업적 「${src.name}」` : id === 't_season' ? '시즌 패스 30레벨' : ''}`)),
+          h('div', { class: 'c' }, h('b', null, owned ? t.name : '???'), h('span', { class: 'muted' }, `${bonusText(t.bonus)} · ${src ? `업적 「${src.name}」 — ${src.desc}` : id === 't_season' ? '시즌 패스 30레벨' : id === 't_rarehunter' ? '희귀 정예 첫 처치' : ''}`)),
           owned ? button(on ? '해제' : '장착', { cls: 'btn go' + (on ? '' : ' btn-primary'), busy: true, onClick: async () => { const r = fail(await app.game.equipTitle(on ? null : id)); if (r.ok) { app.updateHud(true); render(); } } }) : h('span', { class: 'muted' }, '미획득'));
       }));
     }
     const body = h('div', { dataset: { screen: tab === 'ach' ? 'achievements' : 'titles' } },
       h('p', { class: 'modal-desc' }, '업적을 달성하면 보석·정령 알·칭호를 받아요. 칭호는 하나만 장착하며 닉네임 아래에 보여요.'),
-      tabs, h('div', { style: { marginTop: '8px' } }, list));
+      tabs, filters, h('div', { style: { marginTop: '8px' } }, list));
     const n = M.claimableAchievements(s);
     const actions = [tab === 'ach' && n ? button(`받을 수 있는 업적 ${n}개 모두 받기`, { cls: 'btn btn-primary', busy: true, onClick: async () => { const r = fail(await app.game.claimAllAchievements()); if (r.ok) { grantModal(app, `업적 ${r.count}개 보상`, r.reward); render(); } } }) : null,
       button('닫기', { cls: 'btn', onClick: () => m.close() })].filter(Boolean);

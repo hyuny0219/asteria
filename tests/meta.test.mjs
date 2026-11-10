@@ -156,3 +156,25 @@ test('game: boss first clear gives a pet egg + pass XP; mission claim gives pass
     assert.ok(g.state.pass.xp > xp0);
   }
 });
+
+test('v18.2 업적: 새 측정 키가 저장된 기록으로 바로 판정되고 칭호가 모두 연결됨', async () => {
+  const { ACHIEVEMENTS, TITLES, achCat } = await import('../src/data/meta.js');
+  const M2 = await import('../src/core/meta.js');
+  const { newGame } = await import('../src/core/state.js');
+  const s = newGame(Date.UTC(2026, 10, 10));
+  assert.ok(ACHIEVEMENTS.length >= 75);
+  for (const a of ACHIEVEMENTS) { assert.ok(!a.title || TITLES[a.title], a.id); assert.equal(typeof M2.measure(s, a.key), 'number', a.id); assert.ok(achCat(a)); }
+  // 아직 아무것도 안 했으면 새 업적은 하나도 달성 안 됨
+  const fresh = M2.achievementStatus(s).filter((a) => a.done);
+  assert.deepEqual(fresh.map((a) => a.id), []);
+  s.player.tier = 4;
+  s.diff = { cur: 'easy', tracks: { normal: { bossCleared: { B10: true } }, hard: { bossCleared: {} } } };
+  s.raid.bestGrade = 'S'; s.worldBoss.bestGrade = 'A';
+  s.mplus = { best: { quarry: 7, gold: 11, books: 3 } };
+  s.story = { seen: { end: 1 } };
+  const done = new Set(M2.achievementStatus(s).filter((a) => a.done).map((a) => a.id));
+  for (const id of ['pr1', 'pr2', 'pr3', 'pr4', 'nB10', 'rdS', 'rdA', 'wbA', 'mp5', 'mp10', 'end']) assert.ok(done.has(id), id);
+  for (const id of ['hB10', 'wbS', 'mp15']) assert.ok(!done.has(id), id);
+  const r = M2.claimAchievement(s, 'pr4');
+  assert.equal(r.ok, true); assert.ok(s.titles.owned.includes('t_ascend')); assert.equal(s.wallet.awakenStone, 30);
+});
