@@ -20,6 +20,10 @@ import * as SYNUI from './synergy.js';
 import * as EVO from './evo.js';
 import { EVO_SKILLS as EVO_IDS } from '../data/skillforms.js';
 import * as MAILUI from './mail.js';
+import * as MISS from '../core/missions.js';
+import { groupMenuTiles } from './menugroups.js';
+export { MENU_GROUPS, groupMenuTiles } from './menugroups.js';
+import * as EXP from '../core/expedition.js';
 import { jewelName, socketCount } from '../core/crafting.js';
 import { MONSTERS } from '../data/content.js';
 const MONSTERS_NAME = (id) => (MONSTERS[id] ? MONSTERS[id].name : id);
@@ -675,16 +679,75 @@ export function menuTiles(app) {
   ];
 }
 export function todoCount(app) { return menuTiles(app).filter((t) => t.dot).length; }
-export function menuPanel(app) {
-  const root = h('div', { class: 'panel', style: { height: '100%', margin: 0 } });
-  root.appendChild(h('div', { class: 'panel-head' }, h('h2', null, '메뉴')));
-  const sc = h('div', { class: 'panel-scroll' });
-  const grid = h('div', { class: 'tiles' });
-  for (const t of menuTiles(app)) {
-    grid.appendChild(h('button', { type: 'button', class: 'tile' + (t.dot ? ' hot' : ''), dataset: { key: 'tile-' + t.id }, 'aria-label': t.t + (t.dot ? ' (할 일 있음)' : ''), onClick: t.on },
-      t.src ? img(t.src, '', 'tile-em') : t.em ? img(skillIcon(t.em), '', 'tile-em') : icon(t.ic, 24), h('span', { class: 't' }, t.t), h('span', { class: 's' }, t.s), t.dot ? h('span', { class: 'dot', 'aria-hidden': 'true' }) : null));
+
+// ---------- v18 메뉴: 할 일 · 최근 · 분류 ----------
+// 22개 타일이 한 줄로 섞여 있던 것을 분류별로 나누고, 위에 "할 일"(빨간 점)과 "최근 사용"을 모아 보여줍니다.
+const MENU_ICON = { attendance: 'calendar', gacha: 'gift', shop: 'shop', classChange: 'swap', settings: 'gear', missions: 'check' };
+// 한 번에 받기로 처리되는 타일 (나머지 할 일은 눌러서 직접 처리)
+const QUICK_IDS = new Set(['mail', 'attendance', 'missions', 'pass', 'achievements']);
+const RECENT_KEY = 'asteria.menuRecent';
+const RECENT_MAX = 4;
+export function menuRecent() {
+  try { const v = JSON.parse(localStorage.getItem(RECENT_KEY) || '[]'); return Array.isArray(v) ? v.filter((x) => typeof x === 'string').slice(0, RECENT_MAX) : []; } catch { return []; }
+}
+function pushRecent(id) {
+  try { const v = [id, ...menuRecent().filter((x) => x !== id)].slice(0, RECENT_MAX); localStorage.setItem(RECENT_KEY, JSON.stringify(v)); } catch { /* 저장 불가 환경: 최근 목록만 생략 */ }
+}
+// 받을 수 있는 보상(우편 · 출석 · 업적 · 미션 · 패스 · 원정)을 순서대로 받기. 각각 저장이 끝난 뒤에만 결과를 알립니다.
+export async function quickClaimAll(app) {
+  const g = app.game;
+  const tiles = new Map(menuTiles(app).map((t) => [t.id, t]));
+  const got = [];
+  const run = async (label, fn) => { const r = await fn(); if (r && r.ok) got.push(label); else if (r && r.reason && r.reason !== 'none' && r.reason !== 'duplicate') fail(r); return r; };
+  if (tiles.get('mail') && tiles.get('mail').dot) await run('우편', () => g.claimAllMail());
+  if (tiles.get('attendance') && tiles.get('attendance').dot) await run('출석', () => g.claimAttendance());
+  if (tiles.get('achievements') && tiles.get('achievements').dot) await run('업적', () => g.claimAllAchievements());
+  {
+    const ms = MISS.missionStatus(app.state, g.now());
+    let n = 0;
+    for (const x of ms.list) if (x.done && !x.claimed) { const r = await g.claimMission(x.id); if (r.ok) n++; }
+    if (n) got.push(`미션 ${n}개`);
+    if (MISS.missionStatus(app.state, g.now()).canBonus) await run('미션 완료 보너스', () => g.claimMissionBonus());
   }
-  sc.appendChild(grid);
+  if (tiles.get('pass') && tiles.get('pass').dot) await run('시즌 패스', () => g.claimAllPass());
+  if (EXP.readyCount(app.state, g.now()) > 0) await run('원정', () => g.claimAllExpeditions());
+  if (got.length) { sfx('reward'); toast(`받기 완료 · ${got.join(' · ')}`, 'good', 2600); }
+  else toast('지금 받을 보상이 없어요.', 'info', 1600);
+  app.renderPanel();
+  return got;
+}
+function menuTileEl(t, { compact = false } = {}) {
+  const go = () => { pushRecent(t.id); t.on(); };
+  const ic = MENU_ICON[t.id] && !t.em && !t.src ? icon(MENU_ICON[t.id], compact ? 22 : 24) : t.src ? img(t.src, '', 'tile-em') : t.em ? img(skillIcon(t.em), '', 'tile-em') : icon(t.ic, compact ? 22 : 24);
+  return h('button', { type: 'button', class: 'tile' + (t.dot ? ' hot' : ''), dataset: { key: 'tile-' + t.id }, 'aria-label': t.t + (t.dot ? ' (할 일 있음)' : '') + (t.s ? ` · ${t.s}` : ''), onClick: go },
+    ic, h('span', { class: 't' }, t.t), h('span', { class: 's' }, t.s), t.dot ? h('span', { class: 'dot', 'aria-hidden': 'true' }) : null);
+}
+export function menuPanel(app) {
+  const root = h('div', { class: 'panel', dataset: { screen: 'menu' }, style: { height: '100%', margin: 0 } });
+  root.appendChild(h('div', { class: 'panel-head' }, h('h2', null, '메뉴')));
+  const sc = h('div', { class: 'panel-scroll menu-scroll' });
+  const tiles = menuTiles(app);
+  const byId = new Map(tiles.map((t) => [t.id, t]));
+  // 할 일
+  const hot = tiles.filter((t) => t.dot);
+  const quick = hot.filter((t) => QUICK_IDS.has(t.id)).length + (EXP.readyCount(app.state, Date.now()) > 0 ? 1 : 0);
+  if (hot.length || quick) {
+    sc.appendChild(h('section', { class: 'menu-todo card', 'aria-label': '할 일' },
+      h('div', { class: 'menu-todo-head' }, h('b', null, `할 일 ${hot.length}`),
+        quick ? button('한 번에 받기', { cls: 'btn btn-primary btn-sm', busy: true, dataset: { key: 'quickClaim' }, onClick: () => quickClaimAll(app) }) : null),
+      h('div', { class: 'todo-chips' }, hot.map((t) => h('button', { type: 'button', class: 'todo-chip', dataset: { key: 'todo-' + t.id }, onClick: () => { pushRecent(t.id); t.on(); } },
+        t.t, h('small', null, t.s))))));
+  }
+  // 최근 사용
+  const recent = menuRecent().map((id) => byId.get(id)).filter(Boolean);
+  if (recent.length) {
+    sc.appendChild(h('h3', { class: 'menu-sec' }, icon('clock', 14), '최근 사용'));
+    sc.appendChild(h('div', { class: 'tiles compact' }, recent.map((t) => menuTileEl(t, { compact: true }))));
+  }
+  for (const g of groupMenuTiles(tiles)) {
+    sc.appendChild(h('h3', { class: 'menu-sec', dataset: { group: g.id } }, g.t));
+    sc.appendChild(h('div', { class: 'tiles compact' }, g.tiles.map((t) => menuTileEl(t, { compact: true }))));
+  }
   root.appendChild(sc);
   return root;
 }

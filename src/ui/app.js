@@ -6,7 +6,7 @@ import { BattleRenderer } from '../render/battle.js';
 import { itemIcon, portrait, classPortrait, preloadFor, skillIcon, uiIcon } from '../render/assets.js';
 import * as prog from '../core/progression.js';
 import { fmt } from '../core/util.js';
-import { button, clear, closeAllModals, h, icon, img, initModals, initToasts, modalOpen, openModal, toast } from './dom.js';
+import { button, clear, closeAllModals, closeTopModal, h, icon, img, initModals, initToasts, modalOpen, openModal, toast } from './dom.js';
 import * as S from './screens.js';
 import * as V4 from './v4.js';
 import * as STORYUI from './story.js';
@@ -51,6 +51,7 @@ export class App {
 
   build() {
     const app = this.root;
+    this.initBackNav();
     clear(app);
     this.el = {};
     const E = this.el;
@@ -613,6 +614,26 @@ export class App {
       if (nowMs - (this.lastTouch || 0) < 4000) return;
     }
     if (this.panelDirty && !this.pointerDown && (force || nowMs - (this.lastPanel || 0) > 1000)) this.renderPanel();
+  }
+  // v18 휴대폰 뒤로 가기 / 브라우저 뒤로: 창 닫기 → 전투 탭으로 → 두 번 누르면 나가기.
+  // (전에는 뒤로 가기 한 번에 게임 페이지를 바로 벗어났음)
+  initBackNav() {
+    if (this._backNav || typeof history === 'undefined' || typeof window === 'undefined') return;
+    this._backNav = true;
+    const push = () => { try { history.pushState({ asteria: 'top' }, ''); } catch { /* 무시 */ } };
+    try { history.replaceState({ asteria: 'base' }, ''); } catch { /* 무시 */ }
+    push();
+    let armed = 0;
+    window.addEventListener('popstate', () => {
+      let handled = closeTopModal();
+      if (!handled && this.tab !== 'battle' && !this.root.classList.contains('immersive')) { this.setTab('battle'); handled = true; }
+      if (handled) { armed = 0; push(); return; }
+      const t = Date.now();
+      if (t - armed < 2200) { history.back(); return; }
+      armed = t;
+      toast('뒤로 가기를 한 번 더 누르면 게임을 나가요.', 'info', 2200);
+      push();
+    });
   }
   navDot(tab, on) {
     const b = this.navBtns[tab];

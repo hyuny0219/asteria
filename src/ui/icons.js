@@ -18,5 +18,11 @@ export const ICONS = {
  "skill": "<path d=\"M14 2L5 13H11L10 22L20 10H14Z\"/>",
  "sound": "<path d=\"M3 9H7L12 4V20L7 15H3Z M16 8Q21 12 16 16 M19 4Q28 12 19 20\"/>",
  "star": "<path d=\"M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9Z\"/>",
- "warning": "<path d=\"M12 3L22 21H2Z M12 9V14 M12 17V18\"/>"
+ "warning": "<path d=\"M12 3L22 21H2Z M12 9V14 M12 17V18\"/>",
+ "shop": "<path d=\"M5 8H19L18 21H6Z M9 8V6A3 3 0 0 1 15 6V8\"/>",
+ "gift": "<path d=\"M3 8H21V12H3Z M5 12V21H19V12 M12 8V21 M12 8C10 4 6 4 7 7C7.5 8 12 8 12 8 M12 8C14 4 18 4 17 7C16.5 8 12 8 12 8\"/>",
+ "calendar": "<path d=\"M4 5H20V21H4Z M4 10H20 M8 3V7 M16 3V7 M8 15L11 18L16 13\"/>",
+ "swap": "<path d=\"M4 8H18L14 4 M20 16H6L10 20\"/>",
+ "gear": "<path d=\"M12 9A3 3 0 1 0 12 15A3 3 0 1 0 12 9 M12 2V5 M12 19V22 M2 12H5 M19 12H22 M4.9 4.9L7 7 M17 17L19.1 19.1 M4.9 19.1L7 17 M17 7L19.1 4.9\"/>",
+ "clock": "<path d=\"M12 3A9 9 0 1 1 11.99 3 M12 7V12L15 14\"/>"
 };

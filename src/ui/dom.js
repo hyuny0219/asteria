@@ -87,6 +87,14 @@ const stack = [];
 let root = null;
 export function initModals(el) { root = el; document.addEventListener('keydown', onKey, true); }
 
+// v18 뒤로 가기: 맨 위 창을 닫음. 닫을 수 없는 창(저장 실패 등)이면 아무것도 안 하고 true(뒤로 가기 소비).
+export function closeTopModal() {
+  const top = stack[stack.length - 1];
+  if (!top) return false;
+  if (top.dismissible) top.close('back');
+  return true;
+}
+
 function focusables(el) {
   return [...el.querySelectorAll('button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])')].filter((x) => x.offsetParent !== null || x === document.activeElement);
 }
