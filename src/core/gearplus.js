@@ -7,6 +7,7 @@ import { SKILLS } from '../data/content.js';
 import { lookFor, mainScore, MYTHIC_UNIQUE_KEYS, rollLegend, rollOneOption } from './items.js';
 import { hashString, kstDayIndex, makeRng } from './util.js';
 import { returnJewels } from './crafting.js';
+import { awakenMods } from './awakenstage.js';
 
 const EQ_SLOTS = ['weapon', 'helmet', 'armor', 'gloves', 'boots', 'necklace', 'ring1', 'ring2'];
 const find = (s, id) => s.inventory.find((i) => i.id === id);
@@ -67,8 +68,8 @@ export function skillMods(state, equipped = state.equipped) {
   }
   const aw = state.skills && state.skills.awaken;
   if (aw) for (const [sid, pick] of Object.entries(aw)) {
-    const opt = AWAKENINGS[sid] && AWAKENINGS[sid][pick];
-    if (opt && ((state.skills.levels || {})[sid] || 1) >= AWAKEN.needLevel) add({ [sid]: opt.mods });
+    const m = awakenMods(sid, pick, (state.skills.levels || {})[sid] || 1);   // v18.4 단계별 (Lv 10/20/30)
+    if (m) add({ [sid]: m });
   }
   return out;
 }

@@ -11,6 +11,7 @@ import { rarityLabel } from '../core/items.js';
 import { sfx } from '../platform/audio.js';
 import { button, h, img, openModal, toast } from './dom.js';
 import { costChip, fail } from './screens.js';
+import * as AWS from '../core/awakenstage.js';
 
 const OPT_KEYS = Object.keys(BALANCE.equipment.options);
 const PCT = new Set(['atkPct', 'critChance', 'critDmg', 'aspd', 'hpPct', 'defPct', 'cdr', 'ultCharge', 'goldPct']);
@@ -196,19 +197,23 @@ export function awakenCard(app) {
   const st = G.awakenStatus(s, Date.now());
   return h('div', { class: 'card', dataset: { screen: 'awaken' }, style: { marginTop: '8px' } },
     h('h3', null, '스킬 각성'),
-    h('p', { class: 'muted small', style: { margin: '0 0 6px' } }, `스킬 Lv ${AWAKEN.needLevel}이 되면 각성 두 갈래 중 하나를 고릅니다. 첫 선택은 무료, 바꾸기는 하루 1번 무료(오늘 ${st.free}번 남음), 그다음은 보석 ${AWAKEN.changeGem}.`),
+    h('p', { class: 'muted small', style: { margin: '0 0 6px' } }, `스킬 Lv ${AWAKEN.needLevel}이 되면 각성 두 갈래 중 하나를 고릅니다. 각성은 스킬 Lv ${AWS.AWAKEN_STAGES[1]}에 2단계, Lv ${AWS.AWAKEN_STAGES[2]}에 3단계(완성 · 피해 ×${AWS.AWAKEN_FINAL_MUL})로 같은 방향이 더 강해져요. 첫 선택은 무료, 바꾸기는 하루 1번 무료(오늘 ${st.free}번 남음), 그다음은 보석 ${AWAKEN.changeGem}.`),
     ids.map((id) => {
       const lv = prog.skillLevel(s, id);
       const cur = (s.skills.awaken || {})[id];
       const ok = lv >= AWAKEN.needLevel;
+      const stg = AWS.awakenStage(lv);
+      const nx = AWS.nextStageLevel(lv);
       return h('div', { class: 'awk-row' + (cur !== undefined && ok ? ' on' : ''), dataset: { key: 'awk-' + id } },
-        h('span', { class: 'awk-ic' + (cur !== undefined && ok ? ' awk-' + (cur ? 'b' : 'a') : '') }, img(skillIcon(SKILLS[id].icon), '')),
-        h('div', { class: 'awk-body' }, h('div', { class: 't' }, `${EVO.skName(s, id)} · Lv ${lv}`),
+        h('span', { class: 'awk-ic' + (cur !== undefined && ok ? ' awk-' + (cur ? 'b' : 'a') + ' awk-s' + stg : '') }, img(skillIcon(SKILLS[id].icon), '')),
+        h('div', { class: 'awk-body' }, h('div', { class: 't' }, `${EVO.skName(s, id)} · Lv ${lv}`, ok ? h('span', { class: 'awk-stage s' + stg }, stg >= 3 ? '각성 완성' : `각성 ${stg}단계`) : null,
+          ok && nx ? h('span', { class: 'muted small' }, ` · 다음 단계 Lv ${nx}`) : null),
           ok ? h('div', { class: 'awk-opts' }, AWAKENINGS[id].map((o, i) => h('button', { type: 'button', class: 'awk-opt', 'aria-pressed': String(cur === i), disabled: cur !== undefined && cur !== i && st.free <= 0 && s.wallet.gem < st.gem, dataset: { awk: `${id}:${i}` }, onClick: async () => {
             if (cur === i) return;
             const r = fail(await app.game.setAwaken(id, i));
             if (r.ok) toast(`${EVO.skName(s, id)} 각성: ${o.name}${r.paid ? ` (보석 ${r.paid})` : ''}`, 'good');
-          } }, h('b', null, img(skillIcon(i ? 'L11' : 'L10'), '', 'awk-em'), `${i ? 'B' : 'A'} · ${o.name}`), h('span', null, o.desc),
+          } }, h('b', null, img(skillIcon(i ? 'L11' : 'L10'), '', 'awk-em'), `${i ? 'B' : 'A'} · ${o.name}`), h('span', null, stg <= 1 ? o.desc : AWS.describeStage(o.mods, stg)),
+            nx ? h('span', { class: 'awk-next' }, `${AWS.awakenStage(nx) >= 3 ? '완성' : AWS.awakenStage(nx) + '단계'}: ${AWS.describeStage(o.mods, AWS.awakenStage(nx))}`) : null,
             cur !== undefined && cur !== i ? (st.free > 0 ? h('span', { class: 'awk-cost free' }, '오늘 무료 변경') : costChip('gem', st.gem, s.wallet.gem < st.gem)) : null)))
             : h('div', { class: 'muted small' }, `Lv ${AWAKEN.needLevel}에 각성 · ${AWAKENINGS[id].map((o, i) => `${i ? 'B' : 'A'} ${o.name}`).join(' / ')}`)));
     }));
