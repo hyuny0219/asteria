@@ -224,7 +224,7 @@ export function runesCard(app) {
   const slotEl = (i) => {
     const id = R.equipped[i];
     return h('div', { class: 'skill-line' }, h('span', { class: 'rune-ic' + (id ? ' on' : '') }, id && RUNES[id].icon ? img(skillIcon(RUNES[id].icon), '') : icon('star', 22)),
-      h('div', null, h('div', { class: 't' }, `각인 ${i + 1} · ${id ? `${RUNES[id].name} Lv ${R.owned[id]}` : '비어 있음'}`), h('div', { class: 'muted' }, id ? runeText(id, R.owned[id]) : '스킬 뽑기의 전설 결과로 얻어요.')),
+      h('div', null, h('div', { class: 't' }, `각인 ${i + 1} · ${id ? `${RUNES[id].name} Lv ${R.owned[id]}` : '비어 있음'}`), h('div', { class: 'muted' }, id ? runeText(id, R.owned[id]) : owned.length ? '아래 각인 목록에서 골라 장착해요.' : `스킬 뽑기에서 ${Math.round(BALANCE.gacha.skill.rates.rune * 100)}% 확률로 나와요. 각인 없이 ${BALANCE.gacha.skill.pity}번째 뽑기는 확정이에요.`)),
       id ? button('해제', { cls: 'chip-btn', busy: true, onClick: async () => fail(await app.game.unequipRune(i)) }) : null);
   };
   return h('div', { dataset: { screen: 'runes' } },
