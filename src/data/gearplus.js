@@ -110,6 +110,4 @@ export const EXTRACT = Object.freeze({ ore: 200, awakenStone: 1 });
 export const IMPRINT = Object.freeze({ ore: 300, goldPerLevel: 600 });
 
 // 프리셋 (장비 + 스킬 + 각인). Battle kinds → preset index when 자동 교체 is on.
-export const LOADOUT_NAMES = ['사냥', '보스', '쐐기'];
 export const LOADOUT_KINDS = Object.freeze({ farm: '사냥', dungeon: '재료 던전', boss: '지역 보스', raid: '레이드', world: '월드 보스', tower: '시련의 탑', trial: '승급 시련', mplus: '쐐기 던전', rift: '균열' });
-export const LOADOUT_DEFAULT_MAP = Object.freeze({ farm: 0, dungeon: 0, boss: 1, raid: 1, world: 1, tower: 1, trial: 1, mplus: 2, rift: 2 });

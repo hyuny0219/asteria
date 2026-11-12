@@ -215,36 +215,5 @@ export function awakenCard(app) {
 }
 
 // ---------- 프리셋 (equipment tab) ----------
-export function loadoutCard(app) {
-  const s = app.state;
-  const L = s.loadouts;
-  const card = h('div', { class: 'card loadout-card', dataset: { screen: 'loadouts' }, style: { marginTop: '8px' } },
-    h('div', { class: 'kv' }, h('h3', { style: { margin: 0 } }, '프리셋 (장비 + 스킬 + 각인)'), h('span', { class: 'muted small' }, L.auto ? '자동 교체 켜짐' : '')),
-    h('div', { class: 'lo-grid' }, L.list.map((p, i) => {
-      const r = p.saved ? G.resolveLoadout(s, p) : null;
-      const n = r ? Object.values(r.equipped).filter(Boolean).length : 0;
-      return h('div', { class: 'lo-slot' + (L.current === i ? ' cur' : ''), dataset: { lo: String(i) } },
-        h('button', { type: 'button', class: 'lo-name', 'aria-label': `${p.name} 이름 바꾸기`, onClick: () => renameLoadout(app, i) }, h('b', null, p.name), ' ✎'),
-        h('span', { class: 'muted small' }, p.saved ? `장비 ${n}/8${r.missing.length ? ` · 없음 ${r.missing.length}` : ''}` : '비어 있음'),
-        button('저장', { cls: 'chip-btn', busy: true, dataset: { act: 'lo-save' }, onClick: async () => { const x = fail(await app.game.saveLoadout(i)); if (x.ok) toast(`지금 장비·스킬을 "${p.name}"에 저장`, 'good'); } }),
-        button('불러오기', { cls: 'chip-btn', busy: true, disabled: !p.saved, dataset: { act: 'lo-apply' }, onClick: async () => {
-          const x = fail(await app.game.applyLoadout(i));
-          if (x.ok) toast(x.missing.length ? `"${p.name}" 장착 · 없는 장비 ${x.missing.map((k) => SLOT_NAMES[k]).join(', ')}는 비워 둠` : `"${p.name}" 장착`, x.missing.length ? 'info' : 'good', 2600);
-        } }));
-    })),
-    h('label', { class: 'switch-row' }, h('span', null, '전투 종류에 맞춰 자동 교체'), h('input', { type: 'checkbox', checked: L.auto, onChange: async (e) => fail(await app.game.setLoadoutAuto(e.target.checked)) })),
-    L.auto ? h('div', { class: 'lo-map' }, Object.entries(LOADOUT_KINDS).map(([k, label]) => h('div', { class: 'kv' }, label,
-      h('select', { 'aria-label': `${label} 프리셋`, dataset: { kind: k }, onChange: async (e) => fail(await app.game.setLoadoutAuto(true, { [k]: Number(e.target.value) })) },
-        [[-1, '지금 장비'], ...L.list.map((p, i) => [i, p.name])].map(([v, t]) => h('option', { value: String(v), selected: L.map[k] === v }, t)))))) : null,
-    h('p', { class: 'muted small', style: { margin: '4px 0 0' } }, '자동 교체는 그 전투에서만 프리셋을 씁니다(장착 중인 장비는 그대로). 분해·이식으로 없어진 장비 칸은 비어 있게 됩니다.'));
-  return card;
-}
-function renameLoadout(app, i) {
-  const s = app.state;
-  const input = h('input', { type: 'text', class: 'text', maxlength: '8', value: s.loadouts.list[i].name, 'aria-label': '프리셋 이름' });
-  const m = openModal({ id: 'loName', title: '프리셋 이름', kind: 'center', body: h('div', null, input, h('p', { class: 'muted small' }, '최대 8글자')),
-    actions: [button('취소', { cls: 'btn', onClick: () => m.close() }), button('저장', { cls: 'btn btn-primary', busy: true, onClick: async () => { const r = fail(await app.game.renameLoadout(i, input.value)); if (r.ok) m.close(); } })] });
-  setTimeout(() => input.focus(), 50);
-}
 
 export const v10Tiles = (app) => [{ id: 'legendCodex', ic: 'star', em: 'L07', t: '고유 효과', s: `수집 ${Object.keys(app.state.gearPlus.vault).length}/${Object.keys(UNIQUES).length}`, on: () => openLegendCodex(app) }];

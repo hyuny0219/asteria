@@ -129,33 +129,10 @@ const BAD = /(^|[-_ ])(adv?|ads|banner|sponsor|promo-banner)([-_ ]|$)/;
     await p.locator('[data-screen="awaken"]').scrollIntoViewIfNeeded();
     { const o = await overflow(p); ok(!o, `${tag} skills no overflow`, o ? { o } : undefined); }
     await p.screenshot({ path: `${out}v10_awaken_${tag}.png` });
-    // presets
+    // v18.3: 장비 프리셋 제거 — 장비 화면에 프리셋 카드가 없어야 함
     await p.evaluate(() => __asteria.app.setTab('equipment'));
-    await p.waitForSelector('[data-screen="loadouts"]');
-    await p.evaluate(async (id) => { await __asteria.game.equip(id); }, seeded.legends[1]);
-    await p.click('[data-lo="0"] [data-act="lo-save"]');
     await p.waitForTimeout(400);
-    await p.evaluate(async () => { await __asteria.game.unequip('weapon'); });
-    await p.click('[data-lo="0"] [data-act="lo-apply"]');
-    await p.waitForTimeout(400);
-    ok(await p.evaluate((id) => __asteria.game.state.equipped.weapon === id, seeded.legends[1]), `${tag} preset save → apply`);
-    // missing item → empty slot + notice
-    await p.evaluate(async () => { await __asteria.game.unequip('weapon'); });
-    await p.evaluate(async (id) => { await __asteria.game.transact('qaDrop', (s) => { s.inventory = s.inventory.filter((i) => i.id !== id); return { ok: true }; }); }, seeded.legends[1]);
-    await p.click('[data-lo="0"] [data-act="lo-apply"]');
-    await p.waitForTimeout(400);
-    const miss = await p.evaluate(() => ({ w: __asteria.game.state.equipped.weapon, toast: [...document.querySelectorAll('.toast')].map((t) => t.textContent).join('|') }));
-    ok(!miss.w && /없는 장비/.test(miss.toast), `${tag} missing gear → empty slot + notice`, miss);
-    // auto swap + mapping
-    await p.locator('[data-screen="loadouts"] .switch-row input').check();
-    await p.waitForSelector('.lo-map select');
-    await p.selectOption('.lo-map select[data-kind="boss"]', '0').catch(() => p.selectOption('.lo-map select >> nth=0', '0'));
-    await p.waitForTimeout(300);
-    const L = await p.evaluate(() => __asteria.game.state.loadouts);
-    ok(L.auto && Object.values(L.map).includes(0), `${tag} auto swap mapping saved`, { map: L.map });
-    await p.locator('[data-screen="loadouts"]').scrollIntoViewIfNeeded();
-    { const o = await overflow(p); ok(!o, `${tag} presets no overflow`, o ? { o } : undefined); }
-    await p.screenshot({ path: `${out}v10_presets_${tag}.png` });
+    ok(await p.locator('[data-screen="loadouts"]').count() === 0 && (await p.evaluate(() => __asteria.game.state.loadouts)) === undefined, `${tag} presets removed`);
     // menu tile + class names
     await p.evaluate(() => __asteria.app.setTab('menu'));
     await p.waitForTimeout(300);

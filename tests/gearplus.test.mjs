@@ -103,28 +103,14 @@ test('스킬 각성: needs Lv 10, first pick free, one free change per KST day, 
   assert.equal(G.skillMods(s).m_meteor, undefined);
 });
 
-test('프리셋: save → swap gear → apply; missing items become empty; auto view for battles', async () => {
-  let clock = T0;
-  const g = new Game({ saver: new MemorySaver(), now: () => clock });
-  await g.load();
-  const s = g.state;
-  const w1 = mk(s, 'weapon', 'rare', 10, 1), w2 = mk(s, 'weapon', 'epic', 10, 2);
-  s.equipped.weapon = w1.id;
-  assert.ok(G.saveLoadout(s, 1).ok);
-  s.equipped.weapon = w2.id;
-  assert.ok(G.applyLoadout(s, 1, prog.unlockedSkills(s)).ok);
-  assert.equal(s.equipped.weapon, w1.id);
-  s.equipped.weapon = w2.id;
-  G.setLoadoutAuto(s, true);
-  assert.equal(G.loadoutFor(s, 'boss').name, '보스');
-  assert.equal(G.loadoutFor(s, 'farm'), null);   // preset 1 (사냥) never saved → worn gear
-  const bossAtk = g.heroCfg({ session: true, kind: 'boss' }).stats.atk;
-  const farmAtk = g.heroCfg({}).stats.atk;
-  assert.notEqual(bossAtk, farmAtk);
-  assert.equal(s.equipped.weapon, w2.id, 'auto swap never changes worn gear');
-  s.inventory = s.inventory.filter((i) => i.id !== w1.id);   // dismantled
-  const r = G.applyLoadout(s, 1, prog.unlockedSkills(s));
-  assert.deepEqual(r.missing, ['weapon']);
+test('v18.3 장비 프리셋 제거: 예전 세이브의 loadouts는 지우고 전투는 착용 장비 그대로', async () => {
+  const { migrate } = await import('../src/core/state.js');
+  const s = newGame(T0, 7, 'warrior');
+  assert.equal(s.loadouts, undefined);
+  s.loadouts = { list: [{ name: '보스', saved: true, gear: {} }], auto: true, map: {} };
+  s.schemaVersion = s.schemaVersion;   // same schema: fill/cleanup pass only
+  const m = migrate(s);
+  assert.equal(m.loadouts, undefined);
 });
 
 test('재련 rerolls only the chosen option and gets dearer; 등급 올리기 3 → 1 next rarity', () => {

@@ -33,6 +33,7 @@ import { autoGrowReserve } from '../core/autogrow.js';
 import { killRewards } from '../core/combat.js';
 import { enhanceChance, itemOptions, itemStats, rarityLabel, rarityOrder } from '../core/items.js';
 import * as prog from '../core/progression.js';
+import { skillMaxLevel, skillLevelMul, SKILL_CAP_ABS } from '../core/skilllevel.js';
 import * as DF from '../core/difficulty.js';
 import { stageLevel, stageReward, nextRefillAt } from '../core/dungeon.js';
 import { activeSetBonuses, playerStats, powerRating, setCounts } from '../core/stats.js';
@@ -209,7 +210,6 @@ export function equipmentPanel(app) {
     root.appendChild(sc);
     return root;
   }
-  sc.appendChild(V10.loadoutCard(app));
   const filters = [['all', '전체'], ['weapon', '무기'], ['helmet', '투구'], ['armor', '갑옷'], ['gloves', '장갑'], ['boots', '신발'], ['necklace', '목걸이'], ['ring', '반지']];
   sc.appendChild(h('div', { class: 'tabs', role: 'group', 'aria-label': '부위 필터', style: { margin: '12px 0 8px' } },
     filters.map(([k, l]) => h('button', { type: 'button', class: 'tab', 'aria-pressed': String(app.eqFilter === k), onClick: () => { app.eqFilter = k; app.renderPanel(); } }, l))));
@@ -451,7 +451,7 @@ export function skillsPanel(app) {
     const lv = prog.skillLevel(s, id);
     const c = prog.skillLevelCost(s, id);
     const have = s.skills.books[id] || 0;
-    return h('span', { class: 'sk-lv' }, gradeTag(s, id), ` Lv ${lv}/${BALANCE.skills.maxLevel} · 스킬북 ${have}${c ? `/${c.books}` : ''}`);
+    return h('span', { class: 'sk-lv' }, gradeTag(s, id), ` Lv ${lv}/${skillMaxLevel(s)} · 스킬북 ${have}${c ? `/${c.books}` : ''}`);
   };
   sc.appendChild(h('div', { class: 'section-title' }, '편성'));
   for (let i = 0; i < 6; i++) {
@@ -485,7 +485,7 @@ export function skillsPanel(app) {
         if (r.ok) toast(`${EVO.skName(s, id)} Lv ${r.level}`, 'good');
       } })));
   }
-  sc.appendChild(h('p', { class: 'muted' }, `레벨당 피해 +${Math.round(BALANCE.skills.levelBonusPerLevel * 100)}%. 스킬북은 스킬북 서고 던전·스킬 뽑기·보스에서 얻어요. 스킬 등급(일반~신화)은 스킬 뽑기에서 더 높은 등급 카드가 나오면 올라가요. 아이콘을 누르면 등급 효과를 볼 수 있어요.`));
+  sc.appendChild(h('p', { class: 'muted' }, `레벨당 피해 +${Math.round(BALANCE.skills.levelBonusPerLevel * 100)}% (Lv 11부터 +${Math.round(BALANCE.skills.levelBonusHigh * 100)}%). 최대 레벨은 전직할 때마다 5씩 올라가요(최대 ${SKILL_CAP_ABS}). 스킬북은 스킬북 서고 던전·스킬 뽑기·보스에서 얻어요. 스킬 등급(일반~신화)은 스킬 뽑기에서 더 높은 등급 카드가 나오면 올라가요. 아이콘을 누르면 등급 효과를 볼 수 있어요.`));
   sc.appendChild(V10.awakenCard(app));
   sc.appendChild(V4.runesCard(app));
   const cs = CLASSES[s.player.cls || 'warrior'];
@@ -512,13 +512,13 @@ export function openSkillDetail(app, id) {
   const s = app.state;
   const sk = EVO.sv(s, id);
   const lvl = prog.skillLevel(s, id);
-  const coef = sk.coef ? sk.coef * (1 + BALANCE.skills.levelBonusPerLevel * (lvl - 1)) : null;
+  const coef = sk.coef ? sk.coef * skillLevelMul(lvl) : null;
   openModal({ id: 'skilldetail', title: sk.name, body: h('div', { dataset: { screen: 'skilldetail' } },
     h('div', { class: 'evo-detail-ic' }, EVO.evoIcon(s, id, 'boss-art')),
     sk.baseName && sk.baseName !== sk.name ? h('p', { class: 'muted small', style: { textAlign: 'center', margin: '0' } }, `${sk.baseName}의 ${sk.evoTier}차 진화`) : null,
     h('p', null, sk.desc),
     h('div', { class: 'card' },
-      h('div', { class: 'kv' }, '스킬 레벨', h('b', null, `${lvl} / ${BALANCE.skills.maxLevel}`)),
+      h('div', { class: 'kv' }, '스킬 레벨', h('b', null, `${lvl} / ${skillMaxLevel(s)}${skillMaxLevel(s) < SKILL_CAP_ABS ? ` (다음 전직 때 ${skillMaxLevel(s) + BALANCE.skills.capPerTier})` : ''}`)),
       coef ? h('div', { class: 'kv' }, '피해 계수', h('b', null, `공격력 × ${coef.toFixed(2)}`)) : null,
       sk.cd ? h('div', { class: 'kv' }, '재사용 대기', h('b', null, `${sk.cd}초`)) : null,
       sk.internalCd ? h('div', { class: 'kv' }, '내부 대기', h('b', null, `${sk.internalCd}초`)) : null,

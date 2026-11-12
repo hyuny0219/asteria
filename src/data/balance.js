@@ -162,7 +162,9 @@ export const BALANCE = Object.freeze({
     // v15 4차 전직(초월): Lv 100 · 3차 · 노말 B05 처치 · 재료 · 초월 시련 (docs/DESIGN_V15_TIER4.md)
     4: { level: 100, boss: 'B05', bossDiff: 'normal', starShard: 26, awakenStone: 150, goldMinutes: 240, trial: 'T04' },
   },
-  skills: { levelBonusPerLevel: 0.08, maxLevel: 10, booksPerLevel: 2, goldMinutesPerLevel: 3 },
+  skills: { levelBonusPerLevel: 0.08, maxLevel: 10, booksPerLevel: 2, goldMinutesPerLevel: 3,
+    // v18.3 Lv 11+ (skilllevel.js): 전직 단계마다 최대 +5, 레벨당 +2%, 스킬북 2n + 10k권, 골드 ×2
+    capPerTier: 5, levelBonusHigh: 0.02, booksHighStep: 10, goldHighMul: 2 },
   runes: { slots: 2, maxLevel: 5, perLevel: 0.2 },
   gacha: {
     equipment: {

@@ -37,11 +37,11 @@ test('target caps the result: target uncommon leaves uncommons alone', () => {
   assert.ok(q.steps.every((st) => st.to === 'uncommon'));
 });
 
-test('locked, equipped and preset items are never used; slots never mix', () => {
+test('locked and equipped items are never used; slots never mix', () => {
   const s = bag([['weapon', 'common', 3], ['armor', 'common', 2], ['gloves', 'common', 3]]);
   s.inventory.find((i) => i.slot === 'weapon').locked = true;
   const g = s.inventory.filter((i) => i.slot === 'gloves');
-  s.loadouts.list[0].saved = true; s.loadouts.list[0].gear = { gloves: g[0].id };
+  s.equipped.gloves = g[0].id;   // v18.3: 프리셋 대신 착용으로 보호 확인
   const q = G.bulkRarityUpPlan(s, 'epic');
   assert.equal(q.steps.length, 0);
   assert.equal(q.ok, false);

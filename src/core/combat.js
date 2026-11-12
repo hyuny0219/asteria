@@ -16,6 +16,7 @@ import { clamp } from './util.js';
 
 const C = BALANCE.combat;
 import * as SYN from './synergy.js';
+import { skillLevelMul } from './skilllevel.js';
 const M = BALANCE.monster;
 const TICK = C.tickMs;
 
@@ -486,7 +487,7 @@ export class Battle {
   skillCoef(id) {
     const sk = this.skill(id);
     const lvl = this.heroCfg.skillLevel(id);
-    let c = sk.coef * (1 + BALANCE.skills.levelBonusPerLevel * (lvl - 1));
+    let c = sk.coef * skillLevelMul(lvl);
     if (isUlt(id)) { const tier = this.heroCfg.tier || (this.heroCfg.branch ? 1 : 0); if (tier >= 4) c *= 2.5; else if (tier >= 3) c *= 2; else if (tier >= 2) c *= 1.5; }
     if (this.caps.cap_beast2 && (id === 'a_beast' || id === 'a_pack')) c *= 2;
     const m = this.modsFor(id);
@@ -651,7 +652,7 @@ export class Battle {
       const md = this.modsFor(ac.skill);
       const stun = (sk.stunSec || 0) + (md.stunAdd || 0);
       const slow = md.slow || sk.slow;
-      const lvMul = 1 + BALANCE.skills.levelBonusPerLevel * (this.heroCfg.skillLevel(ac.skill) - 1);
+      const lvMul = skillLevelMul(this.heroCfg.skillLevel(ac.skill));
       for (const e of targets) {
         if (e.state === 'dying') continue;
         if (stun > 0 && !e.boss) e.stunUntil = Math.max(e.stunUntil, this.t + stun * 1000);
@@ -738,7 +739,7 @@ export class Battle {
     const dmg = damageFormula(this.heroAtk(), coef * (this.synMul || 1), e.defense, e.level, false, this.rng());
     return this.dealDamage(e, dmg, { crit: false, action: chainSkill ? 'skill' : 'synergy', skill: comboId || chainSkill });
   }
-  synLv(skill) { return SKILLS[skill] ? 1 + BALANCE.skills.levelBonusPerLevel * (this.heroCfg.skillLevel(skill) - 1) : 1; }
+  synLv(skill) { return SKILLS[skill] ? skillLevelMul(this.heroCfg.skillLevel(skill)) : 1; }
 
   kill(e) {
     e.state = 'dying';

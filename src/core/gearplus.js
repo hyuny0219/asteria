@@ -1,6 +1,6 @@
 // v10 장비·스킬 확장: 전설 고유 효과(+추출·이식), 스킬 각성, 장비·스킬 프리셋, 재련·등급 올리기.
 // DOM-free; every mutation runs inside Game.transact.
-import { AWAKEN, AWAKENINGS, EXTRACT, IMPRINT, ITEM_LEVEL, LOADOUT_DEFAULT_MAP, LOADOUT_NAMES, MYTHIC_MUL, RARITY_UP, REFORGE, UNIQUES } from '../data/gearplus.js';
+import { AWAKEN, AWAKENINGS, EXTRACT, IMPRINT, ITEM_LEVEL, MYTHIC_MUL, RARITY_UP, REFORGE, UNIQUES } from '../data/gearplus.js';
 import { BALANCE } from '../data/balance.js';
 import { GRADE_BONUS, GRADE_EFFECT } from '../data/skillgrade.js';
 import { SKILLS } from '../data/content.js';
@@ -15,9 +15,6 @@ const hasLegendSlot = (it) => it && (it.rarity === 'legendary' || it.rarity === 
 
 // ---------- defaults / migration ----------
 export function defaultGearPlus() { return { vault: {}, awakenDay: null, awakenFree: 1 }; }
-export function defaultLoadouts() {
-  return { list: LOADOUT_NAMES.map((name) => ({ name, saved: false, gear: {}, skills: [], runes: [] })), auto: false, map: { ...LOADOUT_DEFAULT_MAP } };
-}
 // Items found before v10: legendary/mythic get a deterministic 고유 효과 (seeded by the item id).
 export function backfillLegends(state) {
   let n = 0;
@@ -141,65 +138,6 @@ export function setAwaken(state, skillId, pick, now) {
   return { ok: true, skill: skillId, pick, paid };
 }
 
-// ---------- 프리셋 ----------
-export function saveLoadout(state, idx, name = null) {
-  const L = state.loadouts.list[idx];
-  if (!L) return { ok: false, reason: 'loadout' };
-  L.gear = { ...state.equipped };
-  L.skills = [...state.skills.equipped];
-  L.runes = [...((state.skills.runes && state.skills.runes.equipped) || [])];
-  L.saved = true;
-  if (name) L.name = String(name).slice(0, 8);
-  return { ok: true, idx };
-}
-export function renameLoadout(state, idx, name) {
-  const L = state.loadouts.list[idx];
-  const n = String(name || '').trim().slice(0, 8);
-  if (!L || !n) return { ok: false, reason: 'loadout' };
-  L.name = n;
-  return { ok: true };
-}
-// What a preset resolves to right now: missing items (분해·이식) → empty, locked skills/runes dropped.
-export function resolveLoadout(state, L, unlocked = null) {
-  const equipped = {};
-  const missing = [];
-  const used = new Set();
-  for (const k of EQ_SLOTS) {
-    const id = L.gear[k];
-    if (id && find(state, id) && !used.has(id)) { equipped[k] = id; used.add(id); }
-    else { equipped[k] = null; if (id) missing.push(k); }
-  }
-  const skills = (L.skills || []).map((id) => (id && (!unlocked || unlocked.includes(id)) ? id : null));
-  while (skills.length < 6) skills.push(null);
-  const owned = (state.skills.runes && state.skills.runes.owned) || {};
-  const runes = (L.runes || []).map((id) => (id && owned[id] ? id : null));
-  return { equipped, skills, runes, missing };
-}
-export function applyLoadout(state, idx, unlocked) {
-  const L = state.loadouts.list[idx];
-  if (!L || !L.saved) return { ok: false, reason: 'loadout' };
-  const r = resolveLoadout(state, L, unlocked);
-  state.equipped = { ...state.equipped, ...r.equipped };
-  const slots = state.skills.equipped.length;
-  state.skills.equipped = r.skills.slice(0, slots).map((id, i) => id || state.skills.equipped[i] || null);
-  if (state.skills.runes) state.skills.runes.equipped = r.runes.length ? r.runes : state.skills.runes.equipped;
-  state.loadouts.current = idx;
-  return { ok: true, missing: r.missing };
-}
-export function setLoadoutAuto(state, on, map = null) {
-  state.loadouts.auto = !!on;
-  if (map) for (const [k, v] of Object.entries(map)) if (k in state.loadouts.map && [0, 1, 2, -1].includes(v)) state.loadouts.map[k] = v;
-  return { ok: true };
-}
-// The loadout a battle of `kind` should use (null → the gear actually worn).
-export function loadoutFor(state, kind) {
-  const L = state.loadouts;
-  if (!L || !L.auto) return null;
-  const idx = L.map[kind];
-  const p = idx === undefined || idx < 0 ? null : L.list[idx];
-  return p && p.saved ? p : null;
-}
-
 // ---------- 재련 ----------
 export function reforgeCost(it) {
   const n = it.reforges || 0;
@@ -300,17 +238,11 @@ export function rarityUp(state, baseId, matIds, rng) {
 // 광석·별의 파편이 모자라면 거기서 멈춥니다. 미리보기와 실행이 같은 계획을 씁니다.
 export const BULK_TARGETS = ['uncommon', 'rare', 'epic', 'legendary', 'mythic'];
 const RANK = { common: 0, uncommon: 1, rare: 2, epic: 3, legendary: 4, mythic: 5 };
-function presetIds(state) {
-  const out = new Set();
-  for (const L of (state.loadouts && state.loadouts.list) || []) if (L.saved) for (const id of Object.values(L.gear || {})) if (id) out.add(id);
-  return out;
-}
 export function bulkRarityUpPlan(state, maxTo = 'epic', slot = null) {
   if (!BULK_TARGETS.includes(maxTo)) return { ok: false, reason: 'target' };
-  const keep = presetIds(state);
   const sl = (it) => (it.slot === 'accessory' ? 'necklace' : it.slot);
-  const excluded = state.inventory.filter((i) => (i.locked || isEquipped(state, i.id) || keep.has(i.id)) && (!slot || sl(i) === slot)).length;
-  const pool = state.inventory.filter((i) => !i.locked && !isEquipped(state, i.id) && !keep.has(i.id) && RANK[i.rarity] < RANK[maxTo] && (!slot || sl(i) === slot))
+  const excluded = state.inventory.filter((i) => (i.locked || isEquipped(state, i.id)) && (!slot || sl(i) === slot)).length;
+  const pool = state.inventory.filter((i) => !i.locked && !isEquipped(state, i.id) && RANK[i.rarity] < RANK[maxTo] && (!slot || sl(i) === slot))
     .map((i) => ({ id: i.id, slot: sl(i), rarity: i.rarity, score: mainScore(i) + i.level * 0.001 }));
   let ore = state.wallet.ore, star = state.wallet.starShard || 0;
   const steps = [];

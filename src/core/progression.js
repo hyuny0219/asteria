@@ -7,6 +7,7 @@ import { killRewards } from './combat.js';
 import { applyAutoStats } from './economy.js';
 import { OATHS, OATH_BY_ID, OATH_CHANGE_GOLD_MIN } from '../data/oath.js';
 import { evolutionsFor } from './skillforms.js';
+import { skillMaxLevel, skillStepCost } from './skilllevel.js';
 
 const CAP = BALANCE.levelCap;
 const PROMO = BALANCE.promotion;
@@ -225,8 +226,9 @@ export function setOath(state, id) {
 export function skillLevel(state, id) { return (state.skills.levels && state.skills.levels[id]) || 1; }
 export function skillLevelCost(state, id) {
   const n = skillLevel(state, id);
-  if (n >= BALANCE.skills.maxLevel) return null;
-  return { books: BALANCE.skills.booksPerLevel * n, gold: Math.floor(goldPerMinute(state.player.level) * BALANCE.skills.goldMinutesPerLevel * n) };
+  if (n >= skillMaxLevel(state)) return null;
+  const c = skillStepCost(n);
+  return { books: c.books, gold: Math.floor(goldPerMinute(state.player.level) * c.goldMinutes) };
 }
 export function levelSkill(state, id) {
   if (!unlockedSkills(state).includes(id)) return { ok: false, reason: 'locked-skill' };

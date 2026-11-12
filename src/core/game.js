@@ -272,10 +272,6 @@ export class Game {
   extractLegend(id) { return this.transact('extract', (s) => gear.extractLegend(s, id)); }
   imprintLegend(id, uid) { return this.transact('imprint', (s) => gear.imprintLegend(s, id, uid)); }
   setAwaken(skillId, pick) { return this.transact('awaken', (s) => gear.setAwaken(s, skillId, pick, this.now())); }
-  saveLoadout(idx, name = null) { return this.transact('loadoutSave', (s) => gear.saveLoadout(s, idx, name)); }
-  renameLoadout(idx, name) { return this.transact('loadoutName', (s) => gear.renameLoadout(s, idx, name)); }
-  applyLoadout(idx) { return this.transact('loadoutApply', (s) => gear.applyLoadout(s, idx, prog.unlockedSkills(s))); }
-  setLoadoutAuto(on, map = null) { return this.transact('loadoutAuto', (s) => gear.setLoadoutAuto(s, on, map)); }
   // v12 탈것 · 날개
   steedEquip(kind, id) { return this.transact('steed', (s) => steeds.equip(s, kind, id)).then((r) => { if (r.ok) this.syncHero(); return r; }); }
   steedLevel(kind, id, steps) { return this.transact('steed', (s) => steeds.levelUp(s, kind, id, steps)).then((r) => { if (r.ok) this.syncHero(); return r; }); }
@@ -305,15 +301,8 @@ export class Game {
     const cls = s.player.cls || 'warrior';
     const t = s.talents;
     const preset = opts.session && t && t.autoSwitch ? 1 : (t ? t.active : 0);
-    // v10 프리셋 자동 교체: the battle uses the mapped loadout as a view — the worn gear is not changed
-    const L = gear.loadoutFor(s, opts.kind || (opts.session ? 'boss' : 'farm'));
-    let view = s;
-    if (L) {
-      const r = gear.resolveLoadout(s, L, prog.unlockedSkills(s));
-      const skills = r.skills.slice(0, s.skills.equipped.length).map((id, i) => (i < prog.slotCount(s) ? id : null));
-      view = { ...s, equipped: r.equipped, skills: { ...s.skills, equipped: skills, runes: s.skills.runes ? { ...s.skills.runes, equipped: r.runes.length ? r.runes : s.skills.runes.equipped } : s.skills.runes } };
-    }
-    return { stats: playerStats(view, { preset, rift: opts.rift || null }), pet: s.pets ? meta.petPower(s) : null, skills: view.skills, branch: s.player.branch, cls, tier: prog.tierOf(s), ult: CLASS_SKILLS[cls].ult, range: CLASSES[cls].range, skillLevel: (id) => prog.skillLevel(s, id), loadout: L ? L.name : null, oath: (prog.oathOf(s) || {}).fx || null };
+    const view = s;
+    return { stats: playerStats(view, { preset, rift: opts.rift || null }), pet: s.pets ? meta.petPower(s) : null, skills: view.skills, branch: s.player.branch, cls, tier: prog.tierOf(s), ult: CLASS_SKILLS[cls].ult, range: CLASSES[cls].range, skillLevel: (id) => prog.skillLevel(s, id), oath: (prog.oathOf(s) || {}).fx || null };
   }
   syncHero() {
     if (this.farm) this.farm.updateStats(this.heroCfg({}));

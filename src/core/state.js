@@ -12,7 +12,7 @@ import { defaultWorldBoss } from './worldboss.js';
 import { defaultCraft } from './crafting.js';
 import { defaultMail } from './mail.js';
 import { defaultSteeds } from './steeds.js';
-import { backfillLegends, defaultGearPlus, defaultLoadouts } from './gearplus.js';
+import { backfillLegends, defaultGearPlus } from './gearplus.js';
 
 export const SCHEMA_VERSION = 9;
 
@@ -57,7 +57,6 @@ export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0, cls = 'wa
     mounts: defaultSteeds(),              // v12 탈것 (steeds.js)
     wings: defaultSteeds(),               // v12 날개
     gearPlus: defaultGearPlus(),          // v10 고유 효과 보관함 · 각성 변경 기록 (gearplus.js)
-    loadouts: defaultLoadouts(),          // v10 장비·스킬 프리셋 3칸 + 자동 교체 (gearplus.js)
     worldBoss: defaultWorldBoss(),        // 월드 보스 기록 + 희귀 정예 도감 (worldboss.js)   // 스테이지 지도 (schema 7): best stars, first-clear claimed, auto-advance
     notices: {},            // one-time notices shown after load: { slotEnhance: { refund, levels } }
     skills: {
@@ -248,6 +247,8 @@ export function migrate(s) {
     for (const k of ['normal', 'hard']) { const t = cur.diff && cur.diff.tracks && cur.diff.tracks[k]; if ((cur.diff && cur.diff.cur === k) || (t && Object.keys(t.maxWave || {}).some((x) => (t.maxWave[x] || 1) > 1))) seen['d:' + k] = at; }
     cur.story = { seen };
   }
+  // v18.3 장비 프리셋 제거 (거의 안 쓰여서 뺌). 전투는 항상 지금 착용한 장비·스킬로.
+  delete cur.loadouts;
   // fill fields added later in the same schema with defaults (forward-compatible)
   const d = newGame(cur.createdAt || Date.now(), cur.rngSeed);
   for (const k of Object.keys(d)) if (cur[k] === undefined) cur[k] = d[k];
