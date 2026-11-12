@@ -10,6 +10,7 @@ import { BRANCHES, CLASSES, RUNES, SETS, SET_SLOTS } from '../data/content.js';
 import { itemOptions, itemStats } from './items.js';
 import { talentEffects } from './talents.js';
 import { rebirthMultipliers, farmMultipliers as rebirthFarm } from './rebirth.js';
+import { ascMultipliers } from './ascension.js';
 import { metaBonus } from './meta.js';
 import { enchantBonus, foodBonus, jewelBonus } from './crafting.js';
 import { skillMods as gearSkillMods } from './gearplus.js';
@@ -121,9 +122,10 @@ export function playerStats(state, opts = {}) {
   }
   atk += equipBonus.atk; hp += equipBonus.hp; def += equipBonus.def; crit += equipBonus.crit;
   const rb = rebirthMultipliers(state);
-  atk *= (cls.mods.atk || 1) * (1 + pct.atkPct) * rb.atk;
-  hp *= (cls.mods.hp || 1) * Math.max(0.2, 1 + pct.hpPct) * rb.hp;
-  def *= (cls.mods.def || 1) * (1 + pct.defPct);
+  const asc = ascMultipliers(state);   // v18.5 초월 레벨
+  atk *= (cls.mods.atk || 1) * (1 + pct.atkPct) * rb.atk * asc.atk;
+  hp *= (cls.mods.hp || 1) * Math.max(0.2, 1 + pct.hpPct) * rb.hp * asc.hp;
+  def *= (cls.mods.def || 1) * (1 + pct.defPct) * asc.def;
   if (defToAtk) atk += def * defToAtk;
   crit = Math.max(0, crit + pct.critChance);
   aspd *= 1 + pct.aspd;

@@ -22,6 +22,7 @@ import { BLESSINGS, CURSES } from '../core/rift.js';
 import { AFFIXES, MPLUS } from '../core/mplus.js';
 import * as V8 from './v8.js';
 import * as MAILUI from './mail.js';
+import * as ASC from '../core/ascension.js';
 
 export const TABS = [
   { id: 'battle', label: '전투', icon: 'battle' },
@@ -561,7 +562,7 @@ export class App {
     }
     const capName = CLASSES[p.cls || 'warrior'].hero, capSub = prog.tierName(s) || (p.cls && p.cls !== 'warrior' ? CLASSES[p.cls].name : '흑장미의 서약');
     if (E.capB && E.capB.textContent !== capName) { E.capB.textContent = capName; E.capS.textContent = capSub; } else if (E.capS && E.capS.textContent !== capSub) E.capS.textContent = capSub;
-    E.sub.textContent = `Lv ${p.level} · ${prog.tierName(s) || CLASSES[p.cls || 'warrior'].name}${p.pendingExp ? ' · 보관 EXP ' + fmt(p.pendingExp) : ''}`;
+    E.sub.textContent = `Lv ${p.level}${(p.tier || 0) >= 4 && p.level >= BALANCE.levelCap ? ` · 초월 ${p.ascLv || 0}` : ''} · ${prog.tierName(s) || CLASSES[p.cls || 'warrior'].name}${p.pendingExp ? ' · 보관 EXP ' + fmt(p.pendingExp) : ''}`;
     E.gold.querySelector('.v').textContent = fmt(s.wallet.gold);
     E.ore.querySelector('.v').textContent = fmt(s.wallet.ore);
     const mailN = MAILUI.mailCount(s);
@@ -580,8 +581,10 @@ export class App {
     E.miniSub.textContent = m === 'DEFEAT' ? '재정비 중' : m === 'FARM' ? `처치 ${s.progression.waveKills}/${BALANCE.combat.waveKillTarget}` : '전투 중';
     E.miniBar.style.width = E.progBar.style.width;
     E.worldBtn.disabled = m !== 'FARM' && m !== 'DEFEAT';
-    const need = expToNext(p.level);
-    E.lvbar.style.width = need ? Math.min(100, (p.exp / need) * 100).toFixed(1) + '%' : '0%';
+    const asc = ASC.ascOpen(s);   // v18.5: Lv 100 초월 뒤엔 초월 레벨 경험치
+    const need = asc ? (p.ascLv >= ASC.ASC_MAX ? 0 : ASC.ascExpToNext(p.ascLv || 0)) : expToNext(p.level);
+    const cur = asc ? (p.ascExp || 0) : p.exp;
+    E.lvbar.style.width = need ? Math.min(100, (cur / need) * 100).toFixed(1) + '%' : asc ? '100%' : '0%';
     const bossId = region.boss;
     const can = this.game.canChallengeBoss(bossId);
     E.bossBtn.disabled = m !== 'FARM';

@@ -6,7 +6,7 @@
 //
 //   node tools/balance_sim_v4.mjs [--seeds 2] [--days 22] [--sessions 4] [--session-min 30] [--class warrior] [--json out]
 import { Game } from '../src/core/game.js';
-import { upgradeCost as rbCost } from '../src/core/rebirth.js';
+import { upgradeCost as rbCost, canRebirth } from '../src/core/rebirth.js';
 import { riftOpen, runsLeft } from '../src/core/rift.js';
 import { MemorySaver } from '../src/platform/memorySaver.js';
 import { playerStats } from '../src/core/stats.js';
@@ -22,6 +22,8 @@ import { TITLES } from '../src/data/meta.js';
 import { REGIONS, BOSSES, RUNES } from '../src/data/content.js';
 import { BALANCE } from '../src/data/balance.js';
 import { writeFileSync } from 'node:fs';
+import { steedBonus } from '../src/core/steeds.js';
+import { MOUNTS, WINGS } from '../src/data/steeds.js';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((a, v, i, arr) => (v.startsWith('--') ? [...a, [v.slice(2), arr[i + 1] && !arr[i + 1].startsWith('--') ? arr[i + 1] : true]] : a), []));
 const SEEDS = Number(args.seeds || 2);
@@ -141,9 +143,36 @@ async function runOne(seed, cls) {
     for (const L of [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]) if (lv >= L) mark('lv' + L);
     m.early ||= {}; for (let L = 2; L <= 10; L++) if (lv >= L && m.early[L] === undefined) m.early[L] = (clock - start) / 60000;
     // rebirth at Lv 100 (--rebirths, default 1), then spend essence on the cheapest upgrade
-    if (lv >= 100 && (g.state.rebirth.count || 0) < Number(args.rebirths ?? 1)) { const r = await g.doRebirth(); if (r.ok) { mark('rebirth' + g.state.rebirth.count); m.rebirthLevelAtDay = day(); return; } }
+    if (lv >= 100 && (g.state.rebirth.count || 0) < Number(args.rebirths ?? 0)) { const r = await g.doRebirth(); if (r.ok) { mark('rebirth' + g.state.rebirth.count); m.rebirthLevelAtDay = day(); return; } }
     if (g.state.rebirth.count) { for (const L of [50, 100]) if (lv >= L) mark('rb_lv' + L); }
     for (let k = 0; k < 20; k++) { const c = ['atk', 'hp', 'exp', 'gold'].map((x) => [x, rbCost(x, g.state.rebirth.levels[x] || 0)]).sort((a, b) => a[1] - b[1])[0]; if (g.state.rebirth.essence < c[1]) break; await g.rebirthUpgrade(c[0]); }
+    // --late N (v18.5 후반 플레이): 초월 뒤 실제 플레이어처럼
+    //   · N일마다 Lv 100에서 환생(전직 단계·장비·난이도 기록 유지, 기억의 가속으로 빠르게 복귀)
+    //   · Lv 100이면 열린 가장 높은 난이도로 이동(노말 → 하드)
+    //   · 탈것·날개 뽑기권·보석으로 소환, 먹이·깃털로 레벨업, ★ 올리기, 가장 센 것 장착
+    if (args.late) {
+      // v18.5: 환생은 초월 Lv 50부터 — 되는 즉시
+      for (const L of [1, 10, 25, 50]) if ((g.state.player.ascLv || 0) >= L) mark('asc' + L);
+      if (canRebirth(g.state)) {
+        const r = await g.doRebirth(); if (r.ok) { m.lastLateRebirth = day(); (m.lateRebirths ||= []).push(Math.round(day() * 10) / 10); return; }
+      }
+      if (lv >= 100 && tierOf(g.state) >= 4) {
+        const target = DF.diffOpen(g.state, 'hard') ? 'hard' : DF.diffOpen(g.state, 'normal') ? 'normal' : 'easy';
+        if (DF.curDiff(g.state) !== target && g.mode === 'FARM') { const r = await g.switchDifficulty(target); if (r.ok) mark(target + '_start'); }
+      }
+      for (const kind of ['mount', 'wing']) {
+        const tk = kind === 'mount' ? 'mountTicket' : 'wingTicket';
+        while ((g.state.wallet[tk] || 0) >= 10) { const r = await g.steedSummon(kind, 10); if (!r.ok) break; }
+        if ((g.state.wallet[tk] || 0) > 0) await g.steedSummon(kind, 1);
+        if (g.state.wallet.gem >= 3000) await g.steedSummon(kind, 10);
+        const box = kind === 'mount' ? g.state.mounts : g.state.wings, T = kind === 'mount' ? MOUNTS : WINGS;
+        const ids = Object.keys(box.owned || {});
+        for (const id of ids) await g.steedStar(kind, id);
+        const val = (id) => { const b = steedBonus(kind, id, box.owned[id]); return Object.entries(b || {}).reduce((a, [k, v]) => a + (['atkPct', 'critDmg', 'aspd', 'hpPct', 'defPct', 'critChance', 'lifesteal', 'cdr'].includes(k) ? v : 0), 0); };
+        const best = ids.sort((a, b) => val(b) - val(a))[0];
+        if (best) { if (box.equipped !== best) await g.steedEquip(kind, best); for (let k = 0; k < 10; k++) { const r = await g.steedLevel(kind, best, 1); if (!r.ok) break; } }
+      }
+    }
     // dungeons
     for (const type of ['quarry', 'gold', 'books']) {
       if (!dungeonOpen(g.state, type)) continue;
@@ -162,7 +191,7 @@ async function runOne(seed, cls) {
       if (cl.canPromote) { const r = await g.promote(nt, nt === 1 ? branch : nt === 4 ? oathOptions(g.state)[0].id : null); if (r.ok) mark('tier' + nt); }
     }
     // v15: 이지 심연의 군주를 잡으면 노말로 넘어가 진행 (--rebirths 0 --full 일 때 의미 있음)
-    if (DF.curDiff(g.state) === 'easy' && DF.diffOpen(g.state, 'normal') && g.state.player.level >= 100 && !Number(args.rebirths ?? 1)) { const r = await g.switchDifficulty('normal'); if (r.ok) mark('normal_start'); }
+    if (DF.curDiff(g.state) === 'easy' && DF.diffOpen(g.state, 'normal') && g.state.player.level >= 100 && !Number(args.rebirths ?? 0)) { const r = await g.switchDifficulty('normal'); if (r.ok) mark('normal_start'); }
     // talents: one-toggle auto allocation from tier 1
     if (t >= 1 && !g.state.talents.auto) await g.talentAuto(true);
     // rift: free runs (always take the first blessing)
@@ -211,8 +240,10 @@ async function runOne(seed, cls) {
     if (g.state.player.level >= 100) mark('lv100');
     (m.shardDay ||= []).push(g.state.wallet.starShard); m.lastShard = g.state.wallet.starShard;
     // --snap dir: write the save at the end of each listed day (e.g. --snap-days 3,6,10) for other sims
-    if (args.snap) { const days = String(args['snap-days'] || '3,6,10,14').split(',').map(Number); if (days.includes(d + 1)) { const { mkdirSync } = await import('node:fs'); mkdirSync(args.snap, { recursive: true }); writeFileSync(`${args.snap}/${cls}_s${seed}_d${d + 1}.json`, JSON.stringify(g.state)); } }
-    if (!args.full && g.state.player.level >= 100 && m.marks.tier3 && (g.state.rebirth.count || 0) >= Number(args.rebirths ?? 1)) break;
+    // (--late: 환생 중이면 Lv 100으로 돌아온 날로 미뤄서 저장 — 하드 측정용)
+    if (args.snap) { const days = String(args['snap-days'] || '3,6,10,14').split(',').map(Number); if (days.includes(d + 1)) m.snapDue = d + 1;
+      if (m.snapDue && (!args.late || g.state.player.level >= 100)) { const { mkdirSync } = await import('node:fs'); mkdirSync(args.snap, { recursive: true }); writeFileSync(`${args.snap}/${cls}_s${seed}_d${m.snapDue}.json`, JSON.stringify(g.state)); m.snapDue = null; } }
+    if (!args.full && g.state.player.level >= 100 && m.marks.tier3 && (g.state.rebirth.count || 0) >= Number(args.rebirths ?? 0)) break;
   }
   if (args.trace) console.error("end", JSON.stringify(m.marks), g.state.player.exp, g.state.player.pendingExp, cls, g.mode, JSON.stringify(g.state.rift.run), g.state.player.level, g.state.progression.region);
   m.final = { level: g.state.player.level, tier: tierOf(g.state), region: g.state.progression.region, wave: g.state.progression.wave, tower: g.state.tower.best, stats: playerStats(g.state), gem: g.state.wallet.gem, days: day(), locked: lockTierAt(g.state) };
@@ -244,7 +275,7 @@ for (const b of Object.keys(BOSSES).filter((x) => !BOSSES[x].raid)) {
 }
 for (const cls of CLASSES) {
   const rs = runs.filter((r) => r.cls === cls);
-  for (const r of rs) console.log(`  ${cls}#${r.seed} t3 ${r.marks.tier3 ?? "—"} B09 ${r.marks.win_B09 ?? "—"} B10 ${r.marks.win_B10 ?? "—"} lv100 ${r.marks.lv100 ?? "—"} final ${r.final.region}/${r.final.wave} · shardIn ${JSON.stringify(r.shardIn || {})} shard@d ${(r.shardDay || []).filter((_, i) => i % 2 === 1).join(',')} · N-boss ${REGIONS.map((x) => r.marks['win_N_' + x.boss] ?? '—').join(',')} · nFail ${JSON.stringify(r.nFail || {})} · trials ${(r.trials || []).filter((x) => x.startsWith('T4')).slice(0, 8).join(' ')} · tower ${r.final.tower}`);
+  for (const r of rs) console.log(`  ${cls}#${r.seed} t3 ${r.marks.tier3 ?? "—"} B09 ${r.marks.win_B09 ?? "—"} B10 ${r.marks.win_B10 ?? "—"} lv100 ${r.marks.lv100 ?? "—"} final ${r.final.region}/${r.final.wave} · shardIn ${JSON.stringify(r.shardIn || {})} shard@d ${(r.shardDay || []).filter((_, i) => i % 2 === 1).join(',')} · N-boss ${REGIONS.map((x) => r.marks['win_N_' + x.boss] ?? '—').join(',')} · nFail ${JSON.stringify(r.nFail || {})} · trials ${(r.trials || []).filter((x) => x.startsWith('T4')).slice(0, 8).join(' ')} · tower ${r.final.tower}${args.late ? ` · asc1/10/25/50 ${['asc1', 'asc10', 'asc25', 'asc50'].map((k) => r.marks[k] ?? '—').join('/')} · 환생 ${(r.lateRebirths || []).join(',') || '—'} · H-boss ${REGIONS.map((x) => r.marks['win_H_' + x.boss] ?? '—').join(',')}` : ''}`);
   console.log(`${cls}: final ${rs.map((r) => `L${r.final.level}/T${r.final.tier}/tower${r.final.tower}/${r.final.region}`).join(' ')} · lv100 day ${rs.map((r) => r.marks.lv100 ?? '—').join(',')} · tier4 day ${rs.map((r) => r.marks.tier4 ?? '—').join(',')} · raid ${rs.map((r) => (r.raid || []).join('')).join(' ')} · deaths ${rs.map((r) => r.deaths).join(',')}`);
 }
 { const em = {}; for (let L = 2; L <= 10; L++) { const v = runs.map((r) => r.early && r.early[L]).filter((x) => x !== undefined); em[L] = median(v); } report.earlyMin = em;

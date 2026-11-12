@@ -16,6 +16,8 @@ export const BALANCE = Object.freeze({
   version: '0.4-v4-experimental',
   seedVersion: '0.1-experimental',
   levelCap: 100,
+  // v18.5 초월 레벨: 초월(4차) 뒤 Lv 100에서 얻는 경험치가 쌓이는 두 번째 레벨 (환생 조건 = 초월 Lv 50)
+  ascension: { maxLevel: 50, expBase: 400000, expGrowth: 0.06, perLevel: { atk: 0.01, hp: 0.01, def: 0.01 } },
   promotionLevel: 30,                 // first tier (kept for v3 UI)
   promotionLevels: [30, 60, 90],      // tier 1 / 2 / 3: EXP is stored at these levels until promoted
   expCurve: { base: 100, exponent: 1.8, bandMul: [[10, 0.25], [30, 0.15], [60, 0.6], [90, 0.8], [101, 1.6]] },   // floor(100 · Lv^1.8 · band) — band ×0.25 / ×0.15 / ×0.6 / ×0.8 / ×1.6 (v6 속도 조정: Lv30≈6h·Lv60≈2.5d·Lv90≈7d·Lv100≈10d)

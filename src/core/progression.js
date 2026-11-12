@@ -8,6 +8,7 @@ import { applyAutoStats } from './economy.js';
 import { OATHS, OATH_BY_ID, OATH_CHANGE_GOLD_MIN } from '../data/oath.js';
 import { evolutionsFor } from './skillforms.js';
 import { skillMaxLevel, skillStepCost } from './skilllevel.js';
+import { gainAscExp } from './ascension.js';
 
 const CAP = BALANCE.levelCap;
 const PROMO = BALANCE.promotion;
@@ -42,7 +43,10 @@ export function gainExp(state, amount) {
     res.levels += 1;
     if (isPromotionLocked(state)) { p.pendingExp += p.exp; res.toPending += p.exp; p.exp = 0; break; }
   }
-  if (p.level >= CAP && p.exp > 0) { res.discarded += p.exp; p.exp = 0; }
+  if (p.level >= CAP && p.exp > 0) {   // v18.5: 초월했으면 초월 레벨로
+    const a = gainAscExp(state, p.exp); p.exp = 0;
+    res.discarded += a.discarded; if (a.levels) res.ascLevels = a.levels;
+  }
   if (res.levels) applyAutoStats(state);
   return res;
 }

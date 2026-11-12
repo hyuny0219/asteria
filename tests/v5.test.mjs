@@ -101,17 +101,21 @@ test('capstone: 그림자 일격 gives guaranteed crits after shadow step', () =
   assert.ok(playerStats(s).caps.cap_shadowCrit);
 });
 
-test('rebirth: needs Lv 100; resets level/gold/upgrades, keeps tier/gear/gems; multipliers apply', () => {
+test('rebirth: needs 초월 + 초월 Lv 50; resets level/gold/upgrades, keeps tier/gear/gems; multipliers apply', () => {
   const s = tier1('warrior', 99);
-  assert.equal(RB.doRebirth(s, T0).reason, 'level');
-  s.player.level = 100; s.player.tier = 3; s.wallet.gold = 1e9; s.wallet.gem = 500; s.player.statsUpgrades.atk = 300;
+  assert.equal(RB.doRebirth(s, T0).reason, 'rebirthTier');
+  s.player.level = 100; s.player.tier = 3;
+  assert.equal(RB.doRebirth(s, T0).reason, 'rebirthTier');   // v18.5: 3차로는 안 됨
+  s.player.tier = 4;
+  assert.equal(RB.doRebirth(s, T0).reason, 'rebirthAsc');
+  s.player.ascLv = 50; s.wallet.gold = 1e9; s.wallet.gem = 500; s.player.statsUpgrades.atk = 300;
   const it = makeItem(s, { slot: 'weapon', rarity: 'rare', level: 90, rng: makeRng(2) }); s.inventory.push(it); s.equipped.weapon = it.id; s.tower.best = 40;
   const before = T.pointsTotal(s);
   const r = RB.doRebirth(s, T0);
   assert.equal(r.ok, true);
   assert.equal(r.essence, 30 + 20);
   assert.equal(s.player.level, 1); assert.equal(s.wallet.gold, 0); assert.equal(s.player.statsUpgrades.atk, 0);
-  assert.equal(s.player.tier, 3); assert.equal(s.equipped.weapon, it.id); assert.equal(s.wallet.gem, 500);
+  assert.equal(s.player.tier, 4); assert.equal(s.equipped.weapon, it.id); assert.equal(s.wallet.gem, 500);
   assert.equal(s.progression.region, 'meadow');
   assert.equal(prog.isPromotionLocked(s), false);
   assert.ok(T.pointsTotal(s) >= before, 'talent points kept (+3 per rebirth)');
@@ -208,9 +212,12 @@ test('rift: clearing the last floor ends the run with rewards (no endless runs)'
 
 test('rebirth: 기억의 가속 multiplies EXP only below the previous peak level', () => {
   const s = tier1('mage', 100);
-  RB.doRebirth(s, T0);
+  s.player.tier = 4; s.player.ascLv = 50;
+  assert.equal(RB.doRebirth(s, T0).ok, true);
   assert.equal(playerStats(s).rebirth.exp, RB.REBIRTH.catchUpExp);
   s.player.level = 100;
+  assert.equal(playerStats(s).rebirth.exp, RB.REBIRTH.catchUpAscExp, 'still below the previous 초월 Lv');
+  s.player.ascLv = 50;
   assert.equal(playerStats(s).rebirth.exp, 1);
 });
 

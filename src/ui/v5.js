@@ -109,7 +109,7 @@ export function openRebirth(app) {
       h('div', { class: 'card' },
         h('div', { class: 'kv' }, '환생 횟수', h('b', null, `${rb.count}회`)),
         h('div', { class: 'kv' }, '환생 정수', h('b', null, `${fmtFull(rb.essence)} (누적 ${fmtFull(rb.totalEssence)})`)),
-        h('div', { class: 'kv' }, '조건', h('b', null, pv.ok ? 'Lv 100 달성 · 환생 가능' : `Lv 100 필요 (현재 Lv ${s.player.level})`)),
+        h('div', { class: 'kv' }, '조건', h('b', null, pv.ok ? '초월 Lv 50 달성 · 환생 가능' : (s.player.tier || 0) < 4 ? '초월(4차 전직) 후 초월 Lv 50' : `초월 Lv 50 필요 (현재 초월 Lv ${s.player.ascLv || 0})`)),
         h('div', { class: 'kv' }, '이번 환생으로 얻는 정수', h('b', null, `${pv.essence} (기본 30 + 탑 최고층 ×0.5 + 환생 횟수 ×5)`))),
       h('div', { class: 'section-title' }, '영구 강화 (정수 사용)'),
       h('div', { class: 'shop-list' }, ups),
@@ -117,9 +117,9 @@ export function openRebirth(app) {
       h('div', { class: 'card' }, h('b', { class: 'warn' }, '초기화되는 것'), h('ul', { class: 'small', style: { margin: '4px 0 6px', paddingLeft: '18px' } }, pv.resets.map((x) => h('li', null, x))),
         h('b', { class: 'okc' }, '그대로 남는 것'), h('ul', { class: 'small', style: { margin: '4px 0 0', paddingLeft: '18px' } }, pv.keeps.map((x) => h('li', null, x)))));
     const actions = [
-      button(pv.ok ? `환생하기 · 정수 +${pv.essence}` : 'Lv 100에 환생할 수 있어요', { cls: 'btn btn-primary', disabled: !pv.ok || g.mode !== 'FARM', onClick: () => {
+      button(pv.ok ? `환생하기 · 정수 +${pv.essence}` : '초월 Lv 50에 환생할 수 있어요', { cls: 'btn btn-primary', disabled: !pv.ok || g.mode !== 'FARM', onClick: () => {
         const cm = openModal({ id: 'rebirthConfirm', title: '정말 환생할까요?', kind: 'center',
-          desc: `레벨이 1이 되고 골드(${fmt(s.wallet.gold)})와 골드 자동 강화 단계가 사라집니다. 장비·승급 단계·스킬·특성·보석은 그대로이고, 환생 정수 ${pv.essence}를 얻습니다. 되돌릴 수 없어요.`,
+          desc: `레벨이 1, 초월 레벨이 0이 되고 골드(${fmt(s.wallet.gold)})와 골드 자동 강화 단계가 사라집니다. 장비·승급 단계·스킬·특성·보석은 그대로이고, 환생 정수 ${pv.essence}를 얻습니다. 되돌릴 수 없어요.`,
           actions: [
             button('환생하기', { cls: 'btn btn-danger', busy: true, onClick: async () => {
               const r = fail(await g.doRebirth());
@@ -231,7 +231,7 @@ export function v5Tiles(app) {
   const out = [];
   const open = T.talentsOpen(s);
   out.push({ id: 'talents', ic: 'star', em: V5_ICONS.talents, t: '특성', s: open ? `남은 포인트 ${T.pointsFree(s)}` : '1차 승급 후', dot: open && T.pointsFree(s) > 0 && !s.talents.auto, on: () => openTalents(app) });
-  out.push({ id: 'rebirth', ic: 'growth', em: V5_ICONS.rebirth, t: '환생', s: s.rebirth.count ? `${s.rebirth.count}회 · 정수 ${s.rebirth.essence}` : 'Lv 100부터', dot: RB.canRebirth(s), on: () => openRebirth(app) });
+  out.push({ id: 'rebirth', ic: 'growth', em: V5_ICONS.rebirth, t: '환생', s: s.rebirth.count ? `${s.rebirth.count}회 · 정수 ${s.rebirth.essence}` : '초월 Lv 50부터', dot: RB.canRebirth(s), on: () => openRebirth(app) });
   return out;
 }
 export const riftDot = (s) => RF.riftOpen(s) && (!!(s.rift.run && s.rift.run.choices) || RF.runsLeft(s, Date.now()) > 0);

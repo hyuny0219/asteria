@@ -116,7 +116,10 @@ test('rebirth keeps tier 4, its oath and the 6th slot', () => {
   const s = t3();
   DF.track(s, 'normal').bossCleared.B05 = true; s.promotion.trials[4] = true;
   prog.promote(s, 4, 'w_ruin', T0);
+  assert.equal(doRebirth(s, T0 + 1000).reason, 'rebirthAsc');   // v18.5: 초월 Lv 50부터
+  s.player.ascLv = 50;
   const r = doRebirth(s, T0 + 1000);
+  assert.equal(s.player.ascLv, 0); assert.equal(s.player.ascPeak, 50);
   assert.equal(r.ok, true);
   assert.equal(s.player.level, 1);
   assert.equal(s.player.tier, 4);

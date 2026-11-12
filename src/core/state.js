@@ -29,6 +29,7 @@ export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0, cls = 'wa
       statsUpgrades: { atk: 0, hp: 0, def: 0, crit: 0, speed: 0 },
       stats: { str: 0, int: 0, dex: 0, agi: 0, vit: 0, wis: 0 }, statAuto: true,
       peakLevel: 1,                               // highest level ever (talent points survive 환생)
+      ascLv: 0, ascExp: 0, ascPeak: 0,            // v18.5 초월 레벨 (ascension.js)
     },
     // 특성 / 환생 / 균열 (schema 4) — see talents.js, rebirth.js, rift.js
     talents: { presets: [{}, {}], active: 0, autoSwitch: false, auto: false, respecDay: null, respecUsed: 0 },

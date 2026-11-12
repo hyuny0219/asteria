@@ -11,10 +11,12 @@ import { applyAutoStats } from './economy.js';
 
 export const REBIRTH = Object.freeze({
   level: 100,
+  ascLevel: 50,                  // v18.5 초월 레벨 조건
   essenceBase: 30,
   essencePerTowerFloor: 0.5,     // floor(tower.best × 0.5)
   essencePerRebirth: 5,          // later rebirths give a bit more
-  catchUpExp: 16,                // 기억의 가속: EXP ×16 while below the peak level reached before
+  catchUpExp: 16,
+  catchUpAscExp: 4,              // v18.5 초월 레벨 회복은 ×4 (×16이면 환생이 반나절마다 돌아서 정수·특성이 폭주)                // 기억의 가속: EXP ×16 while below the peak level reached before
   upgrades: {
     atk: { name: '영혼의 칼날', desc: '공격력', per: 0.08, base: 10, growth: 1.35, max: 50 },
     hp: { name: '영혼의 갑주', desc: '최대 HP', per: 0.08, base: 10, growth: 1.35, max: 50 },
@@ -25,7 +27,8 @@ export const REBIRTH = Object.freeze({
 
 export function defaultRebirth() { return { count: 0, essence: 0, totalEssence: 0, levels: { atk: 0, hp: 0, gold: 0, exp: 0 }, lastAt: null }; }
 
-export const canRebirth = (state) => state.player.level >= REBIRTH.level;
+// v18.5: 환생은 초월(4차) 뒤 초월 Lv 50부터 — 초월하자마자 Lv 1로 돌아가는 흐름을 막음
+export const canRebirth = (state) => (state.player.tier || 0) >= 4 && state.player.level >= REBIRTH.level && (state.player.ascLv || 0) >= REBIRTH.ascLevel;
 export function essenceFor(state) {
   const rb = state.rebirth;
   return Math.floor(REBIRTH.essenceBase + ((state.tower && state.tower.best) || 0) * REBIRTH.essencePerTowerFloor + rb.count * REBIRTH.essencePerRebirth);
@@ -44,24 +47,29 @@ export function rebirthMultipliers(state) {
 export function farmMultipliers(state) {
   const m = rebirthMultipliers(state);
   const p = state.player;
-  if (state.rebirth && state.rebirth.count > 0 && p.level < (p.peakLevel || 0)) m.exp *= REBIRTH.catchUpExp;
+  if (state.rebirth && state.rebirth.count > 0) {
+    if (p.level < (p.peakLevel || 0)) m.exp *= REBIRTH.catchUpExp;
+    else if ((p.ascLv || 0) < (p.ascPeak || 0)) m.exp *= REBIRTH.catchUpAscExp;
+  }
   return m;
 }
 
 export function preview(state) {
   return {
     ok: canRebirth(state), essence: essenceFor(state), count: state.rebirth.count,
-    resets: ['레벨 → 1, 경험치·보관 경험치', '골드와 골드 자동 강화 단계', '능력치 포인트(자동으로 다시 분배)', '사냥 위치 → 별빛 초원 W1 (이미 잡은 보스 지역은 자동으로 다시 올라가요)'],
-    keeps: ['클래스·승급 단계·갈래 (레벨 잠금 없이 다시 성장)', '장비·가방·보석·뽑기권·재료', '스킬 레벨·스킬북·각인·특성', '지역 개방·보스 처치·탑·레이드·균열 기록', `기억의 가속: 이전 최고 레벨까지 경험치 ×${REBIRTH.catchUpExp}`],
+    resets: ['레벨 → 1, 초월 레벨 → 0, 경험치·보관 경험치', '골드와 골드 자동 강화 단계', '능력치 포인트(자동으로 다시 분배)', '사냥 위치 → 별빛 초원 W1 (이미 잡은 보스 지역은 자동으로 다시 올라가요)'],
+    keeps: ['클래스·승급 단계·갈래 (레벨 잠금 없이 다시 성장)', '장비·가방·보석·뽑기권·재료', '스킬 레벨·스킬북·각인·특성', '지역 개방·보스 처치·탑·레이드·균열 기록', `기억의 가속: 이전 최고 레벨까지 경험치 ×${REBIRTH.catchUpExp}, 이전 최고 초월 레벨까지 ×${REBIRTH.catchUpAscExp}`],
   };
 }
 
 export function doRebirth(state, now) {
-  if (!canRebirth(state)) return { ok: false, reason: 'level', need: REBIRTH.level };
+  if (!canRebirth(state)) return { ok: false, reason: (state.player.tier || 0) < 4 ? 'rebirthTier' : 'rebirthAsc', need: REBIRTH.ascLevel };
   const gain = essenceFor(state);
   const p = state.player;
   p.peakLevel = Math.max(p.peakLevel || 0, p.level);
+  p.ascPeak = Math.max(p.ascPeak || 0, p.ascLv || 0);
   p.level = 1; p.exp = 0; p.pendingExp = 0;
+  p.ascLv = 0; p.ascExp = 0;
   for (const k of Object.keys(p.statsUpgrades)) p.statsUpgrades[k] = 0;
   for (const k of STAT_KEYS) p.stats[k] = 0;
   p.statAuto = true;
