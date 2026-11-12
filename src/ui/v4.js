@@ -6,7 +6,7 @@ import { BOSSES, BRANCHES, CLASSES, CLASS_IDS, CLASS_SKILLS, CURRENCY_ICONS, EMB
 import { classPortrait, itemIcon, OATH_ICON, portrait, promoPortrait, skillIcon, spriteMeta, uiIcon } from '../render/assets.js';
 import * as prog from '../core/progression.js';
 import { nextLevelAt, quoteDraw, rateTable, skillRateTable, summonLevel } from '../core/gacha.js';
-import { missionStatus } from '../core/missions.js';
+import { missionStatus, weeklyStatus, WEEKLY_BONUS } from '../core/missions.js';
 import { floorLevel, floorReward, nextFloor } from '../core/tower.js';
 import { triesLeft, raidBossHp } from '../core/raid.js';
 import { dungeonState, nextRefillAt, stageLevel, stageReward } from '../core/dungeon.js';
@@ -171,31 +171,50 @@ function showDrawResults(app, isEq, r, after) {
 }
 
 // ======================= 일일 미션 =======================
-export function openMissions(app) {
+const RW_KO = { gem: '보석', ore: '강화 광석', eqTicket: '장비 뽑기권', skTicket: '스킬 뽑기권', awakenStone: '각성석', starShard: '별의 파편', petEgg: '정령 알', mountTicket: '탈것 소환권', wingTicket: '날개 소환권' };
+const rwText = (rw) => Object.entries(rw || {}).map(([k, v]) => `${RW_KO[k] || k} ${fmtFull(v)}`).join(' · ');
+const dhm = (ms) => { const m = Math.floor(ms / 60000), d = Math.floor(m / 1440), hh = Math.floor((m % 1440) / 60); return d ? `${d}일 ${hh}시간` : `${hh}시간 ${m % 60}분`; };
+// v18.6 일일 미션 + 주간 퀘스트 (탭)
+export function openMissions(app, tab = 'daily') {
+  const row = (x, label, onClaim) => h('div', { class: 'check' + (x.claimed ? ' ok' : ''), dataset: { key: 'mis-' + x.id } },
+    h('span', { class: 'mark', 'aria-hidden': 'true' }, x.claimed ? icon('check', 16) : ''),
+    h('div', { class: 'c' }, h('b', null, x.name), x.reward ? h('span', { class: 'muted small' }, rwText(x.reward)) : null,
+      h('div', { class: 'pbar', role: 'progressbar', 'aria-label': x.name, 'aria-valuenow': String(x.progress), 'aria-valuemax': String(x.target) }, h('i', { style: { width: `${(x.progress / x.target) * 100}%` } }))),
+    h('span', { class: 'p' }, `${fmt(x.progress)}/${fmt(x.target)}`),
+    x.claimed ? h('span', { class: 'muted' }, '완료') : button(x.done ? label : '진행 중', { cls: 'btn go' + (x.done ? ' btn-primary' : ''), disabled: !x.done, busy: true, onClick: onClaim }));
   const render = () => {
-    const st = missionStatus(app.state, Date.now());
-    const rows = st.list.map((x) => h('div', { class: 'check' + (x.claimed ? ' ok' : '') },
-      h('span', { class: 'mark', 'aria-hidden': 'true' }, x.claimed ? icon('check', 16) : ''),
-      h('div', { class: 'c' }, h('b', null, x.name), h('div', { class: 'pbar', role: 'progressbar', 'aria-label': x.name, 'aria-valuenow': String(x.progress), 'aria-valuemax': String(x.target) }, h('i', { style: { width: `${(x.progress / x.target) * 100}%` } }))),
-      h('span', { class: 'p' }, `${x.progress}/${x.target}`),
-      x.claimed ? h('span', { class: 'muted' }, '완료') : button(x.done ? `보석 ${BALANCE.missions.gem}` : '진행 중', { cls: 'btn go' + (x.done ? ' btn-primary' : ''), disabled: !x.done, busy: true, onClick: async () => {
-        const r = fail(await app.game.claimMission(x.id));
-        if (r.ok) { toast(`보석 +${r.reward.gem}`, 'good'); render(); }
-      } })));
-    const b = BALANCE.missions.bonus;
-    m.setBody(h('div', { dataset: { screen: 'missions' } },
-      h('p', { class: 'modal-desc' }, '매일 00:00(한국 시간)에 새로 바뀝니다. 다섯 개를 모두 받으면 추가 보상이 있어요.'), rows,
-      h('div', { class: 'card', style: { marginTop: '8px' } }, h('div', { class: 'kv' }, '모두 완료 보상', h('b', null, `보석 ${b.gem} · 장비 뽑기권 ${b.eqTicket} · 스킬 뽑기권 ${b.skTicket}`)),
-        // 사냥 보급 진행 (v8)
-        (() => { const SP = BALANCE.supply, k = (app.state.supply && app.state.supply.kills) || 0;
-          return h('div', { class: 'kv', style: { marginTop: '6px' } }, '사냥 보급', h('span', { class: 'muted small' },
-            `보석 ${SP.gem}: ${k % SP.gemEvery}/${SP.gemEvery} · 장비권: ${k % SP.eqEvery}/${SP.eqEvery} · 스킬권: ${k % SP.skEvery}/${SP.skEvery} 처치`)); })())));
-    m.setActions([button(st.bonusClaimed ? '오늘 보상 완료' : st.canBonus ? '모두 완료 보상 받기' : `${st.list.filter((x) => x.claimed).length}/5 받음`, { cls: 'btn btn-primary', disabled: !st.canBonus, busy: true, onClick: async () => {
-      const r = fail(await app.game.claimMissionBonus());
-      if (r.ok) { toast(`보석 +${r.reward.gem} · 장비 뽑기권 +${r.reward.eqTicket}${r.reward.skTicket ? ` · 스킬 뽑기권 +${r.reward.skTicket}` : ''}`, 'good'); render(); }
-    } })]);
+    const now = Date.now();
+    const st = missionStatus(app.state, now);
+    const wk = weeklyStatus(app.state, now);
+    const tabs = h('div', { class: 'seg', role: 'tablist', 'aria-label': '미션' },
+      ['daily', 'weekly'].map((t) => h('button', { type: 'button', role: 'tab', 'aria-selected': String(tab === t), 'aria-pressed': String(tab === t), dataset: { key: 'mtab-' + t }, onClick: () => { tab = t; render(); } },
+        t === 'daily' ? `일일 ${st.got}/${st.list.length}` : `주간 ${wk.got}/${wk.list.length}`,
+        (t === 'daily' ? st.claimable || st.canBonus : wk.claimable || wk.canBonus) ? h('span', { class: 'dot inline', 'aria-hidden': 'true' }) : null)));
+    let body, actions;
+    if (tab === 'daily') {
+      const b = BALANCE.missions.bonus;
+      body = [h('p', { class: 'modal-desc' }, `매일 00:00(한국 시간)에 바뀝니다. ${st.list.length}개 중 ${st.need}개를 받으면 완료 보상이 있어요.`),
+        st.list.map((x) => row(x, `보석 ${BALANCE.missions.gem}`, async () => { const r = fail(await app.game.claimMission(x.id)); if (r.ok) { toast(`보석 +${r.reward.gem}`, 'good'); render(); } })),
+        h('div', { class: 'card', style: { marginTop: '8px' } }, h('div', { class: 'kv' }, `완료 보상 (${st.need}개)`, h('b', null, `보석 ${b.gem} · 장비 뽑기권 ${b.eqTicket} · 스킬 뽑기권 ${b.skTicket || 0}`)),
+          (() => { const SP = BALANCE.supply, k = (app.state.supply && app.state.supply.kills) || 0;
+            return h('div', { class: 'kv', style: { marginTop: '6px' } }, '사냥 보급', h('span', { class: 'muted small' }, `보석 ${SP.gem}: ${k % SP.gemEvery}/${SP.gemEvery} · 장비권: ${k % SP.eqEvery}/${SP.eqEvery} · 스킬권: ${k % SP.skEvery}/${SP.skEvery} 처치`)); })())];
+      actions = [button(st.bonusClaimed ? '오늘 완료 보상 받음' : st.canBonus ? '완료 보상 받기' : `${st.got}/${st.need} 받음`, { cls: 'btn btn-primary', disabled: !st.canBonus, busy: true, dataset: { key: 'dailyBonus' }, onClick: async () => {
+        const r = fail(await app.game.claimMissionBonus());
+        if (r.ok) { toast(`보석 +${r.reward.gem} · 장비 뽑기권 +${r.reward.eqTicket}${r.reward.skTicket ? ` · 스킬 뽑기권 +${r.reward.skTicket}` : ''}`, 'good'); render(); }
+      } })];
+    } else {
+      body = [h('p', { class: 'modal-desc' }, `매주 월요일 00:00(한국 시간)에 바뀝니다 · ${dhm(wk.resetInMs)} 남음. ${wk.list.length}개 중 ${wk.need}개를 받으면 주간 완료 보상이 있어요.`),
+        wk.list.map((x) => row(x, '받기', async () => { const r = fail(await app.game.claimWeekly(x.id)); if (r.ok) { toast(rwText(r.reward), 'good'); render(); } })),
+        h('div', { class: 'card', style: { marginTop: '8px' } }, h('div', { class: 'kv' }, `주간 완료 보상 (${wk.need}개)`, h('b', null, rwText(WEEKLY_BONUS))))];
+      actions = [button(wk.bonusClaimed ? '이번 주 완료 보상 받음' : wk.canBonus ? '주간 완료 보상 받기' : `${wk.got}/${wk.need} 받음`, { cls: 'btn btn-primary', disabled: !wk.canBonus, busy: true, dataset: { key: 'weeklyBonus' }, onClick: async () => {
+        const r = fail(await app.game.claimWeeklyBonus());
+        if (r.ok) { sfx('reward'); toast(rwText(r.reward), 'good'); render(); }
+      } })];
+    }
+    m.setBody(h('div', { dataset: { screen: tab === 'daily' ? 'missions' : 'weekly' } }, tabs, h('div', { style: { marginTop: '8px' } }, body)));
+    m.setActions(actions);
   };
-  const m = openModal({ id: 'missions', title: '일일 미션', body: h('div'), actions: [] });
+  const m = openModal({ id: 'missions', title: '일일 · 주간 미션', body: h('div'), actions: [] });
   render();
 }
 
@@ -442,9 +461,10 @@ export function celebratePromotion(app, r) {
 export function v4Tiles(app) {
   const s = app.state;
   const ms = missionStatus(s, Date.now());
+  const ws = weeklyStatus(s, Date.now());
   return [
     { id: 'gacha', ic: 'equipment', t: '뽑기', s: `보석 ${fmt(s.wallet.gem)} · 권 ${(s.wallet.eqTicket || 0) + (s.wallet.skTicket || 0)}`, dot: freeDrawAvailable(s), on: () => openGacha(app, (s.wallet.eqTicket || 0) > 0 || !(s.wallet.skTicket > 0) ? 'eq' : 'sk') },
-    { id: 'missions', ic: 'check', t: '일일 미션', s: `${ms.list.filter((x) => x.claimed).length}/5 완료`, dot: ms.claimable > 0 || ms.canBonus, on: () => openMissions(app) },
+    { id: 'missions', ic: 'check', t: '미션', s: `일일 ${ms.got}/${ms.list.length} · 주간 ${ws.got}/${ws.list.length}`, dot: ms.claimable > 0 || ms.canBonus || ws.claimable > 0 || ws.canBonus, on: () => openMissions(app, ms.claimable || ms.canBonus || !(ws.claimable || ws.canBonus) ? 'daily' : 'weekly') },
   ];
 }
 export { go, openBoss, openWorld, closeAllModals, modalOpen };

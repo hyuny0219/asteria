@@ -913,3 +913,6 @@ img.sg-up-ico { width: 16px !important; height: 16px !important; margin: 0 4px 0
 .awk-opt .awk-next { display: block; font-size: 11px; color: var(--muted); margin-top: 2px; }
 .awk-ic.awk-s2 img { box-shadow: 0 0 0 2px var(--gold); }
 .awk-ic.awk-s3 img { box-shadow: 0 0 0 2px var(--gold), 0 0 10px 2px color-mix(in srgb, var(--gold) 70%, transparent); }
+/* v18.6 미션 탭 알림 점 */
+.seg .dot.inline { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--danger, #e5484d); margin-left: 5px; vertical-align: middle; }
+[data-screen="missions"] .check .muted.small, [data-screen="weekly"] .check .muted.small { display: block; }

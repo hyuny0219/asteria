@@ -89,7 +89,7 @@ export function playerStats(state, opts = {}) {
     for (let t = 0; t < Math.min(p.tier || 1, 4); t++) {
       const tp = tiers[t];
       if (!tp) continue;
-      add({ atkPct: tp.atk || 0, hpPct: tp.hp || 0, defPct: tp.def || 0, critChance: tp.crit || 0, critDmg: tp.critDmg || 0, cdr: tp.cdr || 0, aspd: tp.aspd || 0, evade: tp.evade || 0, lifesteal: tp.lifesteal || 0 });
+      add({ atkPct: tp.atk || 0, hpPct: tp.hp || 0, defPct: tp.def || 0, critChance: tp.crit || 0, critDmg: tp.critDmg || 0, cdr: tp.cdr || 0, aspd: tp.aspd || 0, evade: tp.evade || 0, lifesteal: tp.lifesteal || 0, dmgTaken: tp.dmgTaken || 0 });
       defToAtk += tp.defToAtk || 0;
     }
   }

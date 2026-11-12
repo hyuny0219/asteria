@@ -201,7 +201,7 @@ export class Game {
     if (this.mode !== 'FARM') return { ok: false, reason: 'mode' };
     let run = this.state.rift.run;
     if (!run) {
-      const r = await this.transact('riftBegin', (s) => rift.beginRun(s, uid('rift'), this.now()));
+      const r = await this.transact('riftBegin', (s) => { const x = rift.beginRun(s, uid('rift'), this.now()); if (x.ok) missions.track(s, 'challenge', 1, this.now()); return x; });
       if (!r.ok) return r;
       run = this.state.rift.run;
     }
@@ -218,7 +218,7 @@ export class Game {
   async startMplus(dungeon) {
     if (this.mode !== 'FARM') return { ok: false, reason: 'mode' };
     const id = uid('mplus');
-    const r = await this.transact('mplusBegin', (s) => mplus.beginRun(s, dungeon, id, this.now()));
+    const r = await this.transact('mplusBegin', (s) => { const x = mplus.beginRun(s, dungeon, id, this.now()); if (x.ok) missions.track(s, 'challenge', 1, this.now()); return x; });
     if (!r.ok) return r;
     const run = this.state.mplus.run;
     const cfg = mplus.runConfig(this.state, dungeon, run.key, run.affixes);
@@ -233,7 +233,7 @@ export class Game {
   async startWorldBoss() {
     if (this.mode !== 'FARM') return { ok: false, reason: 'mode' };
     const id = uid('wb');
-    const r = await this.transact('worldBossEnter', (s) => worldboss.beginWorldBoss(s, id, this.now()));
+    const r = await this.transact('worldBossEnter', (s) => { const x = worldboss.beginWorldBoss(s, id, this.now()); if (x.ok) missions.track(s, 'challenge', 1, this.now()); return x; });
     if (!r.ok) return r;
     const cfg = worldboss.battleConfig(this.state, this.now());
     this.active = new Battle({ kind: 'world', rng: this.rng, hero: this.sessionHero({ session: true, kind: 'world' }), world: cfg });
@@ -399,7 +399,7 @@ export class Game {
       const tb = TH.bonus(this.now());   // v14 주간 테마 보너스 (방치 정산에는 없음)
       mul.gold *= tb.gold || 1; mul.exp *= tb.exp || 1;
       TH.track(s, 'kills', 1, this.now());
-      if (e.elite && !e.fieldBoss) TH.track(s, 'elites', 1, this.now());
+      if (e.elite && !e.fieldBoss) { TH.track(s, 'elites', 1, this.now()); missions.track(s, 'elites', 1, this.now()); }
       const pst = playerStats(s);
       const gp = (1 + (pst.goldPct || 0)) * pst.rebirth.gold;
       const pm = BALANCE.phase.rewardMul;   // v12: travel legs between phases → richer kills
@@ -620,7 +620,7 @@ export class Game {
     if (this.mode !== 'FARM') return { ok: false, reason: 'mode' };
     if (!prog.raidOpen(this.state)) return { ok: false, reason: 'locked' };
     const id = uid('raid');
-    const r = await this.transact('raidEnter', (s) => raid.beginRaid(s, this.now()));
+    const r = await this.transact('raidEnter', (s) => { const x = raid.beginRaid(s, this.now()); if (x.ok) { missions.track(s, 'challenge', 1, this.now()); missions.track(s, 'raid', 1, this.now()); } return x; });
     if (!r.ok) return r;
     this.session = { kind: 'raid', id, bossId: BALANCE.raid.boss, startedAt: this.now(), viewBefore: this.state.settings.battleView };
     this.active = new Battle({ kind: 'raid', rng: this.rng, hero: this.sessionHero({ session: true, kind: 'raid' }) });
@@ -648,6 +648,7 @@ export class Game {
         if (!win) { s.progression.counters.bossLosses++; return res; }
         s.progression.counters.bossWins++;
         TH.track(s, 'bossWins', 1, this.now());
+        missions.track(s, 'bossWin', 1, this.now());
         meta.trackKill(s, sess.bossId);
         meta.addPassXp(s, PASS.xp.boss, this.now());
         const b = BOSSES[sess.bossId];
@@ -721,7 +722,7 @@ export class Game {
         return { ...fr, win, kills: ev.kills, timeSec: Math.round(ev.t / 1000), reason: ev.reason };
       });
     } else if (sess.kind === 'tower') {
-      r = await this.transact('towerResult', (s) => { const fr = tower.finishFloor(s, sess.floor, win); if (fr.record) meta.addPassXp(s, PASS.xp.towerRecord, this.now()); return { ...fr, win, kills: ev.kills, timeSec: Math.round(ev.t / 1000), reason: ev.reason }; });
+      r = await this.transact('towerResult', (s) => { missions.track(s, 'challenge', 1, this.now()); const fr = tower.finishFloor(s, sess.floor, win); if (fr.record) meta.addPassXp(s, PASS.xp.towerRecord, this.now()); return { ...fr, win, kills: ev.kills, timeSec: Math.round(ev.t / 1000), reason: ev.reason }; });
     } else if (sess.kind === 'rift') {
       r = await this.transact('riftResult', (s) => {
         const fr = rift.finishFloor(s, sess.id, win, ev.hpPct || 0, this.now(), this.rng, this.bookSkills(s));
@@ -833,7 +834,7 @@ export class Game {
   dismissNotice(key) { return this.transact('notice', (s) => { if (!s.notices || !s.notices[key]) return { ok: false, reason: 'none' }; delete s.notices[key]; return { ok: true }; }); }
   // slot enhancement (schema 6): `slot` = weapon … ring1 / ring2
   enhance(slot) { return this.transact('enhance', (s) => { const r = eco.enhance(s, slot, this.rng); if (r.ok) missions.track(s, 'enhance', 1, this.now()); return r; }); }
-  dismantle(ids) { return this.transact('dismantle', (s) => eco.dismantle(s, ids)); }
+  dismantle(ids) { return this.transact('dismantle', (s) => { missions.refreshMissions(s, this.now()); return eco.dismantle(s, ids); }); }
   moveOverflow() { return this.transact('overflow', (s) => eco.moveOverflow(s)); }
   markSeen(ids) { for (const it of this.state.inventory) if (ids.includes(it.id)) it.isNew = false; }
   choosePromotion(branch, opts) { return this.transact('promotion', (s) => prog.choosePromotion(s, branch, opts)); }
@@ -859,12 +860,12 @@ export class Game {
     return this.transact('drawEquipment', (s) => {
       const r = gacha.drawEquipment(s, n, this.rng);
       if (!r.ok) return r;
-      missions.track(s, 'draw', 1, this.now());
+      missions.track(s, 'draw', 1, this.now()); missions.track(s, 'draws', n, this.now());
       const added = eco.addItems(s, r.items);
       return { ...r, overflowed: added.overflowed, converted: added.converted };
     });
   }
-  drawSkill(n) { return this.transact('drawSkill', (s) => { const r = gacha.drawSkill(s, n, this.rng); if (r.ok) missions.track(s, 'draw', 1, this.now()); return r; }); }
+  drawSkill(n) { return this.transact('drawSkill', (s) => { const r = gacha.drawSkill(s, n, this.rng); if (r.ok) { missions.track(s, 'draw', 1, this.now()); missions.track(s, 'draws', n, this.now()); } return r; }); }
   levelSkill(id) { return this.transact('levelSkill', (s) => prog.levelSkill(s, id)); }
   equipRune(id, slot) { return this.transact('rune', (s) => gacha.equipRune(s, id, slot)); }
   unequipRune(slot) { return this.transact('rune', (s) => gacha.unequipRune(s, slot)); }
@@ -873,6 +874,9 @@ export class Game {
   setAutoStats(on) { return this.transact('stat', (s) => eco.setAutoStats(s, on)); }
   setAutoDismantle(v) { return this.transact('setting', (s) => { if (!['off', 'common', 'uncommon', 'rare'].includes(v)) return { ok: false, reason: 'value' }; s.settings.autoDismantle = v; return { ok: true }; }); }
   claimMission(id) { return this.transact('mission', (s) => { const r = missions.claimMission(s, id, this.now()); if (r.ok) { meta.addPassXp(s, PASS.xp.mission, this.now()); r.passXp = PASS.xp.mission; } return r; }); }
+  claimWeekly(id) { return this.transact('weekly', (s) => missions.claimWeekly(s, id, this.now())); }
+  claimWeeklyBonus() { return this.transact('weeklyBonus', (s) => missions.claimWeeklyBonus(s, this.now())); }
+  claimAllWeekly() { return this.transact('weekly', (s) => missions.claimAllWeekly(s, this.now())); }
   claimMissionBonus() { return this.transact('missionBonus', (s) => { const r = missions.claimMissionBonus(s, this.now()); if (r.ok) { meta.addPassXp(s, PASS.xp.missionBonus, this.now()); r.passXp = PASS.xp.missionBonus; } return r; }); }
   // ---------- 도감 · 업적 · 칭호 · 시즌 패스 · 동료 · 신화 제작 ----------
   claimAchievement(id) { return this.transact('achievement', (s) => meta.claimAchievement(s, id)); }

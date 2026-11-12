@@ -708,6 +708,8 @@ export async function quickClaimAll(app) {
     for (const x of ms.list) if (x.done && !x.claimed) { const r = await g.claimMission(x.id); if (r.ok) n++; }
     if (n) got.push(`미션 ${n}개`);
     if (MISS.missionStatus(app.state, g.now()).canBonus) await run('미션 완료 보너스', () => g.claimMissionBonus());
+    const wk = MISS.weeklyStatus(app.state, g.now());   // v18.6 주간
+    if (wk.claimable || wk.canBonus) await run('주간 미션', () => g.claimAllWeekly());
   }
   if (tiles.get('pass') && tiles.get('pass').dot) await run('시즌 패스', () => g.claimAllPass());
   if (EXP.readyCount(app.state, g.now()) > 0) await run('원정', () => g.claimAllExpeditions());

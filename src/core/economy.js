@@ -5,6 +5,7 @@ import { returnJewels } from './crafting.js';
 import { BALANCE } from '../data/balance.js';
 import { playerStats } from './stats.js';
 import { trackItem } from './meta.js';
+import { bump } from './missions.js';
 import { dismantleValue, enhanceChance, enhanceCost, mainScore, rarityOrder } from './items.js';
 import { CLASSES, STAT_KEYS, equipSlotFor } from '../data/content.js';
 import { killRewards } from './combat.js';
@@ -87,6 +88,7 @@ export function addItems(state, items) {
       const ore = dismantleValue(it);
       state.wallet.ore += ore;
       state.progression.counters.dismantled += 1;
+      bump(state, 'dismantle', 1);   // v18.6 일일·주간: 자동 분해도 셈
       state.progression.counters.autoDismantledOre = (state.progression.counters.autoDismantledOre || 0) + ore;
       autoDismantled.push(it);
       continue;
@@ -214,6 +216,7 @@ export function dismantle(state, ids) {
   state.inventory = state.inventory.filter((i) => !remove.has(i.id));
   state.wallet.ore += q.ore;
   state.progression.counters.dismantled += q.count;
+  bump(state, 'dismantle', q.count);
   moveOverflow(state);
   return { ok: true, quote: q };
 }

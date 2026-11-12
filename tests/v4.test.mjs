@@ -224,11 +224,13 @@ test('stat points: 5 per level, auto split by class, manual turns auto off, rese
   assert.ok(playerStats(s).atk > atk);
 });
 
-test('missions reset at KST midnight; each claimed once; bonus after all', () => {
+test('missions reset at KST midnight; each claimed once; bonus after 6 of 8', () => {
   const s = newGame(T0);
   track(s, 'kills', 300, T0); track(s, 'enhance', 5, T0); track(s, 'dungeon', 1, T0); track(s, 'draw', 1, T0); track(s, 'boss', 1, T0);
   for (const id of ['kills', 'enhance', 'dungeon', 'draw', 'boss']) assert.ok(claimMission(s, id, T0).ok);
   assert.equal(claimMission(s, 'kills', T0).reason, 'duplicate');
+  assert.equal(claimMissionBonus(s, T0).reason, 'conditions');   // v18.6: 8개 중 6개
+  track(s, 'elites', 10, T0); assert.ok(claimMission(s, 'elites', T0).ok);
   assert.ok(claimMissionBonus(s, T0).ok);
   assert.equal(claimMissionBonus(s, T0).reason, 'duplicate');
   // 15:00 UTC = 00:00 KST next day

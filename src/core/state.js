@@ -72,6 +72,7 @@ export function newGame(now = Date.now(), seed = (now ^ 0x5eed) >>> 0, cls = 'wa
     },
     gacha: { eq: { draws: 0, pity: 0 }, sk: { draws: 0, pity: 0, mythPity: 0 } },
     missions: { day: null, progress: {}, claimed: {}, bonus: false },
+    weekly: { week: null, progress: {}, claimed: {}, bonus: false },   // v18.6 주간 퀘스트 (missions.js)
     tower: { best: 0 },
     raid: { week: null, tries: 0, best: 0, bestGrade: null },
     bossDaily: { day: null, used: 0 },   // 지역 보스 반복 처치 하루 3회 (bossdaily.js)
