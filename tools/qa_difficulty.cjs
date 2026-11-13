@@ -11,7 +11,7 @@ const out = (process.env.SHOTS || 'docs/qa/screens') + '/';
   await p.goto((process.env.QA_URL || 'http://localhost:' + (process.argv[2] || 8123) + '/') + '?autostart&nodaily');
   await p.waitForFunction(() => globalThis.__asteria?.app?.el && __asteria.game.mode === 'FARM', null, { timeout: 20000 });
   await p.evaluate(() => { document.querySelectorAll('.modal-overlay').forEach((o) => o.remove()); document.getElementById('app').inert = false; });
-  const tx = (fn) => p.evaluate(async (src) => { const g = __asteria.game; const f = new Function('s', 'DF', 'REGIONS', src); const DF = await import('./src/core/difficulty.js'); const { REGIONS } = await import('./src/data/content.js');
+  const tx = (fn) => p.evaluate(async (src) => { const g = __asteria.game; const f = new Function('s', 'DF', 'REGIONS', src); const DF = await import('./src/core/difficulty.js'); const { REGIONS: ALL } = await import('./src/data/content.js'); const REGIONS = ALL.filter((r) => r.act !== 2);
     for (let i = 0; i < 60; i++) { const r = await g.transact('qa', (s) => { f(s, DF, REGIONS); return { ok: true }; }); if (r.ok) return true; await new Promise((x) => setTimeout(x, 60)); } return false; }, fn);
   // Lv 100, 이지 all regions open, 9 bosses down, 심연 10 reached (10-보스 not yet)
   await tx(`s.player.level = 100; s.player.statsUpgrades.atk = 20000; s.player.statsUpgrades.hp = 14000; s.progression.unlockedRegions = REGIONS.map((r) => r.id);

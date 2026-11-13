@@ -103,7 +103,7 @@ const shot = (p, name, vp) => p.screenshot({ path: path.join(OUT, `v8_${name}_${
     await p.evaluate(() => __qaTx((s) => { s.worldBoss.rares.RE01 = 2; s.worldBoss.rares.RE03 = 1; return { ok: true }; }));
     await p.evaluate(async () => { const v6 = await import('./src/ui/v6.js'); v6.openCodex(__asteria.app, 'rare'); });
     await p.waitForTimeout(500);
-    ok(await p.locator('[data-screen="codex"] .rare-cell').count() === 10, `${vp[0]} codex rare tab 10 cells`);
+    ok(await p.locator('[data-screen="codex"] .rare-cell').count() === 20, `${vp[0]} codex rare tab 20 cells (v19 2막 포함)`);
     ok(!(await overflowX(p)), `${vp[0]} codex rare no overflow`);
     await shot(p, 'codex_rare', vp);
     await p.evaluate(() => { document.querySelectorAll('.modal-overlay').forEach((o) => o.remove()); document.getElementById('app').inert = false; });

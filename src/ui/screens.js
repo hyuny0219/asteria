@@ -800,7 +800,7 @@ export function openBoss(app, bossId = null) {
     h('div', { class: 'card' },
       h('div', { class: 'kv' }, first ? '최초 처치 보상' : '반복 처치 보상', h('b', null, first ? firstTxt : d !== 'easy' ? '희귀 장비 1개 + 희귀~전설 1개' : '고급/희귀 장비 1개')),
       first && nextR ? h('div', { class: 'kv' }, '다음 지역', h('b', null, pre + nextR.name + ' 개방')) : null,
-      first && !nextR && nextD && !DF.diffOpen(s, nextD) ? h('div', { class: 'kv' }, '다음 난이도', h('b', { class: 'd-' + nextD }, `${DF.diffName(nextD)} 난이도 개방`)) : null,
+      first && (!nextR || b.region === DF.lastRegion().id) && nextD && !DF.diffOpen(s, nextD) ? h('div', { class: 'kv' }, '다음 난이도', h('b', { class: 'd-' + nextD }, `${DF.diffName(nextD)} 난이도 개방`)) : null,
       first ? null : h('div', { class: 'kv', dataset: { k: 'bossDaily' } }, '오늘 반복 처치', h('b', null, `${BD.left(s, Date.now())}/${BD.BOSS_DAILY}회 남음`)),
       h('p', { class: 'muted', style: { margin: '6px 0 0' } }, first ? '처음 잡는 보스는 횟수 제한 없이 도전할 수 있어요. 실패해도 골드·장비 손실은 없고 직전 사냥 위치로 돌아갑니다.' : '이미 잡은 보스는 모든 보스를 합쳐 하루 3회까지 보상을 받아요(이겼을 때만 차감, 자정 초기화). 실패하면 횟수는 그대로예요.'))),
     actions: [
@@ -852,7 +852,7 @@ export function openResult(app, r) {
     if (res.ok) app.applyView();
   };
   if (r.kind === 'boss' && r.win && r.ending) {   // v14: 이지 심연의 군주 첫 처치 → 엔딩 카드 뒤 결과 창
-    return STORYUI.openEnding(app, () => openResult(app, { ...r, ending: false }));
+    return STORYUI.openEnding(app, () => openResult(app, { ...r, ending: false }), r.ending === 2 ? 2 : 1);
   }
   if (r.kind === 'boss' && r.win) {
     const b = BOSSES[r.bossId];

@@ -9,11 +9,11 @@ import { raidOpen } from '../src/core/progression.js';
 import { BALANCE } from '../src/data/balance.js';
 
 const T0 = Date.UTC(2026, 10, 8, 3);
-const LAST = REGIONS[REGIONS.length - 1];
+const LAST = DF.lastRegion();   // v19: 1막 끝(심연) — 2막은 같은 난이도 안에서 이어짐
 function clearedEasy() {
   const s = newGame(T0);
   s.player.level = 100;
-  for (const r of REGIONS) { s.progression.maxWave[r.id] = 10; if (!s.progression.unlockedRegions.includes(r.id)) s.progression.unlockedRegions.push(r.id); s.progression.bossCleared[r.boss] = true; }
+  for (const r of REGIONS.filter((x) => !x.act)) { s.progression.maxWave[r.id] = 10; if (!s.progression.unlockedRegions.includes(r.id)) s.progression.unlockedRegions.push(r.id); s.progression.bossCleared[r.boss] = true; }
   s.progression.region = LAST.id; s.progression.wave = 7;
   return s;
 }
@@ -57,7 +57,7 @@ test('onBossCleared on 노말 writes the 노말 track only and reports the unloc
   let r = prog.onBossCleared(s, LAST.boss, 'easy');
   assert.equal(r.first, true);
   assert.equal(r.diffUnlocked, 'normal');
-  assert.equal(r.unlocked, null);
+  assert.ok(r.unlocked === null || r.unlocked === 'r11');   // v19: 2막 첫 지역(이미 열려 있지 않다면)
   assert.equal(DF.switchDiff(s, 'normal').ok, true);
   r = prog.onBossCleared(s, 'B01');
   assert.equal(r.first, true);
@@ -113,7 +113,12 @@ test('enemy scaling: none on 이지, grows through the stages, 하드 > 노말',
   assert.ok(c.hp > a.hp && c.atk > a.atk);
   assert.equal(DF.farmLevel('normal', 'meadow', 1), 100);
   assert.equal(DF.farmLevel('easy', 'meadow', 1), 1);
-  assert.equal(DF.stepIndex(LAST.id, 'boss'), REGIONS.length * 11 - 1);
+  assert.equal(DF.stepIndex(LAST.id, 'boss'), 109);
+  // v19 2막: 이지도 배율이 붙고, 1막 끝에서 이어서 커짐
+  const e11 = DF.enemyMul('easy', 'r11', 1), e20 = DF.enemyMul('easy', 'r20', 'boss');
+  assert.ok(e11 && e11.hp >= 1 && e20.hp > e11.hp);
+  const n10 = DF.enemyMul('normal', 'void', 'boss'), n20 = DF.enemyMul('normal', 'r20', 'boss'), h20 = DF.enemyMul('hard', 'r20', 'boss');
+  assert.ok(n20.hp > n10.hp && h20.hp > n20.hp);
 });
 
 test('nextGoal points at 노말 1-1 once 이지 is done', () => {

@@ -36,16 +36,18 @@ export function maybeIntro(app) {
 }
 
 // 엔딩 (이지 심연의 군주 첫 처치): 카드를 넘긴 뒤 onDone (노말 개방 결과 창).
-export function openEnding(app, onDone) {
+// v19: which === 2 → 2막 엔딩 (별을 삼키는 자 첫 처치)
+export function openEnding(app, onDone, which = 1) {
   let i = 0;
-  const m = openModal({ id: 'ending', kind: 'center', title: '엔딩', dismissible: false, body: h('div'), actions: [] });
+  const CARDS = which === 2 ? ST.ENDING2 : ST.ENDING;
+  const m = openModal({ id: 'ending', kind: 'center', title: which === 2 ? '2막 엔딩' : '엔딩', dismissible: false, body: h('div'), actions: [] });
   const render = () => {
-    const c = ST.ENDING[i];
+    const c = CARDS[i];
     m.setBody(h('div', { dataset: { screen: 'ending', card: String(i) }, class: 'story-card' },
-      scene(artFor(c.art), c.title, `${i + 1} / ${ST.ENDING.length}`),
+      scene(artFor(c.art), c.title, `${i + 1} / ${CARDS.length}`),
       h('p', { class: 'story-text' }, c.text),
-      h('div', { class: 'story-dots' }, ST.ENDING.map((_, k) => h('i', { class: k === i ? 'on' : '' })))));
-    const last = i === ST.ENDING.length - 1;
+      h('div', { class: 'story-dots' }, CARDS.map((_, k) => h('i', { class: k === i ? 'on' : '' })))));
+    const last = i === CARDS.length - 1;
     m.setActions([button(last ? '계속' : '다음', { cls: 'btn btn-primary', dataset: { act: 'ending-next' }, onClick: () => { if (!last) { i++; render(); } else { m.close(); if (onDone) onDone(); } } })]);
   };
   render();
@@ -55,7 +57,7 @@ export function openEnding(app, onDone) {
 // 이야기 메뉴: 본 것만, 순서대로
 export function openJournal(app) {
   const list = ST.journal(app.state);
-  const total = Object.keys(ST.REGION_STORY).length * 2 + 3;
+  const total = Object.keys(ST.REGION_STORY).length * 2 + 4;   // + 엔딩 2개 · 노말 · 하드
   openModal({ id: 'journal', title: '이야기', body: h('div', { dataset: { screen: 'journal' } },
     h('p', { class: 'modal-desc' }, `지나온 밤의 기록 ${list.length}/${total}. 새 지역에 처음 들어가거나 보스를 처음 쓰러뜨리면 기록이 늘어나요.`),
     list.length ? list.map((e) => {

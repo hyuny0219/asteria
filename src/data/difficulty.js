@@ -4,13 +4,15 @@
 // Tuned with tools/difficulty_sim.mjs against Lv 100 saves (see docs/BALANCE_CHANGES.md).
 export const DIFF_IDS = Object.freeze(['easy', 'normal', 'hard']);
 export const DIFFICULTY = Object.freeze({
-  easy: { id: 'easy', name: '이지', order: 0 },
+  // v19 2막(11~20지역, step 110~219): 1막 곡선의 끝에서 act2.growth로 이어감
+  easy: { id: 'easy', name: '이지', order: 0, act2: { hp: 1, atk: 1, growth: 1.005 } },
   normal: {
     id: 'normal', name: '노말', order: 1, level: 100, minPlayerLevel: 0,
     hp: { base: 1, growth: 1.02 }, atk: { base: 1.5, growth: 1.02 },
     // v13: 이지 보스에 붙은 추가 배율(balance.monster.scale.boss*)을 보스전에서 일부 상쇄
     // v18.5: 11~20지역을 위해 1~10은 조금 쉽게 — 노말 보스 체력 0.55→0.45, 공격 0.8→0.7
     boss: { hp: 0.45, atk: 0.7 },
+    act2: { growth: 1.006 },   // v19: 노말 20지역 보스 ≈ 하드 9지역 보스
     gold: 1.6, exp: 1.5, drop: 1.25, firstClear: 2,
     // per-kill drop rarity (replaces the easy table) and repeat boss table
     rarity: { common: 0.3, uncommon: 0.38, rare: 0.24, epic: 0.075, legendary: 0.005 },
@@ -21,6 +23,7 @@ export const DIFFICULTY = Object.freeze({
     // v18.5: 성장 1.022→1.02 (뒤 지역이 덜 가파르게), 보스 체력 0.55→0.4 · 공격 0.8→0.6 (하드 10지역 ≈ 40~50일 차)
     hp: { base: 2.5, growth: 1.02 }, atk: { base: 5, growth: 1.02 },
     boss: { hp: 0.4, atk: 0.6 },
+    act2: { growth: 1.013 },   // v19: 하드 11~20 = 환생·초월 레벨이 필요한 장기 목표
     gold: 2.4, exp: 2, drop: 1.5, firstClear: 3,
     rarity: { common: 0.12, uncommon: 0.33, rare: 0.35, epic: 0.18, legendary: 0.02 },
     bossFirst: { epic: 0.5, legendary: 0.5 },

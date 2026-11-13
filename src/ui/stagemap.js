@@ -73,8 +73,9 @@ function buildStage(app, ui, rerender, close) {
           region = null; sel = null; ui.region = null; ui.sel = null; rerender();
         } }, ok ? DF.diffName(x) : `🔒 ${DF.diffName(x)}`);
     }));
-    const diffNote = d === 'easy' ? null : (() => {
+    const diffNote = !DF.enemyMul(d, r.id, 1) ? null : (() => {
       const m = DF.enemyMul(d, r.id, 1), mb = DF.enemyMul(d, r.id, 'boss');
+      if (d === 'easy') return h('p', { class: 'muted small diff-note d-easy' }, `2막 · 적 Lv 100 · 이 지역 체력 ×${m.hp.toFixed(2)}–${mb.hp.toFixed(2)} · 공격 ×${m.atk.toFixed(2)}–${mb.atk.toFixed(2)}`);
       return h('p', { class: 'muted small diff-note d-' + d }, `${DF.diffName(d)} · 적 Lv ${DF.DIFFICULTY[d].level} · 이 지역 체력 ×${m.hp.toFixed(2)}–${mb.hp.toFixed(2)} · 공격 ×${m.atk.toFixed(2)}–${mb.atk.toFixed(2)} · 골드 ×${DF.DIFFICULTY[d].gold} · 첫 클리어 보상 ×${DF.firstClearMul(d)}`);
     })();
     // ---- header: auto-advance toggle
@@ -84,7 +85,21 @@ function buildStage(app, ui, rerender, close) {
       h('button', { type: 'button', class: 'switch', role: 'switch', 'aria-checked': String(auto), 'aria-label': '다음 스테이지 자동 진행', dataset: { act: 'stage-auto' },
         onClick: async () => { const res = await app.game.setStageAuto(!auto); if (!res.ok) toast('잠시 후 다시 시도해 주세요.', 'error'); render(); } }, h('i')));
     // ---- region tabs (all 10, with lock / stars)
-    const tabs = h('div', { class: 'tabs stage-tabs', role: 'tablist', 'aria-label': '지역' }, REGIONS.map((x) => {
+    // v19: 1막(1~10) / 2막(11~20) 나눠 보기 — 지금 보는 지역의 막이 기본
+    const act = (r.act || 1);
+    const act2Open = prog.regionUnlocked(s, 'r11');
+    const actSeg = h('div', { class: 'seg act-seg', role: 'tablist', 'aria-label': '막' }, [1, 2].map((k) => {
+      const ok = k === 1 || act2Open;
+      return h('button', { type: 'button', role: 'tab', class: 'act-chip' + (ok ? '' : ' locked'), 'aria-pressed': String(k === act), 'aria-selected': String(k === act), dataset: { act: 'act-' + k },
+        onClick: () => {
+          if (k === act) return;
+          if (!ok) { toast(`2막은 ${DF.prefix(d)}${BOSSES.B10.name}을 쓰러뜨리면 열려요.`, 'info'); return; }
+          const first = REGIONS.filter((x) => (x.act || 1) === k);
+          const cur = first.filter((x) => prog.regionUnlocked(s, x.id));
+          region = (cur[cur.length - 1] || first[0]).id; sel = null; render();
+        } }, k === 1 ? '1막 · 별이 꺼진 밤' : ok ? '2막 · 성좌 원정' : '🔒 2막 · 성좌 원정');
+    }));
+    const tabs = h('div', { class: 'tabs stage-tabs', role: 'tablist', 'aria-label': '지역' }, REGIONS.filter((x) => (x.act || 1) === act).map((x) => {
       const ok = prog.regionUnlocked(s, x.id);
       const rs = ST.regionStars(s, x.id);
       return h('button', { type: 'button', class: 'tab' + (ok ? '' : ' locked'), role: 'tab', 'aria-selected': String(x.id === region), dataset: { region: x.id },
@@ -168,7 +183,7 @@ function buildStage(app, ui, rerender, close) {
       if (!recentre && ui.tabsLeft != null) { tabs.scrollLeft = ui.tabsLeft; return; }
       const t = tabs.querySelector('[aria-selected="true"]'); if (t && t.scrollIntoView) t.scrollIntoView({ block: 'nearest', inline: 'center' });
     });
-    return h('div', { class: 'stage-wrap', dataset: { screen: 'world', diff: d } }, diffSeg, diffNote, head, tabs, map, detail,
+    return h('div', { class: 'stage-wrap', dataset: { screen: 'world', diff: d } }, diffSeg, actSeg, diffNote, head, tabs, map, detail,
       h('p', { class: 'muted small', style: { margin: '6px 2px 0' } }, `스테이지 = 웨이브. 적 10마리를 처치하면 클리어입니다. 보스를 처치하면 다음 지역이 열립니다. 마지막 지역 보스(${BOSSES[DF.lastRegion().boss].name})를 처치하면 다음 난이도가 열립니다. 자동 진행을 끄면 고른 스테이지에서 계속 사냥합니다.`));
   }
 }

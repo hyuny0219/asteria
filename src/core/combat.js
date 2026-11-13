@@ -350,6 +350,7 @@ export class Battle {
     this.moveEnemies();
     this.tickBuffs();
     this.tickDots();
+    this.tickBossMech();
     this.regen();
     this.heroAct();
     this.petAct();
@@ -414,6 +415,37 @@ export class Battle {
     const b = this.hero.buffs;
     for (const k of Object.keys(b)) if (b[k].until <= this.t) delete b[k];
     if (this.hero.shield && this.hero.shield.until <= this.t) this.hero.shield = null;
+  }
+
+  // ---------- v19 2막 보스 기믹 (BOSSES[id].mech) ----------
+  tickBossMech() {
+    const t = this.t;
+    for (const e of this.alive()) {
+      const M = e.boss && e.def.mech;
+      if (!M || e.state === 'dying') continue;
+      const mx = e.mech || (e.mech = { kind: M.kind, phase: 0, stacks: 0, nextAt: t + (M.everySec || M.addEvery || 0) * 1000, activeUntil: 0 });
+      if (M.kind === 'linkedGuard' && t >= mx.nextAt) {
+        mx.nextAt = t + M.addEvery * 1000;
+        if (mx.stacks < 3) { mx.stacks++; this.events.push({ type: 'mech', enemy: e.uid, name: `성좌 결계 ${mx.stacks}`, t }); }
+      } else if ((M.kind === 'reflect' || M.kind === 'mirror') && t >= mx.nextAt) {
+        mx.nextAt = t + M.everySec * 1000;
+        mx.activeUntil = t + M.durSec * 1000;
+        mx.reflected = 0;
+        this.events.push({ type: 'mech', enemy: e.uid, name: M.kind === 'reflect' ? '프리즘 반사' : '환영 분신', t });
+      } else if (M.kind === 'seal' && t >= mx.nextAt) {
+        mx.nextAt = t + M.everySec * 1000;
+        const id = this.hero.lastSkill;
+        if (id) { this.sealed = { id, until: t + M.durSec * 1000 }; this.events.push({ type: 'mech', enemy: e.uid, name: `봉인 — ${this.skill(id).name}`, t }); }
+      } else if (M.kind === 'regen') {
+        if (!e.dots.length && e.hp < e.maxHp) e.hp = Math.min(e.maxHp, e.hp + e.maxHp * M.pctPerSec * (TICK / 1000));
+      } else if (M.kind === 'timeStop') {
+        if (t >= mx.nextAt) { mx.nextAt = t + M.everySec * 1000; mx.activeUntil = t + M.durSec * 1000; this.events.push({ type: 'mech', enemy: e.uid, name: '시간 정지', t }); }
+        if (t < mx.activeUntil) for (const k of Object.keys(this.hero.cds)) if (this.hero.cds[k] > t) this.hero.cds[k] += TICK;   // 대기 시간이 흐르지 않음
+      } else if (M.kind === 'devour' && mx.phase >= M.phases.length && !this.hero.dead) {
+        mx.drainAcc = (mx.drainAcc || 0) + TICK;
+        if (mx.drainAcc >= 1000) { mx.drainAcc -= 1000; this.affixHit(M.drainPct, 'devour'); }
+      }
+    }
   }
 
   tickDots() {
@@ -534,6 +566,7 @@ export class Battle {
     const sk = this.skill(id);
     if (!sk || sk.kind === 'passive-counter' || sk.kind === 'ultimate') return false;
     if (!this.heroCfg.skills.equipped.includes(id)) return false;
+    if (this.sealed && this.sealed.id === id && this.t < this.sealed.until) return false;   // v19 기록관 봉인
     return (this.hero.cds[id] || 0) <= this.t;
   }
 
@@ -554,6 +587,7 @@ export class Battle {
       } else if (a.kind === 'skill') {
         h.action = { ...a, start: t, dur: 600, impactAt: t + 300, hit: false };
         h.cds[a.skill] = t + this.cooldownMs(a.skill);
+        h.lastSkill = a.skill;
         this.events.push({ type: 'skillStart', skill: a.skill, t });
       } else if (a.kind === 'ult') {
         h.gauge -= 100;
@@ -694,6 +728,18 @@ export class Battle {
   // Applies damage; returns true when the enemy died.
   dealDamage(e, dmg, { crit, action, skill, ranged = false }) {
     const st = this.heroCfg.stats;
+    const mx = e.boss && e.mech;   // v19 2막 보스 기믹
+    if (mx && action !== 'dot' && action !== 'thorns') {
+      if (mx.kind === 'mirror' && this.t < (mx.activeUntil || 0) && this.rng() < e.def.mech.miss) {
+        this.events.push({ type: 'miss', by: 'hero', target: e.uid, mirror: true, t: this.t, x: e.x });
+        return false;
+      }
+      if (mx.kind === 'linkedGuard' && mx.stacks) {
+        dmg = Math.max(1, Math.floor(dmg * (1 - e.def.mech.perAdd * mx.stacks)));
+        if (crit) { mx.stacks--; this.events.push({ type: 'mech', enemy: e.uid, name: '결계 파괴', t: this.t }); }
+      }
+    }
+    if (mx && mx.kind === 'temper' && mx.phase) dmg = Math.max(1, Math.floor(dmg * Math.pow(0.85, mx.phase)));
     e.hp -= dmg;
     e.flashUntil = this.t + 120;
     this.damageDealt += dmg;
@@ -707,6 +753,25 @@ export class Battle {
       if (this.hero.hp <= 0) this.heroDown();
     }
     if (this.caps.cap_berserk && this.hero.hp / this.hero.maxHp <= 0.5) this.heal(dmg * 0.03);
+    if (mx && mx.kind === 'reflect' && this.t < (mx.activeUntil || 0) && action !== 'thorns' && action !== 'dot' && !this.hero.dead) {
+      // 한 번에 최대 체력 5%, 반사 한 번(2.5초) 합계 최대 20% — 여러 번 치는 직업(궁수)만 녹지 않게
+      const room = this.hero.maxHp * (e.def.mech.capTotal || 0.2) - (mx.reflected || 0);
+      const back = Math.floor(Math.min(dmg * e.def.mech.pct, this.hero.maxHp * 0.05, room));
+      if (back >= 1) {
+        mx.reflected = (mx.reflected || 0) + back;
+        this.hero.hp -= back;
+        this.events.push({ type: 'hit', by: 'enemy', target: 'hero', source: e.uid, dmg: back, heavy: false, thorns: true, t: this.t });
+        if (this.hero.hp <= 0) this.heroDown();
+      }
+    }
+    if (mx && (mx.kind === 'temper' || mx.kind === 'devour') && e.hp > 0) {
+      const ph = e.def.mech.phases;
+      while (mx.phase < ph.length && e.hp / e.maxHp < ph[mx.phase]) {
+        mx.phase++;
+        if (mx.kind === 'temper') { e.heavyMul = (e.heavyMul || 1) * 0.8; this.events.push({ type: 'mech', enemy: e.uid, name: `담금질 ${mx.phase}단계`, t: this.t }); }
+        else { e.atk = Math.floor(e.atk * 1.15); this.events.push({ type: 'mech', enemy: e.uid, name: mx.phase >= ph.length ? '사건의 지평 — 마지막 형태' : '형태 변화', t: this.t }); }
+      }
+    }
     if (e.boss && !e.enraged && e.hp > 0 && e.hp / e.maxHp < C.enrage.below && !e.trial) {
       e.enraged = true;
       e.atk = Math.floor(e.atk * C.enrage.atkMul);
@@ -800,7 +865,7 @@ export class Battle {
         const hv = e.def.heavy;
         e.pending = { impactAt: t + hv.telegraphMs, mult: hv.mult, heavy: true };
         e.state = 'telegraph'; e.stateAt = t;
-        e.heavyAt = t + hv.everySec * 1000 * (e.enraged ? C.enrage.intervalMul : 1) + hv.telegraphMs;
+        e.heavyAt = t + hv.everySec * 1000 * (e.enraged ? C.enrage.intervalMul : 1) * (e.heavyMul || 1) + hv.telegraphMs;
         this.events.push({ type: 'telegraph', enemy: e.uid, heavy: true, name: hv.name, shape: hv.shape, ms: hv.telegraphMs, t });
         continue;
       }
@@ -830,6 +895,7 @@ export class Battle {
       return;
     }
     let dmg = damageFormula(e.atk, mult, st.def, e.level, false, this.rng());
+    if (e.mech && e.mech.kind === 'bloodlust') dmg = Math.floor(dmg * (1 + e.def.mech.atkAtLow * (1 - Math.max(0, e.hp) / e.maxHp)));   // v19 혈월의 사도
     if (this.mp && this.mp.aff.has('raging') && !e.boss && e.hp / e.maxHp < 0.3) dmg = Math.floor(dmg * 1.5);
     const guard = h.buffs.guard;
     if (guard) dmg = Math.max(1, Math.floor(dmg * (1 - guard.reduce)));
@@ -845,6 +911,7 @@ export class Battle {
     h.hp -= dmg;
     h.hitFxUntil = this.t + 240;
     if (e.prefix === 'vamp' && dmg > 0 && e.state !== 'dying') e.hp = Math.min(e.maxHp, e.hp + Math.floor(dmg * PREFIXES.vamp.lifesteal));   // v14 흡혈하는
+    if (e.mech && e.mech.kind === 'bloodlust' && dmg > 0 && e.state !== 'dying') e.hp = Math.min(e.maxHp, e.hp + Math.floor(dmg * e.def.mech.lifesteal));
     if (st.thorns && dmg > 0 && e.state !== 'dying') this.dealDamage(e, Math.max(1, Math.floor(dmg * st.thorns)), { crit: false, action: 'thorns', skill: null });
     this.events.push({ type: 'hit', by: 'enemy', target: 'hero', source: e.uid, dmg, heavy, guarded: !!guard, t: this.t });
     const w = this.hitChargeWindow;

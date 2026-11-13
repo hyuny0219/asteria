@@ -140,8 +140,14 @@ export class BattleRenderer {
       if (ev.heavy) { this.kick(4, 160); this.flashScreen(ev.guarded ? '#A9C8FF' : '#FF4060', 0.18, 160); }
       return null;
     }
-    if (ev.type === 'miss') {
+    if (ev.type === 'miss' && ev.by === 'hero') {   // v19 잠든 여왕 환영: 영웅 공격이 빗나감
+      this.pushNumber({ x: ev.x ?? 300, y: 0.36, text: '빗나감', miss: true, born: now, dx: 0 });
+    } else if (ev.type === 'miss') {
       this.pushNumber({ x: HERO_X, y: 0.38, text: '회피', miss: true, born: now, dx: 0 });
+    } else if (ev.type === 'mech') {   // v19 2막 보스 기믹 이름
+      const e = battle.enemies.find((q) => q.uid === ev.enemy);
+      this.pushNumber({ x: e ? e.x : 320, y: 0.24, text: ev.name, syn: '#C9A8FF', born: now, dx: 0 });
+      this.kick(2, 120);
     } else if (ev.type === 'enemyHeal') {
       const e = battle.enemies.find((q) => q.uid === ev.enemy);
       if (e && s.damageNumbers === 'all') this.pushNumber({ x: e.x, y: 0.42, text: '+' + fmt(ev.amount), dot: '#7FE0A0', born: now, dx: 0 });

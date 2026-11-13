@@ -2,10 +2,10 @@
 // 지역 소개는 이지에서 처음 들어간 지역마다, 난이도 도입은 노말·하드에 처음 들어갈 때 한 번.
 // 보스 기록·엔딩은 첫 처치 결과(transact) 안에서 기록됩니다.
 import { REGIONS } from '../data/content.js';
-import { REGION_STORY, DIFF_STORY, ENDING } from '../data/story.js';
+import { REGION_STORY, DIFF_STORY, ENDING, ENDING2 } from '../data/story.js';
 import * as DF from './difficulty.js';
 
-export { REGION_STORY, DIFF_STORY, ENDING };
+export { REGION_STORY, DIFF_STORY, ENDING, ENDING2 };
 export const defaultStory = () => ({ seen: {} });
 function st(state) {
   if (!state.story || typeof state.story !== 'object' || !state.story.seen || typeof state.story.seen !== 'object') state.story = defaultStory();
@@ -33,13 +33,16 @@ export function pendingIntro(state) {
 }
 
 // Called inside the boss-result transaction on a first clear.
+// v19: 2막(11~20) 보스 기록·엔딩은 어느 난이도든 처음 잡을 때 (1막은 이지만)
 export function onBossFirstClear(state, bossId, d, now = Date.now()) {
   const out = {};
-  if (d !== 'easy') return out;
   const region = REGIONS.find((r) => r.boss === bossId);
   if (!region || !REGION_STORY[region.id]) return out;
+  const act2 = region.act === 2;
+  if (d !== 'easy' && !act2) return out;
   if (markSeen(state, 'b:' + bossId, now)) out.lore = REGION_STORY[region.id].boss;
-  if (region === REGIONS[REGIONS.length - 1] && markSeen(state, 'end', now)) out.ending = true;
+  if (region.id === 'void' && markSeen(state, 'end', now)) out.ending = true;
+  if (region.id === 'r20' && markSeen(state, 'end2', now)) out.ending = 2;
   return out;
 }
 
@@ -53,6 +56,7 @@ export function journal(state) {
     if (seen(state, 'b:' + r.boss)) out.push({ key: 'b:' + r.boss, kind: 'boss', region: r.id, boss: r.boss, title: `${r.name} · 보스`, text: S.boss });
   }
   if (seen(state, 'end')) out.push({ key: 'end', kind: 'ending', title: '엔딩 · 첫 번째 새벽', text: ENDING.map((c) => c.text).join(' ') });
+  if (seen(state, 'end2')) out.push({ key: 'end2', kind: 'ending', title: '2막 엔딩 · 두 번째 새벽', text: ENDING2.map((c) => c.text).join(' ') });
   for (const d of ['normal', 'hard']) if (seen(state, 'd:' + d)) out.push({ key: 'd:' + d, kind: 'diff', diff: d, title: `${DF.diffName(d)} 난이도`, text: DIFF_STORY[d] });
   return out;
 }

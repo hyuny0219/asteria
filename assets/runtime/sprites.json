@@ -391,7 +391,11 @@
    "status": "GPT_O5_ICONS",
    "note": "서약 8 + 초월 문장·시련·6번 칸·서약 바꾸기"
   },
-  "gpt_o6": "GPT package O6 (진화 스킬 아이콘)"
+  "gpt_o6": "GPT package O6 (진화 스킬 아이콘)",
+  "gpt_v19/": {
+   "status": "GENERATED_SINGLE",
+   "note": "v19 2막: Higgsfield GPT Image 2.6, 기존 시트를 스타일 참고로 한 장씩 생성 (투명 배경)"
+  }
  },
  "monsters": {
   "M01": {
@@ -3547,6 +3551,726 @@
     }
    },
    "framesSource": "gpt_c/mon_act_10.png row 2"
+  },
+  "M21": {
+   "id": "M21",
+   "name": "성흔 수호병",
+   "displayBodyPx": 104,
+   "file": "assets/runtime/mon_M21.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    10,
+    20
+   ],
+   "size": [
+    220,
+    211
+   ],
+   "scale": 0.2169,
+   "bodyHeightPx": 208.0,
+   "pivot": [
+    104.0,
+    209.5
+   ],
+   "hitbox": [
+    14.3,
+    14.0,
+    191.1,
+    183.0
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
+  },
+  "M22": {
+   "id": "M22",
+   "name": "별조각 망령",
+   "displayBodyPx": 96,
+   "file": "assets/runtime/mon_M22.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    48,
+    35
+   ],
+   "size": [
+    181,
+    195
+   ],
+   "scale": 0.1983,
+   "bodyHeightPx": 192.0,
+   "pivot": [
+    94.5,
+    193.2
+   ],
+   "hitbox": [
+    12.2,
+    12.7,
+    156.0,
+    169.0
+   ],
+   "flying": true,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
+  },
+  "M23": {
+   "id": "M23",
+   "name": "유리 전갈",
+   "displayBodyPx": 84,
+   "file": "assets/runtime/mon_M23.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    2,
+    23
+   ],
+   "size": [
+    191,
+    171
+   ],
+   "scale": 0.1881,
+   "bodyHeightPx": 168.0,
+   "pivot": [
+    46.7,
+    169.1
+   ],
+   "hitbox": [
+    12.5,
+    11.2,
+    166.1,
+    147.8
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
+  },
+  "M24": {
+   "id": "M24",
+   "name": "굴절 정령",
+   "displayBodyPx": 96,
+   "file": "assets/runtime/mon_M24.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    27,
+    0
+   ],
+   "size": [
+    187,
+    195
+   ],
+   "scale": 0.1916,
+   "bodyHeightPx": 192.0,
+   "pivot": [
+    98.2,
+    193.3
+   ],
+   "hitbox": [
+    12.7,
+    12.9,
+    161.2,
+    169.0
+   ],
+   "flying": true,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
+  },
+  "M25": {
+   "id": "M25",
+   "name": "금서 마도서",
+   "displayBodyPx": 80,
+   "file": "assets/runtime/mon_M25.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    7,
+    23
+   ],
+   "size": [
+    166,
+    162
+   ],
+   "scale": 0.1648,
+   "bodyHeightPx": 160.0,
+   "pivot": [
+    86.8,
+    161.0
+   ],
+   "hitbox": [
+    11.0,
+    10.6,
+    144.0,
+    140.8
+   ],
+   "flying": true,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
+  },
+  "M26": {
+   "id": "M26",
+   "name": "서고 감시자",
+   "displayBodyPx": 112,
+   "file": "assets/runtime/mon_M26.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    1,
+    0
+   ],
+   "size": [
+    227,
+    227
+   ],
+   "scale": 0.2222,
+   "bodyHeightPx": 224.0,
+   "pivot": [
+    189.9,
+    225.6
+   ],
+   "hitbox": [
+    15.0,
+    15.0,
+    196.9,
+    197.1
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
+  },
+  "M27": {
+   "id": "M27",
+   "name": "뿌리 사냥꾼",
+   "displayBodyPx": 96,
+   "file": "assets/runtime/mon_M27.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    19,
+    146
+   ],
+   "size": [
+    276,
+    196
+   ],
+   "scale": 0.2779,
+   "bodyHeightPx": 192.0,
+   "pivot": [
+    77.1,
+    194.2
+   ],
+   "hitbox": [
+    18.3,
+    13.7,
+    239.6,
+    169.0
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
+  },
+  "M28": {
+   "id": "M28",
+   "name": "포자 나방",
+   "displayBodyPx": 96,
+   "file": "assets/runtime/mon_M28.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    13,
+    9
+   ],
+   "size": [
+    211,
+    195
+   ],
+   "scale": 0.2108,
+   "bodyHeightPx": 192.0,
+   "pivot": [
+    110.7,
+    193.3
+   ],
+   "hitbox": [
+    14.0,
+    12.8,
+    183.2,
+    169.0
+   ],
+   "flying": true,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
+  },
+  "M29": {
+   "id": "M29",
+   "name": "성운 해파리",
+   "displayBodyPx": 96,
+   "file": "assets/runtime/mon_M29.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    12,
+    17
+   ],
+   "size": [
+    196,
+    195
+   ],
+   "scale": 0.1953,
+   "bodyHeightPx": 192.0,
+   "pivot": [
+    93.8,
+    193.4
+   ],
+   "hitbox": [
+    13.0,
+    12.9,
+    170.0,
+    169.0
+   ],
+   "flying": true,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
+  },
+  "M30": {
+   "id": "M30",
+   "name": "별비늘 상어",
+   "displayBodyPx": 96,
+   "file": "assets/runtime/mon_M30.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    3,
+    134
+   ],
+   "size": [
+    295,
+    196
+   ],
+   "scale": 0.29,
+   "bodyHeightPx": 192.0,
+   "pivot": [
+    140.3,
+    193.7
+   ],
+   "hitbox": [
+    19.2,
+    13.3,
+    256.0,
+    169.0
+   ],
+   "flying": true,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
+  },
+  "M31": {
+   "id": "M31",
+   "name": "태엽 기사",
+   "displayBodyPx": 112,
+   "file": "assets/runtime/mon_M31.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    1,
+    6
+   ],
+   "size": [
+    233,
+    227
+   ],
+   "scale": 0.2307,
+   "bodyHeightPx": 224.0,
+   "pivot": [
+    88.2,
+    225.4
+   ],
+   "hitbox": [
+    15.2,
+    14.8,
+    202.2,
+    197.1
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
+  },
+  "M32": {
+   "id": "M32",
+   "name": "시간 까마귀",
+   "displayBodyPx": 88,
+   "file": "assets/runtime/mon_M32.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    5,
+    9
+   ],
+   "size": [
+    185,
+    179
+   ],
+   "scale": 0.1816,
+   "bodyHeightPx": 176.0,
+   "pivot": [
+    100.7,
+    177.1
+   ],
+   "hitbox": [
+    12.5,
+    11.6,
+    159.8,
+    154.9
+   ],
+   "flying": true,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
+  },
+  "M33": {
+   "id": "M33",
+   "name": "몽마",
+   "displayBodyPx": 100,
+   "file": "assets/runtime/mon_M33.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    22,
+    24
+   ],
+   "size": [
+    230,
+    203
+   ],
+   "scale": 0.232,
+   "bodyHeightPx": 200.0,
+   "pivot": [
+    100.5,
+    201.6
+   ],
+   "hitbox": [
+    15.2,
+    13.6,
+    199.5,
+    176.0
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
+  },
+  "M34": {
+   "id": "M34",
+   "name": "가면 무희",
+   "displayBodyPx": 112,
+   "file": "assets/runtime/mon_M34.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    0,
+    0
+   ],
+   "size": [
+    228,
+    228
+   ],
+   "scale": 0.2233,
+   "bodyHeightPx": 224.0,
+   "pivot": [
+    89.4,
+    226.0
+   ],
+   "hitbox": [
+    15.2,
+    15.4,
+    197.3,
+    197.1
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
+  },
+  "M35": {
+   "id": "M35",
+   "name": "월광 늑대인간",
+   "displayBodyPx": 120,
+   "file": "assets/runtime/mon_M35.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    22,
+    7
+   ],
+   "size": [
+    239,
+    243
+   ],
+   "scale": 0.2414,
+   "bodyHeightPx": 240.0,
+   "pivot": [
+    147.2,
+    241.7
+   ],
+   "hitbox": [
+    15.6,
+    16.1,
+    207.8,
+    211.2
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
+  },
+  "M36": {
+   "id": "M36",
+   "name": "혈정 벌레",
+   "displayBodyPx": 88,
+   "file": "assets/runtime/mon_M36.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    36,
+    3
+   ],
+   "size": [
+    166,
+    178
+   ],
+   "scale": 0.1762,
+   "bodyHeightPx": 176.0,
+   "pivot": [
+    103.5,
+    177.2
+   ],
+   "hitbox": [
+    10.9,
+    11.8,
+    144.2,
+    154.9
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
+  },
+  "M37": {
+   "id": "M37",
+   "name": "용광로 거인",
+   "displayBodyPx": 128,
+   "file": "assets/runtime/mon_M37.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    8,
+    7
+   ],
+   "size": [
+    264,
+    259
+   ],
+   "scale": 0.2626,
+   "bodyHeightPx": 256.0,
+   "pivot": [
+    125.6,
+    257.6
+   ],
+   "hitbox": [
+    17.2,
+    16.9,
+    229.4,
+    225.3
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
+  },
+  "M38": {
+   "id": "M38",
+   "name": "불꽃 대장장이 망령",
+   "displayBodyPx": 112,
+   "file": "assets/runtime/mon_M38.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    31,
+    1
+   ],
+   "size": [
+    214,
+    227
+   ],
+   "scale": 0.2247,
+   "bodyHeightPx": 224.0,
+   "pivot": [
+    85.8,
+    225.3
+   ],
+   "hitbox": [
+    14.0,
+    14.8,
+    186.0,
+    197.1
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
+  },
+  "M39": {
+   "id": "M39",
+   "name": "공허 성좌 기사",
+   "displayBodyPx": 120,
+   "file": "assets/runtime/mon_M39.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    0,
+    4
+   ],
+   "size": [
+    247,
+    243
+   ],
+   "scale": 0.2414,
+   "bodyHeightPx": 240.0,
+   "pivot": [
+    175.8,
+    241.4
+   ],
+   "hitbox": [
+    16.3,
+    15.8,
+    214.6,
+    211.2
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
+  },
+  "M40": {
+   "id": "M40",
+   "name": "지평선의 눈",
+   "displayBodyPx": 96,
+   "file": "assets/runtime/mon_M40.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    3,
+    29
+   ],
+   "size": [
+    215,
+    195
+   ],
+   "scale": 0.2103,
+   "bodyHeightPx": 192.0,
+   "pivot": [
+    115.4,
+    193.5
+   ],
+   "hitbox": [
+    14.0,
+    13.0,
+    186.4,
+    169.0
+   ],
+   "flying": true,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
   }
  },
  "bosses": {
@@ -5688,6 +6412,366 @@
     }
    },
    "framesSource": "gpt_d/boss_act_guardian.png"
+  },
+  "B11": {
+   "id": "B11",
+   "name": "성좌의 파수꾼",
+   "displayBodyPx": 190,
+   "file": "assets/runtime/boss_B11.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    13,
+    0
+   ],
+   "size": [
+    377,
+    385
+   ],
+   "scale": 0.3827,
+   "bodyHeightPx": 380.0,
+   "pivot": [
+    211.9,
+    382.3
+   ],
+   "hitbox": [
+    24.6,
+    25.1,
+    327.3,
+    334.4
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
+  },
+  "B12": {
+   "id": "B12",
+   "name": "프리즘 골렘",
+   "displayBodyPx": 190,
+   "file": "assets/runtime/boss_B12.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    34,
+    0
+   ],
+   "size": [
+    343,
+    385
+   ],
+   "scale": 0.377,
+   "bodyHeightPx": 380.0,
+   "pivot": [
+    197.5,
+    381.5
+   ],
+   "hitbox": [
+    22.6,
+    24.3,
+    297.6,
+    334.4
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
+  },
+  "B13": {
+   "id": "B13",
+   "name": "기록관",
+   "displayBodyPx": 180,
+   "file": "assets/runtime/boss_B13.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    29,
+    2
+   ],
+   "size": [
+    344,
+    365
+   ],
+   "scale": 0.3568,
+   "bodyHeightPx": 360.0,
+   "pivot": [
+    170.1,
+    362.1
+   ],
+   "hitbox": [
+    22.8,
+    23.7,
+    298.0,
+    316.8
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
+  },
+  "B14": {
+   "id": "B14",
+   "name": "세계수의 그림자",
+   "displayBodyPx": 190,
+   "file": "assets/runtime/boss_B14.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    60,
+    0
+   ],
+   "size": [
+    331,
+    383
+   ],
+   "scale": 0.3744,
+   "bodyHeightPx": 380.0,
+   "pivot": [
+    161.5,
+    382.2
+   ],
+   "hitbox": [
+    21.8,
+    25.0,
+    286.6,
+    334.4
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
+  },
+  "B15": {
+   "id": "B15",
+   "name": "성운의 리바이어던",
+   "displayBodyPx": 190,
+   "file": "assets/runtime/boss_B15.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    27,
+    6
+   ],
+   "size": [
+    371,
+    385
+   ],
+   "scale": 0.3827,
+   "bodyHeightPx": 380.0,
+   "pivot": [
+    211.6,
+    382.3
+   ],
+   "hitbox": [
+    24.2,
+    25.1,
+    321.9,
+    334.4
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
+  },
+  "B16": {
+   "id": "B16",
+   "name": "멈춘 시간의 왕",
+   "displayBodyPx": 190,
+   "file": "assets/runtime/boss_B16.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    45,
+    0
+   ],
+   "size": [
+    362,
+    383
+   ],
+   "scale": 0.3755,
+   "bodyHeightPx": 380.0,
+   "pivot": [
+    204.1,
+    380.4
+   ],
+   "hitbox": [
+    24.4,
+    23.2,
+    313.6,
+    334.4
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
+  },
+  "B17": {
+   "id": "B17",
+   "name": "잠든 여왕",
+   "displayBodyPx": 180,
+   "file": "assets/runtime/boss_B17.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    5,
+    0
+   ],
+   "size": [
+    364,
+    365
+   ],
+   "scale": 0.3579,
+   "bodyHeightPx": 360.0,
+   "pivot": [
+    157.9,
+    362.1
+   ],
+   "hitbox": [
+    23.7,
+    23.7,
+    315.9,
+    316.8
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
+  },
+  "B18": {
+   "id": "B18",
+   "name": "혈월의 사도",
+   "displayBodyPx": 190,
+   "file": "assets/runtime/boss_B18.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    8,
+    0
+   ],
+   "size": [
+    381,
+    384
+   ],
+   "scale": 0.3766,
+   "bodyHeightPx": 380.0,
+   "pivot": [
+    252.9,
+    381.1
+   ],
+   "hitbox": [
+    24.8,
+    23.9,
+    331.1,
+    334.4
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
+  },
+  "B19": {
+   "id": "B19",
+   "name": "별 대장장이",
+   "displayBodyPx": 190,
+   "file": "assets/runtime/boss_B19.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    8,
+    0
+   ],
+   "size": [
+    377,
+    385
+   ],
+   "scale": 0.3762,
+   "bodyHeightPx": 380.0,
+   "pivot": [
+    208.6,
+    382.6
+   ],
+   "hitbox": [
+    24.6,
+    25.4,
+    327.4,
+    334.4
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
+  },
+  "B20": {
+   "id": "B20",
+   "name": "별을 삼키는 자",
+   "displayBodyPx": 190,
+   "file": "assets/runtime/boss_B20.webp",
+   "sourceRect": [
+    0,
+    0,
+    1024,
+    1024
+   ],
+   "trimOffset": [
+    14,
+    4
+   ],
+   "size": [
+    378,
+    385
+   ],
+   "scale": 0.3792,
+   "bodyHeightPx": 380.0,
+   "pivot": [
+    207.7,
+    382.3
+   ],
+   "hitbox": [
+    24.7,
+    25.1,
+    328.4,
+    334.4
+   ],
+   "flying": false,
+   "mirrored": false,
+   "status": "RUNTIME_STATIC_SPRITE",
+   "source": "higgsfield_gpt_image_2_6"
   }
  },
  "hero": {
@@ -31295,6 +32379,106 @@
    "groundRatio": 0.86,
    "status": "STATIC_SINGLE_LAYER_BACKGROUND",
    "source": "gpt_g/bg_rift.png"
+  },
+  "r11": {
+   "file": "assets/runtime/bg_r11.webp",
+   "size": [
+    1024,
+    680
+   ],
+   "groundRatio": 0.86,
+   "status": "STATIC_SINGLE_LAYER_BACKGROUND",
+   "source": "gpt_v19/bg_r11.png"
+  },
+  "r12": {
+   "file": "assets/runtime/bg_r12.webp",
+   "size": [
+    1024,
+    680
+   ],
+   "groundRatio": 0.86,
+   "status": "STATIC_SINGLE_LAYER_BACKGROUND",
+   "source": "gpt_v19/bg_r12.png"
+  },
+  "r13": {
+   "file": "assets/runtime/bg_r13.webp",
+   "size": [
+    1024,
+    680
+   ],
+   "groundRatio": 0.86,
+   "status": "STATIC_SINGLE_LAYER_BACKGROUND",
+   "source": "gpt_v19/bg_r13.png"
+  },
+  "r14": {
+   "file": "assets/runtime/bg_r14.webp",
+   "size": [
+    1024,
+    680
+   ],
+   "groundRatio": 0.86,
+   "status": "STATIC_SINGLE_LAYER_BACKGROUND",
+   "source": "gpt_v19/bg_r14.png"
+  },
+  "r15": {
+   "file": "assets/runtime/bg_r15.webp",
+   "size": [
+    1024,
+    680
+   ],
+   "groundRatio": 0.86,
+   "status": "STATIC_SINGLE_LAYER_BACKGROUND",
+   "source": "gpt_v19/bg_r15.png"
+  },
+  "r16": {
+   "file": "assets/runtime/bg_r16.webp",
+   "size": [
+    1024,
+    680
+   ],
+   "groundRatio": 0.86,
+   "status": "STATIC_SINGLE_LAYER_BACKGROUND",
+   "source": "gpt_v19/bg_r16.png"
+  },
+  "r17": {
+   "file": "assets/runtime/bg_r17.webp",
+   "size": [
+    1024,
+    680
+   ],
+   "groundRatio": 0.86,
+   "status": "STATIC_SINGLE_LAYER_BACKGROUND",
+   "source": "gpt_v19/bg_r17.png"
+  },
+  "r18": {
+   "file": "assets/runtime/bg_r18.webp",
+   "size": [
+    1024,
+    680
+   ],
+   "groundRatio": 0.86,
+   "status": "STATIC_SINGLE_LAYER_BACKGROUND",
+   "source": "gpt_v19/bg_r18.png"
+  },
+  "r19": {
+   "file": "assets/runtime/bg_r19.webp",
+   "size": [
+    1024,
+    680
+   ],
+   "groundRatio": 0.86,
+   "status": "STATIC_SINGLE_LAYER_BACKGROUND",
+   "source": "gpt_v19/bg_r19.png"
+  },
+  "r20": {
+   "file": "assets/runtime/bg_r20.webp",
+   "size": [
+    1024,
+    680
+   ],
+   "groundRatio": 0.86,
+   "status": "STATIC_SINGLE_LAYER_BACKGROUND",
+   "source": "gpt_v19/bg_r20.png"
   }
  },
  "portraits": {

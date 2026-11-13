@@ -301,10 +301,13 @@ export function nextGoal(state) {
     return { id: 'boss', text: `${pre}${BOSSES[region.boss].name} 도전`, action: `boss:${region.boss}` };
   }
   const nextRegion = REGIONS.find((r) => regionUnlocked(state, r.id) && !t.bossCleared[r.boss]);
-  if (nextRegion && nextRegion.id !== p.region) return { id: 'move', text: `${pre}${nextRegion.name}(으)로 이동`, action: 'world' };
-  // this difficulty is done → point at the next one (once it is open and untouched)
+  // this difficulty's 1막 is done → point at the next difficulty first (once it is open and untouched);
+  // v19 2막(11~20)은 그다음 목표
   const nd = DF.DIFF_IDS[DF.DIFFICULTY[d].order + 1];
-  if (nd && DF.diffOpen(state, nd) && !Object.keys(DF.track(state, nd).bossCleared).length && (DF.track(state, nd).maxWave[REGIONS[0].id] || 1) <= 1) return { id: 'diff', text: `${DF.diffName(nd)} 난이도 1-1 시작`, action: 'world' };
+  const ndFresh = nd && DF.diffOpen(state, nd) && !Object.keys(DF.track(state, nd).bossCleared).length && (DF.track(state, nd).maxWave[REGIONS[0].id] || 1) <= 1;
+  if (nextRegion && nextRegion.id !== p.region && !(ndFresh && nextRegion.act === 2)) return { id: 'move', text: `${pre}${nextRegion.name}(으)로 이동`, action: 'world' };
+  if (ndFresh) return { id: 'diff', text: `${DF.diffName(nd)} 난이도 1-1 시작`, action: 'world' };
+  if (nextRegion && nextRegion.id !== p.region) return { id: 'move', text: `${pre}2막 ${nextRegion.name}(으)로 이동`, action: 'world' };
   const nt = nextTier(state);
   if (tierOf(state) < 4 && state.player.level >= BALANCE.tiers[nt].level - 5) {
     const cl = promotionChecklist(state, nt);

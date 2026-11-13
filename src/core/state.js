@@ -251,6 +251,14 @@ export function migrate(s) {
   }
   // v18.3 장비 프리셋 제거 (거의 안 쓰여서 뺌). 전투는 항상 지금 착용한 장비·스킬로.
   delete cur.loadouts;
+  // v19 2막: 이미 10지역 보스(심연의 군주)를 잡은 트랙은 11지역(무너진 성좌)을 열어 둠
+  {
+    const tracks = [cur.progression, ...(cur.diff && cur.diff.tracks ? Object.values(cur.diff.tracks) : [])];
+    for (const t of tracks) if (t && t.bossCleared && t.bossCleared.B10 && Array.isArray(t.unlockedRegions) && !t.unlockedRegions.includes('r11')) {
+      t.unlockedRegions.push('r11');
+      t.maxWave ||= {}; t.maxWave.r11 = t.maxWave.r11 || 1;
+    }
+  }
   // fill fields added later in the same schema with defaults (forward-compatible)
   const d = newGame(cur.createdAt || Date.now(), cur.rngSeed);
   for (const k of Object.keys(d)) if (cur[k] === undefined) cur[k] = d[k];

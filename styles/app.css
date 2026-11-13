@@ -916,3 +916,7 @@ img.sg-up-ico { width: 16px !important; height: 16px !important; margin: 0 4px 0
 /* v18.6 미션 탭 알림 점 */
 .seg .dot.inline { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--danger, #e5484d); margin-left: 5px; vertical-align: middle; }
 [data-screen="missions"] .check .muted.small, [data-screen="weekly"] .check .muted.small { display: block; }
+/* v19 1막/2막 */
+.act-seg { margin-top: 6px; }
+.act-seg .act-chip { font-size: 12.5px; }
+.act-seg .act-chip.locked { opacity: .55; }

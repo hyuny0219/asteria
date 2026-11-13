@@ -80,6 +80,7 @@ export function measure(state, key) {
   if (key === 'deaths') return c.deaths || 0;
   if (key === 'dismantled') return c.dismantled || 0;
   if (key === 'rares') return Object.keys((state.worldBoss && state.worldBoss.rares) || {}).length;
+  if (key.startsWith('act2boss:')) { const b = key.slice(9); const tr = state.diff && state.diff.tracks ? Object.values(state.diff.tracks) : []; return (state.progression.bossCleared[b] || tr.some((t) => t && t.bossCleared && t.bossCleared[b])) ? 1 : 0; }
   if (key.startsWith('dboss:')) { const [, d, b] = key.split(':'); const t = state.diff && state.diff.tracks && state.diff.tracks[d]; return t && t.bossCleared && t.bossCleared[b] ? 1 : 0; }
   if (key === 'mplus') { const m = state.mplus; return m ? Math.max(0, ...Object.values(m.best || {})) : 0; }
   if (key === 'raidGrade') return GRADE_RANK[state.raid && state.raid.bestGrade] || 0;

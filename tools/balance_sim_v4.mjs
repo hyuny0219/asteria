@@ -74,7 +74,7 @@ async function runOne(seed, cls) {
       if (r.kind === 'boss' && DF.curDiff(s) !== 'easy' && r.bossId === m.repeatBoss && DF.track(s).bossCleared[r.bossId]) { if (r.win) { m.repeatWins = (m.repeatWins || 0) + 1; if (m.repeatWins % 5 === 0) m.repeatDown = Math.max(0, (m.repeatDown || 0) - 1); } else m.repeatDown = (m.repeatDown || 0) + 1; }
       if (r.kind === 'boss' && !r.win && DF.curDiff(s) !== 'easy') { const k = r.bossId + ':' + (r.reason || 'death'); (m.nFail ||= {})[k] = ((m.nFail ||= {})[k] || 0) + 1; }
       if (r.kind === 'trial') (m.trials ||= []).push(`T${r.tier}${r.win ? 'W' : 'L'}@${day().toFixed(1)}`);
-      if (r.kind === 'boss') { const dp = r.diff && r.diff !== 'easy' ? r.diff[0].toUpperCase() + '_' : ''; m.bossFights.push({ boss: dp + r.bossId, win: r.win, sec: r.timeSec, lv: s.player.level }); if (r.win) { mark('win_' + dp + r.bossId); lastFailPower = 0; } }
+      if (r.kind === 'boss') { const dp = r.diff && r.diff !== 'easy' ? r.diff[0].toUpperCase() + '_' : ''; m.bossFights.push({ boss: dp + r.bossId, win: r.win, sec: r.timeSec, lv: s.player.level }); if (r.win) { mark('win_' + dp + r.bossId); lastFailPower = 0; (m.lastWinDay ||= {})[r.diff || 'easy'] = day(); } }
       if (r.kind === 'trial' && r.win) mark('trial' + r.tier);
       if (r.kind === 'tower' && !r.win) lastTower = clock;
       if (r.kind === 'raid') { (m.raid ||= []).push(r.grade); }
@@ -157,7 +157,10 @@ async function runOne(seed, cls) {
         const r = await g.doRebirth(); if (r.ok) { m.lastLateRebirth = day(); (m.lateRebirths ||= []).push(Math.round(day() * 10) / 10); return; }
       }
       if (lv >= 100 && tierOf(g.state) >= 4) {
-        const target = DF.diffOpen(g.state, 'hard') ? 'hard' : DF.diffOpen(g.state, 'normal') ? 'normal' : 'easy';
+        let target = DF.diffOpen(g.state, 'hard') ? 'hard' : DF.diffOpen(g.state, 'normal') ? 'normal' : 'easy';
+        // v19: 지금 난이도의 2막을 아직 밀고 있으면(최근 2일 안에 보스를 잡았으면) 그대로 — 실제 플레이어처럼
+        { const cd = DF.curDiff(g.state); const tr = DF.track(g.state, cd);
+          if (cd !== target && !tr.bossCleared.B20 && tr.bossCleared.B10 && day() - (m.lastWinDay?.[cd] ?? -99) < 2) target = cd; }
         if (DF.curDiff(g.state) !== target && g.mode === 'FARM') { const r = await g.switchDifficulty(target); if (r.ok) mark(target + '_start'); }
       }
       for (const kind of ['mount', 'wing']) {
@@ -275,7 +278,7 @@ for (const b of Object.keys(BOSSES).filter((x) => !BOSSES[x].raid)) {
 }
 for (const cls of CLASSES) {
   const rs = runs.filter((r) => r.cls === cls);
-  for (const r of rs) console.log(`  ${cls}#${r.seed} t3 ${r.marks.tier3 ?? "—"} B09 ${r.marks.win_B09 ?? "—"} B10 ${r.marks.win_B10 ?? "—"} lv100 ${r.marks.lv100 ?? "—"} final ${r.final.region}/${r.final.wave} · shardIn ${JSON.stringify(r.shardIn || {})} shard@d ${(r.shardDay || []).filter((_, i) => i % 2 === 1).join(',')} · N-boss ${REGIONS.map((x) => r.marks['win_N_' + x.boss] ?? '—').join(',')} · nFail ${JSON.stringify(r.nFail || {})} · trials ${(r.trials || []).filter((x) => x.startsWith('T4')).slice(0, 8).join(' ')} · tower ${r.final.tower}${args.late ? ` · asc1/10/25/50 ${['asc1', 'asc10', 'asc25', 'asc50'].map((k) => r.marks[k] ?? '—').join('/')} · 환생 ${(r.lateRebirths || []).join(',') || '—'} · H-boss ${REGIONS.map((x) => r.marks['win_H_' + x.boss] ?? '—').join(',')}` : ''}`);
+  for (const r of rs) console.log(`  ${cls}#${r.seed} t3 ${r.marks.tier3 ?? "—"} B09 ${r.marks.win_B09 ?? "—"} B10 ${r.marks.win_B10 ?? "—"} lv100 ${r.marks.lv100 ?? "—"} final ${r.final.region}/${r.final.wave} · shardIn ${JSON.stringify(r.shardIn || {})} shard@d ${(r.shardDay || []).filter((_, i) => i % 2 === 1).join(',')} · N-boss ${REGIONS.map((x) => r.marks['win_N_' + x.boss] ?? '—').join(',')} · nFail ${JSON.stringify(r.nFail || {})} · trials ${(r.trials || []).filter((x) => x.startsWith('T4')).slice(0, 8).join(' ')} · tower ${r.final.tower}${args.late ? ` · asc1/10/25/50 ${['asc1', 'asc10', 'asc25', 'asc50'].map((k) => r.marks[k] ?? '—').join('/')} · 환생 ${(r.lateRebirths || []).join(',') || '—'} · H-boss ${REGIONS.map((x) => r.marks['win_H_' + x.boss] ?? '—').join(',')}` : ''} · E2-boss ${REGIONS.filter((x) => x.act === 2).map((x) => r.marks['win_' + x.boss] ?? '—').join(',')}`);
   console.log(`${cls}: final ${rs.map((r) => `L${r.final.level}/T${r.final.tier}/tower${r.final.tower}/${r.final.region}`).join(' ')} · lv100 day ${rs.map((r) => r.marks.lv100 ?? '—').join(',')} · tier4 day ${rs.map((r) => r.marks.tier4 ?? '—').join(',')} · raid ${rs.map((r) => (r.raid || []).join('')).join(' ')} · deaths ${rs.map((r) => r.deaths).join(',')}`);
 }
 { const em = {}; for (let L = 2; L <= 10; L++) { const v = runs.map((r) => r.early && r.early[L]).filter((x) => x !== undefined); em[L] = median(v); } report.earlyMin = em;

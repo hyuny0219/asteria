@@ -333,7 +333,7 @@ export class Game {
   // ---------- main loop ----------
   // realDtMs: wall time since last call (caller caps it). Returns ticks run.
   advance(realDtMs) {
-    if (!this.state || this.busy) return 0;
+    if (!this.state || this.busy || this.finishing) return 0;
     if (this.stageQueue && this.stageQueue.length) this.flushStageClears();
     if (!['FARM', 'BOSS', 'DUNGEON', 'PROMOTION_TRIAL', 'DEFEAT'].includes(this.mode)) return 0;
     const speed = this.state.settings.speed === 2 ? 2 : 1;
@@ -350,7 +350,7 @@ export class Game {
         if (p.fieldBossSec >= BALANCE.combat.fieldBossEverySec && this.farm.spawnFieldBoss(waveLevel(p.region, p.wave))) p.fieldBossSec = 0;
       }
       this.process(this.active.drainEvents());
-      if (this.busy) break;
+      if (this.busy || this.finishing) break;
     }
     // automatic growth: spend farming gold on upgrades every 2 s of play
     this.growAcc = (this.growAcc || 0) + realDtMs;
@@ -566,7 +566,8 @@ export class Game {
     missions.track(this.state, 'boss', 1, this.now());
     const d = DF.curDiff(this.state);
     this.session = { kind: 'boss', id: uid('boss'), bossId, diff: d, startedAt: this.now(), viewBefore: this.state.settings.battleView };
-    const diff = d === 'easy' ? null : { level: DF.bossLevel(d, bossId), mul: DF.enemyMul(d, BOSSES[bossId].region, 'boss') };
+    const em = DF.enemyMul(d, BOSSES[bossId].region, 'boss');   // v19: 이지 2막도 배율이 있음
+    const diff = em ? { level: DF.bossLevel(d, bossId), mul: em } : null;
     this.active = new Battle({ kind: 'boss', rng: this.rng, hero: this.sessionHero({ session: true, kind: 'boss' }), boss: { id: bossId, diff } });
     this.acc = 0;
     this.setMode('BOSS');
@@ -634,12 +635,15 @@ export class Game {
     if (ev.type !== 'victory' && ev.type !== 'defeat') return;
     const sess = this.session;
     const win = ev.type === 'victory';
-    this.busy = true;   // stop simulating the finished battle
+    this.finishing = true;   // stop simulating the finished battle
     queueMicrotask(() => this.finishSession(sess, win, ev).catch((err) => this.log('finish error', err)));
   }
 
   async finishSession(sess, win, ev) {
-    this.busy = false;
+    // v19 fix: 다른 저장(예: 시너지 기록)이 진행 중이면 끝날 때까지 기다림.
+    // 예전엔 busy를 그냥 풀어서, 같은 리비전으로 두 저장이 겹치면 '다른 탭에서 실행 중' 화면이 떴음.
+    for (let i = 0; this.busy && i < 500; i++) await new Promise((r) => setTimeout(r, 20));
+    this.finishing = false;
     let r;
     if (sess.kind === 'boss') {
       r = await this.transact('bossResult', (s) => {

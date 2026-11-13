@@ -44,12 +44,15 @@ export const TITLES = Object.freeze({
   t_survivor: { name: '불굴', bonus: { defPct: 0.02, hpPct: 0.01 } },
   t_veteran: { name: '별의 순례자', bonus: { goldPct: 0.03, expPct: 0.01 } },
   t_naturalist: { name: '대박물학자', bonus: { goldPct: 0.02, dropPct: 0.02 } },
+  // v19 2막
+  t_act2: { name: '성좌 원정대', bonus: { atkPct: 0.02, hpPct: 0.02, expPct: 0.02 } },
+  t_devourer: { name: '별을 삼킨 자를 삼킨 자', bonus: { atkPct: 0.03, hpPct: 0.03, critDmg: 0.03 } },
 });
 
 // 업적 분류 (UI 필터) — key로 결정
 export const ACH_CATS = Object.freeze([
   { id: 'growth', name: '성장', keys: ['peakLevel', 'tier', 'rebirth', 'skillMax', 'awaken', 'enhances'] },
-  { id: 'battle', name: '전투', keys: ['kills', 'bossWins', 'boss', 'dboss', 'fieldBosses', 'rares', 'deaths'] },
+  { id: 'battle', name: '전투', keys: ['kills', 'bossWins', 'boss', 'dboss', 'act2boss', 'fieldBosses', 'rares', 'deaths'] },
   { id: 'challenge', name: '도전', keys: ['tower', 'rift', 'mplus', 'raidGrade', 'wbGrade'] },
   { id: 'collect', name: '수집', keys: ['codexTiers', 'itemCodex', 'pets', 'steeds', 'uniques', 'synergy', 'draws', 'story'] },
   { id: 'life', name: '생활', keys: ['attendance', 'dismantled'] },
@@ -109,7 +112,8 @@ export const ACHIEVEMENTS = Object.freeze([
   { id: 'fb10', name: '필드의 위협', desc: '필드 보스 10회 처치', key: 'fieldBosses', goal: 10, reward: { gem: 80 } },
   { id: 'fb100', name: '필드의 지배자', desc: '필드 보스 100회 처치', key: 'fieldBosses', goal: 100, reward: { gem: 200, mountFood: 40 } },
   { id: 'rr5', name: '희귀 추적자', desc: '희귀 정예 5종 처치', key: 'rares', goal: 5, reward: { gem: 150 } },
-  { id: 'rr10', name: '모든 희귀 정예', desc: '희귀 정예 10종 처치', key: 'rares', goal: 10, reward: { gem: 300, eqTicket: 5 } },
+  { id: 'rr10', name: '희귀 정예 수집가', desc: '희귀 정예 10종 처치', key: 'rares', goal: 10, reward: { gem: 300, eqTicket: 5 } },
+  { id: 'rr20', name: '모든 희귀 정예', desc: '희귀 정예 20종 처치 (1·2막 전부)', key: 'rares', goal: 20, reward: { gem: 500, eqTicket: 10 } },
   { id: 'nB05', name: '밤의 문턱', desc: '노말 5지역 보스 처치', key: 'dboss:normal:B05', goal: 1, reward: { gem: 200, starShard: 2 } },
   { id: 'nB10', name: '밤을 걷는 자', desc: '노말 심연의 군주 처치', key: 'dboss:normal:B10', goal: 1, reward: { gem: 400, starShard: 3 }, title: 't_normal' },
   { id: 'hB05', name: '심연의 초입', desc: '하드 5지역 보스 처치', key: 'dboss:hard:B05', goal: 1, reward: { gem: 400, starShard: 3 } },
@@ -127,7 +131,8 @@ export const ACHIEVEMENTS = Object.freeze([
   { id: 'wbA', name: '토벌대', desc: '월드 보스 A등급', key: 'wbGrade', goal: 4, reward: { gem: 200 } },
   { id: 'wbS', name: '세계의 방패', desc: '월드 보스 S등급', key: 'wbGrade', goal: 5, reward: { gem: 400, starShard: 2 }, title: 't_worldboss' },
   // 수집
-  { id: 'cx90', name: '대박물학자', desc: '몬스터 도감 90단계 (전부)', key: 'codexTiers', goal: 90, reward: { gem: 400 }, title: 't_naturalist' },
+  { id: 'cx90', name: '대박물학자', desc: '몬스터 도감 90단계', key: 'codexTiers', goal: 90, reward: { gem: 400 }, title: 't_naturalist' },
+  { id: 'cx180', name: '두 막의 박물지', desc: '몬스터 도감 180단계 (1·2막 전부)', key: 'codexTiers', goal: 180, reward: { gem: 600 } },
   { id: 'ic21', name: '장비 수집가', desc: '장비 도감 21칸', key: 'itemCodex', goal: 21, reward: { gem: 100 } },
   { id: 'ic42', name: '모든 장비', desc: '장비 도감 42칸 (전부)', key: 'itemCodex', goal: 42, reward: { gem: 400, eqTicket: 10 } },
   { id: 'st4', name: '첫 동행', desc: '탈것·날개 합쳐 4종', key: 'steeds', goal: 4, reward: { gem: 100, mountTicket: 2 } },
@@ -137,6 +142,12 @@ export const ACHIEVEMENTS = Object.freeze([
   { id: 'un30', name: '유물 수집가', desc: '고유 효과 30종 보관 (전부)', key: 'uniques', goal: 30, reward: { gem: 500 }, title: 't_relic' },
   { id: 'sy5', name: '조화의 시작', desc: '시너지 콤보 5종 발견', key: 'synergy', goal: 5, reward: { gem: 100, skTicket: 2 } },
   { id: 'sy10', name: '조화의 현자', desc: '시너지 콤보 10종 발견 (전부)', key: 'synergy', goal: 10, reward: { gem: 300 }, title: 't_combo' },
+  // v19 2막 (난이도 무관 = act2boss, 특정 난이도 = dboss)
+  { id: 'a2s', name: '성좌 원정', desc: '2막 첫 보스 「성좌의 파수꾼」 처치', key: 'act2boss:B11', goal: 1, reward: { gem: 200, starShard: 1 } },
+  { id: 'a2m', name: '별의 바다를 건너', desc: '2막 5번째 보스 「성운의 리바이어던」 처치', key: 'act2boss:B15', goal: 1, reward: { gem: 300, starShard: 2 } },
+  { id: 'a2e', name: '두 번째 새벽', desc: '「별을 삼키는 자」 처치 (2막 엔딩)', key: 'act2boss:B20', goal: 1, reward: { gem: 500, starShard: 3 }, title: 't_act2' },
+  { id: 'nB20', name: '노말 성좌 원정', desc: '노말 「별을 삼키는 자」 처치', key: 'dboss:normal:B20', goal: 1, reward: { gem: 800, starShard: 5 } },
+  { id: 'hB20', name: '별을 삼킨 자를 삼킨 자', desc: '하드 「별을 삼키는 자」 처치', key: 'dboss:hard:B20', goal: 1, reward: { gem: 1500, starShard: 8 }, title: 't_devourer' },
   { id: 'end', name: '첫 번째 새벽', desc: '이지 엔딩 보기', key: 'story:end', goal: 1, reward: { gem: 300 }, title: 't_lore' },
   { id: 'gc5000', name: '별을 삼킨 자', desc: '뽑기 5,000회', key: 'draws', goal: 5000, reward: { gem: 600 } },
   // 생활

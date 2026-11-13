@@ -25,8 +25,12 @@ export function track(state, d = curDiff(state)) {
   return state.diff.tracks[d];
 }
 
-// 노말 opens when 이지's last-region boss is down; 하드 when 노말's is.
-export const lastRegion = () => REGIONS[REGIONS.length - 1];
+// 노말 opens when 이지's 1막 last boss (심연의 군주) is down; 하드 when 노말's is.
+// v19: 2막(11~20)은 각 난이도 안에서 10지역 보스 다음에 이어지고, 다음 난이도 해금 조건은 그대로 1막 끝.
+export const ACT1_LAST = 'void';
+export const lastRegion = () => REGION_BY_ID[ACT1_LAST];
+export const finalRegion = () => REGIONS[REGIONS.length - 1];
+export const actOf = (regionId) => (REGION_BY_ID[regionId] && REGION_BY_ID[regionId].act) || 1;
 export function diffOpen(state, d) {
   const o = DIFFICULTY[d].order;
   if (o === 0) return true;
@@ -61,12 +65,20 @@ export function switchDiff(state, d) {
 
 // Enemy scaling on 노말/하드. n: 1..10 or 'boss'.
 export const stepIndex = (regionId, n) => REGION_BY_ID[regionId].order * 11 + (n === 'boss' ? 10 : n - 1);
+const ACT1_STEPS = 109;   // 1막 마지막 step (10지역 보스)
 export function enemyMul(d, regionId, n) {
-  if (d === 'easy') return null;
   const D = DIFFICULTY[d];
   const i = stepIndex(regionId, n);
+  const extra = Math.max(0, i - ACT1_STEPS);   // 2막 step 수
+  if (d === 'easy') {
+    if (!extra) return null;                   // 1막 이지는 레벨 곡선 그대로
+    const g = Math.pow(D.act2.growth, extra);
+    return { hp: D.act2.hp * g, atk: D.act2.atk * g };
+  }
   const bm = n === 'boss' && D.boss ? D.boss : { hp: 1, atk: 1 };
-  return { hp: D.hp.base * Math.pow(D.hp.growth, i) * bm.hp, atk: D.atk.base * Math.pow(D.atk.growth, i) * bm.atk };
+  const g2 = D.act2 ? Math.pow(D.act2.growth, extra) : 1;
+  const base = Math.min(i, ACT1_STEPS);
+  return { hp: D.hp.base * Math.pow(D.hp.growth, base) * bm.hp * g2, atk: D.atk.base * Math.pow(D.atk.growth, base) * bm.atk * g2 };
 }
 export const farmLevel = (d, regionId, wave) => (d === 'easy' ? waveLevel(regionId, wave) : DIFFICULTY[d].level);
 export const bossLevel = (d, bossId) => (d === 'easy' ? BOSSES[bossId].level : DIFFICULTY[d].level);

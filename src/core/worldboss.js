@@ -122,6 +122,17 @@ export const RARES = Object.freeze({
   castle: { id: 'RE08', name: '잊힌 기사 발테르', base: 'M15' },
   sky: { id: 'RE09', name: '폭풍깃 그리폰 아에라', base: 'M17' },
   void: { id: 'RE10', name: '공허의 눈 녹시스', base: 'M19' },
+  // v19 2막
+  r11: { id: 'RE11', name: '떨어진 별 세레스', base: 'M22' },
+  r12: { id: 'RE12', name: '무지개 독침 이리스', base: 'M23' },
+  r13: { id: 'RE13', name: '찢긴 금서 네크로노', base: 'M25' },
+  r14: { id: 'RE14', name: '천년뿌리 오르벤', base: 'M27' },
+  r15: { id: 'RE15', name: '은하 갈기 메두사라', base: 'M29' },
+  r16: { id: 'RE16', name: '마지막 초침 크로노', base: 'M32' },
+  r17: { id: 'RE17', name: '깨지 않는 꿈 루나리', base: 'M33' },
+  r18: { id: 'RE18', name: '붉은 송곳니 볼그', base: 'M35' },
+  r19: { id: 'RE19', name: '잿불 망치 하로크', base: 'M38' },
+  r20: { id: 'RE20', name: '종말의 눈동자 아비스', base: 'M40' },
 });
 export const RARE_RULES = Object.freeze({ chance: 0.03, gem: 40, rarity: { rare: 0.6, epic: 0.35, legendary: 0.05 }, title: 't_rarehunter' });
 export const rareCount = (state) => Object.keys((state.worldBoss && state.worldBoss.rares) || {}).length;
