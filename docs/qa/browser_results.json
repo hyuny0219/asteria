@@ -1,5 +1,5 @@
 {
- "startedAt": "2026-11-13T00:01:46.205Z",
+ "startedAt": "2026-11-16T01:31:42.039Z",
  "base": "http://localhost:8447/",
  "viewports": [
   [
@@ -2352,8 +2352,8 @@
     "4",
     "Ⅰ",
     "신성",
-    "영웅",
     "희귀",
+    "일반",
     "폭발"
    ],
    "errors": []
@@ -3643,7 +3643,7 @@
     "4",
     "Ⅰ",
     "신성",
-    "일반",
+    "영웅",
     "희귀",
     "폭발"
    ],
@@ -3971,8 +3971,8 @@
    "name": "reload keeps the same pending claim",
    "pass": true,
    "detail": {
-    "first": "claim_mwe7rd3n_1oe2t1e",
-    "after": "claim_mwe7rd3n_1oe2t1e"
+    "first": "claim_mwilaomw_1ey20kv",
+    "after": "claim_mwilaomw_1ey20kv"
    }
   },
   {
@@ -4054,7 +4054,7 @@
     "k0": 1,
     "k1": {
      "kills": 1,
-     "acc": 16.59999999999991,
+     "acc": 16.600000000000023,
      "mode": "FARM"
     }
    }
@@ -4149,7 +4149,7 @@
   }
  ],
  "errors": [],
- "finishedAt": "2026-11-13T00:04:22.065Z",
+ "finishedAt": "2026-11-16T01:34:22.686Z",
  "summary": {
   "screenChecks": 141,
   "screenPass": 141,

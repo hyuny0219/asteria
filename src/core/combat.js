@@ -342,7 +342,9 @@ export class Battle {
       return;
     }
     if (this.kind === 'farm' || this.kind === 'dungeon' || this.kind === 'tower' || this.kind === 'rift' || this.kind === 'mplus') {
-      if (this.alive().length < C.maxEnemiesOnField && t >= this.nextSpawnAt && (!this.phase || this.phaseRoom())) {
+      // v19.1: 목표 처치 수가 있는 던전·탑·균열은 남은 목표만큼만 내보냄 (마지막 적을 잡으면 필드가 비어 깔끔하게 끝남)
+      const capped = Number.isFinite(this.killTarget) && this.kind !== 'mplus' && this.kills + this.alive().length >= this.killTarget;
+      if (!capped && this.alive().length < C.maxEnemiesOnField && t >= this.nextSpawnAt && (!this.phase || this.phaseRoom())) {
         if (this.kind === 'farm') this.spawnFarmEnemy(); else this.spawnSessionEnemy();
         this.nextSpawnAt = t + C.spawnGapSec * 1000 * (this.themeMod().spawnGapMul || 1);
       }
@@ -810,7 +812,9 @@ export class Battle {
     e.state = 'dying';
     e.dieAt = this.t + 420;
     this.kills++;
-    if (e.prefix === 'split' && !this.over) {   // v14 분열하는: 작은 조각 2마리 (역할·접두사 없음)
+    // 목표 수가 있는 전투에선 조각이 목표를 넘기면 쪼개지지 않음 (끝날 때 조각이 남지 않게)
+    const room = Number.isFinite(this.killTarget) && !this.mp ? this.killTarget - this.kills - this.alive().length : Infinity;
+    if (e.prefix === 'split' && !this.over && room >= PREFIXES.split.split.n) {   // v14 분열하는: 작은 조각 2마리 (역할·접두사 없음)
       const S = PREFIXES.split.split;
       for (let i = 0; i < S.n; i++) {
         const c = this.addEnemy({ ...e.def, name: e.def.name + ' 조각' }, e.level, { plain: true });
