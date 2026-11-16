@@ -12,7 +12,7 @@ import { talentEffects } from './talents.js';
 import { rebirthMultipliers, farmMultipliers as rebirthFarm } from './rebirth.js';
 import { ascMultipliers } from './ascension.js';
 import { metaBonus } from './meta.js';
-import { enchantBonus, foodBonus, jewelBonus } from './crafting.js';
+import { enchantBonus, foodBonus, slotJewelBonus } from './crafting.js';
 import { skillMods as gearSkillMods } from './gearplus.js';
 import { equippedBonus as steedBonus } from './steeds.js';
 
@@ -76,7 +76,7 @@ export function playerStats(state, opts = {}) {
     const s = itemStats(it, slotLevel(state, slotKey));
     for (const k of Object.keys(s)) equipBonus[k] = (equipBonus[k] || 0) + s[k];
     add(itemOptions(it));
-    add(jewelBonus(it));   // v8 보옥
+    add(slotJewelBonus(state, slotKey));   // v8 보옥 (v19.2: 슬롯에 박힘)
   }
   for (const sb of activeSetBonuses(state)) add(sb.bonus);
   // v15 초월 서약 (퍼센트 부분; 전투 효과 fx는 combat.js)

@@ -119,7 +119,7 @@ const shot = (p, name, vp) => p.screenshot({ path: path.join(OUT, `v8_${name}_${
     await p.waitForTimeout(200);
     await p.click('[data-screen="workshop"] .mp-row .btn-primary >> nth=0');
     await p.waitForTimeout(500);
-    const gem = await p.evaluate(() => { const s = __asteria.game.state; const it = s.inventory.find((i) => i.id === s.equipped.weapon); return it.gems && it.gems[0]; });
+    const gem = await p.evaluate(() => { const s = __asteria.game.state; return s.craft.sockets.weapon && s.craft.sockets.weapon[0]; });   // v19.2 슬롯 보옥
     ok(gem && gem.t === 'ruby' && gem.lv === 1, `${vp[0]} jewel socketed ${JSON.stringify(gem)}`);
     await p.click('[data-screen="workshop"] .mp-row .btn:not([disabled]) >> nth=0');
     await p.waitForTimeout(500);
@@ -128,7 +128,7 @@ const shot = (p, name, vp) => p.screenshot({ path: path.join(OUT, `v8_${name}_${
     await shot(p, 'workshop_jewel', vp);
     await p.click('[data-screen="workshop"] .ws-sockets .btn >> nth=0');
     await p.waitForTimeout(500);
-    ok(await p.evaluate(() => { const s = __asteria.game.state; const it = s.inventory.find((i) => i.id === s.equipped.weapon); return !it.gems[0] && s.craft.jewels['ruby:1'] === 1; }), `${vp[0]} free unsocket back to bag`);
+    ok(await p.evaluate(() => { const s = __asteria.game.state; return !s.craft.sockets.weapon[0] && s.craft.jewels['ruby:1'] === 1; }), `${vp[0]} free unsocket back to bag`);
     await p.click('[data-screen="workshop"] .seg button >> nth=1');
     await p.waitForTimeout(300);
     await p.click('[data-screen="workshop"] [data-slot="weapon"] .btn');

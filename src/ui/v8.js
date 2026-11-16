@@ -276,26 +276,33 @@ export function openWorkshop(app, tab = 'jewel', focusItem = null) {
   const act = async (p) => { const r = fail(await p); if (r.ok) render(); return r; };
 
   const jewelTab = (s) => {
-    const items = [];
-    for (const k of EQ_SLOTS) { const it = s.equipped[k] && s.inventory.find((i) => i.id === s.equipped[k]); if (it && CR.socketCount(it)) items.push([k, it]); }
-    if (focusItem) { const it = s.inventory.find((i) => i.id === focusItem); if (it && CR.socketCount(it) && !items.some(([, x]) => x.id === it.id)) items.unshift([null, it]); }
-    const rows = items.length ? items.map(([k, it]) => h('div', { class: 'card ws-item' },
-      h('div', { class: 'kv' }, h('span', { class: 'card-title' }, img(itemIcon(it.look), '', 'emblem'), h('b', { style: { color: 'var(--text)' } }, `${k ? SLOT_NAMES[k] + ' · ' : ''}${it.name}`)), h('span', { class: `rar r-${it.rarity}` }, RARITY[it.rarity].name)),
-      h('div', { class: 'ws-sockets' }, Array.from({ length: CR.socketCount(it) }, (_, i) => {
-        const g = it.gems && it.gems[i];
-        const sel = pick && pick.itemId === it.id && pick.idx === i;
-        return g ? button(h('span', { class: 'jw-label' }, jewelBadge(g.t, g.lv), h('span', null, jewelText(g))), { cls: 'btn small-btn jewel-' + g.t, ariaLabel: `${jewelText(g)} 빼기`, busy: true, onClick: () => act(app.game.unsocketJewel(it.id, i)) })
-          : button(sel ? '보옥을 고르세요 ↓' : `빈 홈 ${i + 1} +`, { cls: 'btn small-btn' + (sel ? ' btn-primary' : ''), onClick: () => { pick = sel ? null : { itemId: it.id, idx: i }; render(); } });
-      })))) : [h('p', { class: 'muted' }, '홈이 있는 장비를 끼고 있지 않아요. 영웅 1칸 · 전설 2칸 · 신화 3칸.')];
+    // v19.2: 보옥은 슬롯에 박힘. 켜진 홈 = 낀 장비 등급, 꺼진 홈의 보옥은 보관(빼기 가능)
+    const slotsShown = EQ_SLOTS.filter((k) => CR.activeSockets(s, k) > 0 || CR.slotGems(s, k).some(Boolean));
+    if (focusItem) { const k = EQ_SLOTS.find((x) => s.equipped[x] === focusItem); if (k && slotsShown.includes(k)) { slotsShown.splice(slotsShown.indexOf(k), 1); slotsShown.unshift(k); } }
+    const rows = slotsShown.length ? slotsShown.map((k) => {
+      const it = s.equipped[k] && s.inventory.find((i) => i.id === s.equipped[k]);
+      const n = CR.activeSockets(s, k);
+      const gems = CR.slotGems(s, k);
+      return h('div', { class: 'card ws-item', dataset: { slot: k } },
+        h('div', { class: 'kv' }, h('span', { class: 'card-title' }, it ? img(itemIcon(it.look), '', 'emblem') : null, h('b', { style: { color: 'var(--text)' } }, `${SLOT_NAMES[k]} 슬롯${it ? ' · ' + it.name : ''}`)), it ? h('span', { class: `rar r-${it.rarity}` }, `${RARITY[it.rarity].name} · 홈 ${n}칸`) : h('span', { class: 'muted small' }, '장비 없음')),
+        h('div', { class: 'ws-sockets' }, gems.map((g, i) => {
+          if (i >= n && !g) return null;
+          const off = i >= n;
+          const sel = pick && pick.slot === k && pick.idx === i;
+          return g ? button(h('span', { class: 'jw-label' }, jewelBadge(g.t, g.lv), h('span', null, jewelText(g) + (off ? ' (꺼짐)' : ''))), { cls: 'btn small-btn jewel-' + g.t + (off ? ' ws-off' : ''), ariaLabel: `${jewelText(g)} 빼기`, busy: true, onClick: () => act(app.game.unsocketJewel(k, i)) })
+            : button(sel ? '보옥을 고르세요 ↓' : `빈 홈 ${i + 1} +`, { cls: 'btn small-btn' + (sel ? ' btn-primary' : ''), onClick: () => { pick = sel ? null : { slot: k, idx: i }; render(); } });
+        })),
+        gems.some((g, i) => g && i >= n) ? h('p', { class: 'muted small', style: { margin: '4px 0 0' } }, '꺼진 홈: 더 높은 등급 장비를 끼면 다시 켜져요.') : null);
+    }) : [h('p', { class: 'muted' }, '홈이 있는 장비를 끼고 있지 않아요. 영웅 1칸 · 전설 2칸 · 신화 3칸.')];
     const bag = Object.entries(s.craft.jewels || {}).filter(([, n]) => n > 0).map(([k, n]) => { const [t, lv] = k.split(':'); return { t, lv: Number(lv), n }; })
       .sort((a, b) => CR.JEWEL_TYPES.indexOf(a.t) - CR.JEWEL_TYPES.indexOf(b.t) || b.lv - a.lv);
     const bagRows = bag.length ? bag.map((j) => h('div', { class: 'mp-row' },
       jewelBadge(j.t, j.lv),
       h('div', { class: 'mp-name' }, h('b', { class: 'jewel-' + j.t }, `${CR.jewelName(j.t, j.lv)} ×${j.n}`), h('span', { class: 'muted small' }, `${CR.JEWELS[j.t].label} ${pct1(CR.JEWELS[j.t].values[j.lv - 1])}`)),
-      pick ? button('끼우기', { cls: 'btn btn-primary', busy: true, onClick: async () => { const r = await act(app.game.socketJewel(pick.itemId, pick.idx, j.t, j.lv)); if (r.ok) { pick = null; render(); } } })
+      pick ? button('끼우기', { cls: 'btn btn-primary', busy: true, onClick: async () => { const r = await act(app.game.socketJewel(pick.slot, pick.idx, j.t, j.lv)); if (r.ok) { pick = null; render(); } } })
         : button(j.lv >= CR.MAX_JEWEL_LV ? '최대' : `합성 3→1`, { cls: 'btn', disabled: j.n < 3 || j.lv >= CR.MAX_JEWEL_LV, busy: true, onClick: () => act(app.game.combineJewel(j.t, j.lv)) }))) : [h('p', { class: 'muted' }, '가방이 비었어요. 쐐기 던전(시간 내), 월드 보스(B 이상), 보옥 원정에서 얻어요.')];
-    return [h('p', { class: 'modal-desc' }, '장비 홈에 보옥을 끼우면 능력치가 올라요. 빼기는 무료, 장비를 분해하면 보옥은 가방으로 돌아와요. 같은 보옥 3개로 다음 단계 1개를 만들어요(최대 5단계).'),
-      h('div', { class: 'section-title' }, '장착 장비의 홈'), ...rows,
+    return [h('p', { class: 'modal-desc' }, '보옥은 장비 슬롯에 박혀서 장비를 바꿔도 그대로 남아요. 켜지는 홈 수는 낀 장비 등급(영웅 1 · 전설 2 · 신화 3). 빼기는 무료, 같은 보옥 3개로 다음 단계 1개를 만들어요(최대 5단계).'),
+      h('div', { class: 'section-title' }, '슬롯의 홈'), ...rows,
       h('div', { class: 'section-title' }, pick ? '끼울 보옥 고르기' : '보옥 가방'), ...bagRows,
       h('p', { class: 'muted small' }, `단계별 효과: ${CR.JEWEL_TYPES.map((t) => `${CR.JEWELS[t].name}(${CR.JEWELS[t].label}) ${CR.JEWELS[t].values.map((v) => pct1(v).slice(1)).join('/')}`).join(' · ')}`)];
   };

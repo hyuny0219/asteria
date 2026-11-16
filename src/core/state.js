@@ -9,7 +9,7 @@ import { defaultMplus } from './mplus.js';
 import { defaultDiff, defaultTrack } from './difficulty.js';
 import { defaultExpedition } from './expedition.js';
 import { defaultWorldBoss } from './worldboss.js';
-import { defaultCraft } from './crafting.js';
+import { defaultCraft, migrateSockets } from './crafting.js';
 import { defaultMail } from './mail.js';
 import { defaultSteeds } from './steeds.js';
 import { backfillLegends, defaultGearPlus } from './gearplus.js';
@@ -274,6 +274,7 @@ export function migrate(s) {
   for (const k of Object.keys(d.player)) if (cur.player[k] === undefined) cur.player[k] = d.player[k];
   for (const k of Object.keys(d.slotEnhance)) { cur.slotEnhance[k] ||= 0; cur.slotEnhanceOre[k] ||= 0; }
   for (const k of Object.keys(d.craft)) if (cur.craft[k] === undefined) cur.craft[k] = d.craft[k];
+  migrateSockets(cur);   // v19.2 보옥: 장비 → 슬롯
   for (const k of Object.keys(d.gearPlus)) if (cur.gearPlus[k] === undefined) cur.gearPlus[k] = d.gearPlus[k];
   for (const k of ['mounts', 'wings']) {   // v12: keep a half-written steed block safe
     const b = cur[k];

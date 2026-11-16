@@ -244,8 +244,8 @@ export class Game {
     return { ok: true };
   }
   // ---------- 제작·강화 확장 (보옥 · 마부 · 버프 음식) ----------
-  socketJewel(itemId, idx, t, lv) { return this.transact('jewel', (s) => craft.socket(s, itemId, idx, t, lv)); }
-  unsocketJewel(itemId, idx) { return this.transact('jewel', (s) => craft.unsocket(s, itemId, idx)); }
+  socketJewel(slot, idx, t, lv) { return this.transact('jewel', (s) => craft.socket(s, slot, idx, t, lv)); }
+  unsocketJewel(slot, idx) { return this.transact('jewel', (s) => craft.unsocket(s, slot, idx)); }
   combineJewel(t, lv) { return this.transact('jewel', (s) => craft.combine(s, t, lv)); }
   enchantSlot(slot) { return this.transact('enchant', (s) => craft.enchantRoll(s, slot, this.rng)); }
   cookFood(id) { return this.transact('cook', (s) => craft.cook(s, id, this.now())); }

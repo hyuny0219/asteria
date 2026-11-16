@@ -9,30 +9,43 @@ import { makeRng } from '../src/core/util.js';
 
 const T0 = Date.UTC(2026, 10, 9, 3, 0, 0);
 
-test('보옥: sockets by rarity, socket/unsocket/replace, stats apply only when equipped', () => {
+test('보옥: 슬롯에 박힘 — 홈 수는 낀 장비 등급, 장비를 바꿔도 남음', () => {
   const s = newGame(T0); const rng = makeRng(1);
   const it = makeItem(s, { slot: 'weapon', rarity: 'legendary', level: 30, rng });
-  s.inventory.push(it);
+  const it2 = makeItem(s, { slot: 'weapon', rarity: 'mythic', level: 30, rng });
+  const low = makeItem(s, { slot: 'weapon', rarity: 'rare', level: 30, rng });
+  s.inventory.push(it, it2, low);
   assert.equal(CR.socketCount(it), 2);
   assert.equal(CR.socketCount({ rarity: 'rare' }), 0);
   CR.addJewel(s, 'ruby', 3, 2);
-  const before = playerStats(s, { now: T0 }).atk;
-  assert.equal(CR.socket(s, it.id, 0, 'ruby', 3).ok, true);
-  assert.equal(CR.socket(s, it.id, 2, 'ruby', 3).reason, 'socket');
-  assert.equal(playerStats(s, { now: T0 }).atk, before);          // not equipped yet
+  assert.equal(CR.socket(s, 'weapon', 0, 'ruby', 3).reason, 'socket');   // 장비 없음 → 켜진 홈 0
   eco.equip(s, it.id);
+  const before = playerStats(s, { now: T0 }).atk;
+  assert.equal(CR.socket(s, 'weapon', 0, 'ruby', 3).ok, true);
+  assert.equal(CR.socket(s, 'weapon', 2, 'ruby', 3).reason, 'socket');
   const withJ = playerStats(s, { now: T0 }).atk;
-  CR.unsocket(s, it.id, 0);
-  const without = playerStats(s, { now: T0 }).atk;
-  assert.ok(withJ > without);
+  assert.ok(withJ > before);
+  // 다른 무기로 바꿔도 보옥은 무기 슬롯에 그대로
+  eco.equip(s, it2.id);
+  assert.deepEqual(CR.slotGems(s, 'weapon')[0], { t: 'ruby', lv: 3 });
+  assert.ok(CR.slotJewelBonus(s, 'weapon').atkPct > 0);
+  // 홈이 없는 장비 → 꺼짐 (보관), 다시 높은 등급 → 켜짐
+  eco.equip(s, low.id);
+  assert.deepEqual(CR.slotJewelBonus(s, 'weapon'), {});
+  assert.deepEqual(CR.slotGems(s, 'weapon')[0], { t: 'ruby', lv: 3 });
+  eco.equip(s, it.id);
+  assert.ok(CR.slotJewelBonus(s, 'weapon').atkPct > 0);
+  // 교체·빼기
+  CR.addJewel(s, 'topaz', 1);
+  assert.deepEqual(CR.socket(s, 'weapon', 0, 'topaz', 1).replaced, { t: 'ruby', lv: 3 });
   assert.equal(CR.jewelCount(s, 'ruby', 3), 2);
-  CR.socket(s, it.id, 0, 'ruby', 3); CR.addJewel(s, 'topaz', 1);
-  const r = CR.socket(s, it.id, 0, 'topaz', 1);
-  assert.deepEqual(r.replaced, { t: 'ruby', lv: 3 });
-  assert.equal(CR.jewelCount(s, 'ruby', 3), 2);
+  eco.equip(s, low.id);
+  assert.equal(CR.unsocket(s, 'weapon', 0).ok, true);   // 꺼진 홈에서도 빼기 가능
+  assert.equal(CR.jewelCount(s, 'topaz', 1), 1);
+  assert.equal(CR.socket(s, 'nope', 0, 'ruby', 3).reason, 'slot');
 });
 
-test('보옥: 3 → next level, max 5; dismantle returns socketed 보옥', () => {
+test('보옥: 3 → 다음 단계, 최대 5 · 예전 세이브의 장비 보옥은 슬롯/가방으로 옮김', () => {
   const s = newGame(T0); const rng = makeRng(2);
   CR.addJewel(s, 'emerald', 1, 7);
   assert.equal(CR.combine(s, 'emerald', 1).ok, true);
@@ -40,12 +53,21 @@ test('보옥: 3 → next level, max 5; dismantle returns socketed 보옥', () =>
   assert.equal(CR.combine(s, 'emerald', 1).reason, 'count');
   assert.equal(CR.jewelCount(s, 'emerald', 2), 2); assert.equal(CR.jewelCount(s, 'emerald', 1), 1);
   assert.equal(CR.combine(s, 'emerald', 5).reason, 'level');
-  const it = makeItem(s, { slot: 'armor', rarity: 'mythic', level: 30, rng });
-  s.inventory.push(it);
-  CR.socket(s, it.id, 2, 'emerald', 2);
-  const d = eco.dismantle(s, [it.id]);
-  assert.equal(d.ok, true); assert.equal(d.quote.jewelsReturned, 1);
-  assert.equal(CR.jewelCount(s, 'emerald', 2), 2);
+  const worn = makeItem(s, { slot: 'armor', rarity: 'mythic', level: 30, rng });
+  const bagIt = makeItem(s, { slot: 'weapon', rarity: 'legendary', level: 30, rng });
+  s.inventory.push(worn, bagIt);
+  eco.equip(s, worn.id);
+  worn.gems = [null, null, { t: 'emerald', lv: 2 }];
+  bagIt.gems = [{ t: 'ruby', lv: 4 }];
+  const m = migrate(JSON.parse(JSON.stringify(s)));
+  const st = m.state || m;
+  assert.deepEqual(CR.slotGems(st, 'armor')[2], { t: 'emerald', lv: 2 });
+  assert.equal(CR.jewelCount(st, 'ruby', 4), 1);
+  assert.ok(st.inventory.every((i) => !i.gems));
+  // 분해해도 슬롯 보옥은 그대로
+  const before = CR.jewelCount(st, 'emerald', 2);
+  assert.equal(eco.dismantle(st, [bagIt.id]).ok, true);
+  assert.equal(CR.jewelCount(st, 'emerald', 2), before);
 });
 
 test('마부: per slot, costs ore + 각성석, re-roll replaces, survives item swaps', () => {

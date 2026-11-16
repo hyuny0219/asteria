@@ -573,6 +573,7 @@ input.text { width: 100%; min-height: 36px; background: var(--panel); border: 1p
 /* v8 제작소 */
 .ws-sockets { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
 .ws-sockets .btn.small-btn { flex: 1 1 140px; width: auto; min-height: 34px; padding: 4px 10px; font-size: 12px; white-space: normal; }
+.ws-sockets .btn.ws-off { opacity: .55; border-style: dashed; }
 .jewel-ruby { color: #E2566B; } .jewel-sapphire { color: #5C8DF0; } .jewel-emerald { color: #3FBF7F; }
 .jewel-topaz { color: #E0A93A; } .jewel-amethyst { color: #A877E8; }
 [data-screen="workshop"] .seg { margin-bottom: 10px; }

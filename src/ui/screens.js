@@ -24,7 +24,7 @@ import * as MISS from '../core/missions.js';
 import { groupMenuTiles } from './menugroups.js';
 export { MENU_GROUPS, groupMenuTiles } from './menugroups.js';
 import * as EXP from '../core/expedition.js';
-import { jewelName, socketCount } from '../core/crafting.js';
+import { jewelName, socketCount, slotGems } from '../core/crafting.js';
 import { MONSTERS } from '../data/content.js';
 const MONSTERS_NAME = (id) => (MONSTERS[id] ? MONSTERS[id].name : id);
 import { bgMeta, classPortrait, itemIcon, portrait, skillIcon, spriteMeta, uiIcon } from '../render/assets.js';
@@ -264,8 +264,9 @@ export function openCompare(app, id) {
       h('p', { class: 'muted', dataset: { note: 'slot-enhance' }, style: { margin: '8px 0 0' } }, lv
         ? `${SLOT_NAMES[target]} 슬롯 강화 +${lv} (기본 능력치 +${lv * 5}%)가 두 장비 모두에 적용된 값입니다. 장비를 바꿔도 강화 단계는 슬롯에 남습니다.`
         : `강화는 ${SLOT_NAMES[target]} 슬롯에 붙습니다. 장비를 바꿔도 강화 단계가 유지됩니다.`),
-      socketCount(it) ? h('div', { class: 'card', dataset: { note: 'sockets' }, style: { marginTop: '8px' } }, h('div', { class: 'kv' }, `보옥 홈 ${socketCount(it)}칸`,
-        h('b', null, Array.from({ length: socketCount(it) }, (_, i) => (it.gems && it.gems[i] ? jewelName(it.gems[i].t, it.gems[i].lv) : '빈 홈')).join(' · ')))) : null);
+      socketCount(it) || slotGems(s, target).some(Boolean) ? h('div', { class: 'card', dataset: { note: 'sockets' }, style: { marginTop: '8px' } }, h('div', { class: 'kv' }, `${SLOT_NAMES[target]} 슬롯 보옥 · 이 장비 홈 ${socketCount(it)}칸`,
+        h('b', null, slotGems(s, target).map((g, i) => (g ? jewelName(g.t, g.lv) + (i >= socketCount(it) ? '(꺼짐)' : '') : i < socketCount(it) ? '빈 홈' : null)).filter(Boolean).join(' · ') || '없음')),
+        h('p', { class: 'muted small', style: { margin: '4px 0 0' } }, '보옥은 슬롯에 박혀 있어서 장비를 바꿔도 그대로 남아요.')) : null);
     m.setBody(body);
     const lockBtn = button(it.locked ? '잠금 해제' : '잠금', { cls: 'btn', busy: true, onClick: async () => { fail(await app.game.setLock(it.id, !it.locked)); render(); } });
     const actions = [
@@ -273,7 +274,7 @@ export function openCompare(app, id) {
         : slots.length > 1 ? h('div', { class: 'btn-row' }, slots.map((k) => button(`${SLOT_NAMES[k]}에 장착`, { cls: 'btn btn-primary', busy: true, onClick: async () => { const r = fail(await app.game.equip(it.id, k)); if (r.ok) { toast(`${it.name} 장착`, 'good'); render(); } } })))
         : button('장착', { cls: 'btn btn-primary', busy: true, onClick: async () => { const r = fail(await app.game.equip(it.id)); if (r.ok) { toast(`${it.name} 장착`, 'good'); render(); } } }),
       h('div', { class: 'btn-row' }, button(`${SLOT_NAMES[target]} 강화 +${lv}`, { cls: 'btn btn-gold', onClick: () => openEnhance(app, target) }), lockBtn),
-      socketCount(it) ? button('보옥 홈 관리', { cls: 'btn', onClick: () => V8.openWorkshop(app, 'jewel', it.id) }) : null,
+      socketCount(it) || slotGems(s, target).some(Boolean) ? button('보옥 홈 관리', { cls: 'btn', onClick: () => V8.openWorkshop(app, 'jewel', it.id) }) : null,
       ...V10.compareActions(app, it, render),
     ];
     m.setActions(actions);
